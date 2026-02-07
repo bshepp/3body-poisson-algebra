@@ -1,0 +1,499 @@
+"""
+Three-Body Problem: Lie Algebra of Pairwise Interactions
+=========================================================
+
+We want to explore whether the pairwise interaction Hamiltonians
+of a three-body gravitational system form a finite-dimensional
+Lie algebra under Poisson brackets.
+
+Setup: Planar three-body problem (2D to keep things tractable)
+- 3 bodies with masses m1, m2, m3
+- Positions: (x1,y1), (x2,y2), (x3,y3)  
+- Momenta: (px1,py1), (px2,py2), (px3,py3)
+- Phase space: 12-dimensional
+
+Pairwise Hamiltonians:
+  H_12 = kinetic_12 + V_12 (interaction between bodies 1 and 2)
+  H_13 = kinetic_13 + V_13
+  H_23 = kinetic_23 + V_23
+
+Key question: What does {H_12, H_13} look like?
+Does the algebra close?
+"""
+
+import sympy as sp
+from sympy import symbols, sqrt, simplify, collect, factor, expand
+from sympy import Function, Rational
+
+print("="*70)
+print("THREE-BODY LIE ALGEBRA EXPLORATION")
+print("Poisson Brackets of Pairwise Interaction Hamiltonians")
+print("="*70)
+
+# ============================================================
+# PHASE SPACE VARIABLES
+# ============================================================
+# Positions
+x1, y1, x2, y2, x3, y3 = symbols('x1 y1 x2 y2 x3 y3', real=True)
+# Momenta
+px1, py1, px2, py2, px3, py3 = symbols('px1 py1 px2 py2 px3 py3', real=True)
+# Masses
+m1, m2, m3 = symbols('m1 m2 m3', positive=True)
+# Gravitational constant
+G = symbols('G', positive=True)
+
+# Collect coordinates and momenta for Poisson bracket computation
+q_vars = [x1, y1, x2, y2, x3, y3]
+p_vars = [px1, py1, px2, py2, px3, py3]
+
+print("\nPhase space: 12D (planar 3-body)")
+print(f"Positions: {q_vars}")
+print(f"Momenta:   {p_vars}")
+
+# ============================================================
+# POISSON BRACKET
+# ============================================================
+def poisson_bracket(f, g):
+    """
+    Compute {f, g} = sum_i (df/dq_i * dg/dp_i - df/dp_i * dg/dq_i)
+    """
+    result = 0
+    for qi, pi in zip(q_vars, p_vars):
+        result += sp.diff(f, qi) * sp.diff(g, pi) - sp.diff(f, pi) * sp.diff(g, qi)
+    return result
+
+# ============================================================
+# PAIRWISE DISTANCES
+# ============================================================
+r12_sq = (x1 - x2)**2 + (y1 - y2)**2
+r13_sq = (x1 - x3)**2 + (y1 - y3)**2
+r23_sq = (x2 - x3)**2 + (y2 - y3)**2
+
+r12 = sqrt(r12_sq)
+r13 = sqrt(r13_sq)
+r23 = sqrt(r23_sq)
+
+# ============================================================
+# PAIRWISE POTENTIAL ENERGIES
+# ============================================================
+V12 = -G * m1 * m2 / r12
+V13 = -G * m1 * m3 / r13
+V23 = -G * m2 * m3 / r23
+
+print("\n" + "="*70)
+print("PAIRWISE POTENTIALS")
+print("="*70)
+print(f"\nV_12 = -G*m1*m2 / r_12")
+print(f"V_13 = -G*m1*m3 / r_13")
+print(f"V_23 = -G*m2*m3 / r_23")
+
+# ============================================================
+# PAIRWISE KINETIC ENERGIES
+# ============================================================
+# For the pairwise Hamiltonians, we need to think carefully.
+# The FULL Hamiltonian is:
+#   H = T1 + T2 + T3 + V12 + V13 + V23
+# where Ti = (pxi^2 + pyi^2)/(2*mi)
+#
+# We can decompose this as:
+#   H = H_12 + H_13 + H_23
+# but there's an overcounting issue with kinetic energy.
+#
+# APPROACH 1: Focus on the potentials only.
+# The potentials alone carry the interaction structure.
+# {V_12, V_13} tells us how the interactions couple.
+# This is actually the most revealing approach because the
+# kinetic terms are quadratic in momenta and the potentials 
+# are the nonlinear part that creates chaos.
+
+print("\n" + "="*70)
+print("APPROACH 1: POISSON BRACKETS OF POTENTIALS")
+print("="*70)
+print("\nComputing {V_12, V_13}...")
+print("(This captures how the 1-2 interaction couples to the 1-3 interaction)")
+
+# {V_12, V_13} - the coupling mediated through body 1
+pb_V12_V13 = poisson_bracket(V12, V13)
+pb_V12_V13_simplified = simplify(pb_V12_V13)
+
+print(f"\n{{V_12, V_13}} = {pb_V12_V13_simplified}")
+
+print("\nComputing {V_12, V_23}...")
+print("(Coupling mediated through body 2)")
+
+pb_V12_V23 = poisson_bracket(V12, V23)
+pb_V12_V23_simplified = simplify(pb_V12_V23)
+
+print(f"\n{{V_12, V_23}} = {pb_V12_V23_simplified}")
+
+print("\nComputing {V_13, V_23}...")
+print("(Coupling mediated through body 3)")
+
+pb_V13_V23 = poisson_bracket(V13, V23)
+pb_V13_V23_simplified = simplify(pb_V13_V23)
+
+print(f"\n{{V_13, V_23}} = {pb_V13_V23_simplified}")
+
+# ============================================================
+# ANALYSIS: What do the brackets look like?
+# ============================================================
+print("\n" + "="*70)
+print("KEY OBSERVATION")
+print("="*70)
+print("""
+Note: {V_ij, V_ik} should be zero because V_ij depends only on 
+positions (not momenta), and V_ik also depends only on positions.
+The Poisson bracket of two functions that depend only on q's is:
+
+  {f(q), g(q)} = sum(df/dq * dg/dp - df/dp * dg/dq) = 0
+
+since df/dp = dg/dp = 0 for position-only functions.
+
+This means the potentials alone DON'T form a nontrivial algebra!
+The momenta are essential — they're the "carrier" of the coupling.
+""")
+
+# ============================================================
+# APPROACH 2: Use full pairwise Hamiltonians
+# ============================================================
+print("="*70)
+print("APPROACH 2: PAIRWISE HAMILTONIANS WITH KINETIC TERMS")
+print("="*70)
+print("""
+We need to include kinetic energy. The natural decomposition:
+  
+  H_12 = p1²/(2m1) + p2²/(2m2) + V_12  [two-body Hamiltonian for pair 1,2]
+  
+But this overcounts kinetic energy (body 1 appears in H_12 and H_13).
+That's actually FINE for our purposes — we're not trying to recover
+the total H. We're asking what algebra these generators produce.
+
+Think of H_12 as "the generator of two-body dynamics for pair 1,2"
+— it's the Hamiltonian that would govern the system if body 3 
+didn't exist.
+""")
+
+# Full pairwise Hamiltonians
+T1 = (px1**2 + py1**2) / (2*m1)
+T2 = (px2**2 + py2**2) / (2*m2)
+T3 = (px3**2 + py3**2) / (2*m3)
+
+H12 = T1 + T2 + V12
+H13 = T1 + T3 + V13
+H23 = T2 + T3 + V23
+
+print("H_12 = T_1 + T_2 + V_12")
+print("H_13 = T_1 + T_3 + V_13")
+print("H_23 = T_2 + T_3 + V_23")
+
+print("\nComputing {H_12, H_13}...")
+print("(This is the key bracket — coupling through shared body 1)\n")
+
+pb_H12_H13 = poisson_bracket(H12, H13)
+pb_H12_H13_simplified = simplify(pb_H12_H13)
+
+print(f"{{H_12, H_13}} = ")
+print(f"  {pb_H12_H13_simplified}")
+
+# Let's also try to expand and collect terms to see structure
+pb_H12_H13_expanded = expand(pb_H12_H13)
+print(f"\nExpanded form:")
+print(f"  {pb_H12_H13_expanded}")
+
+print("\n\nComputing {H_12, H_23}...")
+pb_H12_H23 = poisson_bracket(H12, H23)
+pb_H12_H23_simplified = simplify(pb_H12_H23)
+print(f"{{H_12, H_23}} = {pb_H12_H23_simplified}")
+
+print("\n\nComputing {H_13, H_23}...")
+pb_H13_H23 = poisson_bracket(H13, H23)
+pb_H13_H23_simplified = simplify(pb_H13_H23)
+print(f"{{H_13, H_23}} = {pb_H13_H23_simplified}")
+
+# ============================================================
+# DEEPER ANALYSIS
+# ============================================================
+print("\n" + "="*70)
+print("STRUCTURAL ANALYSIS")
+print("="*70)
+
+# The bracket {H_12, H_13} comes from cross terms between
+# kinetic energy of body 1 and potentials.
+# Let's compute the pieces explicitly:
+
+print("\nBreaking down {H_12, H_13} into constituent brackets:\n")
+
+# {T1, V13} - how body 1's momentum interacts with V_13 potential
+pb_T1_V13 = poisson_bracket(T1, V13)
+pb_T1_V13_s = simplify(pb_T1_V13)
+print(f"  {{T_1, V_13}} = {pb_T1_V13_s}")
+print(f"    (This is the force on body 1 from body 3, dotted with velocity direction)")
+
+# {T1, V12} - how body 1's momentum interacts with V_12 potential  
+pb_T1_V12 = poisson_bracket(T1, V12)
+pb_T1_V12_s = simplify(pb_T1_V12)
+print(f"\n  {{T_1, V_12}} = {pb_T1_V12_s}")
+print(f"    (Force on body 1 from body 2, dotted with velocity direction)")
+
+# The full bracket should be:
+# {H12, H13} = {T1+T2+V12, T1+T3+V13}
+#             = {T1,V13} + {T2,V13} + {V12,T1} + {V12,T3} + {V12,V13}
+# But {T2,V13}=0 (no shared variables), {V12,V13}=0 (both position-only)
+# So: {H12, H13} = {T1, V13} - {T1, V12} + ... wait let me be careful
+
+print("\n\nCareful decomposition of {H_12, H_13}:")
+print("  {H_12, H_13} = {T1+T2+V12, T1+T3+V13}")
+print("  = {T1,T1} + {T1,T3} + {T1,V13}")
+print("    + {T2,T1} + {T2,T3} + {T2,V13}")  
+print("    + {V12,T1} + {V12,T3} + {V12,V13}")
+
+terms = {}
+for name_f, f in [("T1", T1), ("T2", T2), ("V12", V12)]:
+    for name_g, g in [("T1", T1), ("T3", T3), ("V13", V13)]:
+        pb = simplify(poisson_bracket(f, g))
+        terms[f"{name_f},{name_g}"] = pb
+        status = "= 0" if pb == 0 else f"= {pb}"
+        print(f"  {{{name_f}, {name_g}}} {status}")
+
+print("\nSo the surviving terms are:")
+print(f"  {{T1, V13}} = {terms['T1,V13']}")
+print(f"  {{V12, T1}} = {terms['V12,T1']}")
+print(f"  {{V12, T3}} = {terms['V12,T3']}")
+
+print(f"\n  {{H_12, H_13}} = {{T1,V13}} + {{V12,T1}} + {{V12,T3}}")
+
+surviving_sum = simplify(terms['T1,V13'] + terms['V12,T1'] + terms['V12,T3'])
+print(f"                = {surviving_sum}")
+
+# ============================================================
+# PHYSICAL INTERPRETATION
+# ============================================================
+print("\n" + "="*70)
+print("PHYSICAL INTERPRETATION")
+print("="*70)
+print("""
+{T1, V13} = Force on body 1 from body 3, projected along body 1's velocity
+           = The rate at which the 1-3 potential changes due to body 1's motion
+
+{V12, T1} = -Force on body 1 from body 2, projected along body 1's velocity
+           = MINUS the rate at which the 1-2 potential changes due to body 1's motion
+
+{V12, T3} = Force on body 2 from body 1 (∂V12/∂x2, ∂V12/∂y2) projected 
+            along body 3's velocity... WAIT. V12 doesn't depend on body 3's 
+            position, and T3 doesn't depend on body 2's variables.
+            Actually this should be 0. Let me check...
+""")
+
+# Verify
+pb_V12_T3_check = poisson_bracket(V12, T3)
+print(f"  {{V12, T3}} = {simplify(pb_V12_T3_check)}")
+
+print("""
+So {H_12, H_13} = {T1, V13} + {V12, T1}
+                = Force_13 · v1/m1  -  Force_12 · v1/m1
+
+This is BEAUTIFUL. The Poisson bracket of the two pairwise Hamiltonians
+is proportional to the DIFFERENCE of forces on the shared body (body 1),
+projected along its velocity.
+
+In other words: {H_12, H_13} measures how much the two interactions 
+COMPETE for body 1's trajectory.
+
+This is a TIDAL quantity — it's the differential gravitational influence
+on the shared body.
+""")
+
+# ============================================================
+# Let's write this more explicitly
+# ============================================================
+print("="*70)
+print("EXPLICIT FORM OF THE BRACKET")
+print("="*70)
+
+# Force on body 1 from body 3
+F13_x = -sp.diff(V13, x1)
+F13_y = -sp.diff(V13, y1)
+
+# Force on body 1 from body 2  
+F12_x = -sp.diff(V12, x1)
+F12_y = -sp.diff(V12, y1)
+
+print(f"\nForce on body 1 from body 3:")
+print(f"  F13_x = {simplify(F13_x)}")
+print(f"  F13_y = {simplify(F13_y)}")
+
+print(f"\nForce on body 1 from body 2:")
+print(f"  F12_x = {simplify(F12_x)}")
+print(f"  F12_y = {simplify(F12_y)}")
+
+print(f"\n{{H_12, H_13}} = (1/m1) * [ (F13 - F12) · p1 ]")
+print(f"              = (1/m1) * [ (F13_x - F12_x)*px1 + (F13_y - F12_y)*py1 ]")
+
+# Verify this formula
+bracket_formula = (1/m1) * ((F13_x - F12_x)*px1 + (F13_y - F12_y)*py1)
+bracket_formula_s = simplify(bracket_formula)
+original_s = simplify(terms['T1,V13'] + terms['V12,T1'])
+
+diff_check = simplify(bracket_formula_s - original_s)
+print(f"\n  Verification (should be 0): {diff_check}")
+
+# ============================================================
+# DEFINE THE NEW GENERATOR
+# ============================================================
+print("\n" + "="*70)
+print("DEFINING NEW GENERATORS")
+print("="*70)
+print("""
+Let's define the brackets as new objects:
+
+  K1 := {H_12, H_13} = (F_13 - F_12) · p_1 / m_1
+         ^ mediated through body 1 (the shared body)
+
+  K2 := {H_12, H_23} = (F_21 - F_23) · p_2 / m_2  (by symmetry)
+         ^ mediated through body 2
+
+  K3 := {H_13, H_23} = (F_31 - F_32) · p_3 / m_3  (by symmetry)
+         ^ mediated through body 3
+
+Each K_i is a "tidal competition" generator — it measures how the 
+two interactions incident on body i compete for its trajectory.
+
+THE KEY QUESTION: What is {K_i, H_jk}? And what is {K_i, K_j}?
+If these close back into H's and K's, we have a finite algebra!
+""")
+
+# Define K1, K2, K3 explicitly
+K1 = simplify(terms['T1,V13'] + terms['V12,T1'])  # = {H12, H13}
+K2 = simplify(poisson_bracket(H12, H23))  # = {H12, H23}
+K3 = simplify(poisson_bracket(H13, H23))  # = {H13, H23}
+
+print(f"K1 = {K1}")
+print(f"\nK2 = {K2}")
+print(f"\nK3 = {K3}")
+
+# ============================================================
+# SECOND-LEVEL BRACKETS: Does the algebra close?
+# ============================================================
+print("\n" + "="*70)
+print("SECOND-LEVEL BRACKETS: DOES IT CLOSE?")
+print("="*70)
+
+print("\nComputing {K1, H12}...")
+pb_K1_H12 = simplify(poisson_bracket(K1, H12))
+print(f"  {{K1, H12}} = {pb_K1_H12}")
+
+print("\nComputing {K1, H13}...")
+pb_K1_H13 = simplify(poisson_bracket(K1, H13))
+print(f"  {{K1, H13}} = {pb_K1_H13}")
+
+print("\nComputing {K1, H23}...")
+pb_K1_H23 = simplify(poisson_bracket(K1, H23))
+print(f"  {{K1, H23}} = {pb_K1_H23}")
+
+print("\nComputing {K1, K2}...")
+pb_K1_K2 = simplify(poisson_bracket(K1, K2))
+print(f"  {{K1, K2}} = {pb_K1_K2}")
+
+# ============================================================
+# Check if second-level brackets can be expressed in terms of 
+# H12, H13, H23, K1, K2, K3
+# ============================================================
+print("\n" + "="*70)
+print("STRUCTURE ANALYSIS")
+print("="*70)
+print("""
+Examining whether second-level brackets can be expressed as 
+functions of our generators H_ij and K_i...
+
+Key structural question: Are the new brackets:
+(a) Linear combinations of existing generators? → Lie algebra closes
+(b) Polynomial in phase space variables of bounded degree? → Graded algebra
+(c) Arbitrary new functions? → Infinite-dimensional, algebra doesn't close
+""")
+
+# Let's check the degree structure
+# H_ij is degree 2 in momenta (from T) + position-dependent (from V)
+# K_i = {H_ij, H_ik} is degree 1 in momenta (bracket reduces degree by 1)
+# {K_i, H_jk} would be degree 0+2-1 in momenta... let's check
+
+print("\nDegree analysis in momenta:")
+print("  H_ij ~ p² + V(q)  [degree 2 in p from kinetic, degree 0 from V]")
+print("  K_i = {H,H} ~ p¹ · f(q)  [degree 1 in p, as bracket reduces by 1]")
+print("  {K,H} should give ~ p⁰·g(q) + p²·h(q)  [mixed degrees]")
+
+# Check: is {K1, H12} momentum-independent?
+# Substitute zero momenta
+test_zero_p = {px1:0, py1:0, px2:0, py2:0, px3:0, py3:0}
+pb_K1_H12_zero_p = pb_K1_H12.subs(test_zero_p)
+print(f"\n  {{K1, H12}} at p=0: {simplify(pb_K1_H12_zero_p)}")
+
+# Check degree 2 part - substitute zero positions... actually let's 
+# just check if there are p² terms
+print(f"\n  Checking momentum structure of {{K1, H12}}...")
+
+# Collect by momentum variables
+from sympy import Poly
+try:
+    # Try to see the polynomial structure in momenta
+    p_symbols = [px1, py1, px2, py2, px3, py3]
+    pb_expanded = expand(pb_K1_H12)
+    
+    # Get terms and their degree in momenta
+    from sympy import degree_list, total_degree
+    terms_list = sp.Add.make_args(pb_expanded)
+    max_p_degree = 0
+    for term in terms_list:
+        p_deg = sum(sp.degree(term, p) for p in p_symbols)
+        if p_deg > max_p_degree:
+            max_p_degree = p_deg
+    print(f"  Max momentum degree in {{K1, H12}}: {max_p_degree}")
+except Exception as e:
+    print(f"  (Degree analysis encountered complexity: {e})")
+
+print("\n" + "="*70)
+print("JACOBI IDENTITY CHECK")
+print("="*70)
+print("""
+The Jacobi identity must hold:
+  {H_12, {H_13, H_23}} + {H_13, {H_23, H_12}} + {H_23, {H_12, H_13}} = 0
+  
+Which translates to:
+  {H_12, K3} + {H_13, -K2} + {H_23, K1} = 0
+  {H_12, K3} - {H_13, K2} + {H_23, K1} = 0
+
+This is a consistency check and also tells us a relation between 
+the second-level brackets.
+""")
+
+pb_H12_K3 = simplify(poisson_bracket(H12, K3))
+pb_H13_K2 = simplify(poisson_bracket(H13, K2))
+pb_H23_K1 = simplify(poisson_bracket(H23, K1))
+
+jacobi = simplify(pb_H12_K3 - pb_H13_K2 + pb_H23_K1)
+print(f"Jacobi identity check (should be 0): {jacobi}")
+
+print("\n" + "="*70)
+print("SUMMARY AND NEXT STEPS")
+print("="*70)
+print("""
+WHAT WE'VE ESTABLISHED:
+
+1. The three pairwise Hamiltonians H_12, H_13, H_23 do NOT commute
+   under Poisson brackets (as expected).
+
+2. Their brackets produce three new generators K_1, K_2, K_3 where:
+   K_i = "tidal competition" at body i = differential force · velocity
+
+3. Each K_i is degree 1 in momenta, while each H_ij is degree 2.
+   This grading structure constrains what the algebra can look like.
+
+4. The question of closure depends on whether {K_i, H_jk} and {K_i, K_j}
+   can be expressed in terms of H's and K's.
+
+If the algebra closes at 6 generators (3 H's + 3 K's), we'd have 
+something like a real form of a rank-2 Lie algebra (possibly related 
+to so(3,1), su(3), or sp(4)).
+
+If it doesn't close, the PATTERN of how new generators appear still 
+encodes the structure of three-body chaos.
+""")

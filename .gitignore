@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Checkpoints (large binary files)
+checkpoints/
+
+# AWS keys and secrets
+*.pem
+trust-policy.json
+s3-policy.json
+block-devices.json
+userdata.sh
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Large plot files can be regenerated
+# (keeping them for now, but uncomment if repo gets big)
+# *.png
