@@ -9,6 +9,10 @@ build/
 # Checkpoints (large binary files)
 checkpoints/
 
+# Atlas output (generated data)
+atlas_output/
+atlas_test_output/
+
 # AWS keys and secrets
 *.pem
 trust-policy.json
