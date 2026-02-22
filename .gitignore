@@ -16,9 +16,10 @@ s3-policy.json
 block-devices.json
 userdata.sh
 
-# IDE
+# IDE / AI tool config
 .vscode/
 .idea/
+.claude/
 *.swp
 *.swo
 

@@ -1,0 +1,88 @@
+POTENTIAL COMPARISON RESULTS
+==================================================
+
+                                                    L0   L1   L2    L3    L4    Status
+  1/r  (Newton)       — non-integrable               3    6   17   116     -    GROWING (super-exponential)
+  1/r² (Calogero-Moser) — integrable in 1D            3    6   17   116     -    GROWING (identical to 1/r)
+  r²   (Harmonic)     — integrable                    3    6   13    15    15    FINITE (stabilised at L3, dim=15)
+
+==================================================
+DETAILED RESULTS
+==================================================
+
+Potential: 1/r (Newton) — non-integrable
+  Dimensions: [3, 6, 17, 116]
+  New-per-level: [3, 3, 11, 99]
+  Growth ratio d(n)/d(n-1): 2.0, 2.83, 6.82
+  Stabilised: No
+  Level 4 lower bound: d(4) >= 2,725 (from AWS)
+  SVD gap at level 3: 10^6 (definitive)
+
+Potential: 1/r² (Calogero-Moser) — integrable in 1D
+  Dimensions: [3, 6, 17, 116]
+  New-per-level: [3, 3, 11, 99]
+  Growth ratio d(n)/d(n-1): 2.0, 2.83, 6.82
+  Stabilised: No
+  SVD gap at level 3: 8.6 x 10^5 (definitive)
+  NOTE: Identical to Newton! See analysis below.
+
+Potential: r² (Harmonic) — integrable
+  Dimensions: [3, 6, 13, 15, 15]
+  New-per-level: [3, 3, 7, 2, 0]
+  Stabilised: YES at level 3 (dim = 15)
+  SVD gap at level 3: 3.1 x 10^14 (definitive)
+  SVD gap at level 4: 1.6 x 10^14 (definitive, same dim)
+
+==================================================
+ANALYSIS
+==================================================
+
+1. HARMONIC POTENTIAL: FRAMEWORK VALIDATED
+   The r² potential is integrable (it's a system of coupled
+   harmonic oscillators). The Poisson algebra stabilises at
+   dim = 15 with ZERO new generators at level 4. This confirms
+   that the framework correctly detects integrability: integrable
+   systems produce finite-dimensional algebras.
+
+2. CALOGERO-MOSER: SURPRISING RESULT
+   The 1/r² potential gives the IDENTICAL dimension sequence
+   [3, 6, 17, 116] as the 1/r (Newton) potential.
+
+   Key insight: Calogero-Moser integrability holds for 1D
+   particles on a line (any N), not for particles in the PLANE.
+   The planar three-body problem with 1/r² potential is NOT
+   known to be integrable for scalar particles without spin
+   degrees of freedom. The super-exponential growth we observe
+   is consistent with this non-integrability.
+
+   The identical dimension sequence for 1/r and 1/r² suggests
+   that the growth depends on the SINGULARITY TYPE of the
+   potential (inverse-distance), not the specific power.
+
+3. DICHOTOMY: SINGULAR vs REGULAR POTENTIALS
+   The framework distinguishes sharply between:
+   - Singular potentials (1/r, 1/r²): infinite-dim algebra,
+     identical dimension sequence [3, 6, 17, 116, ...]
+   - Regular potentials (r²): finite-dim algebra, dim = 15
+
+   This is consistent with the Morales-Ramis framework, where
+   the singularity structure of the potential determines the
+   differential Galois group and hence integrability properties.
+
+4. THE HARMONIC DIMENSION: d = 15
+   For the planar 3-body harmonic oscillator, the algebra
+   stabilises at dim 15.  The phase space has dim 12, so
+   15 > 12 indicates the algebra includes functions that are
+   not independent on each energy shell (Casimirs reduce the
+   effective dimension).  This should be computable analytically
+   from the known symmetry algebra of coupled oscillators.
+
+==================================================
+SUMMARY TABLE
+==================================================
+
+  Potential    | Singular? | Integrable? | Algebra dim | Growth
+  -------------|-----------|-------------|-------------|--------
+  r² (harmonic)|    No     |     Yes     |    15       | Finite
+  1/r (Newton) |    Yes    |     No      |    ?        | Super-exp
+  1/r² (C-M)   |    Yes    |   1D only   |    ?        | Super-exp
