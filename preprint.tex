@@ -49,7 +49,7 @@ algebra through four bracket levels.  The dimension sequence
   d(0)=3,\quad d(1)=6,\quad d(2)=17,\quad d(3)=116
 \]
 is proved exactly for levels~0--3, and a lower bound
-$d(4) \ge 2{,}725$ is established numerically.
+$d(4) \ge 4{,}501$ is established numerically.
 The growth is super-exponential, implying
 infinite Gelfand--Kirillov dimension.  Remarkably, the sequence
 is invariant under changes of mass ratios, including the
@@ -217,11 +217,11 @@ New generators & 3 & 3 & 11 & 99 \\
 \bottomrule
 \end{tabular}
 \end{center}
-At level 4, the lower bound $d(4) \ge 2{,}725$ is established
-with 8,000 sample points.  No SVD gap is detected, suggesting
-the true dimension is much larger (possibly close to the
-theoretical maximum of 11,679 candidates plus the 156 existing
-generators).
+At level 4, the lower bound $d(4) \ge 4{,}501$ is established
+with 30,000 sample points.  A gap ratio of $2{,}225$ is detected
+in the full SVD spectrum at index 11,673 (of 11,679 columns),
+though the gap at the rank boundary itself is modest ($1.2\times$),
+suggesting the true dimension may be higher.
 \end{theorem}
 
 \begin{remark}
@@ -236,7 +236,7 @@ Level & Candidates & $d(n)$ & New & Ratio $d(n)/d(n{-}1)$ \\
 1 & 3 & 6 & 3 & 2.0 \\
 2 & 12 & 17 & 11 & 2.83 \\
 3 & 138 & 116 & 99 & 6.82 \\
-4 & $\ge$11,523 & $\ge$2,725 & $\ge$2,609 & $\ge$23.5 \\
+4 & $\ge$11,523 & $\ge$4,501 & $\ge$4,385 & $\ge$38.8 \\
 \bottomrule
 \end{tabular}
 \end{center}

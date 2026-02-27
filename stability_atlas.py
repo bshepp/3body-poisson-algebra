@@ -421,6 +421,13 @@ class PoissonAlgebra:
         if epsilon is None:
             epsilon = self.config.epsilon
 
+        p = positions.reshape(3, 2)
+        r12 = np.linalg.norm(p[0] - p[1])
+        r13 = np.linalg.norm(p[0] - p[2])
+        r23 = np.linalg.norm(p[1] - p[2])
+        r_min = min(r12, r13, r23)
+        epsilon = min(epsilon, 0.1 * r_min)
+
         Z_qp, Z_u = self._sample_local(positions, n_samples, epsilon)
         full_matrix = self._evaluate(Z_qp, Z_u)   # (N, n_generators)
 

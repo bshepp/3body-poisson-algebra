@@ -9,16 +9,21 @@ build/
 # Checkpoints (large binary files)
 checkpoints/
 
-# Atlas output (generated data)
+# Atlas output (generated data — large .npy files)
 atlas_output/
+atlas_output_hires/
 atlas_test_output/
+atlas_1000/
 
-# AWS keys and secrets
+# AWS keys, secrets, and launch configs
 *.pem
 trust-policy.json
 s3-policy.json
 block-devices.json
-userdata.sh
+spot_options.json
+tags*.json
+userdata*.sh
+*_temp.txt
 
 # IDE / AI tool config
 .vscode/
@@ -31,6 +36,16 @@ userdata.sh
 Thumbs.db
 .DS_Store
 
-# Large plot files can be regenerated
-# (keeping them for now, but uncomment if repo gets big)
-# *.png
+# Large generated images
+*.png
+
+# Pickle files
+*.pkl
+
+# Numpy data files (generated, large)
+*.npy
+*.npz
+
+# Strategy brainstorm drafts (consolidated into docs)
+strategy*.txt
+Designing*.txt
