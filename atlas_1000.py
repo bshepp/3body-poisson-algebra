@@ -23,7 +23,7 @@ import argparse
 import subprocess
 import numpy as np
 from time import time
-from multiprocessing import Pool
+from multiprocessing import Pool, TimeoutError as MPTimeoutError
 
 os.environ.setdefault('OMP_NUM_THREADS', '1')
 os.environ.setdefault('MKL_NUM_THREADS', '1')
@@ -168,6 +168,9 @@ def run_scan(args):
             'start_row': start_row, 'end_row': end_row,
         }, f, indent=2)
 
+    point_timeout = args.timeout
+    print(f"  Per-point timeout: {point_timeout}s\n", flush=True)
+
     # Fork workers AFTER algebra is built
     pool = Pool(processes=n_workers)
 
@@ -178,9 +181,17 @@ def run_scan(args):
         t_row = time()
 
         work = [(mu, phi_vals[j], epsilon) for j in range(grid_n)]
-        results = pool.map(_eval_point, work)
+        async_results = [pool.apply_async(_eval_point, (w,)) for w in work]
 
-        for j, (rank, svs, gap) in enumerate(results):
+        n_timeout = 0
+        for j, ar in enumerate(async_results):
+            try:
+                rank, svs, gap = ar.get(timeout=point_timeout)
+            except MPTimeoutError:
+                rank, svs, gap = -1, np.array([]), 0.0
+                n_timeout += 1
+            except Exception:
+                rank, svs, gap = -1, np.array([]), 0.0
             rank_map[local_i, j] = rank
             gap_map[local_i, j] = gap
             if len(svs) > 0:
@@ -211,13 +222,15 @@ def run_scan(args):
         remaining = (total_points - done) / rate if rate > 0 else 0
         row_time = time() - t_row
 
+        timeout_str = f"  timeouts={n_timeout}" if n_timeout else ""
         print(f"  Row {local_i+1:4d}/{n_rows}  "
               f"(global {global_i:4d})  mu={mu:.4f}  "
               f"[{done:7d}/{total_points}]  "
               f"row={row_time:.1f}s  "
               f"ETA={remaining/60:.0f}m  "
               f"ranks=[{rank_map[local_i,:].min()},{rank_map[local_i,:].max()}]  "
-              f"gap=[{gap_map[local_i,:].min():.1e},{gap_map[local_i,:].max():.1e}]",
+              f"gap=[{gap_map[local_i,:].min():.1e},{gap_map[local_i,:].max():.1e}]"
+              f"{timeout_str}",
               flush=True)
 
     pool.close()
@@ -281,14 +294,18 @@ def run_merge(args):
         expected = cfg['end_row'] - cfg['start_row']
         actual = cp['completed_rows']
         if actual < expected:
-            print(f"  WARNING: {bdir} incomplete ({actual}/{expected} rows)")
-            continue
+            print(f"  WARNING: {bdir} incomplete ({actual}/{expected} rows) "
+                  f"-- including partial data")
 
-        all_rank.append(np.load(os.path.join(bpath, 'rank_map.npy')))
-        all_gap.append(np.load(os.path.join(bpath, 'gap_map.npy')))
-        all_sv.append(np.load(os.path.join(bpath, 'sv_spectra.npy')))
+        r = np.load(os.path.join(bpath, 'rank_map.npy'))[:actual]
+        g = np.load(os.path.join(bpath, 'gap_map.npy'))[:actual]
+        s = np.load(os.path.join(bpath, 'sv_spectra.npy'))[:actual]
+        all_rank.append(r)
+        all_gap.append(g)
+        all_sv.append(s)
         total_rows += actual
-        print(f"  {bdir}: {actual} rows OK")
+        status = "OK" if actual == expected else f"PARTIAL ({actual}/{expected})"
+        print(f"  {bdir}: {actual} rows {status}")
 
     if total_rows != grid_n:
         print(f"\n  WARNING: merged {total_rows} rows, expected {grid_n}")
@@ -343,6 +360,8 @@ def main():
     parser.add_argument('--start-row', type=int, default=0)
     parser.add_argument('--end-row', type=int, default=100)
     parser.add_argument('--workers', type=int, default=15)
+    parser.add_argument('--timeout', type=int, default=600,
+                        help='Per-point timeout in seconds (default 600)')
     args = parser.parse_args()
 
     if args.mode == 'scan':

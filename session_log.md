@@ -746,6 +746,124 @@ symmetry forces upon the generator set.
 
 ---
 
+## Multi-Epsilon Deep Structure Analysis (Feb 2026)
+
+### Clean Panel Renders
+
+Removed the superimposed isosceles symmetry lines from the multi-epsilon
+panel images to reveal underlying structure more clearly.  The clean
+versions expose previously hidden features — particularly concentric ring
+patterns and discrete "beaded" rank-drop spots along the symmetry curves.
+
+**Output:**
+- `atlas_output_hires/multi_epsilon/multi_epsilon_panels_1_r_clean.png`
+- `atlas_output_hires/multi_epsilon/multi_epsilon_panels_1_r2_clean.png`
+
+### Isosceles Bead Discovery
+
+With the overlay lines removed, the 1/r² (Calogero-Moser) panels revealed
+**discrete dark spots ("beads")** strung along the isosceles symmetry
+curves — configurations where the Poisson algebra rank drops even further
+than the already-reduced isosceles baseline.
+
+**Three isosceles curves in (mu, phi) space:**
+1. mu = 1 (r₁₃ = r₁₂) — horizontal line
+2. mu = 2cos(phi) (r₂₃ = r₁₂) — descending curve
+3. mu = 1/(2cos(phi)) (r₂₃ = r₁₃) — ascending curve
+
+**Findings at eps=5e-4:**
+- Along these curves, the rank is generally 116 (7 below the generic max
+  of 123), due to S₂ permutation symmetry creating linear dependencies
+  among Poisson bracket generators.
+- At specific discrete phi values, the rank drops further to 115 (drop 8)
+  or 114 (drop 9).  These are the "beads."
+- Deepest beads: the equilateral point (phi=60, mu=1) where all three
+  curves meet (full S₃ symmetry), and elongated isosceles configurations
+  at phi~77-79 degrees on the r₂₃=r₁₃ curve (rank 114, drop 9).
+- Also visible: **concentric ring features** centered on the Lagrange
+  equilateral point, suggesting radial structure in the rank landscape.
+
+**Physics:** For the 1/r² potential (Calogero-Moser, famously exactly
+integrable), the beads mark triangle shapes where specific angle
+relationships create additional dynamical symmetries beyond the discrete
+S₂ permutation.  The concentric rings may reflect resonance structure
+in the phase space.
+
+**Output:**
+- `atlas_output_hires/multi_epsilon/bead_analysis_1_r2.png`
+
+### Lagrange Center Zoomed Renders
+
+Rendered single-panel zoomed views at eps=2e-4 (the epsilon showing the
+richest structure) centered on the equilateral Lagrange point, at three
+zoom levels (wide/medium/tight), for both potentials.
+
+**Output:** `atlas_output_hires/multi_epsilon/lagrange_zoom_{wide,medium,tight}_2e-4_{1_r,1_r2}.png`
+
+### High-Resolution Lagrange Scan
+
+Created `hires_lagrange_scan.py` for a focused high-resolution scan of
+the Lagrange region.  Timing test results:
+
+| Grid | Per-point | Total (local) | Total (r6i.4xlarge, 15 workers) |
+|------|-----------|---------------|--------------------------------|
+| 300×300 | 1.05s | ~26h | ~2h |
+| 500×500 | 1.05s | ~73h | ~5h |
+| 1000×1000 | 1.05s | ~12 days | ~22h |
+
+**Region:** mu=[0.3, 2.0], phi=[15°, 105°] — focused around the
+equilateral point to capture the concentric ring and bead features.
+
+**Status:** Prepared for AWS deployment (see plan below).
+
+### 1000×1000 Atlas Failure Analysis
+
+Investigated why the original 1000×1000 atlas scan (`atlas_1000.py`)
+completed only 880/1000 rows.
+
+**block_0000_0100 (rows 0-99):** Algebra built successfully but zero rows
+computed.  Likely spot instance termination immediately after
+initialization.
+
+**block_0100_0200 (rows 100-199):** 80/100 rows done, then stalled at
+row 81 (mu~0.95) with escalating timeouts.
+
+**Root cause: near-collision configurations.**  At mu~0.95, small phi
+angles (3-5°) place bodies 2 and 3 extremely close (r₂₃ ≈ 0.07).  The
+1/r potential terms blow up (u₂₃ = 1/r₂₃ ~ 14), causing lambdified
+level-3 expressions to produce extreme intermediate values.  Individual
+point evaluations exceed the 600s timeout.  With `apply_async`, each
+timeout blocks a worker for the full 600s, cascading: 5 timeouts per row
+inflate row time from 215s to 3600s+.
+
+**Fixes identified:**
+1. Pre-screen collision risk — skip if any r_ij < 0.05 (instant fail
+   instead of wasting 600s)
+2. Reduce default timeout from 600s to 120s
+3. Continue scanning on timeout (don't stall the whole block)
+
+**Impact on Lagrange scan:** The focused region (phi=[15°, 105°]) has
+minimum inter-body distance r_min = 0.259, well above collision risk.
+No timeouts expected.
+
+### AWS Deployment Plan
+
+Adapt the proven `atlas_1000.py` infrastructure with collision-zone fixes
+for a 1000×1000 Lagrange-region scan on r6i.4xlarge.  Estimated cost:
+~$3-12 depending on single vs. 10 parallel instances.  Also re-run the
+two missing blocks from the original scan.
+
+See `hires_lagrange_aws.py` (to be created) and the plan file in
+`.cursor/plans/`.
+
+### New Files
+
+- `multi_epsilon_atlas.py` — Updated: clean panel rendering (no overlay lines)
+- `hires_lagrange_scan.py` — Focused high-res Lagrange region scanner
+- `render_zoomed.py` — Zoomed single-panel renderer
+
+---
+
 ## Speculative Directions
 
 A brainstorm on possible generalizations is recorded in `conjectures.md`.

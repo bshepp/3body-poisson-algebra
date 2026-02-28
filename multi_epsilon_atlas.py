@@ -647,6 +647,45 @@ def run_animation():
         plt.close()
         print(f"    Saved multi_epsilon_panels_{pot_d}.png")
 
+        # --- Static multi-panel (CLEAN: no overlay lines) ---
+        fig, axes = plt.subplots(2, n_eps, figsize=(5 * n_eps, 12),
+                                 facecolor='white')
+        if n_eps == 1:
+            axes = axes.reshape(2, 1)
+
+        for k, eps in enumerate(avail_eps):
+            rm = eps_data[eps]['rank']
+            gm = eps_data[eps]['gap']
+            lg = np.log10(np.clip(gm, 1, None))
+
+            ax_r = axes[0, k]
+            ax_r.pcolormesh(phi * 180 / np.pi, mu, rm, cmap='RdYlGn',
+                            vmin=rank_min, vmax=rank_max, shading='auto')
+            n_below = np.sum(rm < 116)
+            ax_r.set_title(f'eps={eps:.0e}\nrank<116: {n_below}', fontsize=11)
+            if k == 0:
+                ax_r.set_ylabel(r'$\mu$', fontsize=12)
+            else:
+                ax_r.set_yticklabels([])
+
+            ax_g = axes[1, k]
+            ax_g.pcolormesh(phi * 180 / np.pi, mu, lg, cmap='inferno',
+                            vmin=0, vmax=9, shading='auto')
+            ax_g.set_xlabel(r'$\phi$ (deg)', fontsize=11)
+            if k == 0:
+                ax_g.set_ylabel(r'$\mu$', fontsize=12)
+            else:
+                ax_g.set_yticklabels([])
+
+        fig.suptitle(f'Multi-Epsilon Atlas -- {pot_l}\n'
+                     'Top: Rank maps  |  Bottom: Gap ratio landscapes',
+                     fontsize=15, fontweight='bold', y=1.01)
+        plt.tight_layout()
+        plt.savefig(os.path.join(out, f'multi_epsilon_panels_{pot_d}_clean.png'),
+                    dpi=150, bbox_inches='tight', facecolor='white')
+        plt.close()
+        print(f"    Saved multi_epsilon_panels_{pot_d}_clean.png")
+
     # --- Interactive Plotly with epsilon slider ---
     try:
         import plotly.graph_objects as go
