@@ -1,0 +1,35 @@
+{
+  "config": "scalene",
+  "mu": 0.6,
+  "phi": 0.785,
+  "epsilon": 0.005,
+  "n_samples": 10000,
+  "n_generators": 156,
+  "n_pairs": 11523,
+  "level_dims": {
+    "0": 3,
+    "1": 6,
+    "2": 17,
+    "3": 116,
+    "4": 3142
+  },
+  "dims": [
+    3,
+    6,
+    17,
+    116,
+    3142
+  ],
+  "new_per_level": [
+    3,
+    3,
+    11,
+    99,
+    3026
+  ],
+  "d4_lower_bound": 3142,
+  "max_gap_ratio": 1.6846674956950096,
+  "max_gap_index": 9999,
+  "elapsed_seconds": 289.716703414917,
+  "timestamp": "2026-02-24 07:47:17"
+}

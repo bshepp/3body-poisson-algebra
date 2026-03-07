@@ -51,14 +51,19 @@ algebra through four bracket levels.  The dimension sequence
 is proved exactly for levels~0--3, and a lower bound
 $d(4) \ge 4{,}501$ is established numerically.
 The growth is super-exponential, implying
-infinite Gelfand--Kirillov dimension.  Remarkably, the sequence
+infinite Gelfand--Kirillov dimension.  The sequence
 is invariant under changes of mass ratios, including the
 exceptional Tsygvintsev cases where first-order Morales--Ramis
-obstructions vanish.  These results provide a new computational
-perspective on the non-integrability of the three-body problem,
-complementing the differential Galois approach of
-Morales-Ruiz--Ramis--Sim\'{o} and the higher variational equation
-techniques of Combot and Maciejewski--Przybylska.
+obstructions vanish.  Comparison with alternative potentials
+reveals a sharp structural dichotomy: the integrable harmonic
+potential ($V \propto r^2$) produces a finite-dimensional
+algebra (stabilising at dimension~15), while both the
+Newtonian ($1/r$) and Calogero--Moser ($1/r^2$) potentials
+yield the identical sequence $3, 6, 17, 116$.  The dimension
+sequence is thus a new algebraic invariant of the pairwise
+Hamiltonian decomposition, determined by the singularity class
+of the potential rather than by the coupling constants or
+integrability properties.
 \end{abstract}
 
 
@@ -85,9 +90,10 @@ yielding increasingly powerful obstructions.
 In this paper we take a complementary, purely algebraic approach.
 Rather than analyzing variational equations along specific
 orbits, we study the Poisson algebra generated \emph{ab initio}
-by the pairwise Hamiltonians.  If this algebra were
-finite-dimensional, the problem would possess hidden symmetries;
-infinite-dimensional growth signals fundamental non-integrability.
+by the pairwise Hamiltonians.  The growth rate of this algebra
+characterises the algebraic complexity of the pairwise
+decomposition and its dependence on the potential type and mass
+ratios.
 
 \subsection{Setup and notation}
 
@@ -206,7 +212,8 @@ AWS EC2 instance (16 vCPUs, 128~GB RAM).
 
 \begin{theorem}\label{thm:dims}
 For the planar Newtonian three-body problem with
-$G=1$ and any positive masses $(m_1, m_2, m_3)$:
+$G=1$ (mass invariance established in
+Theorem~\ref{thm:mass-inv}):
 \begin{center}
 \begin{tabular}{@{}ccccc@{}}
 \toprule
@@ -225,8 +232,11 @@ suggesting the true dimension may be higher.
 \end{theorem}
 
 \begin{remark}
-The number of candidate brackets at each level and the
-dimension increments are:
+Candidates at level~$n$ are all pairwise brackets $\pb{f}{g}$
+with $f$ from the frontier (generators new at level~$n{-}1$) and
+$g$ from the full accumulated set through level~$n{-}1$,
+excluding self-brackets and antisymmetric duplicates.  The
+candidate counts and dimension increments are:
 \begin{center}
 \begin{tabular}{@{}crrrc@{}}
 \toprule
@@ -241,16 +251,30 @@ Level & Candidates & $d(n)$ & New & Ratio $d(n)/d(n{-}1)$ \\
 \end{tabular}
 \end{center}
 The ratio $d(n)/d(n{-}1)$ is itself increasing, indicating
-super-exponential growth and infinite Gelfand--Kirillov dimension.
+super-exponential growth and infinite Gelfand--Kirillov
+dimension~\cite{gelfand-kirillov-1966}.
+\end{remark}
+
+\begin{remark}
+The dimension $d(n)$ counts \emph{linearly} independent functions
+on the 12-dimensional phase space $\R^{12}$.  Since at most 12
+functions can be functionally independent on $\R^{12}$,
+$d(3) = 116$ implies at least 104~nonlinear functional relations
+among the level-3 generators.  The growth of $d(n)$ measures the
+algebraic complexity of the generated function space, not the
+number of independent dynamical degrees of freedom.
 \end{remark}
 
 \subsection{Mass invariance}
 
 \begin{theorem}\label{thm:mass-inv}
-For all positive masses $(m_1, m_2, m_3)$, the dimension function
-$d(n) = \dim \cA_n$ of the pairwise Poisson algebra is generically
-constant.  In particular, $d(0)=3$, $d(1)=6$, $d(2)=17$, $d(3)=116$
-for all positive mass configurations.
+The dimension function $d(n) = \dim \cA_n$ of the pairwise Poisson
+algebra is generically constant: it takes the values $d(0)=3$,
+$d(1)=6$, $d(2)=17$, $d(3)=116$ on a Zariski-open dense subset of
+the positive mass cone $(m_1, m_2, m_3) \in \R_{>0}^3$.
+Computationally, these values have been verified at four specific
+mass configurations spanning all symmetry types, including the
+Tsygvintsev exceptional cases (Table~\ref{tab:mass-inv}).
 \end{theorem}
 
 \begin{proof}[Proof sketch]
@@ -290,9 +314,18 @@ neither of which involves the masses:
     introduce universal monomial types independent of masses.
 \end{itemize}
 
-The masses appear only as multiplicative coefficients on terms,
-never determining \emph{which} monomials are present.  Consequently,
-the set of linear dependencies is the same for all positive masses.
+The monomial structure in the $u_{ij}$ variables is determined
+by the chain rule, which is mass-independent.  At each bracket
+level, the set of $u_{ij}$-exponent patterns appearing in the
+generators is the same for all positive masses.  Since monomials
+with distinct $u_{ij}$-exponent patterns cannot cancel against
+each other (they are algebraically independent when evaluated at
+generic phase-space points), a linear dependency can be
+mass-dependent only if the coefficient --- a rational function
+of the masses --- of every $u_{ij}$-monomial within the
+dependency relation vanishes simultaneously.  The Zariski
+argument shows this can happen only on a proper algebraic
+subvariety of the mass cone.
 
 As additional evidence: the equal-mass case has $S_3$ permutation
 symmetry, which is the configuration most likely to exhibit
@@ -304,7 +337,8 @@ structural, not symmetry-induced.
 
 We verified the theorem computationally for four distinct mass
 configurations spanning the full range of symmetry types:
-\begin{center}
+\begin{table}[ht]
+\centering
 \begin{tabular}{@{}llcl@{}}
 \toprule
 Configuration & $(m_1, m_2, m_3)$ & Tsygvintsev param.\ $\mu$ & $d(0{:}3)$ \\
@@ -315,7 +349,9 @@ Tsygvintsev case~2 ($\mathbb{Z}_2$) & $(1,1,5/2)$ & $8/27$ & $3,6,17,116$ \\
 Tsygvintsev case~3 ($\mathbb{Z}_2$) & $(1,1,5.098)$ & $2/9$ & $3,6,17,116$ \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{Mass invariance verification across four configurations.}
+\label{tab:mass-inv}
+\end{table}
 
 The Tsygvintsev parameter $\mu = \sum_{i<j} m_i m_j / (\sum_k m_k)^2$
 determines the differential Galois group structure of the first
@@ -338,43 +374,49 @@ The three level-1 generators
 \]
 have a natural physical interpretation as \emph{tidal competition
 operators}.  Each $K_i$ measures the dynamical competition between
-two pairwise interactions sharing a common body.  For equal masses
-with $G=1$:
+two pairwise interactions sharing a common body.  Explicitly,
 \[
   K_1 = \pb{H_{12}}{H_{13}}
-  = \sum_{k} \left(
-    \frac{\partial V_{12}}{\partial q_k}\dot{q}_k^{(13)}
-    - \frac{\partial V_{13}}{\partial q_k}\dot{q}_k^{(12)}
-  \right),
+  = \frac{1}{m_1}\bigl[
+    (\mathbf{F}_{13} - \mathbf{F}_{12}) \cdot \mathbf{p}_1
+  \bigr],
 \]
-encoding the rate at which the 12-interaction ``pulls'' the system
-away from the 13-trajectory and vice versa.
+where $\mathbf{F}_{ij} = -\nabla_i V_{ij}$ is the force on body
+$i$ from body $j$.  This encodes the rate at which the
+12-interaction ``pulls'' body~1 away from the 13-trajectory and
+vice versa; the other $K_i$ are obtained by cyclic permutation.
 
 
 % ====================================================================
 \section{Discussion}
 % ====================================================================
 
-\subsection{Connection to non-integrability}
+\subsection{Relationship to non-integrability}
 
-The super-exponential growth of $\cA$ provides a new algebraic
-certificate of non-integrability for the three-body problem.  If
-the system were Liouville-integrable with analytic first
-integrals $F_1, \ldots, F_n$ in involution, the Poisson algebra
-generated by the $H_{ij}$ would be constrained to a
-finite-dimensional quotient modulo the ideal generated by
-$\pb{F_k}{\cdot}$.  The unbounded growth of $\cA$ shows no such
-constraint exists.
+The three-body problem is known to be non-integrable: Bruns
+showed that no additional algebraic first integrals
+exist~\cite{bruns-1887}, Poincar\'{e} extended this to analytic
+integrals~\cite{poincare-1890}, and the differential Galois
+approach of Morales-Ruiz, Ramis, and
+Sim\'{o}~\cite{morales-ramis-simo-2007} provides modern
+obstructions via higher variational equations.
 
-This is philosophically related to, but technically distinct from,
-the Morales--Ramis approach.  The Morales--Ramis--Sim\'{o}
-theorem~\cite{morales-ramis-simo-2007} shows that integrability
-forces the Galois group of \emph{each} higher variational
-equation to have abelian identity component.  Our result shows
-that the \emph{global} algebraic structure generated by the
-pairwise Hamiltonians is incompatible with finite-dimensional
-symmetry, without reference to particular solutions or
-variational equations.
+The super-exponential growth of $\cA$ is \emph{consistent with}
+these non-integrability results.  However, the potential
+comparison in Section~\ref{sec:potential-comparison} shows that the Calogero--Moser
+($1/r^2$) system --- whose one-dimensional version is completely
+Liouville-integrable~\cite{moser-1975} --- produces the
+\emph{identical} dimension sequence $3, 6, 17, 116$.  The
+growth rate of the pairwise Poisson algebra therefore does not
+by itself distinguish integrable from non-integrable systems.
+
+The dimension sequence is better understood as a
+\emph{structural invariant} of the pairwise Hamiltonian
+decomposition, determined by the singularity class of the
+potential (Section~\ref{sec:potential-comparison}).  Whether finer algebraic data --- such
+as the SVD gap magnitudes, the structure constants of the
+algebra, or divergence at higher bracket levels --- can
+discriminate integrability remains an open question.
 
 \subsection{Relation to Combot's work}
 
@@ -387,10 +429,11 @@ The growth rate of our Poisson algebra generators may be related
 to the growth of his obstruction space dimensions, though the
 precise connection remains to be established.
 
-\subsection{Potential comparison: validation via control experiments}
+\subsection{Potential comparison: structural classification by potential type}
+\label{sec:potential-comparison}
 
-To validate that the framework genuinely detects integrability
-properties, we tested two additional potentials:
+To probe the dependence of the algebra on the potential, we
+tested two additional pairwise interactions:
 
 \begin{center}
 \begin{tabular}{@{}llccccl@{}}
@@ -406,14 +449,19 @@ $V_{ij} = -1/r_{ij}^2$ (Calogero--Moser) & 1D integrable & 3 & 6 & 17 & 116 & gr
 
 The harmonic potential (coupled oscillators) is integrable, and
 its Poisson algebra stabilises at dimension~15 with \emph{zero}
-new generators at level~4.  This confirms that integrable systems
-produce finite-dimensional algebras under our construction.
+new generators at level~4.  This confirms that regular
+potentials produce finite-dimensional algebras under our
+construction.
 
 The Calogero--Moser ($1/r^2$) potential gives the \emph{identical}
-sequence $3, 6, 17, 116$ as Newton.  This is consistent because
-Calogero--Moser integrability holds for particles on a line (1D),
-not in the plane (2D): the planar three-body $1/r^2$ problem is
-not known to be integrable for scalar particles.
+sequence $3, 6, 17, 116$ as Newton.  This identity is
+notable: the one-dimensional rational Calogero--Moser system is
+completely Liouville-integrable~\cite{moser-1975,calogero-1971},
+yet in the planar setting the pairwise Poisson algebra grows
+at exactly the same rate as the (non-integrable) gravitational
+case.  The dimension sequence is therefore determined by the
+\emph{singularity structure} of the pairwise potential, not by
+the integrability of the full system.
 
 The results reveal a sharp dichotomy:
 \begin{itemize}[nosep]
@@ -425,13 +473,14 @@ The results reveal a sharp dichotomy:
     power of the singularity.
 \end{itemize}
 
-This dichotomy aligns with the Morales--Ramis framework, where
-the singularity structure of the potential determines the
-differential Galois group.  Combined with mass invariance
-(Theorem~\ref{thm:mass-inv}), the sequence $3, 6, 17, 116$
-depends only on the number of bodies, the spatial dimension,
-and the presence of inverse-distance singularities --- not on
-the power of the singularity or the coupling constants.
+Combined with mass invariance (Theorem~\ref{thm:mass-inv}),
+the sequence $3, 6, 17, 116$ depends only on the number of
+bodies, the spatial dimension, and the singularity class of the
+potential --- not on the power of the singularity or the coupling
+constants.  Whether this structural invariant can be refined to
+distinguish integrable from non-integrable systems --- for
+instance via the SVD gap magnitude or higher-level divergence
+--- remains an open question.
 
 \subsection{Novelty of the sequence}
 
@@ -441,12 +490,13 @@ Integer Sequences (OEIS).  If confirmed at higher levels with
 exact methods, this would constitute a novel integer sequence
 arising from fundamental physics.
 
-\begin{conjecture}
-The dimension sequence $d(n)$ of the pairwise Poisson algebra
-of the planar three-body problem satisfies
-$\log d(n) = \Theta(n^2)$, corresponding to Gelfand--Kirillov
-dimension $\GKdim(\cA) = +\infty$.
-\end{conjecture}
+\begin{remark}
+Based on the four exactly computed values $d(0)$ through $d(3)$
+and the lower bound $d(4) \ge 4{,}501$, the growth appears
+consistent with $\log d(n) = \Theta(n^2)$, which would
+correspond to $\GKdim(\cA) = +\infty$.  Confirming this
+asymptotic would require exact computation of additional levels.
+\end{remark}
 
 
 % ====================================================================
@@ -459,7 +509,7 @@ dimension $\GKdim(\cA) = +\infty$.
     exactly and extend to level~5.
 
   \item \textbf{Further alternative potentials.}  The $1/r^2$
-    and $r^2$ cases have been computed (Section~4.4).
+    and $r^2$ cases have been computed (Section~\ref{sec:potential-comparison}).
     Logarithmic potentials ($V \propto \log r$) and Yukawa
     potentials ($V \propto e^{-\alpha r}/r$) remain to be tested.
     The logarithmic case is particularly interesting as the
@@ -485,76 +535,93 @@ dimension $\GKdim(\cA) = +\infty$.
 
   \item \textbf{Local dimension landscape and stability atlas.}
     The results above characterise the \emph{global} algebraic
-    structure: generators are evaluated at random phase-space
-    points spanning the full dynamics.  A natural extension is to
-    probe the algebra \emph{locally}: evaluate the generators at
-    points sampled in a small neighbourhood of a specific
-    configuration, and compute the effective SVD rank there.
+    structure.  A natural extension is to evaluate the generators
+    at points sampled in an $\varepsilon$-ball around a specific
+    configuration and compute the local SVD rank
+    $d_{\mathrm{loc}}(n; q)$ as a function on the reduced
+    configuration space (the shape sphere for $N=3$).  Regions
+    where the local rank drops below the generic value may contain
+    approximate local conservation laws and near-integrable dynamics.
 
-    If the local rank drops below the global value of~$d(n)$, this
-    signals the presence of \emph{approximate local conservation
-    laws} --- additional algebraic constraints that hold near that
-    configuration but not generically.  These are precisely the
-    structures responsible for orbital stability.
+    Preliminary computations (Figure~\ref{fig:atlas}) map the SVD
+    gap ratio across the shape sphere at level~3.  The landscape
+    respects the $S_3$ permutation symmetry of the equal-mass
+    problem: rank drops occur at the Lagrange equilateral point,
+    the Euler collinear configurations, and along the three
+    isosceles curves connecting them.  The global dimension
+    (Theorem~\ref{thm:mass-inv}) is mass-invariant, but the
+    \emph{local} landscape is expected to vary with mass ratios,
+    encoding stability boundaries from purely algebraic data.
 
-    Concretely, one would:
-    \begin{enumerate}[nosep,label=(\alph*)]
-      \item Choose a target configuration (e.g.\ the Lagrange
-        equilateral triangle, an Euler collinear solution, or a
-        periodic orbit such as the figure-eight).
-      \item Sample phase-space points in a ball of radius
-        $\varepsilon$ around the target.
-      \item Compute the local SVD rank $d_{\mathrm{loc}}(n)$ as a
-        function of $\varepsilon$.
-      \item Sweep across configuration space to build a
-        \emph{dimension landscape} $d_{\mathrm{loc}}(n; q)$.
-    \end{enumerate}
-
-    The resulting map would have a direct physical interpretation:
-    regions of low effective dimension correspond to near-integrable
-    dynamics and stable orbits, while regions at the full generic
-    rank correspond to the chaotic sea.  Boundaries between the two
-    would trace the edges of KAM tori --- the frontier of stability.
-
-    For the planar three-body problem, after reducing by
-    centre-of-mass translation, rotation, and scaling, the
-    configuration space of triangle shapes is two-dimensional.  The
-    dimension landscape could therefore be visualised as a heat map
-    over shape space at fixed energy, with valleys at the Lagrange
-    and Euler configurations and plateaux in the chaotic regime.
-
-    Two features make this especially promising:
-    \begin{itemize}[nosep]
-      \item The \textbf{tidal competition generators} $K_i =
-        \pb{H_{ij}}{H_{ik}}$ directly encode the balance of
-        pairwise forces.  At a relative equilibrium all three
-        forces balance, so the $K_i$ satisfy additional algebraic
-        relations there --- precisely the mechanism that would
-        produce a local rank drop.
-      \item The \textbf{mass invariance} of the global dimension
-        (Theorem~\ref{thm:mass-inv}) contrasts with the expected
-        \emph{mass dependence} of the local landscape.  Different
-        mass ratios produce different stability regions (e.g.\
-        the Lagrange points are linearly stable only when the
-        Routh ratio $m_1 m_2 + m_1 m_3 + m_2 m_3 < (m_1+m_2+m_3)^2/27$
-        is satisfied).  The local dimension map would vary with
-        masses even though the global algebra does not, and the
-        pattern of that variation would encode stability boundaries
-        from purely algebraic data.
-    \end{itemize}
-
-    This approach would constitute a \emph{stability atlas} derived
-    entirely from the Poisson bracket structure, requiring no
-    numerical orbit integration, no linearisation, and no
-    perturbation theory --- only evaluation of exact algebraic
-    generators at chosen points.
+    \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\textwidth]{fig_atlas_teaser}
+    \caption{Preliminary stability atlas: SVD gap ratio of the
+      level-3 Poisson algebra mapped onto the shape sphere, with
+      $S_3$ permutation symmetry curves (isosceles triangles)
+      overlaid.  Rank drops at the Lagrange equilateral and Euler
+      collinear configurations indicate local algebraic
+      constraints.}
+    \label{fig:atlas}
+    \end{figure}
 \end{enumerate}
+
+
+% ====================================================================
+% Acknowledgments
+% ====================================================================
+\section*{Acknowledgments}
+
+The polynomial representation via auxiliary variables
+$u_{ij} = 1/r_{ij}$ (Section~2.1), the computational pipeline
+--- symbolic Poisson bracket engine, SVD rank analysis, stability
+atlas, and AWS orchestration --- and the manuscript itself were
+developed with the assistance of Claude
+(Opus~4.6)~\cite{claude-2026}, a large language model by
+Anthropic.  Claude also conducted an adversarial review that
+identified the Calogero--Moser comparison as a decisive test and
+led to the reframing of the paper's central claims.  All
+mathematical results were verified by independent symbolic and
+numerical computation.
 
 
 % ====================================================================
 % References
 % ====================================================================
 \begin{thebibliography}{99}
+
+\bibitem{bruns-1887}
+H.~Bruns,
+\emph{\"{U}ber die Integrale des Vielk\"{o}rper-Problems},
+Acta Math.\ \textbf{11} (1887), 25--96.
+
+\bibitem{calogero-1971}
+F.~Calogero,
+\emph{Solution of the one-dimensional $N$-body problems with
+quadratic and/or inversely quadratic pair potentials},
+J.~Math.\ Phys.\ \textbf{12} (1971), 419--436.
+
+\bibitem{claude-2026}
+Anthropic,
+\emph{Claude (Opus~4.6)} [Large language model], 2026.
+\url{https://claude.ai/}
+
+\bibitem{combot-2013}
+T.~Combot,
+\emph{A note on algebraic potentials and Morales--Ramis theory},
+Celestial Mech.\ Dynam.\ Astronom.\ \textbf{115} (2013), 397--404.
+
+\bibitem{gelfand-kirillov-1966}
+I.~M.~Gelfand and A.~A.~Kirillov,
+\emph{Sur les corps li\'{e}s aux alg\`{e}bres enveloppantes des
+alg\`{e}bres de Lie},
+Inst.\ Hautes \'{E}tudes Sci.\ Publ.\ Math.\ \textbf{31} (1966),
+5--19.
+
+\bibitem{maciejewski-przybylska-2011}
+A.~J.~Maciejewski and M.~Przybylska,
+\emph{Non-integrability of the three-body problem},
+Celestial Mech.\ Dynam.\ Astronom.\ \textbf{110} (2011), 17--30.
 
 \bibitem{morales-ramis-2001}
 J.~J.~Morales-Ruiz and J.-P.~Ramis,
@@ -569,26 +636,34 @@ Galois groups of higher variational equations},
 Ann.\ Sci.\ \'{E}c.\ Norm.\ Sup\'{e}r.\ (4) \textbf{40} (2007),
 845--884.
 
+\bibitem{moser-1975}
+J.~Moser,
+\emph{Three integrable Hamiltonian systems connected with
+isospectral deformations},
+Adv.\ Math.\ \textbf{16} (1975), 197--220.
+
+\bibitem{poincare-1890}
+H.~Poincar\'{e},
+\emph{Sur le probl\`{e}me des trois corps et les \'{e}quations
+de la dynamique},
+Acta Math.\ \textbf{13} (1890), 1--270.
+
+\bibitem{simon-2023}
+S.~Simon,
+\emph{Formal first integrals and higher variational equations},
+Preprint, arXiv:2309.04449, 2023.
+
 \bibitem{tsygvintsev-2007}
 A.~Tsygvintsev,
 \emph{On some exceptional cases in the integrability of the
 three-body problem},
 Celestial Mech.\ Dynam.\ Astronom.\ \textbf{99} (2007), 23--47.
 
-\bibitem{combot-2013}
-T.~Combot,
-\emph{A note on algebraic potentials and Morales--Ramis theory},
-Celestial Mech.\ Dynam.\ Astronom.\ \textbf{115} (2013), 397--404.
-
-\bibitem{maciejewski-przybylska-2011}
-A.~J.~Maciejewski and M.~Przybylska,
-\emph{Non-integrability of the three-body problem},
-Celestial Mech.\ Dynam.\ Astronom.\ \textbf{110} (2011), 17--30.
-
-\bibitem{simon-2023}
-S.~Simon,
-\emph{Formal first integrals and higher variational equations},
-Preprint, arXiv:2309.04449, 2023.
+\bibitem{ziglin-1983}
+S.~L.~Ziglin,
+\emph{Branching of solutions and non-existence of first
+integrals in Hamiltonian mechanics~I},
+Funct.\ Anal.\ Appl.\ \textbf{16} (1983), 181--189.
 
 \end{thebibliography}
 

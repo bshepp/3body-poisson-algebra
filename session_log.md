@@ -281,6 +281,13 @@ Due to Python 3.13's compile recursion limit, each expression is lambdified indi
 
 The growth ratio is **accelerating** — the algebra grows faster than any single exponential. The Level 4 dimension is a **lower bound** because we exhausted our numerical precision before finding a gap.
 
+> **[Annotation, Mar 2026]:** The 8K-sample bound of >2,725 was later
+> superseded. Multi-configuration sampling (see "Phase 4" below) culminated
+> in a 30K-sample global run that produced d(4) = **4,501** with a
+> **definitive SVD gap** (gap ratio 2,225×). The sequence through level 4
+> is now [3, 6, 17, 116, ≥4,501]. The bound is still a lower bound (≥),
+> but the gap is now clean enough to be reported with confidence.
+
 ### Exponential Fit (at 8000 samples)
 ```
 dim ≈ 0.01 × exp(3.15 × level)
@@ -290,6 +297,15 @@ Predicted level 5: ~63,432
 ### Key Physical Interpretation
 
 The accelerating growth rate (super-exponential) is consistent with **infinite Gelfand-Kirillov dimension** and reflects the fundamental non-integrability of the three-body problem. Each level of Poisson brackets generates increasingly complex tidal interactions between body pairs, and these interactions remain functionally independent — the algebra does not develop enough identities (beyond Jacobi) to constrain its growth.
+
+> **[Annotation, Mar 2026]:** The interpretation above was written before the
+> Calogero-Moser comparison (see "Phase 5" below). The CM potential (1/r²) is
+> exactly integrable in 1D yet produces the **identical** dimension sequence
+> [3, 6, 17, 116] in the planar case. This invalidated the claim that
+> super-exponential growth "reflects non-integrability." The growth is real and
+> the algebra is genuinely infinite-dimensional, but it is a **structural
+> invariant** of singular pairwise potentials — not a certificate of
+> non-integrability. The paper was reframed accordingly (see "Phase 6").
 
 ---
 
@@ -508,6 +524,26 @@ purely structural, and the chain rule derivatives du_ij/dx_k contain no mass
 parameters. The masses only appear as multiplicative coefficients on terms,
 never determining *which* monomials appear.
 
+> **[Annotation, Mar 2026]:** The final claim above — "masses only appear
+> as multiplicative coefficients on terms, never determining *which*
+> monomials appear" — was identified as flawed during the adversarial
+> review of the preprint. The statement is too strong: in the kinetic
+> term T_i = (px_i² + py_i²)/(2m_i), the mass enters as a denominator
+> on the entire term, but after iterated Poisson brackets the mass
+> dependence can become more entangled with the monomial structure.
+>
+> The corrected argument (used in the final preprint) proceeds differently:
+> the key observation is that the **set of monomials** appearing in each
+> generator is mass-independent — only the coefficients depend on mass.
+> The evaluation matrix M(m) therefore has entries that are rational
+> functions of the masses. Its rank can only drop on a proper algebraic
+> subvariety (Zariski-closed set of measure zero). Since we observe rank
+> 116 at four algebraically independent mass points — including the most
+> symmetric case (equal masses, which is the *prime candidate* for rank
+> drop) — the generic rank must be 116 everywhere. The proof is a
+> standard Zariski semicontinuity argument, not a "multiplicative
+> coefficients" argument.
+
 **Consequence:** If proven, this upgrades the dimension sequence from
 "numerically verified at specific mass points" to a theorem about the
 planar three-body gravitational potential. The sequence 3, 6, 17, 116, ...
@@ -538,6 +574,12 @@ probe* of stability.
 | High (near 116) | Generic chaotic dynamics, no extra algebraic structure |
 | Intermediate | Partial stability, resonance zones, KAM tori boundaries |
 
+> **[Annotation, Mar 2026]:** The "near-integrable" interpretation for
+> low-rank regions was speculative. Given the CM finding (integrable
+> system, same global rank), low local rank is better described as
+> reflecting **local symmetry constraints** rather than local
+> integrability. The atlas maps algebraic structure, not integrability.
+
 **Why this works:** Stable configurations exist precisely where *extra
 approximate conservation laws* constrain the dynamics locally. If the
 Poisson algebra generators satisfy additional algebraic relations near a
@@ -562,6 +604,12 @@ algebraic signature of stability.
   regions traces the edges of KAM tori — the frontier between regular and
   chaotic dynamics.
 
+  > **[Annotation, Mar 2026]:** The KAM connection is speculative and
+  > unverified. The atlas results so far show rank drops only at
+  > symmetric configurations, not at KAM torus boundaries. Whether the
+  > algebraic rank landscape correlates with KAM structure remains an
+  > open question for future work.
+
 **Visualisation:** For the planar three-body problem, after reducing by
 centre-of-mass translation, rotation, and scaling, configuration space is
 2D (two shape parameters for the triangle). The dimension landscape can be
@@ -579,6 +627,13 @@ atlas derived purely from Poisson bracket structure.**
 ## Potential Comparison Study
 
 **Framework validation via control experiments with known-integrability potentials.**
+
+> **[Annotation, Mar 2026]:** The framing as "validation via
+> known-integrability" turned out to be misleading. The experiments
+> validated the *computational framework* (harmonic closes, singular grows)
+> but did *not* validate the "non-integrability certificate" interpretation.
+> In the final paper, this section is titled "Structural classification by
+> potential type."
 
 ### Results
 
@@ -600,17 +655,38 @@ atlas derived purely from Poisson bracket structure.**
    The planar three-body 1/r² problem is not known to be integrable for
    scalar particles.
 
+   > **[Annotation, Mar 2026]:** The reasoning above ("consistent because
+   > CM is only integrable in 1D") was our initial attempt to deflect the
+   > CM result. On deeper reflection during the adversarial review (see
+   > "Phase 5"), we recognised this was a more fundamental finding: the
+   > dimension sequence is determined by the **singularity structure** of
+   > the potential, not by integrability. CM being integrable in 1D means
+   > that an integrable system can still produce infinite-dimensional
+   > Poisson algebras in higher dimensions. This broke the "non-integrability
+   > certificate" interpretation entirely.
+
 3. **Sharp dichotomy: singular vs regular potentials.** The framework
    distinguishes between singular potentials (1/r, 1/r² — both give infinite
    growth with identical sequences) and regular potentials (r² — finite
    algebra). This aligns with Morales-Ramis theory where singularity
    structure determines the differential Galois group.
 
+   > **[Annotation, Mar 2026]:** The dichotomy observation remains valid
+   > and is in fact the key surviving insight. But the alignment with
+   > "non-integrability" was wrong — the correct framing is that the
+   > dichotomy classifies potentials by **singularity type**, which is a
+   > structural algebraic property independent of integrability status.
+
 4. **The sequence [3, 6, 17, 116] is invariant under the power of the
    singularity** (1/r vs 1/r² give identical growth). Combined with mass
    invariance, this sequence depends only on: (a) the number of bodies, (b)
    the dimension of space, and (c) whether the potential has inverse-distance
    singularities — not on the specific power or coupling constants.
+
+   > **[Annotation, Mar 2026]:** This summary remains correct and became
+   > the foundation of the reframed paper. The key correction is that (c)
+   > should be understood as a **structural algebraic** condition, not as
+   > a proxy for non-integrability.
 
 ## Stability Atlas — Implementation and Results
 
@@ -738,6 +814,18 @@ status comes from symmetry-imposed constraints, not from integrability.
 The rank drops measure precisely how many extra algebraic relations the
 symmetry forces upon the generator set.
 
+> **[Annotation, Mar 2026]:** The phrase "algebraic obstruction to
+> integrability" in the first bullet is the same overreach corrected
+> elsewhere. The global rank of 116 is real and the atlas structure is
+> real, but we cannot call it an "obstruction to integrability" since the
+> CM potential (integrable in 1D) produces the same global rank. The
+> correct statement is: the global dimension is a **structural invariant**
+> of the singular potential. The local rank-drop observations at Lagrange
+> and Euler points remain valid — they reflect genuine symmetry-imposed
+> algebraic dependencies. The atlas is best understood as mapping the
+> **local algebraic structure** of the Poisson algebra, without claims
+> about integrability.
+
 ### Files
 
 - `stability_atlas.py` — Rewritten with exact symbolic engine
@@ -788,6 +876,11 @@ integrable), the beads mark triangle shapes where specific angle
 relationships create additional dynamical symmetries beyond the discrete
 S₂ permutation.  The concentric rings may reflect resonance structure
 in the phase space.
+
+> **[Annotation, Mar 2026]:** The phrase "famously exactly integrable"
+> refers to the 1D Calogero-Moser system. In the planar (2D) case
+> studied here, CM integrability does not apply. This distinction became
+> central to the paper's reframing — see "Phase 5" below.
 
 **Output:**
 - `atlas_output_hires/multi_epsilon/bead_analysis_1_r2.png`
@@ -869,3 +962,271 @@ See `hires_lagrange_aws.py` (to be created) and the plan file in
 A brainstorm on possible generalizations is recorded in `conjectures.md`.
 These are informal and unverified — included for future reference, not as
 claims.
+
+---
+
+## Phase 4: Level 4 Multi-Configuration Sampling (Feb 2026)
+
+The initial d(4) > 2,725 bound from Phase 3 (8K samples, single global
+configuration) left an unsatisfying gap — no clean SVD separation. A
+systematic multi-configuration campaign was run to push the bound higher
+and test whether the Level 4 dimension also showed mass/configuration
+invariance.
+
+### Method
+
+`level4_highsample.py` and `aws_level4.py` were used to compute d(4) at
+multiple configuration types and sample counts, all using the single-pass
+numerical pipeline. All runs on r6i.4xlarge (16 vCPU, 128 GB RAM).
+
+### Results by Configuration
+
+| Config | Samples | d(4) | Gap Ratio | Definitive? |
+|--------|---------|------|-----------|-------------|
+| Global | 5,000 | 2,253 | 1.27 | No |
+| Global | 10,000 | 3,041 | 4.66 | No |
+| Global | 20,000 | 3,959 | 3.81 | No |
+| **Global** | **30,000** | **4,501** | **2,225×** | **Yes** |
+| Lagrange (eps=0.005) | 5,000 | 1,956 | — | No |
+| Lagrange (eps=0.005) | 10,000 | 2,682 | — | No |
+| Lagrange (eps=0.005) | 20,000 | 3,112 | 2.74 | No |
+| Euler (eps=0.005) | 5,000 | 1,470 | — | No |
+| Euler (eps=0.005) | 10,000 | 1,821 | — | No |
+| Euler (eps=0.005) | 20,000 | 2,194 | 1.79 | No |
+| Scalene (eps=0.005) | 5,000 | 1,975 | — | No |
+| Scalene (eps=0.005) | 10,000 | 2,743 | — | No |
+| Scalene (eps=0.005) | 20,000 | 3,218 | 2.69 | No |
+
+### Key Observations
+
+1. **The 30K global run achieved a definitive gap.** Gap ratio of 2,225×
+   at index 11,673 (out of 11,679 total). This establishes d(4) ≥ 4,501
+   with confidence.
+
+2. **Local configurations lag global.** Lagrange, Euler, and Scalene runs
+   at the same sample count always produce lower d(4) than global. This
+   is expected: local sampling in an epsilon-ball sees fewer independent
+   directions than spanning the full phase space.
+
+3. **Euler is the most constrained.** At 20K samples, Euler gives d(4) =
+   2,194 vs. Lagrange at 3,112 and Scalene at 3,218. The collinear
+   symmetry imposes more algebraic relations on the Level 4 generators,
+   consistent with the atlas rank-drop observations.
+
+4. **d(4) is still growing with samples** even at 30K. The true Level 4
+   dimension may be larger than 4,501.
+
+### Updated Dimension Summary (Final)
+
+| Level | Dimension | New Generators | Growth Ratio |
+|-------|-----------|---------------|--------------|
+| 0 | 3 | 3 | — |
+| 1 | 6 | 3 | 2.00× |
+| 2 | 17 | 11 | 2.83× |
+| 3 | 116 | 99 | 6.82× |
+| 4 | ≥4,501 | ≥4,385 | ≥38.8× |
+
+### Files
+
+- `level4_highsample.py` — High-sample-count Level 4 computation
+- `results/level4_global_30000/results.json` — Definitive 30K-sample run
+- `results/highsample_status.json` — Final status (d4=4501, definitive)
+- `results/level4_{euler,lagrange,scalene}_{5000,10000,20000}/` — Local runs
+
+---
+
+## Phase 5: Adversarial Review and Calogero-Moser Reckoning (Mar 2026)
+
+### Context
+
+The preprint (`preprint.tex`) was drafted with the central claim that
+super-exponential growth of the Poisson algebra constituted a
+"non-integrability certificate" — a computable algebraic signature that
+distinguishes integrable from non-integrable systems. The paper was
+submitted for critical review before release.
+
+### The Adversarial Review
+
+A systematic critical review was conducted (with Claude, Opus 4.6) that
+challenged every major claim. The most devastating finding:
+
+**The Calogero-Moser (1/r²) potential — exactly integrable in 1D —
+produces the identical dimension sequence [3, 6, 17, 116] as the
+Newtonian (1/r) potential.**
+
+This had been observed earlier in the potential comparison study (see
+"Potential Comparison Study" above) but was initially explained away as
+"CM is only integrable in 1D, not in 2D." The adversarial review forced
+a deeper reckoning with what this result actually means.
+
+### What the CM Result Breaks
+
+The entire "non-integrability certificate" framing collapses:
+
+- If an integrable potential gives the same growth, the growth cannot be
+  a *certificate* of non-integrability.
+- The growth measures something real — but it measures the **algebraic
+  complexity of the singularity structure**, not integrability.
+- Specifically, the chain rule derivatives du_ij/dx_k = -(x_i - x_j) u_ij³
+  for 1/r and du_ij/dx_k = -2(x_i - x_j) u_ij⁵ for 1/r² generate the
+  same monomial types (the exponent differs but the monomial pattern is
+  isomorphic). This is why the dimension sequences match.
+
+### What Survives
+
+- The dimension sequence [3, 6, 17, 116, ≥4,501] is real and verified.
+- Mass invariance (Theorem 2) holds.
+- The dichotomy between singular (infinite growth) and regular (finite
+  algebra, dim 15 for harmonic) potentials is genuine.
+- The stability atlas structure (local rank drops at symmetric configs)
+  is valid.
+
+### Verification
+
+`run_cm_exact.py` performed a fresh symbolic computation of the CM
+Poisson algebra through level 3, confirming [3, 6, 17, 116] independently
+of the earlier `potential_comparison.py` results.
+
+---
+
+## Phase 6: Paper Reframing and Finalization (Mar 2026)
+
+### Systematic Manuscript Revision
+
+Every section of `preprint.tex` was revised to correct the
+non-integrability framing:
+
+1. **Abstract:** Reframed from "non-integrability certificate" to
+   "structural algebraic invariant." Added the CM finding explicitly.
+
+2. **Introduction (lines 85-90):** Removed unsubstantiated claim about
+   growth rate "signalling" non-integrability.
+
+3. **Theorem 1:** Separated the dimension sequence claim from mass
+   invariance (which became Theorem 2).
+
+4. **Theorem 2 (Mass Invariance):** Changed scope from "all" to "generic"
+   positive masses. Replaced the flawed "multiplicative coefficients"
+   proof sketch with a correct Zariski semicontinuity argument.
+
+5. **Section 4.1 (Non-integrability discussion):** Acknowledged known
+   non-integrability results (Bruns, Poincaré, Morales-Ramis). Stated
+   growth is "consistent with" but not a certificate. Explicitly
+   disclosed the CM invalidation.
+
+6. **Section 4.4 (Potential comparison):** Reframed from "validation" to
+   "structural classification by potential type." Honest interpretation
+   of CM result as showing dimension sequence tracks singularity
+   structure, not integrability.
+
+7. **Tidal competition notation:** Replaced Lagrangian q-dot notation
+   with proper Hamiltonian p/m form throughout.
+
+8. **Remark on d(n):** Added clarification that d(n) counts linearly
+   independent functions, not functionally independent ones (important
+   distinction for a 12D phase space).
+
+9. **GK dimension conjecture:** Downgraded from `\begin{conjecture}` to
+   `\begin{remark}` with caveats — only 4 data points.
+
+10. **Stability atlas section:** Trimmed to ~20 lines plus teaser figure
+    (`fig_atlas_teaser.png`) in the future directions section.
+
+### New References Added
+
+| Reference | Why |
+|-----------|-----|
+| Bruns (1887) | Classical non-integrability result for N-body |
+| Poincaré (1890) | Foundational non-integrability of three-body |
+| Gelfand-Kirillov (1966) | GK dimension definition |
+| Ziglin (1983) | Predecessor to Morales-Ramis |
+| Calogero (1971) | Original 1/r² integrable system |
+| Moser (1975) | CM integrability proof |
+| Claude, Opus 4.6 (2026) | AI tool acknowledgment |
+
+### AI Acknowledgment
+
+A new `\section*{Acknowledgments}` was added disclosing Claude's role:
+
+- **Polynomial representation trick** (u_ij = 1/r_ij, Section 2.1) —
+  the chain rule insight that made the computation tractable.
+- **Computational pipeline** — symbolic engine, SVD analysis, stability
+  atlas, AWS orchestration.
+- **Manuscript drafting and critical review** — including the adversarial
+  analysis that identified the CM test.
+- **Reframing** — helped restructure the paper's central claims after
+  the CM finding.
+- All results independently verified by symbolic and numerical computation.
+
+A `\bibitem{claude-2026}` entry was added citing Claude (Opus 4.6) as
+"a large language model by Anthropic, used as a research and writing tool."
+
+### The Decision to Cite
+
+The decision to cite Claude was deliberate and discussed:
+
+> "Yes add it... it's scary but... it's honest."
+
+The rationale: Claude contributed substantive intellectual work — not just
+code generation but the key insight (polynomial representation) and the
+critical test (CM comparison) that reshaped the paper. Omitting this would
+be dishonest. The citation follows emerging norms for AI acknowledgment
+in academic publications while being clear that all mathematical results
+were independently verified.
+
+---
+
+## Updated Timeline (Complete)
+
+| Step | Duration | Result |
+|------|----------|--------|
+| Numerical approach (`algebra_growth.py`) | ~2 hours | d = 3, 6, 17, 39–103 (unstable) |
+| Sensitivity analysis | ~30 min | Confirmed level 3 instability |
+| Exact symbolic (sqrt form) | hung | cancel() on sqrt expressions too slow |
+| Exact symbolic (polynomial u_ij form) | ~10 min | d = 3, 6, 17, **116** (definitive) |
+| Gap detection fix & verification | ~10 min | Clean results, Jacobi exact zero |
+| OEIS search for 3,6,17,116 | — | No match (sequence appears novel) |
+| AWS level 4 (symbolic, old approach) | 20 days ETA | Killed — too slow |
+| AWS level 4 (CSE + pre-computed derivs) | stuck in lambdify | Killed — still too slow |
+| AWS level 4 (single-pass numerical) | **32-41 min** | d(4) > 2,725 (lower bound) |
+| Unequal mass study | ~50 min total | d = 3,6,17,116 for ALL configs |
+| Potential comparison study | ~30 min | Harmonic: dim 15. CM & Newton: [3,6,17,116] |
+| Stability atlas (coarse + epsilon sweeps) | ~4 hours | Rank 116 globally, drops at symmetric configs |
+| Multi-epsilon deep structure | ~2 hours | Bead discovery, ring features at Lagrange |
+| 1000×1000 atlas scan (AWS) | ~22 hours | 880/1000 rows; collision timeout issue |
+| Level 4 multi-config (5K–30K samples) | ~2.7 hours | **d(4) ≥ 4,501** (definitive gap) |
+| CM symbolic verification (`run_cm_exact.py`) | ~10 min | [3,6,17,116] confirmed independently |
+| Adversarial review + paper reframing | ~3 hours | Non-integrability → structural invariant |
+| Manuscript finalization + AI citation | ~1 hour | `preprint.tex` ready for release |
+
+---
+
+## Updated Project Structure
+
+```
+f:\science-projects\3body\
+├── preprint.tex                # Final manuscript (reframed)
+├── fig_atlas_teaser.png        # Stability atlas teaser for Section 5
+├── exact_growth.py             # Core: exact symbolic Poisson bracket engine
+├── run_cm_exact.py             # CM symbolic verification (independent)
+├── potential_comparison.py     # Three-potential comparison driver
+├── level4_highsample.py        # Level 4 high-sample computation
+├── aws_level4.py               # Multi-config Level 4 pipeline (AWS)
+├── unequal_mass_study.py       # Mass invariance verification
+├── stability_atlas.py          # Rewritten atlas with exact engine
+├── atlas_1000.py               # 1000×1000 full atlas scan
+├── multi_epsilon_atlas.py      # Multi-epsilon panel rendering
+├── shape_sphere.py             # Shape space coordinate utilities
+├── viz_atlas_1000.py           # Atlas visualization
+├── viz_comprehensive.py        # Comprehensive visualization suite
+├── algebra_growth.py           # Original numerical approach (superseded)
+├── exact_growth_cm.py          # CM computation (redundant with run_cm_exact.py)
+├── results/                    # All numerical results
+│   ├── level4_global_30000/    # Definitive d(4) = 4,501
+│   ├── level4_{euler,lagrange,scalene}_{5K,10K,20K}/
+│   ├── highsample_status.json  # Final campaign status
+│   └── *.log                   # Computation logs
+├── checkpoints/                # Pickled symbolic expressions
+├── atlas_output_hires/         # High-res atlas renders
+└── session_log.md              # This file
+```

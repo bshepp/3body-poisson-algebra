@@ -1,0 +1,29 @@
+======================================================================
+  1000x1000 ATLAS SCAN
+  Potential: 1/r   Epsilon: 5e-03
+  Grid: 1000x1000   Rows: 0-99
+  Workers: 15   Samples/point: 400
+  Output: atlas_1000/1_r/block_0000_0100/
+======================================================================
+
+  Building symbolic algebra...
+  Building symbolic generators for Newtonian (1/r)...
+    Level 2: 12 generators (0 zero)
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.7s]
+      40/156  [124.9s]
+      60/156  [266.4s]
+      80/156  [497.0s]
+      100/156  [670.4s]
+      120/156  [773.3s]
+      140/156  [862.3s]
+      156/156  [890.1s]
+    Total lambdify time: 890.7s
+  Algebra ready (1349.2s)
+  Algebra ready (1349.2s, 156 generators)
+
+  Per-point timeout: 600s
+

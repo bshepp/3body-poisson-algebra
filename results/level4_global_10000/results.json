@@ -1,0 +1,35 @@
+{
+  "config": "global",
+  "mu": null,
+  "phi": null,
+  "epsilon": null,
+  "n_samples": 10000,
+  "n_generators": 156,
+  "n_pairs": 11523,
+  "level_dims": {
+    "0": 3,
+    "1": 6,
+    "2": 17,
+    "3": 116,
+    "4": 3041
+  },
+  "dims": [
+    3,
+    6,
+    17,
+    116,
+    3041
+  ],
+  "new_per_level": [
+    3,
+    3,
+    11,
+    99,
+    2925
+  ],
+  "d4_lower_bound": 3041,
+  "max_gap_ratio": 4.659356665801459,
+  "max_gap_index": 9999,
+  "elapsed_seconds": 286.7670226097107,
+  "timestamp": "2026-02-24 09:00:37"
+}

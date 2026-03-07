@@ -1,0 +1,35 @@
+{
+  "config": "euler",
+  "mu": 0.5,
+  "phi": 3.141592653589793,
+  "epsilon": 0.005,
+  "n_samples": 20000,
+  "n_generators": 156,
+  "n_pairs": 11523,
+  "level_dims": {
+    "0": 3,
+    "1": 6,
+    "2": 17,
+    "3": 115,
+    "4": 2194
+  },
+  "dims": [
+    3,
+    6,
+    17,
+    115,
+    2194
+  ],
+  "new_per_level": [
+    3,
+    3,
+    11,
+    98,
+    2079
+  ],
+  "d4_lower_bound": 2194,
+  "max_gap_ratio": 1.7862649008786342,
+  "max_gap_index": 11678,
+  "elapsed_seconds": 644.3057682514191,
+  "timestamp": "2026-02-24 06:50:29"
+}

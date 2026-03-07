@@ -1,0 +1,39 @@
+======================================================================
+  1000x1000 ATLAS SCAN
+  Potential: 1/r   Epsilon: 5e-03
+  Grid: 1000x1000   Rows: 100-199
+  Workers: 15   Samples/point: 400
+  Output: atlas_1000/1_r/block_0100_0200/
+======================================================================
+
+  Resuming from local row 80 (80000 points done)
+
+  Building symbolic algebra...
+  Building symbolic generators for Newtonian (1/r)...
+    Level 2: 12 generators (0 zero)
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.7s]
+      40/156  [123.7s]
+      60/156  [263.6s]
+      80/156  [491.2s]
+      100/156  [662.0s]
+      120/156  [763.7s]
+      140/156  [851.6s]
+      156/156  [879.2s]
+    Total lambdify time: 879.7s
+  Algebra ready (1337.5s)
+  Algebra ready (1337.5s, 156 generators)
+
+  Per-point timeout: 600s
+
+  Row   81/100  (global  180)  mu=0.9419  [  81000/100000]  row=215.0s  ETA=1m  ranks=[116,124]  gap=[8.1e+00,1.1e+08]
+  Row   82/100  (global  181)  mu=0.9468  [  82000/100000]  row=224.3s  ETA=2m  ranks=[116,124]  gap=[6.8e+00,1.1e+08]
+  Row   83/100  (global  182)  mu=0.9518  [  83000/100000]  row=600.1s  ETA=4m  ranks=[-1,125]  gap=[0.0e+00,1.0e+08]  timeouts=1
+  Row   84/100  (global  183)  mu=0.9568  [  84000/100000]  row=1200.1s  ETA=7m  ranks=[-1,125]  gap=[0.0e+00,1.3e+08]  timeouts=2
+  Row   85/100  (global  184)  mu=0.9617  [  85000/100000]  row=1800.1s  ETA=12m  ranks=[-1,125]  gap=[0.0e+00,1.0e+08]  timeouts=3
+  Row   86/100  (global  185)  mu=0.9667  [  86000/100000]  row=1800.1s  ETA=16m  ranks=[-1,126]  gap=[0.0e+00,9.9e+07]  timeouts=3
+  Row   87/100  (global  186)  mu=0.9716  [  87000/100000]  row=2400.1s  ETA=21m  ranks=[-1,125]  gap=[0.0e+00,1.2e+08]  timeouts=4
+  Row   88/100  (global  187)  mu=0.9766  [  88000/100000]  row=3632.7s  ETA=27m  ranks=[-1,125]  gap=[0.0e+00,1.1e+08]  timeouts=5

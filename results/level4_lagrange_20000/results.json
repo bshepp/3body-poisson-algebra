@@ -1,0 +1,35 @@
+{
+  "config": "lagrange",
+  "mu": 1.0,
+  "phi": 1.0471975511965976,
+  "epsilon": 0.005,
+  "n_samples": 20000,
+  "n_generators": 156,
+  "n_pairs": 11523,
+  "level_dims": {
+    "0": 3,
+    "1": 6,
+    "2": 17,
+    "3": 110,
+    "4": 3112
+  },
+  "dims": [
+    3,
+    6,
+    17,
+    110,
+    3112
+  ],
+  "new_per_level": [
+    3,
+    3,
+    11,
+    93,
+    3002
+  ],
+  "d4_lower_bound": 3112,
+  "max_gap_ratio": 2.7410819769599013,
+  "max_gap_index": 11678,
+  "elapsed_seconds": 654.6803402900696,
+  "timestamp": "2026-02-24 05:37:06"
+}

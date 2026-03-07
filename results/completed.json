@@ -1,0 +1,74 @@
+{
+  "lagrange_5000": {
+    "config": "lagrange",
+    "n_samples": 5000,
+    "result_dir": "results/level4_lagrange_5000",
+    "timestamp": "2026-02-24 05:21:13"
+  },
+  "lagrange_10000": {
+    "config": "lagrange",
+    "n_samples": 10000,
+    "result_dir": "results/level4_lagrange_10000",
+    "timestamp": "2026-02-24 05:26:10"
+  },
+  "lagrange_20000": {
+    "config": "lagrange",
+    "n_samples": 20000,
+    "result_dir": "results/level4_lagrange_20000",
+    "timestamp": "2026-02-24 05:37:07"
+  },
+  "euler_5000": {
+    "config": "euler",
+    "n_samples": 5000,
+    "result_dir": "results/level4_euler_5000",
+    "timestamp": "2026-02-24 06:34:55"
+  },
+  "euler_10000": {
+    "config": "euler",
+    "n_samples": 10000,
+    "result_dir": "results/level4_euler_10000",
+    "timestamp": "2026-02-24 06:39:44"
+  },
+  "euler_20000": {
+    "config": "euler",
+    "n_samples": 20000,
+    "result_dir": "results/level4_euler_20000",
+    "timestamp": "2026-02-24 06:50:30"
+  },
+  "scalene_5000": {
+    "config": "scalene",
+    "n_samples": 5000,
+    "result_dir": "results/level4_scalene_5000",
+    "timestamp": "2026-02-24 07:42:27"
+  },
+  "scalene_10000": {
+    "config": "scalene",
+    "n_samples": 10000,
+    "result_dir": "results/level4_scalene_10000",
+    "timestamp": "2026-02-24 07:47:18"
+  },
+  "scalene_20000": {
+    "config": "scalene",
+    "n_samples": 20000,
+    "result_dir": "results/level4_scalene_20000",
+    "timestamp": "2026-02-24 07:58:02"
+  },
+  "global_5000": {
+    "config": "global",
+    "n_samples": 5000,
+    "result_dir": "results/level4_global_5000",
+    "timestamp": "2026-02-24 08:55:50"
+  },
+  "global_10000": {
+    "config": "global",
+    "n_samples": 10000,
+    "result_dir": "results/level4_global_10000",
+    "timestamp": "2026-02-24 09:00:38"
+  },
+  "global_20000": {
+    "config": "global",
+    "n_samples": 20000,
+    "result_dir": "results/level4_global_20000",
+    "timestamp": "2026-02-24 09:11:23"
+  }
+}

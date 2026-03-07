@@ -1,0 +1,41 @@
+======================================================================
+LEVEL 4 — FULLY NUMERICAL PIPELINE (CSE-OPTIMISED)
+======================================================================
+Loaded level-3 checkpoint: 156 expressions
+  Level 0: 3 generators
+  Level 1: 3 generators
+  Level 2: 12 generators
+  Level 3: 138 generators
+
+======================================================================
+STEP 2: Pre-compute symbolic derivatives (CSE)
+======================================================================
+  156 generators × 12 derivatives = 1872 derivatives
+  Pre-computing derivatives for 156 expressions (8 workers)...
+    10/156  [0.5s]  last: {K1,H13}
+    20/156  [3.8s]  last: {{K1,H12},H12}
+    30/156  [105.9s]  last: {{K1,H13},H13}
+    40/156  [212.1s]  last: {{K1,H13},{K1,H23}}
+    50/156  [323.8s]  last: {{K1,H23},K1}
+    60/156  [495.2s]  last: {{K1,H13},{K2,K3}}
+    70/156  [536.7s]  last: {{K1,K2},K2}
+    80/156  [769.0s]  last: {{K1,K3},K3}
+    90/156  [989.4s]  last: {{K2,H12},K1}
+    100/156  [1100.2s]  last: {{K2,H13},H13}
+    110/156  [1215.4s]  last: {{K2,H12},{K3,H23}}
+    120/156  [1291.1s]  last: {{K2,H12},{K2,K3}}
+    130/156  [1336.0s]  last: {{K3,H12},H12}
+    140/156  [1377.2s]  last: {{K2,H23},{K3,H13}}
+    150/156  [1436.1s]  last: {{K3,H12},{K3,H13}}
+    156/156  [1583.8s]  last: {{K2,K3},{K3,H13}}
+  Derivatives done: 1872 derivs, 7486800 total terms  [1583.9s]
+  Derivatives cached: checkpoints/all_derivs.pkl
+  Spot-check: {H12, H13} via pre-computed derivs... OK
+  Step 2 time: 1600.2s
+
+======================================================================
+STEP 3: Lambdify all derivatives
+======================================================================
+  Converting 1872 symbolic derivatives to NumPy callables...
+    200/1872  [4.3s]
+    400/1872  [1599.1s]
