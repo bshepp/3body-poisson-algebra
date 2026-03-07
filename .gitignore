@@ -38,6 +38,7 @@ Thumbs.db
 
 # Large generated images
 *.png
+!fig_atlas_teaser.png
 
 # Pickle files
 *.pkl
@@ -49,3 +50,10 @@ Thumbs.db
 # Strategy brainstorm drafts (consolidated into docs)
 strategy*.txt
 Designing*.txt
+
+# Personal/internal documents — not for public repo
+outreach_emails.md
+funding_briefing.md
+academic_engagement.md
+research_roadmap.md
+email_draft.md
