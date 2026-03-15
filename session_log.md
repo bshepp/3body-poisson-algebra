@@ -1228,5 +1228,270 @@ f:\science-projects\3body\
 │   └── *.log                   # Computation logs
 ├── checkpoints/                # Pickled symbolic expressions
 ├── atlas_output_hires/         # High-res atlas renders
+├── 3d/                         # 3D Extension track (separate)
+│   ├── exact_growth_nd.py      # ND Poisson algebra engine (d=1,2,3)
+│   ├── run_3d.py               # 3D runner (spatial)
+│   ├── run_1d.py               # 1D runner (linear)
+│   ├── validate_2d.py          # 2D validation script
+│   ├── README.md               # Track documentation
+│   ├── checkpoints_d1/         # 1D checkpoints
+│   ├── checkpoints_d2/         # 2D checkpoints
+│   └── checkpoints_d3/         # 3D checkpoints
+└── session_log.md              # This file
+```
+
+---
+
+## Spatial Dimension Independence (March 15, 2026)
+
+### Motivation
+
+The conjectures document (Section 1) predicted the dimension sequence
+would depend on both N (number of bodies) and d (spatial dimension).
+Falsifiable prediction #3 called for computing d(0)–d(3) in 3D.
+This was listed as "Not tested" in the evidence table.
+
+### Approach
+
+Created a completely separate `3d/` directory with no imports from
+the parent project.  The core engine `exact_growth_nd.py` parameterizes
+the symbolic Poisson bracket computation by spatial dimension d ∈ {1,2,3}:
+
+- **Phase space**: 6d variables (3d positions + 3d momenta) + 3 auxiliary u_ij
+- **Polynomial trick**: Identical in all dimensions.  The chain rule
+  du_ij/dx_i = -(x_i - x_j) · u_ij³ has the same form because
+  r_ij = √(Σ(Δcoord)²) in every dimension.
+- **Poisson bracket sum**: 3d terms instead of 6 (2D) or 3 (1D)
+
+Every file in `3d/` carries a track tag:
+```
+# Track: 3D Extension | Spatial three-body Poisson algebra
+# Parent project: ../preprint.tex (planar/2D results)
+```
+
+### Validation
+
+Ran the ND engine at d=2 to confirm it reproduces the known sequence:
+
+| Level | Expected | Got | Status |
+|-------|----------|-----|--------|
+| 0 | 3 | 3 | PASS |
+| 1 | 6 | 6 | PASS |
+| 2 | 17 | 17 | PASS (gap ratio 6.6×10¹⁴) |
+
+Engine validated.  Jacobi identity: EXACT ZERO (symbolic).
+
+### Results
+
+**1D (linear three-body problem, 6D phase space)** — level 3 in 44 seconds:
+
+| Level | d_1D | d_2D (ref) | Match? |
+|-------|------|------------|--------|
+| 0 | 3 | 3 | ✓ |
+| 1 | 6 | 6 | ✓ |
+| 2 | 17 | 17 | ✓ |
+| 3 | 116 | 116 | ✓ (gap 8.3×10⁶) |
+
+**3D (spatial three-body problem, 18D phase space)** — level 3 in ~3.2 hours:
+
+| Level | d_3D | d_2D (ref) | Match? |
+|-------|------|------------|--------|
+| 0 | 3 | 3 | ✓ |
+| 1 | 6 | 6 | ✓ |
+| 2 | 17 | 17 | ✓ (gap 2.4×10¹³) |
+| 3 | 116 | 116 | ✓ (gap 8.7×10⁵) |
+
+### The Result
+
+**The dimension sequence [3, 6, 17, 116] is completely independent of
+spatial dimension.**  Tested at d=1, d=2, d=3 — identical in all cases.
+
+This was NOT expected.  The conjecture predicted d-dependence; the
+falsifiable prediction #3 specifically expected the 3D case to differ.
+Instead, the sequence depends only on N and the singularity class.
+
+### Bug Found and Fixed in Resume Logic
+
+The initial 3D level 3 run used `--resume` from a level 2 checkpoint
+and reported d_3D(3) = 102.  This was incorrect — the resume logic
+used `sum(levels[i], levels[j]) < start_level` to reconstruct which
+pairs were already computed.  This incorrectly marked (level-0, level-2)
+pairs as already computed, skipping 36 valid brackets (138 - 36 = 102).
+
+Fix: changed condition to `max(levels[i], levels[j]) < start_level - 1`,
+which correctly identifies pairs by the level at which they were computed
+(a pair with max level M is first computed at level M+1).
+
+After fixing and re-running, the correct 138 candidates produced
+d_3D(3) = 116, matching 2D exactly.
+
+**Note:** The original `exact_growth.py` has the same bug in its resume
+logic, but it was never triggered because that code runs from scratch
+(level 4 uses its own aws_level4.py pipeline).
+
+### Implications
+
+1. The conjecture should be refined: the dimension sequence depends
+   only on N and the singularity class (singular vs regular).  It does
+   NOT depend on spatial dimension d, mass ratios, or the power of
+   the singularity.
+
+2. The algebra appears to see purely combinatorial structure — the
+   interaction graph K_N — regardless of the ambient geometric
+   dimension.
+
+3. The cosmological argument in conjectures.md is strengthened:
+   the algebraic structure at d=3 is exactly the same as at d=2.
+
+### Timing
+
+| Step | Time |
+|------|------|
+| Engine creation and validation | ~30 min development |
+| 2D validation (level 2) | 5 seconds |
+| 1D full run (level 3) | 44 seconds |
+| 3D level 2 | 6 seconds |
+| 3D level 3 (first run, bug) | ~2.2 hours |
+| Bug fix + 3D level 3 re-run | ~3.2 hours |
+
+### Computational Notes
+
+3D expressions are significantly larger than 2D:
+- Level 2 generators: up to 252 terms (vs 112 in 2D)
+- Level 3 generators: up to 77,316 terms (vs ~3,500 in 2D)
+- Lambdify time for 156 expressions: ~2.9 hours (bottleneck)
+- Bracket computation for 138 candidates: ~18 minutes
+
+The lambdify bottleneck could be addressed by adopting the numerical
+evaluation pipeline from aws_level4.py (pre-compute derivatives
+symbolically, evaluate brackets numerically via NumPy).
+
+---
+
+## N-Body Generalization and Priority Experiments (March 15, 2026)
+
+### Engine Generalization
+
+Built `nbody/exact_growth_nbody.py`, a generalized Poisson algebra engine
+parameterized by:
+
+- **n_bodies** (N): arbitrary, tested at N=3 and N=4
+- **d_spatial** (d): 1, 2, or 3
+- **potential**: `1/r`, `1/r^2`, `1/r^3`
+
+Key generalizations from the N=3-specific `3d/exact_growth_nd.py`:
+
+- Symbols: N*d positions + N*d momenta + C(N,2) auxiliary u_ij
+- Hamiltonians: C(N,2) pairwise H_ij = T_i + T_j + V(u_ij)
+- Level 0: C(N,2) generators (6 for N=4 vs 3 for N=3)
+- Level 1: C(C(N,2), 2) candidates (15 for N=4 vs 3 for N=3)
+- Potential type parameterized: V = -m_i*m_j * u_ij^p where p = 1, 2, or 3
+
+Validated against known N=3, d=2 results: [3, 6, 17] at level 2 with
+definitive SVD gap of 6.6×10¹⁴ at index 17.
+
+### Priority 1: N=4 Dimension Sequence (FIRST EVER)
+
+**Result: d_N4 = [6, 14, 62]**
+
+| Level | Generators | Candidates | Dimension | SVD gap |
+|-------|------------|------------|-----------|---------|
+| 0 | 6 (= C(4,2)) | — | 6 | — |
+| 1 | 15 | 15 | 14 | 1.2×10¹⁵ |
+| 2 | 195 | 195 | 62 | 3.4×10¹¹ |
+
+Computation time: ~14 seconds total (bracket computation + SVD).
+
+Notable observations:
+- Level 1: 15 candidates but only 14 independent — one linear dependence
+- Three "disjoint" brackets ({H12,H34}, {H13,H24}, {H14,H23}) are
+  identically zero because the Hamiltonians share no bodies
+- Level 2: 195 candidates but only 62 independent — massive redundancy
+- The growth ratio d(2)/d(1) = 62/14 ≈ 4.4 (vs 17/6 ≈ 2.8 for N=3)
+
+### Priority 2: 1/r³ Potential Test
+
+**Result: [3, 6, 17, 116] — MATCHES 1/r and 1/r²**
+
+This is the third singular potential tested for N=3. All three give
+identical dimension sequences:
+
+| Potential | Pole order | Sequence |
+|-----------|-----------|----------|
+| 1/r | 1 | [3, 6, 17, 116] |
+| 1/r² | 2 | [3, 6, 17, 116] |
+| 1/r³ | 3 | [3, 6, 17, 116] |
+
+Universality across pole orders is now supported by three independent
+data points.  Computation time: ~12.6 minutes (mostly lambdify at L3).
+
+### Priority 3: N=4 Mass Invariance
+
+**Result: All configs give [6, 14, 62] — mass invariance holds for N=4**
+
+| Config | Masses (m1:m2:m3:m4) | Sequence |
+|--------|---------------------|----------|
+| Equal | 1:1:1:1 | [6, 14, 62] |
+| Hierarchical | 100:10:1:1 | [6, 14, 62] |
+| Mixed | 3:7:11:2 | [6, 14, 62] |
+
+Computation time: ~32 seconds for all three configs.
+
+### Priority 4: N=4 Spatial Dimension Independence
+
+**Result: d=1, d=2, d=3 all give [6, 14, 62] — d-independence holds for N=4**
+
+| d | Phase space | Sequence | Time |
+|---|-------------|----------|------|
+| 1 | 8D + 6 aux | [6, 14, 62] | 8s |
+| 2 | 16D + 6 aux | [6, 14, 62] | 14s |
+| 3 | 24D + 6 aux | [6, 14, 62] | 25s |
+
+### Summary of All Evidence
+
+The conjecture is now supported at TWO values of N:
+
+| Property | N=3 | N=4 |
+|----------|-----|-----|
+| Sequence | [3, 6, 17, 116] | [6, 14, 62] |
+| Mass invariant? | Yes (20+ configs) | Yes (3 configs) |
+| d-independent? | Yes (d=1,2,3) | Yes (d=1,2,3) |
+| Potential-independent? | Yes (1/r, 1/r², 1/r³) | Not yet tested |
+| Infinite GK dim? | Yes (d(4) ≥ 4501) | Likely (growth accelerating) |
+
+The dimension sequence depends only on N and the singularity class.
+
+### Updated Timeline
+
+| Step | Duration | Result |
+|------|----------|--------|
+| Engine generalization | ~30 min | NBodyAlgebra class |
+| N=3 validation | 8s | [3, 6, 17] confirmed |
+| N=4, d=2, L2 | 14s | **[6, 14, 62]** — new sequence |
+| N=3, 1/r³, L3 | 12.6 min | [3, 6, 17, 116] — matches 1/r |
+| N=4 mass invariance (3 configs) | 32s | All [6, 14, 62] |
+| N=4, d=1, L2 | 8s | [6, 14, 62] — matches d=2 |
+| N=4, d=3, L2 | 25s | [6, 14, 62] — matches d=2 |
+
+### Updated Project Structure
+
+```
+f:\science-projects\3body\
+├── ... (existing files) ...
+├── 3d/                         # 3D Extension track (d-parameterized, N=3)
+├── nbody/                      # N-Body Extension track
+│   ├── exact_growth_nbody.py   # Generalized engine (N, d, potential)
+│   ├── validate_n3.py          # Engine validation
+│   ├── run_n4_d2.py            # N=4 d=2 runner
+│   ├── run_n4_d1.py            # N=4 d=1 runner
+│   ├── run_n4_d3.py            # N=4 d=3 runner
+│   ├── run_n4_mass.py          # N=4 mass invariance
+│   ├── run_potential_1r3.py    # 1/r³ potential test
+│   ├── README.md               # Track documentation
+│   ├── checkpoints_N3_d2_1r/   # N=3 validation checkpoints
+│   ├── checkpoints_N3_d2_1r3/  # 1/r³ checkpoints
+│   ├── checkpoints_N4_d1_1r/   # N=4 d=1 checkpoints
+│   ├── checkpoints_N4_d2_1r/   # N=4 d=2 checkpoints
+│   └── checkpoints_N4_d3_1r/   # N=4 d=3 checkpoints
 └── session_log.md              # This file
 ```

@@ -221,6 +221,13 @@ class Potential:
 
     @staticmethod
     def get_metadata(potential_type: str) -> dict:
+        if potential_type.startswith('1/r^'):
+            n = float(potential_type[4:])
+            return {
+                'name': f'1/r^{n}',
+                'integrable': '1D only' if n == 2 else False,
+                'singular': True,
+            }
         if potential_type not in Potential.REGISTRY:
             raise ValueError(f"Unknown potential: {potential_type}. "
                              f"Known: {list(Potential.REGISTRY.keys())}")
@@ -231,6 +238,8 @@ class Potential:
         """
         Return (H12, H13, H23) as SymPy expressions in the polynomial
         u_ij representation used by exact_growth.py.
+
+        Accepts '1/r^n' for any real exponent n (e.g. '1/r^1.5').
         """
         r12_sq = (x1 - x2)**2 + (y1 - y2)**2
         r13_sq = (x1 - x3)**2 + (y1 - y3)**2
@@ -245,6 +254,14 @@ class Potential:
             return (T1 + T2 - u12**2,
                     T1 + T3 - u13**2,
                     T2 + T3 - u23**2)
+
+        if potential_type.startswith('1/r^'):
+            from sympy import Rational, nsimplify
+            n_val = float(potential_type[4:])
+            n_sym = nsimplify(n_val, rational=False)
+            return (T1 + T2 - u12**n_sym,
+                    T1 + T3 - u13**n_sym,
+                    T2 + T3 - u23**n_sym)
 
         if potential_type == 'harmonic':
             return (T1 + T2 + r12_sq,

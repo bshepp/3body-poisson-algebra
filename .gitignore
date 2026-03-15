@@ -40,12 +40,20 @@ Thumbs.db
 *.png
 !fig_atlas_teaser.png
 
-# Pickle files
+# Pickle files (checkpoints, large binary)
 *.pkl
 
 # Numpy data files (generated, large)
 *.npy
 *.npz
+
+# Video / animation assets (generated, large)
+*.mp4
+*.gif
+media/
+atlas_animation/
+video/renders/
+video/__pycache__/
 
 # Strategy brainstorm drafts (consolidated into docs)
 strategy*.txt
