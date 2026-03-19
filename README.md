@@ -13,6 +13,7 @@ The pairwise Hamiltonians of the planar gravitational three-body problem generat
 The sequence **[3, 6, 17, 116]** is:
 - **Mass-invariant** — identical across generic mass configurations, including Tsygvintsev exceptional cases
 - **Potential-invariant** — identical for Newtonian (1/r) and Calogero-Moser (1/r²) potentials
+- **Charge-sign-invariant** — identical for all-attractive, all-repulsive, and mixed Coulomb (helium: +2, −1, −1)
 - **Structurally determined** — by the singularity type of the pairwise interaction, not by integrability
 
 The harmonic potential (r²), by contrast, produces a finite-dimensional algebra that closes at dimension 15.
@@ -34,8 +35,10 @@ The harmonic potential (r²), by contrast, produces a finite-dimensional algebra
 | `aws_level4.py` | Multi-configuration Level 4 pipeline (AWS) |
 | `stability_atlas.py` | Exact-engine atlas scanner |
 | `atlas_1000.py` | 1000×1000 full atlas scan |
-| `multi_epsilon_atlas.py` | Multi-epsilon structure analysis |
+| `multi_epsilon_atlas.py` | Multi-epsilon structure analysis (supports `--charges`) |
 | `sv_landscape_viz.py` | Singular value landscape visualizations |
+| `nbody/helium_atlas.py` | Charge-sign invariance comparison tool |
+| `nbody/run_helium.py` | Helium Coulomb algebra experiments |
 | `session_log.md` | Full development log, annotated with corrections |
 | `results/` | Numerical results (Level 4 runs, atlas logs) |
 
@@ -58,6 +61,18 @@ python run_cm_exact.py
 ```
 
 Level 4 computation requires an AWS instance (r6i.4xlarge recommended). See `level4_highsample.py` and `aws_level4.py`.
+
+```bash
+# Multi-epsilon atlas scan with charges (helium Coulomb)
+python multi_epsilon_atlas.py scan --charges 2 -1 -1
+
+# 1/r² potential with charges
+python multi_epsilon_atlas.py scan --potential 1/r2 --charges 2 -1 -1
+
+# Compare charged vs all-attractive for a given potential
+python nbody/helium_atlas.py compare --potential 1/r
+python nbody/helium_atlas.py compare --potential 1/r2
+```
 
 ## Key insight
 

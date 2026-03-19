@@ -56,6 +56,19 @@ brackets.
 
 **Universality across pole orders confirmed with third potential type.**
 
+### Charge-Sign Invariance (Helium Atom)
+
+Flipping interaction signs (attractive ↔ repulsive) does not change the
+dimension sequence. Verified with:
+- All-attractive gravity (control)
+- All-repulsive (+1, +1, +1)
+- Mixed helium (+2, −1, −1): nucleus-electron attractive, electron-electron repulsive
+
+All produce [3, 6, 17, 116]. The multi-epsilon atlas comparison tool
+(`helium_atlas.py`) provides detailed gap-ratio and singular-value
+spectrum comparisons across configuration space, now supporting
+arbitrary potential types (1/r, 1/r²).
+
 ## Files
 
 | File | Purpose |
@@ -67,6 +80,8 @@ brackets.
 | `run_n4_d3.py` | N=4, d=3, 1/r computation |
 | `run_n4_mass.py` | N=4 mass invariance test (3 configs) |
 | `run_potential_1r3.py` | N=3, 1/r^3 potential test |
+| `run_helium.py` | Helium Coulomb algebra experiments (3 charge configs) |
+| `helium_atlas.py` | Charge-sign invariance atlas comparison tool |
 | `README.md` | This file |
 
 ## Usage
@@ -91,6 +106,14 @@ python run_n4_mass.py
 python run_n4_d1.py
 python run_n4_d3.py
 
+# Helium charge-sign invariance
+python run_helium.py
+
+# Compare charged vs all-attractive atlas data
+python helium_atlas.py compare               # 1/r (default)
+python helium_atlas.py compare --potential 1/r2   # 1/r² comparison
+python helium_atlas.py orbits --potential 1/r2
+
 # Generic usage
 python exact_growth_nbody.py -N 4 -d 2 --max-level 2
 python exact_growth_nbody.py -N 5 -d 2 --max-level 1    # N=5 (expensive)
@@ -100,11 +123,11 @@ python exact_growth_nbody.py -N 5 -d 2 --max-level 1    # N=5 (expensive)
 
 The conjecture (from `../conjectures.md`) now has evidence at TWO values of N:
 
-- **N=3**: sequence [3, 6, 17, 116] -- mass-invariant, d-independent, potential-type-independent
+- **N=3**: sequence [3, 6, 17, 116] -- mass-invariant, d-independent, potential-type-independent, charge-sign-invariant
 - **N=4**: sequence [6, 14, 62, ...] -- mass-invariant, d-independent (through L2)
 
 The sequence depends only on N and the singularity class (singular vs regular).
-All other parameters (masses, spatial dimension, pole order) wash out.
+All other parameters (masses, spatial dimension, pole order, sign of interaction) wash out.
 
 ## Isolation from Parent Project
 

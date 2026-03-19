@@ -17,6 +17,7 @@ Usage:
     python multi_epsilon_atlas.py                          # scan all
     python multi_epsilon_atlas.py scan                     # scan only
     python multi_epsilon_atlas.py scan --potential 1/r     # one potential
+    python multi_epsilon_atlas.py scan --charges 2 -1 -1   # helium Coulomb
     python multi_epsilon_atlas.py analyze                  # derived analysis
     python multi_epsilon_atlas.py animate                  # animation only
     python multi_epsilon_atlas.py all                      # scan + analyze + animate
@@ -26,12 +27,16 @@ import os
 import sys
 import json
 import argparse
+import faulthandler
 import numpy as np
 from numpy.linalg import svd
 from time import time, strftime
 from pathlib import Path
 
 os.environ["PYTHONUNBUFFERED"] = "1"
+sys.stdout.reconfigure(line_buffering=True)
+sys.stderr.reconfigure(line_buffering=True)
+faulthandler.enable()
 
 S3_BUCKET = os.environ.get("S3_BUCKET", "")
 
@@ -64,12 +69,30 @@ HIRES_DIR = 'atlas_output_hires'
 GRID_N = 100
 N_SAMPLES = 400
 LEVEL = 3
-MU_RANGE = (0.05, 5.0)
-PHI_RANGE = (0.05, np.pi - 0.05)
+MU_RANGE = (0.2, 3.0)
+PHI_RANGE = (0.1, np.pi - 0.1)
 
 EPSILONS = [5e-3, 2e-3, 1e-3, 5e-4, 2e-4, 1e-4]
 
 SINGULAR_POTENTIALS = ['1/r', '1/r2']
+
+
+def charges_dir_tag(charges, potential_type='1/r'):
+    """Filesystem-safe tag, e.g. 'coulomb_+2_-1_-1' or 'coulomb_1r2_+2_-1_-1'."""
+    if charges is None:
+        return None
+    charge_part = "_".join(f"{c:+d}" for c in charges)
+    if potential_type == '1/r':
+        return f"coulomb_{charge_part}"
+    pot_slug = POT_DIR.get(potential_type, potential_type.replace('/', ''))
+    return f"coulomb_{pot_slug}_{charge_part}"
+
+
+def charges_label(charges):
+    """Human-readable label for a charge configuration."""
+    if charges is None:
+        return None
+    return "Coulomb (" + ", ".join(f"{c:+d}" for c in charges) + ")"
 
 
 def eps_tag(eps):
@@ -77,11 +100,27 @@ def eps_tag(eps):
     return f"eps_{eps:.0e}".replace("+", "")
 
 
-def eps_dir(potential_type, eps):
-    """Output directory for a given potential and epsilon."""
+def pot_dir_key(potential_type, charges=None):
+    """Directory name for a potential+charges combination."""
+    if charges is not None:
+        return charges_dir_tag(charges, potential_type)
+    return POT_DIR[potential_type]
+
+
+def pot_label_key(potential_type, charges=None):
+    """Human-readable label for a potential+charges combination."""
+    if charges is not None:
+        pot_name = POT_LABEL.get(potential_type, potential_type)
+        return f"{pot_name} {charges_label(charges)}"
+    return POT_LABEL[potential_type]
+
+
+def eps_dir(potential_type, eps, charges=None):
+    """Output directory for a given potential, epsilon, and optional charges."""
+    base = pot_dir_key(potential_type, charges)
     if eps == 5e-3:
-        return os.path.join(HIRES_DIR, POT_DIR[potential_type])
-    return os.path.join(HIRES_DIR, POT_DIR[potential_type], eps_tag(eps))
+        return os.path.join(HIRES_DIR, base)
+    return os.path.join(HIRES_DIR, base, eps_tag(eps))
 
 
 # ---------------------------------------------------------------------------
@@ -117,16 +156,16 @@ def flush_arrays(out_dir, mu_vals, phi_vals, rank_map, gap_map, sv_spectra):
 # ---------------------------------------------------------------------------
 # Grid scan: build once, scan at multiple epsilons
 # ---------------------------------------------------------------------------
-def run_multi_epsilon_scan(potential_type, epsilons=None):
+def run_multi_epsilon_scan(potential_type, epsilons=None, charges=None):
     from stability_atlas import AtlasConfig, PoissonAlgebra, ShapeSpace
 
     if epsilons is None:
         epsilons = EPSILONS
 
-    label = POT_LABEL[potential_type]
+    label = pot_label_key(potential_type, charges)
     eps_to_run = []
     for eps in epsilons:
-        d = eps_dir(potential_type, eps)
+        d = eps_dir(potential_type, eps, charges)
         cp = load_checkpoint(d) if os.path.exists(d) else None
         if cp is not None and cp.get('completed_rows', 0) >= GRID_N:
             print(f"  [{label}] eps={eps:.0e}: COMPLETE (skipping)")
@@ -140,18 +179,22 @@ def run_multi_epsilon_scan(potential_type, epsilons=None):
 
     print(f"\n{'='*70}")
     print(f"  MULTI-EPSILON SCAN: {label}")
+    if charges is not None:
+        print(f"  Charges: {charges}")
     print(f"  Grid: {GRID_N}x{GRID_N} = {GRID_N**2} points/epsilon")
     print(f"  Epsilons to run: {[f'{e:.0e}' for e, _ in eps_to_run]}")
     print(f"  Samples/point: {N_SAMPLES}, Level: {LEVEL}")
     print(f"{'='*70}\n")
 
-    # Build algebra ONCE
+    charges_tuple = tuple(charges) if charges is not None else None
+
     config = AtlasConfig(
         potential_type=potential_type,
         max_level=LEVEL,
         n_phase_samples=N_SAMPLES,
         epsilon=EPSILONS[0],
         svd_gap_threshold=1e4,
+        charges=charges_tuple,
     )
     print(f"  Building symbolic algebra for {label}...")
     t_build = time()
@@ -164,7 +207,7 @@ def run_multi_epsilon_scan(potential_type, epsilons=None):
     total = GRID_N * GRID_N
 
     for eps, start_row in eps_to_run:
-        out_dir = eps_dir(potential_type, eps)
+        out_dir = eps_dir(potential_type, eps, charges)
         os.makedirs(out_dir, exist_ok=True)
 
         print(f"  {'='*60}")
@@ -185,17 +228,20 @@ def run_multi_epsilon_scan(potential_type, epsilons=None):
         np.save(os.path.join(out_dir, 'mu_vals.npy'), mu_vals)
         np.save(os.path.join(out_dir, 'phi_vals.npy'), phi_vals)
 
+        config_data = {
+            'potential': potential_type,
+            'grid_n': GRID_N,
+            'epsilon': eps,
+            'n_samples': N_SAMPLES,
+            'level': LEVEL,
+            'n_generators': n_gen,
+            'mu_range': list(MU_RANGE),
+            'phi_range': list(PHI_RANGE),
+        }
+        if charges is not None:
+            config_data['charges'] = list(charges)
         with open(os.path.join(out_dir, 'config.json'), 'w') as f:
-            json.dump({
-                'potential': potential_type,
-                'grid_n': GRID_N,
-                'epsilon': eps,
-                'n_samples': N_SAMPLES,
-                'level': LEVEL,
-                'n_generators': n_gen,
-                'mu_range': list(MU_RANGE),
-                'phi_range': list(PHI_RANGE),
-            }, f, indent=2)
+            json.dump(config_data, f, indent=2)
 
         t_scan_start = time()
 
@@ -251,6 +297,45 @@ def run_multi_epsilon_scan(potential_type, epsilons=None):
 # ---------------------------------------------------------------------------
 # Derived analysis
 # ---------------------------------------------------------------------------
+_POT_SLUG_TO_TYPE = {v: k for k, v in POT_DIR.items()}
+
+
+def _discover_charged_configs():
+    """Find all charged configurations that have scan data in HIRES_DIR.
+
+    Returns list of (potential_type, charges) tuples.  Directory names
+    follow the convention produced by charges_dir_tag():
+      coulomb_+2_-1_-1          -> ('1/r', [2, -1, -1])
+      coulomb_1_r2_+2_-1_-1    -> ('1/r2', [2, -1, -1])
+    """
+    configs = []
+    if not os.path.isdir(HIRES_DIR):
+        return configs
+    for name in os.listdir(HIRES_DIR):
+        if not name.startswith('coulomb_'):
+            continue
+        base = os.path.join(HIRES_DIR, name)
+        if not os.path.isdir(base):
+            continue
+        remainder = name[len('coulomb_'):]
+
+        potential_type = '1/r'
+        for slug, ptype in _POT_SLUG_TO_TYPE.items():
+            prefix = slug + '_'
+            if remainder.startswith(prefix):
+                potential_type = ptype
+                remainder = remainder[len(prefix):]
+                break
+
+        parts = remainder.split('_')
+        try:
+            charges = [int(p) for p in parts]
+        except ValueError:
+            continue
+        configs.append((potential_type, charges))
+    return configs
+
+
 def run_analysis():
     import matplotlib
     matplotlib.use('Agg')
@@ -261,14 +346,6 @@ def run_analysis():
     STROKE = [pe.withStroke(linewidth=2.5, foreground='black')]
     out = os.path.join(HIRES_DIR, 'multi_epsilon')
     os.makedirs(out, exist_ok=True)
-
-    def mu_phi_to_shape_sphere(mu, phi):
-        w2_sq = mu**2 - mu * np.cos(phi) + 0.25
-        N = 1.0 + w2_sq
-        s1 = (1.0 - w2_sq) / N
-        s2 = 2.0 * (mu * np.cos(phi) - 0.5) / N
-        s3 = 2.0 * mu * np.sin(phi) / N
-        return s1, s2, s3
 
     def draw_isosceles(ax, mu_range, phi_range):
         phi_d = np.linspace(phi_range[0], phi_range[1], 500)
@@ -284,15 +361,20 @@ def run_analysis():
         ax.plot(phi_d[m3] * 180 / np.pi, mu_c3[m3],
                 color='magenta', linewidth=1.5, linestyle='--', alpha=0.7)
 
+    scan_configs = []
     for pot in SINGULAR_POTENTIALS:
-        pot_d = POT_DIR[pot]
-        pot_l = POT_LABEL[pot]
+        scan_configs.append((pot, None))
+    for pot_type, charges in _discover_charged_configs():
+        scan_configs.append((pot_type, charges))
+
+    for potential_type, charges in scan_configs:
+        pot_d = pot_dir_key(potential_type, charges)
+        pot_l = pot_label_key(potential_type, charges)
         print(f"\n  Analyzing {pot_l}...")
 
-        # Load all epsilon data
         eps_data = {}
         for eps in EPSILONS:
-            d = eps_dir(pot, eps)
+            d = eps_dir(potential_type, eps, charges)
             if not os.path.exists(os.path.join(d, 'rank_map.npy')):
                 print(f"    Missing data for eps={eps:.0e}, skipping")
                 continue
@@ -301,8 +383,18 @@ def run_analysis():
                 'gap': np.load(os.path.join(d, 'gap_map.npy')),
                 'sv': np.load(os.path.join(d, 'sv_spectra.npy')),
             }
-        mu = np.load(os.path.join(eps_dir(pot, EPSILONS[0]), 'mu_vals.npy'))
-        phi = np.load(os.path.join(eps_dir(pot, EPSILONS[0]), 'phi_vals.npy'))
+
+        first_avail = None
+        for eps in EPSILONS:
+            d = eps_dir(potential_type, eps, charges)
+            if os.path.exists(os.path.join(d, 'mu_vals.npy')):
+                first_avail = eps
+                break
+        if first_avail is None:
+            print("    No data found, skipping")
+            continue
+        mu = np.load(os.path.join(eps_dir(potential_type, first_avail, charges), 'mu_vals.npy'))
+        phi = np.load(os.path.join(eps_dir(potential_type, first_avail, charges), 'phi_vals.npy'))
 
         avail_eps = sorted(eps_data.keys(), reverse=True)
         if len(avail_eps) < 2:
@@ -522,22 +614,38 @@ def run_animation():
         ax.plot(phi_d[m3] * 180 / np.pi, mu_c3[m3],
                 color='magenta', linewidth=1.5, linestyle='--', alpha=0.6)
 
+    anim_configs = []
     for pot in SINGULAR_POTENTIALS:
-        pot_d = POT_DIR[pot]
-        pot_l = POT_LABEL[pot]
+        anim_configs.append((pot, None))
+    for pot_type, charges in _discover_charged_configs():
+        anim_configs.append((pot_type, charges))
+
+    for potential_type, charges in anim_configs:
+        pot_d = pot_dir_key(potential_type, charges)
+        pot_l = pot_label_key(potential_type, charges)
         print(f"\n  Animating {pot_l}...")
 
         eps_data = {}
         for eps in EPSILONS:
-            d = eps_dir(pot, eps)
+            d = eps_dir(potential_type, eps, charges)
             rm_path = os.path.join(d, 'rank_map.npy')
             if os.path.exists(rm_path):
                 eps_data[eps] = {
                     'rank': np.load(rm_path),
                     'gap': np.load(os.path.join(d, 'gap_map.npy')),
                 }
-        mu = np.load(os.path.join(eps_dir(pot, EPSILONS[0]), 'mu_vals.npy'))
-        phi = np.load(os.path.join(eps_dir(pot, EPSILONS[0]), 'phi_vals.npy'))
+
+        first_avail = None
+        for eps in EPSILONS:
+            d = eps_dir(potential_type, eps, charges)
+            if os.path.exists(os.path.join(d, 'mu_vals.npy')):
+                first_avail = eps
+                break
+        if first_avail is None:
+            print("    No data found, skipping")
+            continue
+        mu = np.load(os.path.join(eps_dir(potential_type, first_avail, charges), 'mu_vals.npy'))
+        phi = np.load(os.path.join(eps_dir(potential_type, first_avail, charges), 'phi_vals.npy'))
 
         avail_eps = sorted(eps_data.keys(), reverse=True)
         if len(avail_eps) < 2:
@@ -690,21 +798,31 @@ def run_animation():
     try:
         import plotly.graph_objects as go
 
-        for pot in SINGULAR_POTENTIALS:
-            pot_d = POT_DIR[pot]
-            pot_l = POT_LABEL[pot]
+        plotly_configs = list(anim_configs)
+        for potential_type, charges in plotly_configs:
+            pot_d = pot_dir_key(potential_type, charges)
+            pot_l = pot_label_key(potential_type, charges)
 
             eps_data = {}
             for eps in EPSILONS:
-                d = eps_dir(pot, eps)
+                d = eps_dir(potential_type, eps, charges)
                 rm_path = os.path.join(d, 'rank_map.npy')
                 if os.path.exists(rm_path):
                     eps_data[eps] = {
                         'rank': np.load(rm_path),
                         'gap': np.load(os.path.join(d, 'gap_map.npy')),
                     }
-            mu = np.load(os.path.join(eps_dir(pot, EPSILONS[0]), 'mu_vals.npy'))
-            phi = np.load(os.path.join(eps_dir(pot, EPSILONS[0]), 'phi_vals.npy'))
+
+            first_avail = None
+            for eps in EPSILONS:
+                d = eps_dir(potential_type, eps, charges)
+                if os.path.exists(os.path.join(d, 'mu_vals.npy')):
+                    first_avail = eps
+                    break
+            if first_avail is None:
+                continue
+            mu = np.load(os.path.join(eps_dir(potential_type, first_avail, charges), 'mu_vals.npy'))
+            phi = np.load(os.path.join(eps_dir(potential_type, first_avail, charges), 'phi_vals.npy'))
             avail_eps = sorted(eps_data.keys(), reverse=True)
 
             if len(avail_eps) < 2:
@@ -783,24 +901,34 @@ def main():
     parser.add_argument('--potential', type=str, default=None,
                         choices=['1/r', '1/r2', 'harmonic'],
                         help='Run only one potential (default: singular potentials)')
+    parser.add_argument('--charges', nargs='+', type=int, default=None,
+                        metavar='Q',
+                        help='Charges for Coulomb potential, e.g. --charges 2 -1 -1')
     args = parser.parse_args()
+
+    charges = args.charges
 
     if args.mode in ('all', 'scan'):
         print(f"\n{'#'*70}")
         print(f"# PHASE 1: MULTI-EPSILON GRID SCANS")
         print(f"# Epsilons: {[f'{e:.0e}' for e in EPSILONS]}")
         print(f"# Grid: {GRID_N}x{GRID_N}, samples={N_SAMPLES}, level={LEVEL}")
+        if charges is not None:
+            print(f"# Charges: {charges}")
         print(f"{'#'*70}")
 
-        if args.potential:
+        if charges is not None:
+            pot = args.potential or '1/r'
+            run_multi_epsilon_scan(pot, charges=charges)
+        elif args.potential:
             pots = [args.potential]
+            for pot in pots:
+                if pot == 'harmonic':
+                    run_multi_epsilon_scan(pot, epsilons=[5e-3, 1e-4])
+                else:
+                    run_multi_epsilon_scan(pot)
         else:
-            pots = list(SINGULAR_POTENTIALS)
-
-        for pot in pots:
-            if pot == 'harmonic':
-                run_multi_epsilon_scan(pot, epsilons=[5e-3, 1e-4])
-            else:
+            for pot in SINGULAR_POTENTIALS:
                 run_multi_epsilon_scan(pot)
 
     if args.mode in ('all', 'analyze'):

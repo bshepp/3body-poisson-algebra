@@ -53,12 +53,16 @@ class NBodyAlgebra:
         Potential type: '1/r', '1/r^2', or '1/r^3'.
     masses : dict, optional
         Masses {1: m1, 2: m2, ...}.  Defaults to equal unit masses.
+    charges : dict, optional
+        Charges {1: q1, 2: q2, ...}.  When provided, the potential for
+        pair (i,j) is q_i * q_j * u_ij^p (positive = repulsive, negative
+        = attractive).  When None, uses -m_i * m_j * u_ij^p (all-attractive).
     checkpoint_dir : str, optional
         Directory for checkpoint files.
     """
 
     def __init__(self, n_bodies=3, d_spatial=2, potential="1/r",
-                 masses=None, checkpoint_dir=None):
+                 masses=None, charges=None, checkpoint_dir=None):
         if n_bodies < 2:
             raise ValueError(f"n_bodies must be >= 2 (got {n_bodies})")
         if d_spatial not in (1, 2, 3):
@@ -76,14 +80,18 @@ class NBodyAlgebra:
 
         self.body_pairs = list(combinations(range(1, n_bodies + 1), 2))
         self.n_pairs = len(self.body_pairs)
+        self.charges = charges
 
         tag = f"N{n_bodies}_d{d_spatial}_{potential.replace('/', '').replace('^', '')}"
+        if charges is not None:
+            charge_str = "_".join(f"q{k}{v:+g}" for k, v in sorted(charges.items()))
+            tag += f"_{charge_str}"
         default_ckpt = os.path.join(_SCRIPT_DIR, f"checkpoints_{tag}")
         self.checkpoint_dir = checkpoint_dir or default_ckpt
 
         self._build_symbols()
         self._build_chain_rule()
-        self._build_hamiltonians(masses)
+        self._build_hamiltonians(masses, charges)
 
     # -----------------------------------------------------------------
     # Symbol construction
@@ -135,7 +143,7 @@ class NBodyAlgebra:
     # Hamiltonians:  H_ij = T_i + T_j + V(u_ij)
     # -----------------------------------------------------------------
 
-    def _build_hamiltonians(self, masses=None):
+    def _build_hamiltonians(self, masses=None, charges=None):
         if masses is None:
             masses = {b: Integer(1) for b in range(1, self.N + 1)}
         self.masses = masses
@@ -153,7 +161,12 @@ class NBodyAlgebra:
         for bi, bj in self.body_pairs:
             u = self.u_by_pair[(bi, bj)]
             mi, mj = masses[bi], masses[bj]
-            H = kinetic(bi) + kinetic(bj) - mi * mj * u ** pot_power
+            if charges is not None:
+                qi = Integer(charges[bi]) if isinstance(charges[bi], int) else charges[bi]
+                qj = Integer(charges[bj]) if isinstance(charges[bj], int) else charges[bj]
+                H = kinetic(bi) + kinetic(bj) + qi * qj * u ** pot_power
+            else:
+                H = kinetic(bi) + kinetic(bj) - mi * mj * u ** pot_power
             name = f"H{bi}{bj}"
             self.hamiltonians[name] = H
             self.hamiltonian_list.append(H)
@@ -491,6 +504,7 @@ class NBodyAlgebra:
             "n_bodies": self.N,
             "d_spatial": self.d,
             "potential": self.potential,
+            "charges": self.charges,
             "exprs": all_exprs,
             "names": all_names,
             "levels": all_levels,
@@ -547,6 +561,12 @@ class NBodyAlgebra:
               f"({self.n_q} positions + {self.n_p} momenta) "
               f"+ {n_pairs} auxiliary u_ij")
         print(f"  Potential: {self.potential}")
+        if self.charges is not None:
+            print(f"  Charges: {self.charges}")
+            for bi, bj in self.body_pairs:
+                qi, qj = self.charges[bi], self.charges[bj]
+                sign = "repulsive" if qi * qj > 0 else "attractive"
+                print(f"    ({bi},{bj}): q{bi}*q{bj} = {qi*qj:+g}  ({sign})")
         print(f"  Symbols: q = {self.q_vars}")
         print(f"           p = {self.p_vars}")
         print(f"           u = {self.u_vars}")

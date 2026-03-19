@@ -102,6 +102,9 @@ class AtlasConfig:
     # Focus regions (named special configurations)
     focus: Optional[str] = None  # 'lagrange', 'euler', 'collision12', etc.
     
+    # Charges for Coulomb potential (None = standard gravitational)
+    charges: Optional[Tuple[float, float, float]] = None
+    
     # Output
     output_dir: str = './atlas_output'
     save_raw: bool = True
@@ -213,10 +216,11 @@ class Potential:
             'integrable': True,
             'singular': False,
         },
-        # TODO: 'log' potential requires expressing log(r) in terms of u_ij.
-        # The chain rule d(log r)/dx_i = (x_i - x_j) * u_ij^2 is polynomial
-        # in u_ij, but the potential itself is not. Needs a separate auxiliary
-        # variable scheme. Deferred for now.
+        'coulomb': {
+            'name': 'Coulomb (1/r with charges)',
+            'integrable': False,
+            'singular': True,
+        },
     }
 
     @staticmethod
@@ -234,13 +238,43 @@ class Potential:
         return Potential.REGISTRY[potential_type]
 
     @staticmethod
-    def get_symbolic_hamiltonians(potential_type: str):
+    def _potential_exponent(potential_type: str):
+        """Return the exponent n for a 1/r^n potential, or None."""
+        if potential_type == '1/r':
+            return 1
+        if potential_type == '1/r2':
+            return 2
+        if potential_type.startswith('1/r^'):
+            return float(potential_type[4:])
+        return None
+
+    @staticmethod
+    def get_symbolic_hamiltonians(potential_type: str, charges=None):
         """
         Return (H12, H13, H23) as SymPy expressions in the polynomial
         u_ij representation used by exact_growth.py.
 
         Accepts '1/r^n' for any real exponent n (e.g. '1/r^1.5').
+        When charges=(q1,q2,q3) is provided with a 1/r^n potential,
+        constructs H_ij = T_i + T_j + q_i*q_j*u_ij^n.
         """
+        from sympy import Integer as _Int
+
+        n = Potential._potential_exponent(potential_type)
+
+        if charges is not None:
+            if n is None:
+                raise ValueError(
+                    f"Charges not supported with potential '{potential_type}'")
+            q1, q2, q3 = [_Int(c) if isinstance(c, int) else c
+                          for c in charges]
+            u12_n = u12 if n == 1 else u12**n
+            u13_n = u13 if n == 1 else u13**n
+            u23_n = u23 if n == 1 else u23**n
+            return (T1 + T2 + q1*q2*u12_n,
+                    T1 + T3 + q1*q3*u13_n,
+                    T2 + T3 + q2*q3*u23_n)
+
         r12_sq = (x1 - x2)**2 + (y1 - y2)**2
         r13_sq = (x1 - x3)**2 + (y1 - y3)**2
         r23_sq = (x2 - x3)**2 + (y2 - y3)**2
@@ -257,8 +291,7 @@ class Potential:
 
         if potential_type.startswith('1/r^'):
             from sympy import Rational, nsimplify
-            n_val = float(potential_type[4:])
-            n_sym = nsimplify(n_val, rational=False)
+            n_sym = nsimplify(n, rational=False)
             return (T1 + T2 - u12**n_sym,
                     T1 + T3 - u13**n_sym,
                     T2 + T3 - u23**n_sym)
@@ -288,11 +321,18 @@ class PoissonAlgebra:
         self.config = config
         self.pot_meta = Potential.get_metadata(config.potential_type)
 
+        charges_label = ""
+        if config.charges is not None:
+            charges_label = f" charges=({','.join(f'{c:+g}' for c in config.charges)})"
+            pot_short = config.potential_type.replace('/', '')
+            self.pot_meta = {**self.pot_meta,
+                             'name': f"Coulomb {config.potential_type}{charges_label}"}
+
         print(f"  Building symbolic generators for {self.pot_meta['name']}...")
         t0 = time()
 
         H12, H13, H23 = Potential.get_symbolic_hamiltonians(
-            config.potential_type)
+            config.potential_type, charges=config.charges)
 
         all_exprs = []
         all_names = []
@@ -383,11 +423,18 @@ class PoissonAlgebra:
         rng = np.random.RandomState(seed)
         base_q = positions.flatten()  # (6,)
 
+        base_r_min = self._base_min_sep(base_q)
+        effective_min_sep = min(min_sep, 0.3 * base_r_min)
+
         Z_qp = np.zeros((n_samples, 12))
         Z_u = np.zeros((n_samples, 3))
         accepted = 0
+        max_attempts = n_samples * 200
 
-        while accepted < n_samples:
+        for _ in range(max_attempts):
+            if accepted >= n_samples:
+                break
+
             q = base_q + rng.randn(6) * epsilon
             p = rng.randn(6) * mom_range
 
@@ -399,7 +446,7 @@ class PoissonAlgebra:
             r13 = np.sqrt(dx13**2 + dy13**2)
             r23 = np.sqrt(dx23**2 + dy23**2)
 
-            if min(r12, r13, r23) < min_sep:
+            if min(r12, r13, r23) < effective_min_sep:
                 continue
 
             Z_qp[accepted, :6] = q
@@ -407,7 +454,21 @@ class PoissonAlgebra:
             Z_u[accepted] = [1.0 / r12, 1.0 / r13, 1.0 / r23]
             accepted += 1
 
+        if accepted < n_samples:
+            Z_qp = Z_qp[:accepted]
+            Z_u = Z_u[:accepted]
+
         return Z_qp, Z_u
+
+    @staticmethod
+    def _base_min_sep(base_q):
+        """Minimum pairwise distance in a flat (6,) position vector."""
+        dx12 = base_q[0] - base_q[2]; dy12 = base_q[1] - base_q[3]
+        dx13 = base_q[0] - base_q[4]; dy13 = base_q[1] - base_q[5]
+        dx23 = base_q[2] - base_q[4]; dy23 = base_q[3] - base_q[5]
+        return min(np.sqrt(dx12**2 + dy12**2),
+                   np.sqrt(dx13**2 + dy13**2),
+                   np.sqrt(dx23**2 + dy23**2))
 
     # -----------------------------------------------------------------
     # Rank computation at a single configuration
@@ -555,6 +616,8 @@ class StabilityAtlas:
         print(f"\nComputing stability atlas:")
         print(f"  Potential: {self.algebra.pot_meta['name']}")
         print(f"  Masses: {self.config.masses}")
+        if self.config.charges is not None:
+            print(f"  Charges: {self.config.charges}")
         print(f"  Level: {self.config.max_level}")
         print(f"  Grid: {n_mu} x {n_phi} = {total} points")
         print(f"  Samples per point: {self.config.n_phase_samples}")
@@ -592,6 +655,7 @@ class StabilityAtlas:
             'config': {
                 'masses': self.config.masses,
                 'potential': self.config.potential_type,
+                'charges': self.config.charges,
                 'level': self.config.max_level,
                 'epsilon': self.config.epsilon,
                 'n_samples': self.config.n_phase_samples,
@@ -937,7 +1001,7 @@ class AtlasVisualizer:
 
 def run_atlas(potential_type='1/r', masses=(1.0, 1.0, 1.0), level=2,
               resolution='coarse', focus=None, epsilon=1e-2,
-              n_samples=200, output_dir='./atlas_output'):
+              n_samples=200, output_dir='./atlas_output', charges=None):
     """
     Main entry point for computing a stability atlas.
     
@@ -946,6 +1010,7 @@ def run_atlas(potential_type='1/r', masses=(1.0, 1.0, 1.0), level=2,
         run_atlas(level=3, resolution='medium')  # higher level, finer grid
         run_atlas(focus='lagrange')            # zoom on Lagrange point
         run_atlas(potential_type='harmonic')   # control case
+        run_atlas(charges=(2, -1, -1))        # helium Coulomb
     """
     
     config = AtlasConfig(
@@ -957,6 +1022,7 @@ def run_atlas(potential_type='1/r', masses=(1.0, 1.0, 1.0), level=2,
         n_phase_samples=n_samples,
         output_dir=output_dir,
         focus=focus,
+        charges=charges,
     )
     
     atlas = StabilityAtlas(config)
@@ -1037,6 +1103,9 @@ if __name__ == '__main__':
     parser.add_argument('--potential', default='1/r', 
                        choices=['1/r', '1/r2', 'harmonic'])
     parser.add_argument('--masses', nargs=3, type=float, default=[1.0, 1.0, 1.0])
+    parser.add_argument('--charges', nargs=3, type=int, default=None,
+                       metavar=('Q1', 'Q2', 'Q3'),
+                       help='Charges for Coulomb potential, e.g. 2 -1 -1')
     parser.add_argument('--level', type=int, default=2)
     parser.add_argument('--resolution', default='coarse',
                        choices=['coarse', 'medium', 'fine', 'ultra', 'adaptive'])
@@ -1045,12 +1114,23 @@ if __name__ == '__main__':
                                'lagrange_obtuse', 'near_collision_12'])
     parser.add_argument('--epsilon', type=float, default=1e-2)
     parser.add_argument('--n-samples', type=int, default=200)
-    parser.add_argument('--output', default='./atlas_output')
+    parser.add_argument('--output', default=None,
+                       help='Output directory (auto-named if not specified)')
     parser.add_argument('--compare', action='store_true',
                        help='Run comparison across potential types')
     
     args = parser.parse_args()
     
+    charges = tuple(args.charges) if args.charges else None
+
+    if args.output is not None:
+        output_dir = args.output
+    elif charges is not None:
+        tag = "_".join(f"{c:+d}" for c in charges)
+        output_dir = f'./atlas_output/coulomb_{tag}'
+    else:
+        output_dir = f'./atlas_output/{args.potential.replace("/", "_")}'
+
     if args.compare:
         run_comparison(level=args.level, resolution=args.resolution)
     else:
@@ -1062,5 +1142,6 @@ if __name__ == '__main__':
             focus=args.focus,
             epsilon=args.epsilon,
             n_samples=args.n_samples,
-            output_dir=args.output,
+            output_dir=output_dir,
+            charges=charges,
         )
