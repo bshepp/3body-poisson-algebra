@@ -35,7 +35,7 @@ The harmonic potential (r²), by contrast, produces a finite-dimensional algebra
 | `aws_level4.py` | Multi-configuration Level 4 pipeline (AWS) |
 | `stability_atlas.py` | Exact-engine atlas scanner |
 | `atlas_1000.py` | 1000×1000 full atlas scan |
-| `multi_epsilon_atlas.py` | Multi-epsilon structure analysis (supports `--charges`) |
+| `multi_epsilon_atlas.py` | Multi-epsilon & adaptive structure analysis (supports `--charges`, multiprocessing, spot instances) |
 | `sv_landscape_viz.py` | Singular value landscape visualizations |
 | `nbody/helium_atlas.py` | Charge-sign invariance comparison tool |
 | `nbody/run_helium.py` | Helium Coulomb algebra experiments |
@@ -72,6 +72,16 @@ python multi_epsilon_atlas.py scan --potential 1/r2 --charges 2 -1 -1
 # Compare charged vs all-attractive for a given potential
 python nbody/helium_atlas.py compare --potential 1/r
 python nbody/helium_atlas.py compare --potential 1/r2
+
+# Adaptive epsilon scan (finds optimal sampling scale per grid point)
+python multi_epsilon_atlas.py adaptive --potential 1/r2
+python multi_epsilon_atlas.py adaptive --potential 1/r2 --charges 2 -1 -1
+
+# AWS: parallel adaptive scan with 15 workers, row-range for distributed execution
+python multi_epsilon_atlas.py adaptive --potential 1/r2 --workers 15
+python multi_epsilon_atlas.py adaptive --potential 1/r2 --start-row 0 --end-row 50 --workers 15
+python multi_epsilon_atlas.py adaptive-merge --potential 1/r2
+python multi_epsilon_atlas.py adaptive-verify --potential 1/r2
 ```
 
 ## Key insight

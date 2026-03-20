@@ -26,14 +26,20 @@ Usage:
 import os
 import sys
 import json
+import signal
+import hashlib
 import argparse
 import faulthandler
 import numpy as np
 from numpy.linalg import svd
 from time import time, strftime
 from pathlib import Path
+from multiprocessing import Pool, TimeoutError as MPTimeoutError, cpu_count
 
 os.environ["PYTHONUNBUFFERED"] = "1"
+os.environ.setdefault('OMP_NUM_THREADS', '1')
+os.environ.setdefault('MKL_NUM_THREADS', '1')
+os.environ.setdefault('OPENBLAS_NUM_THREADS', '1')
 sys.stdout.reconfigure(line_buffering=True)
 sys.stderr.reconfigure(line_buffering=True)
 faulthandler.enable()
@@ -143,6 +149,26 @@ def save_checkpoint(out_dir, completed_rows, n_generators, eps):
             'epsilon': eps,
             'timestamp': strftime('%Y-%m-%d %H:%M:%S'),
         }, f)
+
+
+def save_checkpoint_atomic(out_dir, completed_rows, n_generators, eps,
+                           extra=None):
+    """Write checkpoint via tmp + os.replace to survive spot termination."""
+    cp_file = os.path.join(out_dir, 'checkpoint.json')
+    tmp_file = cp_file + '.tmp'
+    data = {
+        'completed_rows': completed_rows,
+        'n_generators': n_generators,
+        'epsilon': eps,
+        'timestamp': strftime('%Y-%m-%d %H:%M:%S'),
+    }
+    if extra:
+        data.update(extra)
+    with open(tmp_file, 'w') as f:
+        json.dump(data, f, indent=2)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp_file, cp_file)
 
 
 def flush_arrays(out_dir, mu_vals, phi_vals, rank_map, gap_map, sv_spectra):
@@ -890,13 +916,786 @@ def run_animation():
 
 
 # ---------------------------------------------------------------------------
+# Adaptive epsilon scan
+# ---------------------------------------------------------------------------
+MAX_TIERS = 8
+
+# Module-level globals for fork-based multiprocessing (set before Pool).
+# Workers inherit these via copy-on-write after fork.
+_adaptive_algebra = None
+_adaptive_level = LEVEL
+_adaptive_eps_range = (1e-4, 5e-3)
+_adaptive_n_eps = 8
+_adaptive_tier_threshold = 10.0
+_adaptive_max_tiers = MAX_TIERS
+
+_shutdown_requested = False
+
+
+def _sigterm_handler(signum, frame):
+    """Handle SIGTERM from AWS spot reclamation (2-min warning)."""
+    global _shutdown_requested
+    _shutdown_requested = True
+    print("\n  [SIGTERM] Spot reclamation warning -- finishing current row...",
+          flush=True)
+
+
+def _eval_adaptive_point(args):
+    """Worker: compute adaptive rank at one grid point (fork-inherited algebra)."""
+    mu, phi = args
+    from stability_atlas import ShapeSpace
+    positions = ShapeSpace.shape_to_positions(mu, phi)
+    try:
+        rank, svs, info = _adaptive_algebra.compute_adaptive_rank(
+            positions, _adaptive_level,
+            eps_range=_adaptive_eps_range,
+            n_eps=_adaptive_n_eps,
+            tier_threshold=_adaptive_tier_threshold,
+            max_tiers=_adaptive_max_tiers,
+        )
+        tiers = info['tier_boundaries']
+        return (rank, svs, info['max_gap_ratio'], info['optimal_eps'],
+                info['gap_score'], info['n_eps_tested'], tiers)
+    except Exception:
+        return (-1, np.array([]), 0.0, 0.0, 0.0, 0, [])
+
+
+def _adaptive_block_dir(base_dir, start_row, end_row):
+    """Block directory for distributed row-range execution."""
+    return os.path.join(base_dir, f'block_{start_row:04d}_{end_row:04d}')
+
+
+def run_adaptive_scan(potential_type, charges=None,
+                      eps_range=(1e-4, 5e-3), n_eps=8,
+                      tier_threshold=10.0,
+                      n_workers=1, start_row=0, end_row=None,
+                      point_timeout=600):
+    global _adaptive_algebra, _adaptive_level, _adaptive_eps_range
+    global _adaptive_n_eps, _adaptive_tier_threshold, _adaptive_max_tiers
+    global _shutdown_requested
+
+    from stability_atlas import AtlasConfig, PoissonAlgebra, ShapeSpace
+
+    if end_row is None:
+        end_row = GRID_N
+
+    label = pot_label_key(potential_type, charges)
+    charges_tuple = tuple(charges) if charges is not None else None
+
+    base = pot_dir_key(potential_type, charges)
+    is_block = (start_row != 0 or end_row != GRID_N)
+    if is_block:
+        out_dir = _adaptive_block_dir(
+            os.path.join(HIRES_DIR, base, 'adaptive'), start_row, end_row)
+    else:
+        out_dir = os.path.join(HIRES_DIR, base, 'adaptive')
+    os.makedirs(out_dir, exist_ok=True)
+
+    n_rows = end_row - start_row
+    s3_prefix = f"{HIRES_DIR}/{base}/adaptive"
+    if is_block:
+        s3_prefix += f"/block_{start_row:04d}_{end_row:04d}"
+
+    cp = load_checkpoint(out_dir)
+    cp_done = cp.get('completed_rows', 0) if cp else 0
+    if cp_done >= n_rows:
+        print(f"  [{label}] adaptive rows {start_row}-{end_row}: "
+              f"COMPLETE (skipping)")
+        return
+
+    signal.signal(signal.SIGTERM, _sigterm_handler)
+    _shutdown_requested = False
+
+    print(f"\n{'='*70}")
+    print(f"  ADAPTIVE EPSILON SCAN: {label}")
+    if charges is not None:
+        print(f"  Charges: {charges}")
+    print(f"  Rows: {start_row}-{end_row} ({n_rows} rows, "
+          f"{n_rows * GRID_N} points)")
+    print(f"  Grid columns: {GRID_N}")
+    print(f"  Epsilon range: [{eps_range[0]:.0e}, {eps_range[1]:.0e}], "
+          f"{n_eps} candidates, tier threshold={tier_threshold}")
+    print(f"  Samples/point: {N_SAMPLES}, Level: {LEVEL}")
+    print(f"  Workers: {n_workers}, Point timeout: {point_timeout}s")
+    print(f"{'='*70}\n")
+
+    config = AtlasConfig(
+        potential_type=potential_type,
+        max_level=LEVEL,
+        n_phase_samples=N_SAMPLES,
+        epsilon=eps_range[1],
+        svd_gap_threshold=1e4,
+        charges=charges_tuple,
+    )
+    print(f"  Building symbolic algebra for {label}...")
+    t_build = time()
+    algebra = PoissonAlgebra(config)
+    n_gen = len(algebra._names)
+    build_time = time() - t_build
+    print(f"  Algebra ready ({build_time:.1f}s, {n_gen} generators)")
+
+    _adaptive_algebra = algebra
+    _adaptive_level = LEVEL
+    _adaptive_eps_range = eps_range
+    _adaptive_n_eps = n_eps
+    _adaptive_tier_threshold = tier_threshold
+    _adaptive_max_tiers = MAX_TIERS
+
+    mu_vals = np.linspace(MU_RANGE[0], MU_RANGE[1], GRID_N)
+    phi_vals = np.linspace(PHI_RANGE[0], PHI_RANGE[1], GRID_N)
+    mu_slice = mu_vals[start_row:end_row]
+    total = n_rows * GRID_N
+
+    if cp_done > 0:
+        rank_map = np.load(os.path.join(out_dir, 'rank_map.npy'))
+        gap_map = np.load(os.path.join(out_dir, 'gap_map.npy'))
+        sv_spectra = np.load(os.path.join(out_dir, 'sv_spectra.npy'))
+        optimal_eps_map = np.load(os.path.join(out_dir, 'optimal_eps_map.npy'))
+        gap_score_map = np.load(os.path.join(out_dir, 'gap_score_map.npy'))
+        tier_map = np.load(os.path.join(out_dir, 'tier_map.npy'))
+        n_tested_map = np.load(os.path.join(out_dir, 'n_tested_map.npy'))
+        print(f"  Resuming from local row {cp_done} "
+              f"({cp_done * GRID_N} points done)")
+    else:
+        rank_map = np.zeros((n_rows, GRID_N), dtype=np.int32)
+        gap_map = np.zeros((n_rows, GRID_N))
+        sv_spectra = np.zeros((n_rows, GRID_N, n_gen), dtype=np.float64)
+        optimal_eps_map = np.zeros((n_rows, GRID_N))
+        gap_score_map = np.zeros((n_rows, GRID_N))
+        tier_map = np.full((n_rows, GRID_N, MAX_TIERS, 2), -1,
+                           dtype=np.float64)
+        n_tested_map = np.zeros((n_rows, GRID_N), dtype=np.int32)
+
+    np.save(os.path.join(out_dir, 'mu_vals.npy'), mu_slice)
+    np.save(os.path.join(out_dir, 'phi_vals.npy'), phi_vals)
+
+    config_data = {
+        'potential': potential_type,
+        'grid_n': GRID_N,
+        'n_rows': n_rows,
+        'start_row': start_row,
+        'end_row': end_row,
+        'eps_range': list(eps_range),
+        'n_eps': n_eps,
+        'tier_threshold': tier_threshold,
+        'n_samples': N_SAMPLES,
+        'level': LEVEL,
+        'n_generators': n_gen,
+        'n_workers': n_workers,
+        'point_timeout': point_timeout,
+        'mu_range': list(MU_RANGE),
+        'phi_range': list(PHI_RANGE),
+        'mode': 'adaptive',
+    }
+    if charges is not None:
+        config_data['charges'] = list(charges)
+    with open(os.path.join(out_dir, 'config.json'), 'w') as f:
+        json.dump(config_data, f, indent=2)
+
+    use_mp = (n_workers > 1)
+    pool = None
+    if use_mp:
+        print(f"  Starting worker pool ({n_workers} workers)...")
+        pool = Pool(processes=n_workers)
+
+    def _save_all():
+        for arr_name, arr in [('rank_map', rank_map), ('gap_map', gap_map),
+                              ('sv_spectra', sv_spectra),
+                              ('optimal_eps_map', optimal_eps_map),
+                              ('gap_score_map', gap_score_map),
+                              ('tier_map', tier_map),
+                              ('n_tested_map', n_tested_map)]:
+            np.save(os.path.join(out_dir, f'{arr_name}.npy'), arr)
+
+    def _unpack_result(local_i, j, result):
+        rank, svs, max_gap, opt_e, g_score, n_tried, tiers = result
+        rank_map[local_i, j] = rank
+        gap_map[local_i, j] = max_gap
+        if len(svs) > 0:
+            sv_spectra[local_i, j, :len(svs)] = svs
+        optimal_eps_map[local_i, j] = opt_e
+        gap_score_map[local_i, j] = g_score
+        n_tested_map[local_i, j] = n_tried
+        for t_idx, (t_pos, t_gap) in enumerate(tiers[:MAX_TIERS]):
+            tier_map[local_i, j, t_idx, 0] = t_pos
+            tier_map[local_i, j, t_idx, 1] = min(t_gap, 1e16)
+
+    t_scan_start = time()
+
+    try:
+        for local_i in range(cp_done, n_rows):
+            t_row_start = time()
+            global_i = start_row + local_i
+            mu = mu_vals[global_i]
+            n_timeout = 0
+
+            if use_mp:
+                tasks = [(mu, phi_vals[j]) for j in range(GRID_N)]
+                async_results = [pool.apply_async(_eval_adaptive_point, (t,))
+                                 for t in tasks]
+
+                for j, ar in enumerate(async_results):
+                    try:
+                        result = ar.get(timeout=point_timeout)
+                    except MPTimeoutError:
+                        result = (-1, np.array([]), 0.0, 0.0, 0.0, 0, [])
+                        n_timeout += 1
+                    except Exception:
+                        result = (-1, np.array([]), 0.0, 0.0, 0.0, 0, [])
+                    _unpack_result(local_i, j, result)
+            else:
+                for j in range(GRID_N):
+                    result = _eval_adaptive_point((mu, phi_vals[j]))
+                    _unpack_result(local_i, j, result)
+
+            _save_all()
+            save_checkpoint_atomic(out_dir, local_i + 1, n_gen, -1, extra={
+                'start_row': start_row,
+                'end_row': end_row,
+                'n_workers': n_workers,
+                'global_row': global_i + 1,
+            })
+
+            if (local_i + 1) % 5 == 0:
+                s3_sync(out_dir, s3_prefix)
+
+            done = (local_i + 1) * GRID_N
+            elapsed = time() - t_scan_start
+            rate = done / elapsed if elapsed > 0 else 0
+            remaining = (total - done) / rate if rate > 0 else 0
+            row_time = time() - t_row_start
+
+            avg_eps_tested = n_tested_map[local_i, :].mean()
+            timeout_str = f"  timeouts={n_timeout}" if n_timeout else ""
+            print(f"  Row {local_i+1:3d}/{n_rows}  mu={mu:.3f}  "
+                  f"[{done:5d}/{total}]  "
+                  f"row={row_time:.1f}s  "
+                  f"ETA={remaining/60:.0f}m  "
+                  f"ranks=[{rank_map[local_i,:].min()},"
+                  f"{rank_map[local_i,:].max()}]  "
+                  f"gap=[{gap_map[local_i,:].min():.1e},"
+                  f"{gap_map[local_i,:].max():.1e}]  "
+                  f"avg_eps_tried={avg_eps_tested:.1f}"
+                  f"{timeout_str}",
+                  flush=True)
+
+            if _shutdown_requested:
+                print(f"  [SHUTDOWN] Saved through row {local_i+1}/{n_rows}. "
+                      f"Safe to resume.", flush=True)
+                s3_sync(out_dir, s3_prefix)
+                break
+
+    finally:
+        if pool is not None:
+            pool.terminate()
+            pool.join()
+
+    total_time = time() - t_scan_start
+    completed_all = (not _shutdown_requested
+                     and cp_done + (local_i - cp_done + 1) >= n_rows)
+
+    print(f"\n  Adaptive scan {'complete' if completed_all else 'interrupted'}: "
+          f"{total_time:.0f}s ({total_time/60:.1f}m)")
+    print(f"  Rank range: [{rank_map[rank_map >= 0].min() if (rank_map >= 0).any() else -1}, "
+          f"{rank_map.max()}]")
+    print(f"  Gap range:  [{gap_map.min():.2e}, {gap_map.max():.2e}]")
+    valid_eps = optimal_eps_map[optimal_eps_map > 0]
+    if valid_eps.size > 0:
+        print(f"  Optimal eps range: [{valid_eps.min():.2e}, {valid_eps.max():.2e}]")
+    print(f"  Gap score range: [{gap_score_map.min():.2f}, "
+          f"{gap_score_map.max():.2f}]")
+    n_failed = (rank_map == -1).sum()
+    if n_failed > 0:
+        print(f"  WARNING: {n_failed} points failed ({100*n_failed/total:.1f}%)")
+    print()
+
+    s3_sync(out_dir, s3_prefix)
+
+
+# ---------------------------------------------------------------------------
+# Adaptive analysis & visualization
+# ---------------------------------------------------------------------------
+def run_adaptive_analysis(potential_type=None, charges=None):
+    """Generate visualizations from adaptive scan data."""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib import cm
+
+    def draw_isosceles(ax, mu_range, phi_range):
+        phi_d = np.linspace(phi_range[0], phi_range[1], 500)
+        ax.axhline(1.0, color='cyan', linewidth=1.5, linestyle='--', alpha=0.7)
+        mu_c2 = 2 * np.cos(phi_d)
+        m2 = (mu_c2 >= mu_range[0]) & (mu_c2 <= mu_range[1])
+        ax.plot(phi_d[m2] * 180 / np.pi, mu_c2[m2],
+                color='lime', linewidth=1.5, linestyle='--', alpha=0.7)
+        cos_p = np.cos(phi_d)
+        safe = cos_p > 0.01
+        mu_c3 = np.where(safe, 1.0 / (2 * cos_p), np.nan)
+        m3 = np.isfinite(mu_c3) & (mu_c3 >= mu_range[0]) & (mu_c3 <= mu_range[1])
+        ax.plot(phi_d[m3] * 180 / np.pi, mu_c3[m3],
+                color='magenta', linewidth=1.5, linestyle='--', alpha=0.7)
+
+    configs_to_plot = []
+    if potential_type is not None:
+        configs_to_plot.append((potential_type, charges))
+    else:
+        for pot in SINGULAR_POTENTIALS:
+            base = os.path.join(HIRES_DIR, POT_DIR[pot], 'adaptive')
+            if os.path.isdir(base):
+                configs_to_plot.append((pot, None))
+        for pt, ch in _discover_charged_configs():
+            base = os.path.join(HIRES_DIR, pot_dir_key(pt, ch), 'adaptive')
+            if os.path.isdir(base):
+                configs_to_plot.append((pt, ch))
+
+    if not configs_to_plot:
+        print("  No adaptive scan data found.")
+        return
+
+    for pot_type, ch in configs_to_plot:
+        pot_d = pot_dir_key(pot_type, ch)
+        pot_l = pot_label_key(pot_type, ch)
+        ad_dir = os.path.join(HIRES_DIR, pot_d, 'adaptive')
+
+        if not os.path.isfile(os.path.join(ad_dir, 'rank_map.npy')):
+            print(f"  No adaptive data for {pot_l}")
+            continue
+
+        print(f"\n  Visualizing adaptive: {pot_l}...")
+
+        rank = np.load(os.path.join(ad_dir, 'rank_map.npy'))
+        gap = np.load(os.path.join(ad_dir, 'gap_map.npy'))
+        opt_eps = np.load(os.path.join(ad_dir, 'optimal_eps_map.npy'))
+        gap_score = np.load(os.path.join(ad_dir, 'gap_score_map.npy'))
+        tier_data = np.load(os.path.join(ad_dir, 'tier_map.npy'))
+        mu = np.load(os.path.join(ad_dir, 'mu_vals.npy'))
+        phi = np.load(os.path.join(ad_dir, 'phi_vals.npy'))
+
+        phi_deg = np.degrees(phi)
+        out = os.path.join(ad_dir, 'plots')
+        os.makedirs(out, exist_ok=True)
+
+        # --- 1. Four-panel overview ---
+        fig, axes = plt.subplots(2, 2, figsize=(16, 12))
+        fig.suptitle(f'Adaptive Atlas: {pot_l}', fontsize=16, fontweight='bold')
+
+        # Panel 1: optimal epsilon
+        log_eps = np.log10(np.where(opt_eps > 0, opt_eps, 1e-5))
+        im0 = axes[0, 0].pcolormesh(phi_deg, mu, log_eps, cmap='viridis',
+                                      shading='auto')
+        axes[0, 0].set_title('Optimal log₁₀(ε)')
+        axes[0, 0].set_ylabel('μ = r₁₃/r₁₂')
+        plt.colorbar(im0, ax=axes[0, 0])
+        draw_isosceles(axes[0, 0], MU_RANGE, PHI_RANGE)
+
+        # Panel 2: gap score
+        im1 = axes[0, 1].pcolormesh(phi_deg, mu, gap_score, cmap='inferno',
+                                      shading='auto')
+        axes[0, 1].set_title('Gap Score (information content)')
+        plt.colorbar(im1, ax=axes[0, 1])
+        draw_isosceles(axes[0, 1], MU_RANGE, PHI_RANGE)
+
+        # Panel 3: log gap ratio
+        log_gap = np.log10(np.where(gap > 1, gap, 1))
+        im2 = axes[1, 0].pcolormesh(phi_deg, mu, log_gap, cmap='hot',
+                                      shading='auto')
+        axes[1, 0].set_title('log₁₀(best gap ratio)')
+        axes[1, 0].set_xlabel('φ (degrees)')
+        axes[1, 0].set_ylabel('μ = r₁₃/r₁₂')
+        plt.colorbar(im2, ax=axes[1, 0])
+        draw_isosceles(axes[1, 0], MU_RANGE, PHI_RANGE)
+
+        # Panel 4: number of tiers detected
+        n_tiers = np.sum(tier_data[:, :, :, 0] >= 0, axis=2)
+        im3 = axes[1, 1].pcolormesh(phi_deg, mu, n_tiers, cmap='YlOrRd',
+                                      shading='auto', vmin=1, vmax=6)
+        axes[1, 1].set_title('Number of tier boundaries')
+        axes[1, 1].set_xlabel('φ (degrees)')
+        plt.colorbar(im3, ax=axes[1, 1])
+        draw_isosceles(axes[1, 1], MU_RANGE, PHI_RANGE)
+
+        plt.tight_layout()
+        path = os.path.join(out, 'adaptive_overview.png')
+        fig.savefig(path, dpi=200, bbox_inches='tight')
+        plt.close(fig)
+        print(f"    Saved {path}")
+
+        # --- 2. Tier boundary map ---
+        fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+        fig.suptitle(f'Tier Boundaries: {pot_l}', fontsize=15, fontweight='bold')
+
+        tier_labels = ['1st tier', '2nd tier', '3rd tier']
+        cmaps = ['Blues', 'Oranges', 'Greens']
+        for t_idx in range(3):
+            ax = axes[t_idx]
+            t_pos = tier_data[:, :, t_idx, 0].copy()
+            valid = t_pos >= 0
+            t_pos[~valid] = np.nan
+            im = ax.pcolormesh(phi_deg, mu, t_pos, cmap=cmaps[t_idx],
+                               shading='auto')
+            ax.set_title(f'{tier_labels[t_idx]} index')
+            ax.set_xlabel('φ (degrees)')
+            if t_idx == 0:
+                ax.set_ylabel('μ = r₁₃/r₁₂')
+            plt.colorbar(im, ax=ax)
+            draw_isosceles(ax, MU_RANGE, PHI_RANGE)
+
+        plt.tight_layout()
+        path = os.path.join(out, 'tier_boundaries.png')
+        fig.savefig(path, dpi=200, bbox_inches='tight')
+        plt.close(fig)
+        print(f"    Saved {path}")
+
+        # --- 3. Print statistics ---
+        valid_mask = opt_eps > 0
+        print(f"\n    Statistics for {pot_l}:")
+        print(f"      Rank range: [{rank[rank>0].min()}, {rank.max()}]")
+        print(f"      Optimal eps range: [{opt_eps[valid_mask].min():.2e}, "
+              f"{opt_eps[valid_mask].max():.2e}]")
+        print(f"      Median optimal eps: {np.median(opt_eps[valid_mask]):.2e}")
+        print(f"      Gap score range: [{gap_score.min():.2f}, "
+              f"{gap_score.max():.2f}]")
+        print(f"      Median gap score: {np.median(gap_score):.2f}")
+        median_tiers = np.median(n_tiers)
+        print(f"      Median tier count: {median_tiers:.1f}")
+
+
+# ---------------------------------------------------------------------------
+# Verification & data integrity
+# ---------------------------------------------------------------------------
+ADAPTIVE_ARRAYS = [
+    ('rank_map', np.int32, 2),
+    ('gap_map', np.float64, 2),
+    ('sv_spectra', np.float64, 3),
+    ('optimal_eps_map', np.float64, 2),
+    ('gap_score_map', np.float64, 2),
+    ('tier_map', np.float64, 4),
+    ('n_tested_map', np.int32, 2),
+]
+
+
+def _sha256_file(path):
+    h = hashlib.sha256()
+    with open(path, 'rb') as f:
+        for chunk in iter(lambda: f.read(1 << 16), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def verify_adaptive_scan(data_dir, expected_rows=None, expected_cols=None):
+    """Validate adaptive scan output for completeness and integrity.
+
+    Returns (ok: bool, report: dict).
+    """
+    report = {
+        'data_dir': data_dir,
+        'timestamp': strftime('%Y-%m-%d %H:%M:%S'),
+        'checks': {},
+        'warnings': [],
+        'errors': [],
+        'checksums': {},
+    }
+
+    def _check(name, passed, msg=""):
+        report['checks'][name] = {'passed': passed, 'detail': msg}
+        if not passed:
+            report['errors'].append(f"{name}: {msg}")
+        return passed
+
+    def _warn(msg):
+        report['warnings'].append(msg)
+
+    all_ok = True
+
+    # 1. Checkpoint
+    cp = load_checkpoint(data_dir)
+    if cp is None:
+        all_ok &= _check('checkpoint_exists', False, 'No checkpoint.json')
+    else:
+        _check('checkpoint_exists', True,
+               f"completed_rows={cp.get('completed_rows')}")
+        cp_rows = cp.get('completed_rows', 0)
+        if expected_rows is not None and cp_rows < expected_rows:
+            all_ok &= _check('checkpoint_complete', False,
+                             f"checkpoint says {cp_rows}, expected {expected_rows}")
+        else:
+            _check('checkpoint_complete', True, f"rows={cp_rows}")
+
+    # 2. Config
+    cfg_path = os.path.join(data_dir, 'config.json')
+    if os.path.isfile(cfg_path):
+        with open(cfg_path) as f:
+            cfg = json.load(f)
+        _check('config_exists', True,
+               f"potential={cfg.get('potential')}, mode={cfg.get('mode')}")
+        if expected_cols is None:
+            expected_cols = cfg.get('grid_n', GRID_N)
+        if expected_rows is None:
+            expected_rows = cfg.get('n_rows', cfg.get('grid_n', GRID_N))
+    else:
+        all_ok &= _check('config_exists', False, 'No config.json')
+        if expected_rows is None:
+            expected_rows = GRID_N
+        if expected_cols is None:
+            expected_cols = GRID_N
+
+    # 3. Array files
+    loaded = {}
+    for arr_name, dtype, ndim in ADAPTIVE_ARRAYS:
+        fpath = os.path.join(data_dir, f'{arr_name}.npy')
+        if not os.path.isfile(fpath):
+            all_ok &= _check(f'{arr_name}_exists', False, 'File missing')
+            continue
+
+        report['checksums'][arr_name] = _sha256_file(fpath)
+        try:
+            arr = np.load(fpath)
+            loaded[arr_name] = arr
+        except Exception as e:
+            all_ok &= _check(f'{arr_name}_loadable', False, str(e))
+            continue
+
+        _check(f'{arr_name}_exists', True,
+               f"shape={arr.shape}, dtype={arr.dtype}")
+
+        if arr.ndim != ndim:
+            all_ok &= _check(f'{arr_name}_ndim', False,
+                             f"expected {ndim}D, got {arr.ndim}D")
+        else:
+            _check(f'{arr_name}_ndim', True, f"{ndim}D")
+
+        if arr.shape[0] != expected_rows or arr.shape[1] != expected_cols:
+            all_ok &= _check(f'{arr_name}_shape', False,
+                             f"expected ({expected_rows}, {expected_cols}, ...), "
+                             f"got {arr.shape}")
+        else:
+            _check(f'{arr_name}_shape', True, str(arr.shape))
+
+        if np.issubdtype(arr.dtype, np.floating):
+            n_nan = np.isnan(arr).sum()
+            n_inf = np.isinf(arr).sum()
+            if n_nan > 0:
+                all_ok &= _check(f'{arr_name}_nan', False,
+                                 f"{n_nan} NaN values")
+            else:
+                _check(f'{arr_name}_nan', True, 'No NaN')
+            if n_inf > 0:
+                _warn(f"{arr_name} contains {n_inf} Inf values")
+
+    # 4. Rank distribution
+    if 'rank_map' in loaded:
+        rm = loaded['rank_map']
+        n_failed = int((rm == -1).sum())
+        total_pts = rm.size
+        fail_pct = 100 * n_failed / total_pts if total_pts > 0 else 0
+
+        unique, counts = np.unique(rm, return_counts=True)
+        rank_dist = {int(u): int(c) for u, c in zip(unique, counts)}
+        report['rank_distribution'] = rank_dist
+        report['n_failed_points'] = n_failed
+        report['fail_pct'] = round(fail_pct, 2)
+
+        if fail_pct > 5:
+            _warn(f"High failure rate: {n_failed}/{total_pts} "
+                  f"({fail_pct:.1f}%) points have rank=-1")
+        _check('rank_failures', fail_pct <= 10,
+               f"{n_failed}/{total_pts} ({fail_pct:.1f}%) failed")
+
+    # 5. Statistics
+    stats = {}
+    for name, arr in loaded.items():
+        if np.issubdtype(arr.dtype, np.floating) and arr.ndim == 2:
+            flat = arr.flatten()
+            valid = flat[np.isfinite(flat) & (flat > 0)] if name != 'gap_score_map' else flat[np.isfinite(flat)]
+            if valid.size > 0:
+                stats[name] = {
+                    'min': float(np.min(valid)),
+                    'max': float(np.max(valid)),
+                    'mean': float(np.mean(valid)),
+                    'std': float(np.std(valid)),
+                    'median': float(np.median(valid)),
+                }
+    report['statistics'] = stats
+
+    # 6. Grid coordinate files
+    for coord_name in ('mu_vals', 'phi_vals'):
+        fpath = os.path.join(data_dir, f'{coord_name}.npy')
+        if os.path.isfile(fpath):
+            report['checksums'][coord_name] = _sha256_file(fpath)
+            _check(f'{coord_name}_exists', True, '')
+        else:
+            all_ok &= _check(f'{coord_name}_exists', False, 'Missing')
+
+    report['overall_pass'] = all_ok
+
+    report_path = os.path.join(data_dir, 'verification_report.json')
+    with open(report_path, 'w') as f:
+        json.dump(report, f, indent=2, default=str)
+
+    status = "PASS" if all_ok else "FAIL"
+    print(f"\n  Verification {status}: {data_dir}")
+    if report['errors']:
+        for e in report['errors']:
+            print(f"    ERROR: {e}")
+    if report['warnings']:
+        for w in report['warnings']:
+            print(f"    WARN:  {w}")
+    if 'rank_distribution' in report:
+        print(f"    Rank distribution: {report['rank_distribution']}")
+    if 'statistics' in report:
+        for name, s in report['statistics'].items():
+            print(f"    {name}: min={s['min']:.3e} max={s['max']:.3e} "
+                  f"mean={s['mean']:.3e}")
+    print(f"    Report saved: {report_path}")
+
+    return all_ok, report
+
+
+# ---------------------------------------------------------------------------
+# Block merge for distributed execution
+# ---------------------------------------------------------------------------
+def merge_adaptive_blocks(potential_type, charges=None):
+    """Discover and merge adaptive/block_SSSS_EEEE/ dirs into adaptive/merged/."""
+
+    base = pot_dir_key(potential_type, charges)
+    adaptive_dir = os.path.join(HIRES_DIR, base, 'adaptive')
+    label = pot_label_key(potential_type, charges)
+
+    if not os.path.isdir(adaptive_dir):
+        print(f"  No adaptive directory for {label}")
+        return False
+
+    blocks = []
+    for name in sorted(os.listdir(adaptive_dir)):
+        if not name.startswith('block_'):
+            continue
+        bdir = os.path.join(adaptive_dir, name)
+        if not os.path.isdir(bdir):
+            continue
+        parts = name.replace('block_', '').split('_')
+        if len(parts) != 2:
+            continue
+        try:
+            sr, er = int(parts[0]), int(parts[1])
+        except ValueError:
+            continue
+        blocks.append((sr, er, bdir))
+
+    if not blocks:
+        print(f"  No blocks found in {adaptive_dir}")
+        return False
+
+    blocks.sort(key=lambda x: x[0])
+    print(f"\n  Merging {len(blocks)} adaptive blocks for {label}:")
+    for sr, er, bd in blocks:
+        print(f"    rows {sr}-{er}: {bd}")
+
+    # Validate each block is complete
+    for sr, er, bdir in blocks:
+        expected = er - sr
+        cp = load_checkpoint(bdir)
+        if cp is None:
+            print(f"  ERROR: No checkpoint in {bdir}")
+            return False
+        done = cp.get('completed_rows', 0)
+        if done < expected:
+            print(f"  ERROR: Block {sr}-{er} incomplete: "
+                  f"{done}/{expected} rows")
+            return False
+
+    # Verify row continuity
+    expected_start = blocks[0][0]
+    total_rows = 0
+    for sr, er, _ in blocks:
+        if sr != expected_start:
+            print(f"  ERROR: Gap in blocks at row {expected_start} "
+                  f"(next block starts at {sr})")
+            return False
+        total_rows += er - sr
+        expected_start = er
+
+    # Load and concatenate
+    merged_dir = os.path.join(adaptive_dir, 'merged')
+    os.makedirs(merged_dir, exist_ok=True)
+
+    first_cfg_path = os.path.join(blocks[0][2], 'config.json')
+    if os.path.isfile(first_cfg_path):
+        with open(first_cfg_path) as f:
+            cfg = json.load(f)
+        n_gen = cfg.get('n_generators', 156)
+    else:
+        n_gen = 156
+
+    print(f"  Total rows to merge: {total_rows}")
+
+    all_arrays = {}
+    for arr_name, dtype, ndim in ADAPTIVE_ARRAYS:
+        parts_list = []
+        for sr, er, bdir in blocks:
+            fpath = os.path.join(bdir, f'{arr_name}.npy')
+            if not os.path.isfile(fpath):
+                print(f"  ERROR: Missing {arr_name}.npy in block {sr}-{er}")
+                return False
+            parts_list.append(np.load(fpath))
+        merged = np.concatenate(parts_list, axis=0)
+        all_arrays[arr_name] = merged
+        np.save(os.path.join(merged_dir, f'{arr_name}.npy'), merged)
+        print(f"    {arr_name}: shape {merged.shape}")
+
+    # Merge coordinate arrays
+    mu_parts = []
+    for sr, er, bdir in blocks:
+        fpath = os.path.join(bdir, 'mu_vals.npy')
+        if os.path.isfile(fpath):
+            mu_parts.append(np.load(fpath))
+    if mu_parts:
+        np.save(os.path.join(merged_dir, 'mu_vals.npy'),
+                np.concatenate(mu_parts))
+
+    phi_path = os.path.join(blocks[0][2], 'phi_vals.npy')
+    if os.path.isfile(phi_path):
+        np.save(os.path.join(merged_dir, 'phi_vals.npy'),
+                np.load(phi_path))
+
+    # Write merged config
+    merged_cfg = dict(cfg) if os.path.isfile(first_cfg_path) else {}
+    merged_cfg['n_rows'] = total_rows
+    merged_cfg['start_row'] = blocks[0][0]
+    merged_cfg['end_row'] = blocks[-1][1]
+    merged_cfg['merged_from'] = len(blocks)
+    merged_cfg['merge_timestamp'] = strftime('%Y-%m-%d %H:%M:%S')
+    with open(os.path.join(merged_dir, 'config.json'), 'w') as f:
+        json.dump(merged_cfg, f, indent=2)
+
+    save_checkpoint_atomic(merged_dir, total_rows, n_gen, -1, extra={
+        'merged': True,
+        'n_blocks': len(blocks),
+        'total_rows': total_rows,
+    })
+
+    print(f"\n  Merged results saved to {merged_dir}")
+
+    # Run verification on merged data
+    ok, _ = verify_adaptive_scan(merged_dir,
+                                  expected_rows=total_rows,
+                                  expected_cols=GRID_N)
+
+    s3_sync(merged_dir, f"{HIRES_DIR}/{base}/adaptive/merged")
+
+    return ok
+
+
+# ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
 def main():
     parser = argparse.ArgumentParser(
         description='Multi-Epsilon Shape Sphere Atlas')
     parser.add_argument('mode', nargs='?', default='all',
-                        choices=['all', 'scan', 'analyze', 'animate'],
+                        choices=['all', 'scan', 'analyze', 'animate',
+                                 'adaptive', 'adaptive-analyze',
+                                 'adaptive-verify', 'adaptive-merge'],
                         help='Which phase(s) to run')
     parser.add_argument('--potential', type=str, default=None,
                         choices=['1/r', '1/r2', 'harmonic'],
@@ -904,9 +1703,70 @@ def main():
     parser.add_argument('--charges', nargs='+', type=int, default=None,
                         metavar='Q',
                         help='Charges for Coulomb potential, e.g. --charges 2 -1 -1')
+    parser.add_argument('--workers', type=int,
+                        default=max(1, cpu_count() - 1),
+                        help='Number of multiprocessing workers (adaptive mode)')
+    parser.add_argument('--start-row', type=int, default=0,
+                        help='First grid row to scan (adaptive mode)')
+    parser.add_argument('--end-row', type=int, default=None,
+                        help='Last grid row (exclusive, adaptive mode)')
+    parser.add_argument('--point-timeout', type=int, default=600,
+                        help='Per-point timeout in seconds (adaptive mode)')
     args = parser.parse_args()
 
     charges = args.charges
+
+    if args.mode in ('adaptive', 'adaptive-analyze'):
+        pot = args.potential or '1/r'
+        if args.mode == 'adaptive':
+            print(f"\n{'#'*70}")
+            print(f"# ADAPTIVE EPSILON SCAN")
+            print(f"# Grid: {GRID_N}x{GRID_N}, samples={N_SAMPLES}, level={LEVEL}")
+            print(f"# Workers: {args.workers}")
+            if charges is not None:
+                print(f"# Charges: {charges}")
+            print(f"{'#'*70}")
+            run_adaptive_scan(pot, charges=charges,
+                              n_workers=args.workers,
+                              start_row=args.start_row,
+                              end_row=args.end_row,
+                              point_timeout=args.point_timeout)
+
+            # Verify after scan completes
+            base = pot_dir_key(pot, charges)
+            is_block = (args.start_row != 0 or
+                        (args.end_row is not None and args.end_row != GRID_N))
+            if is_block:
+                data_dir = _adaptive_block_dir(
+                    os.path.join(HIRES_DIR, base, 'adaptive'),
+                    args.start_row, args.end_row or GRID_N)
+            else:
+                data_dir = os.path.join(HIRES_DIR, base, 'adaptive')
+            verify_adaptive_scan(data_dir)
+
+        print(f"\n{'#'*70}")
+        print(f"# ADAPTIVE ANALYSIS")
+        print(f"{'#'*70}")
+        run_adaptive_analysis(pot, charges=charges)
+
+    elif args.mode == 'adaptive-verify':
+        pot = args.potential or '1/r'
+        base = pot_dir_key(pot, charges)
+        is_block = (args.start_row != 0 or
+                    (args.end_row is not None and args.end_row != GRID_N))
+        if is_block:
+            data_dir = _adaptive_block_dir(
+                os.path.join(HIRES_DIR, base, 'adaptive'),
+                args.start_row, args.end_row or GRID_N)
+        else:
+            data_dir = os.path.join(HIRES_DIR, base, 'adaptive')
+        ok, report = verify_adaptive_scan(data_dir)
+        sys.exit(0 if ok else 1)
+
+    elif args.mode == 'adaptive-merge':
+        pot = args.potential or '1/r'
+        ok = merge_adaptive_blocks(pot, charges=charges)
+        sys.exit(0 if ok else 1)
 
     if args.mode in ('all', 'scan'):
         print(f"\n{'#'*70}")

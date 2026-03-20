@@ -34,7 +34,8 @@ See revised statement in Section 4 below.
 | Dependence on N | Tested at N=3 and N=4 | N=5 would extend |
 | Dependence on spatial dim | **Independent of d** for N=3 AND N=4 | d=1,2,3 identical |
 | 1/r, 1/r^2, 1/r^3 give same sequence | **Proved** for N=3 through L3 | Could diverge at L4 |
-| Charge-sign invariance | **Proved** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
+| Charge-sign invariance (1/r) | **Proved** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
+| Charge-sign invariance (1/r²) | **Dimension preserved**, gap structure differs (Mar 2026): rank=116 at most grid points but gap correlation r≈0.76 vs r≈0.85 for 1/r. Charges affect *conditioning* of the 116-dim subspace, not its existence | Deeper investigation needed |
 
 ### Why it might be true
 
@@ -73,6 +74,19 @@ See revised statement in Section 4 below.
   sign appears in the Hamiltonian's coefficients, not its functional
   structure — the bracket depends on derivatives, which are sensitive
   to which variables appear (combinatorics) but not their coefficients.
+
+- **1/r² charge-sign atlas comparison (Mar 2026):** Multi-epsilon atlas
+  scan of 1/r² with helium charges (+2, -1, -1) vs all-attractive 1/r².
+  The *dimension* (rank=116) is preserved at most configuration-space
+  points, but the *gap ratio landscape* differs more than for 1/r:
+  Pearson r≈0.76 (vs r≈0.85 for 1/r), with the Lagrange point showing
+  the largest gap deviation (~2 orders of magnitude). This is consistent
+  with the conjecture: charges change the Hamiltonian *coefficients*,
+  which affects how cleanly the 116-dim subspace separates from the null
+  space (a metric property), without changing which subspace it is (a
+  topological property). The stronger effect at 1/r² vs 1/r makes
+  intuitive sense: charges multiply u_ij² (quadratic), producing more
+  complex cross-derivative interactions than at 1/r (linear in u_ij).
 
 - **Unifying intuition:** The algebra sees the *combinatorial topology
   of the interaction graph* — N particles with pairwise interactions
@@ -176,6 +190,14 @@ non-symmetric points.
   landscape might correlate with regions where choreographic
   solutions exist.
 
+- Why does 1/r² show more charge sensitivity in the gap landscape
+  than 1/r? (Pearson r≈0.76 vs ≈0.85.) A possible explanation:
+  for 1/r, charges multiply u_ij linearly — the bracket derivatives
+  see only a scalar factor. For 1/r², charges multiply u_ij² — the
+  derivatives produce 2*q_i*q_j*u_ij terms where the sign interacts
+  with the polynomial degree. Is there a clean algebraic measure
+  of "charge sensitivity" as a function of potential exponent?
+
 ---
 
 ## 4. Sharper Restatement (if the evidence holds)
@@ -191,6 +213,12 @@ spatial dimensions:
 Both independent of mass ratios, spatial dimension, pole order,
 and sign of interaction (attractive, repulsive, or mixed Coulomb).
 The N=3 algebra has infinite GK dimension (d(4) >= 4,501).
+
+*Note:* While the dimension sequence is sign-invariant, the SVD gap
+ratio landscape (a measure of numerical conditioning, not algebraic
+dimension) does depend on charges. For 1/r the gap landscapes are
+highly correlated (r≈0.85); for 1/r² the correlation is weaker
+(r≈0.76). This is a metric, not topological, distinction.
 
 **Conjecture** (supported at N=3 and N=4): For N particles in any
 number of spatial dimensions, interacting via any singular central
@@ -237,7 +265,12 @@ dimensions as in two — no extrapolation across dimensions is needed.
 *Note (Mar 2026)*: Charge-sign invariance has been verified: the
 helium atom (mixed attractive/repulsive Coulomb) produces the same
 algebra as all-attractive gravity. This means the framework applies
-equally to electromagnetic interactions, not just gravity.
+equally to electromagnetic interactions, not just gravity. The 1/r²
+atlas comparison (Mar 2026) further confirms that while the
+*dimension* is charge-invariant, the *gap structure* (conditioning)
+is not — charges affect the metric but not the topology of the
+algebra. This distinction strengthens the conjecture by showing
+precisely what is and is not invariant.
 
 Setting d = 3 and plugging in:
 
@@ -279,9 +312,11 @@ may describe the same phenomenon from different angles.
    dynamical. However, structure formation simulations are
    Newtonian, so the framework applies in that regime.
 
-2. Non-gravitational interactions (electromagnetic, strong, weak)
-   are not modeled. These are short-range and subdominant on
-   cosmological scales, but they matter for small-scale structure.
+2. Non-gravitational interactions: electromagnetic (Coulomb) has now
+   been tested via the helium charge configuration and produces the
+   same dimension sequence. Strong and weak nuclear forces are not
+   modeled. Electromagnetic is long-range but subdominant to gravity
+   on cosmological scales; nuclear forces are short-range.
 
 3. Identifying the surviving independent generators at the S_N
    fixed point with specific cosmological observables (scale

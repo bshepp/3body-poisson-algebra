@@ -13,6 +13,7 @@ checkpoints/
 atlas_output/
 atlas_output_hires/
 atlas_test_output/
+atlas_test_adaptive/
 atlas_1000/
 
 # AWS keys, secrets, and launch configs

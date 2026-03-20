@@ -560,6 +560,123 @@ class PoissonAlgebra:
                 max_ratio = max(max_ratio, ratio)
         return max_ratio
 
+    # -----------------------------------------------------------------
+    # Tier detection and adaptive epsilon
+    # -----------------------------------------------------------------
+    @staticmethod
+    def _find_tiers(singular_values: np.ndarray, threshold: float = 10.0,
+                    max_tiers: int = 8) -> list:
+        """Find tier boundaries: indices where sv[k]/sv[k+1] > threshold.
+
+        Returns list of (index, gap_ratio) sorted by index, capped at
+        *max_tiers* entries.  The "cliff" (transition to machine-epsilon
+        noise) is included if present.
+        """
+        tiers = []
+        n = len(singular_values)
+        for k in range(n - 1):
+            if singular_values[k + 1] < 1e-15:
+                tiers.append((k + 1, float('inf')))
+                break
+            ratio = singular_values[k] / singular_values[k + 1]
+            if ratio >= threshold:
+                tiers.append((k + 1, ratio))
+        tiers.sort(key=lambda t: t[0])
+        return tiers[:max_tiers]
+
+    @staticmethod
+    def _gap_score(singular_values: np.ndarray, tiers: list,
+                   cliff_weight: float = 1.0,
+                   tier_weight: float = 0.3) -> float:
+        """Composite score rewarding a clean cliff and resolved internal tiers.
+
+        score = cliff_weight * log10(cliff_gap)
+              + tier_weight  * sum(log10(internal_gaps))
+
+        The cliff is defined as the tier with the largest gap ratio.
+        Internal tiers are everything else.  Infinite gaps are capped
+        at 1e16 for scoring purposes.
+        """
+        if not tiers:
+            return 0.0
+        cap = 1e16
+
+        best_idx = max(range(len(tiers)), key=lambda i: min(tiers[i][1], cap))
+        cliff_gap = min(tiers[best_idx][1], cap)
+        score = cliff_weight * np.log10(max(cliff_gap, 1.0))
+
+        for i, (_, gap) in enumerate(tiers):
+            if i == best_idx:
+                continue
+            score += tier_weight * np.log10(max(min(gap, cap), 1.0))
+        return score
+
+    def compute_adaptive_rank(self, positions: np.ndarray, level: int,
+                              eps_range: Tuple[float, float] = (1e-4, 5e-3),
+                              n_eps: int = 8,
+                              n_samples: Optional[int] = None,
+                              tier_threshold: float = 10.0,
+                              max_tiers: int = 8,
+                              early_exit_patience: int = 2
+                              ) -> Tuple[int, np.ndarray, dict]:
+        """Sweep epsilon geometrically and pick the scale that maximises
+        multi-tier gap clarity.
+
+        Returns (rank, singular_values, info) where *info* contains::
+
+            optimal_eps      – chosen epsilon
+            gap_score        – composite score at optimal eps
+            tier_boundaries  – list of (index, gap_ratio)
+            n_eps_tested     – how many epsilons were evaluated
+            all_eps          – array of tested epsilons
+            all_scores       – array of scores at each tested eps
+        """
+        eps_lo, eps_hi = eps_range
+        epsilons = np.geomspace(eps_hi, eps_lo, n_eps)
+
+        best_score = -1.0
+        best_rank = 0
+        best_svs = np.array([])
+        best_eps = epsilons[0]
+        best_tiers: list = []
+        decline_count = 0
+        tested_eps = []
+        tested_scores = []
+
+        for eps in epsilons:
+            rank, svs, _ = self.compute_rank_at_configuration(
+                positions, level, n_samples=n_samples, epsilon=eps)
+            tiers = self._find_tiers(svs, threshold=tier_threshold,
+                                     max_tiers=max_tiers)
+            score = self._gap_score(svs, tiers)
+            tested_eps.append(eps)
+            tested_scores.append(score)
+
+            if score > best_score:
+                best_score = score
+                best_rank = rank
+                best_svs = svs
+                best_eps = eps
+                best_tiers = tiers
+                decline_count = 0
+            else:
+                decline_count += 1
+                if decline_count >= early_exit_patience:
+                    break
+
+        info = {
+            'optimal_eps': best_eps,
+            'gap_score': best_score,
+            'tier_boundaries': best_tiers,
+            'n_eps_tested': len(tested_eps),
+            'all_eps': np.array(tested_eps),
+            'all_scores': np.array(tested_scores),
+            'n_generators': len(best_svs),
+            'level': level,
+            'max_gap_ratio': self._max_gap_ratio(best_svs),
+        }
+        return best_rank, best_svs, info
+
 
 # =============================================================================
 # ATLAS COMPUTATION

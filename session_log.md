@@ -1580,3 +1580,212 @@ coefficients within the same 116-dimensional space.
 | Exp 1 (control) | 22 min | 118 min | ~144 min |
 | Exp 2 (full helium) | 19 min | 121 min | ~140 min |
 | Exp 3 (all-repulsive) | 18 min | 123 min | ~140 min |
+
+---
+
+## Session: 1/r² Charged Atlas Scan (Mar 2026)
+
+### Motivation
+
+After establishing charge-sign invariance for 1/r (Pearson r≈0.85 gap
+correlation across configuration space), the natural next test was
+1/r² (Calogero-Moser) with the same helium charges (+2, -1, -1).
+The 1/r² potential is exactly integrable in 1D but produces the same
+dimension sequence [3, 6, 17, 116] as 1/r. Does charge-sign invariance
+also hold for 1/r²?
+
+### Infrastructure Changes
+
+Extended `stability_atlas.py` and `multi_epsilon_atlas.py` to support
+charges with any 1/r^n potential:
+
+- `Potential.get_symbolic_hamiltonians()` now builds
+  H_ij = T_i + T_j + q_i*q_j*u_ij^n for charged configurations
+  with arbitrary exponent n, via a new `_potential_exponent()` helper.
+- Directory naming (`charges_dir_tag`) embeds the potential slug for
+  non-1/r potentials: e.g. `coulomb_1_r2_+2_-1_-1`.
+- CLI accepts `--potential 1/r2 --charges 2 -1 -1` together.
+- `_discover_charged_configs()` parses potential type from directory
+  names for automatic discovery.
+- `helium_atlas.py` accepts `--potential 1/r2` for comparison.
+
+### Results: 1/r² Helium Multi-Epsilon Atlas
+
+Computed 100x100 grid, 400 samples/point, Level 3 (156 generators),
+6 epsilons from 5e-3 to 1e-4. Total runtime: ~19 hours.
+
+#### Rank and Gap Summary
+
+| Epsilon | Rank range | Gap range | Notes |
+|---------|-----------|-----------|-------|
+| 5e-03 | [116, 124] | [3.0, 1.7e+08] | Near-uniform rank |
+| 2e-03 | [116, 124] | [3.0, 1.7e+08] | |
+| 1e-03 | [114, 124] | [3.4, 2.2e+07] | Rank starts to vary |
+| 5e-04 | [114, 120] | [4.9, 1.4e+05] | |
+| 2e-04 | [110, 118] | [5.5, 1.3e+04] | Rank spread widens |
+| 1e-04 | [108, 120] | [4.2, 2.1e+04] | |
+
+#### Comparison: 1/r² Helium vs 1/r² All-Attractive
+
+| Epsilon | Pearson r | Rank agreement | Delta log-gap std |
+|---------|-----------|----------------|-------------------|
+| 5e-03 | 0.809 | 99.9% | 0.65 |
+| 2e-03 | 0.777 | 91.8% | 0.69 |
+| 1e-03 | 0.774 | 88.3% | 0.68 |
+| 5e-04 | 0.782 | 76.8% | 0.65 |
+| 2e-04 | 0.761 | 63.1% | 0.63 |
+| 1e-04 | 0.759 | 59.5% | 0.52 |
+
+For comparison, the 1/r case had Pearson r≈0.85 and delta std≈0.28.
+
+#### Interpretation
+
+1. **Dimension (rank) is largely preserved**: The SV spectra show the
+   cliff at index 116 in both charged and uncharged systems. The
+   algebraic dimension is invariant under charge sign.
+
+2. **Gap magnitude is NOT invariant**: The spectral gap varies
+   significantly between charged and uncharged 1/r², especially near
+   the Lagrange point (delta log-gap of ~2 orders of magnitude). This
+   is a metric property (conditioning of the subspace), not a
+   topological one (which subspace it is).
+
+3. **1/r² shows more charge sensitivity than 1/r**: Pearson r≈0.76
+   (vs 0.85 for 1/r), delta std≈0.52-0.69 (vs 0.28-0.38 for 1/r).
+   This makes intuitive sense: charges multiply u_ij² (quadratic in
+   the auxiliary variable), producing more complex cross-derivative
+   interactions than charges multiplying u_ij (linear).
+
+4. **Consistent with the conjecture**: The dimension sequence depends
+   only on N and the singularity class. Charges are coefficients --
+   they change how cleanly the algebra separates, not what it is.
+
+---
+
+## Session: Adaptive Epsilon Atlas & AWS Infrastructure (Mar 2026)
+
+### Motivation
+
+The multi-epsilon scans revealed that the observed SVD rank and gap
+quality depend heavily on epsilon (the phase-space sampling radius).
+At small epsilon, numerical conditioning collapses the apparent rank
+at symmetric configurations, while at large epsilon, internal tier
+structures in the singular value spectrum are obscured. Instead of
+scanning at fixed epsilons and comparing, we developed an adaptive
+strategy that finds the *optimal* epsilon at each configuration point
+to maximise a composite "gap score" that rewards both a clean main
+cliff (at index 116) and resolved internal tier boundaries.
+
+### Adaptive Epsilon Algorithm
+
+New methods added to `PoissonAlgebra` in `stability_atlas.py`:
+
+- `_find_tiers(svs, threshold)`: identifies indices where
+  `sv[k]/sv[k+1] > threshold` (default 10x), returning a list of
+  `(index, gap_ratio)` pairs representing tier boundaries.
+- `_gap_score(svs, tiers)`: composite score weighting the main cliff
+  (largest gap) at `cliff_weight=1.0` and internal tiers at
+  `tier_weight=0.3`, using log10 of gap ratios.
+- `compute_adaptive_rank(positions, level, eps_range, n_eps)`: sweeps
+  geometrically spaced epsilons from large to small, evaluates
+  `_gap_score` at each, and selects the epsilon that maximises it.
+  Early-exit after `patience=2` consecutive score declines.
+
+### AWS Spot Instance Infrastructure
+
+The adaptive scan in `multi_epsilon_atlas.py` was upgraded from a
+single-threaded sequential loop to a production-grade AWS pipeline:
+
+**Multiprocessing:** Fork-based `multiprocessing.Pool` following the
+proven `atlas_1000.py` pattern. The `PoissonAlgebra` is built once in
+the main process and inherited by workers via module-level globals.
+Per-point timeouts (default 600s) prevent hangs at degenerate configs.
+Thread pinning (OMP/MKL/OpenBLAS=1) avoids oversubscription.
+
+**Checkpointing:** Atomic `save_checkpoint_atomic()` using tmp-file +
+`os.fsync()` + `os.replace()` to survive mid-write spot termination.
+
+**SIGTERM handling:** AWS sends SIGTERM 2 minutes before reclaiming a
+spot instance. The handler sets `_shutdown_requested`; the row loop
+finishes the current row, saves all arrays, syncs to S3, and exits
+cleanly. Resume is automatic via the checkpoint.
+
+**Distributed execution:** `--start-row N --end-row M` splits the grid
+across multiple instances, each writing to `adaptive/block_SSSS_EEEE/`.
+`adaptive-merge` mode discovers, validates, concatenates, and verifies
+all blocks.
+
+**Verification:** `verify_adaptive_scan()` checks array shapes, NaN/Inf,
+rank distribution, failure rates, computes SHA-256 checksums, and writes
+`verification_report.json`. Runs automatically after scan completion.
+
+New CLI arguments:
+```
+python multi_epsilon_atlas.py adaptive --potential 1/r2 --workers 15
+python multi_epsilon_atlas.py adaptive --start-row 0 --end-row 50
+python multi_epsilon_atlas.py adaptive-verify --potential 1/r2
+python multi_epsilon_atlas.py adaptive-merge --potential 1/r2
+```
+
+### Adaptive Scan Results: 1/r² (Mar 2026)
+
+Both all-attractive and helium-charged 1/r² were scanned on the local
+machine (single-threaded, ~10.5 hours each):
+
+| Metric | All-Attractive | Helium (+2,-1,-1) |
+|--------|----------------|-------------------|
+| Rank range | [116, 124] | [116, 124] |
+| Optimal eps range | [1.64e-3, 5.00e-3] | [9.35e-4, 5.00e-3] |
+| Median optimal eps | 5.00e-3 | 5.00e-3 |
+| Gap score range | [16.00, 18.80] | [16.00, 18.95] |
+| Median gap score | 18.20 | 18.28 |
+| Median tier count | 2.0 | 2.0 |
+
+Key observations:
+
+1. **Rank identity confirmed**: Both systems show rank [116, 124],
+   identical range. The adaptive algorithm consistently finds epsilon
+   values that resolve the full 116-dimensional cliff.
+
+2. **Tier structure matches**: Median 2 tiers in both cases, meaning
+   the internal algebraic hierarchy (sub-dimensional structures within
+   the 156-generator space) is the same regardless of charges.
+
+3. **Charged system probes deeper**: The helium configuration's optimal
+   epsilon reaches down to 9.35e-4 (vs 1.64e-3 for all-attractive),
+   confirming that some charged configurations require finer sampling
+   to resolve their algebraic structure -- consistent with the
+   conditioning sensitivity seen in the multi-epsilon scans.
+
+4. **Gap scores nearly identical**: Median gap scores differ by only
+   0.08 (18.28 vs 18.20), meaning the *quality* of algebraic
+   separation is charge-invariant when evaluated at the optimal scale.
+
+### AWS Cost Estimation
+
+With the multiprocessing infrastructure, projected AWS runtimes and
+costs for various scenarios:
+
+| Instance | Workers | Time/scan | Cost/scan | Use case |
+|----------|---------|-----------|-----------|----------|
+| c8g.4xlarge spot | 15 | ~55 min | ~$0.23 | Best value |
+| c7i.4xlarge spot | 15 | ~55 min | ~$0.28 | Safe x86 pick |
+| c7i.8xlarge spot | 31 | ~35 min | ~$0.35 | Fastest |
+| Local (no MP) | 1 | ~10 hrs | $0 | Current |
+
+The r6i.4xlarge previously used ($1.01/hr) is overkill -- this
+workload is CPU-bound, not memory-bound. Compute-optimized instances
+save 30-40%.
+
+### Testing
+
+All infrastructure was validated with a 5-test suite
+(`test_adaptive_infra.py`):
+
+| Test | Result |
+|------|--------|
+| Atomic checkpoint write | PASS |
+| Sequential 5x5 scan | PASS |
+| Verification report (9 checksums) | PASS |
+| Checkpoint recovery (resume from row 2) | PASS |
+| Block scan (0-3, 3-5) + merge | PASS |

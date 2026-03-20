@@ -66,8 +66,15 @@ dimension sequence. Verified with:
 
 All produce [3, 6, 17, 116]. The multi-epsilon atlas comparison tool
 (`helium_atlas.py`) provides detailed gap-ratio and singular-value
-spectrum comparisons across configuration space, now supporting
-arbitrary potential types (1/r, 1/r²).
+spectrum comparisons across configuration space, supporting both
+1/r and 1/r² potentials.
+
+**1/r² with charges (Mar 2026):** The dimension (rank=116) is preserved,
+but the gap ratio landscape differs more than for 1/r. Pearson
+correlation between charged and uncharged gap maps: r≈0.76 for 1/r²
+(vs r≈0.85 for 1/r). The charges affect the *conditioning* of the
+116-dimensional subspace without changing which subspace it is. This
+is consistent with charges being coefficients, not structural elements.
 
 ## Files
 
