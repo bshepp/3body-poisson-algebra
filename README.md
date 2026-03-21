@@ -41,6 +41,10 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 
 *Gap ratio landscape at ε = 10⁻³ comparing all-attractive gravitational 1/r (left) and helium Coulomb +2, −1, −1 (center), with the log₁₀ differential (right). Pearson r = 0.91 confirms charge-sign invariance of the algebraic structure, while the differential reveals charge-sensitive regions near collinear configurations and small mass ratios.*
 
+![Targeted adaptive scan: Lagrange equilateral neighborhood](fig_lagrange_targeted.png)
+
+*High-resolution adaptive scan of the Lagrange equilateral neighborhood (1/r², Calogero-Moser). The optimal sampling scale (top left) drops sharply near the equilateral point (φ ≈ 60°, μ ≈ 1.0), revealing fine algebraic structure invisible at fixed ε. The gap score (top right) shows a pronounced valley around equilateral — the 5-tier point where all four tier boundaries are simultaneously resolved. SVD rank (bottom left) is uniformly 116 except for a few points near (78°, 1.05) where additional syzygies break, while the number of tiers (bottom right) reaches 5–6 in the equilateral cluster and drops to 2–3 at the periphery.*
+
 ## Repository structure
 
 | File | Description |

@@ -517,12 +517,17 @@ def run_analysis(potential_type, charges=None):
         phi_deg = np.degrees(phi)
         n_tiers = np.sum(tier_data[:, :, :, 0] >= 0, axis=2)
 
-        fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-        fig.suptitle(f'Targeted: {name} -- {label}\n{region["description"]}',
-                     fontsize=13, fontweight='bold')
-
         mu_range = (mu[0], mu[-1])
         phi_range = (phi[0], phi[-1])
+        phi_span = phi_deg[-1] - phi_deg[0]
+        mu_span = mu[-1] - mu[0]
+        data_aspect = phi_span / (mu_span * 180)
+        fig_w = max(14, min(22, 10 * data_aspect))
+        fig_h = 10
+
+        fig, axes = plt.subplots(2, 2, figsize=(fig_w, fig_h))
+        fig.suptitle(f'Targeted: {name} -- {label}\n{region["description"]}',
+                     fontsize=13, fontweight='bold')
 
         log_eps = np.log10(np.where(opt_eps > 0, opt_eps, 1e-5))
         im0 = axes[0, 0].pcolormesh(phi_deg, mu, log_eps, cmap='viridis',
@@ -552,6 +557,10 @@ def run_analysis(potential_type, charges=None):
         axes[1, 1].set_xlabel('phi (deg)')
         plt.colorbar(im3, ax=axes[1, 1])
         draw_isosceles(axes[1, 1], mu_range, phi_range)
+
+        for ax in axes.flat:
+            ax.set_xlim(phi_deg[0], phi_deg[-1])
+            ax.set_ylim(mu[0], mu[-1])
 
         fig.tight_layout(rect=[0, 0, 1, 0.93])
         path = os.path.join(out, f'{name}_overview.png')
@@ -585,6 +594,8 @@ def run_analysis(potential_type, charges=None):
             im = ax.pcolormesh(np.degrees(phi), mu, diff, cmap='RdBu_r',
                                vmin=-vlim, vmax=vlim, shading='auto')
             draw_isosceles(ax, (mu[0], mu[-1]), (phi[0], phi[-1]))
+            ax.set_xlim(np.degrees(phi[0]), np.degrees(phi[-1]))
+            ax.set_ylim(mu[0], mu[-1])
             ax.set_xlabel('phi (deg)')
             ax.set_ylabel('mu')
             ax.set_title(f'Gap Score Difference (charged - ref): {name}\n'
