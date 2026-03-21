@@ -18,6 +18,25 @@ The sequence **[3, 6, 17, 116]** is:
 
 The harmonic potential (r²), by contrast, produces a finite-dimensional algebra that closes at dimension 15.
 
+### Internal structure: S₃-equivariant jet filtration
+
+The 116-dimensional level-3 algebra has rigid internal structure. The 156 bracket products decompose as:
+
+| Component | Count | ε-scaling | Origin |
+|-----------|-------|-----------|--------|
+| **Tier 1** | 52 | ε⁰ | E-type irreps of S₃ — zeroth-order observables |
+| **Tier 2** | 44 | ε¹ | First-order variation |
+| **Tier 3** | 16 | ε² | Second-order variation |
+| **Tier 4** | 4 | ε³ | Third-order variation |
+| Syzygies | 32 | — | Jacobi identity consequences |
+| True zeros | 8 | — | Translation invariance (first-class) |
+
+The scaling exponents are **integer-quantized** (0, 1, 2, 3). The tier sizes are predicted exactly by the Clebsch-Gordan decomposition of S₃ representations: the algebra contains 52 copies of E (standard, dim 2), 24 of A (trivial), and 28 of A' (sign), with E-fraction locked at exactly 2/3 at every bracket level.
+
+The 40 null generators are not Dirac constraints — the 32 syzygies break at special submanifolds (collinear: rank increases to 124), while the 8 true zeros correspond to total-momentum conservation. The tier structure and constraint structure are orthogonal decompositions.
+
+Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential_comparison_plots/quantization_analysis.md)
+
 ![Gap ratio landscape: gravitational vs helium Coulomb at epsilon=1e-3](fig_atlas_teaser.png)
 
 *Gap ratio landscape at ε = 10⁻³ comparing all-attractive gravitational 1/r (left) and helium Coulomb +2, −1, −1 (center), with the log₁₀ differential (right). Pearson r = 0.91 confirms charge-sign invariance of the algebraic structure, while the differential reveals charge-sensitive regions near collinear configurations and small mass ratios.*
@@ -40,6 +59,11 @@ The harmonic potential (r²), by contrast, produces a finite-dimensional algebra
 | `sv_landscape_viz.py` | Singular value landscape visualizations |
 | `nbody/helium_atlas.py` | Charge-sign invariance comparison tool |
 | `nbody/run_helium.py` | Helium Coulomb algebra experiments |
+| `quantization_analysis.py` | Tier structure statistics, LQG/Bekenstein hypothesis tests |
+| `clebsch_gordan_analysis.py` | S₃ × SO(2) representation decomposition and CG verification |
+| `dirac_constraint_test.py` | Epsilon scaling and constraint identification from SVD data |
+| `dirac_analysis_from_svd.py` | Comprehensive noise-floor taxonomy (syzygies vs true zeros) |
+| `potential_comparison_plots/` | Analysis figures and documentation |
 | `session_log.md` | Full development log, annotated with corrections |
 | `results/` | Numerical results (Level 4 runs, atlas logs) |
 
