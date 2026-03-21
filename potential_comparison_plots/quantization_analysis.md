@@ -219,20 +219,26 @@ The 40 generators below rank 116 are suspicious: if they vanish on the physical 
 
 The 40 null generators decompose into **8 true zeros + 32 syzygies**, and neither population explains the tier structure.
 
-**8 True Zeros (SVs 148-155):**
-- Max value < 2.3×10⁻¹⁴ across ALL 10,000 configurations and ALL 5 epsilons
-- SVs 151-155 are at machine epsilon (< 10⁻¹⁵) everywhere
-- These are bracket expressions that simplify to identically zero as symbolic phase-space functions
-- **First-class by construction**: since g(z) ≡ 0, we have {g, f} ≡ 0 for all f
-- Physical origin: iterated brackets that reduce to total-momentum components, which Poisson-commute with all relative-coordinate Hamiltonians due to translation invariance
+**Critical finding from direct evaluation:** All 156 generators are nonzero as phase-space functions. Not a single generator has RMS < 1e-14 at any of the 4 tested configurations (Lagrange, isosceles, collinear, scalene) at any epsilon. The 40 null directions in the SVD are entirely **syzygies** — linear combinations of generators that vanish, not individual generators that vanish.
 
-**32 Syzygies (SVs 116-147):**
-- Zero at 87.7% of the atlas (generic configurations), but become nonzero at special submanifolds
+**8 "Deep" syzygies (SVs 148-155):**
+- These are the tightest linear dependencies — the combinations that most nearly vanish
+- Max SV < 2.3×10⁻¹⁴ across ALL 10,000 configurations and ALL 5 epsilons
+- SVs 151-155 at machine epsilon (< 10⁻¹⁵) everywhere
+- These are linear combinations of generators (not individual generators) that cancel to high precision at every configuration
+
+**32 "Soft" syzygies (SVs 116-147):**
+- Weaker linear dependencies that hold at generic configurations but break at special submanifolds
 - At collinear configurations (phi ≈ 6°), 8 of these "wake up," increasing rank from 116 → 124
 - Max rank across atlas: 125 (at mu=1.020, phi=5.7°)
 - These are **Jacobi identity consequences**: the three-term identity {{A,B},C} + cyc = 0 creates linear dependencies, but at special configurations where certain brackets degenerate, the dependency breaks
 - **NOT Dirac constraints**: they don't define a constraint surface in phase space
-- **Potential-independent**: both 1/r and 1/r² give exactly 40 null generators at every configuration
+- **Potential-independent**: both 1/r and 1/r² give exactly 40 null directions at every configuration
+
+**Null space structure (from direct SVD):**
+- 96.4% of null-space weight is in level-3 generators, ~3.4% in level 2, zero in levels 0-1
+- All 40 null vectors are syzygies (multi-generator combinations), zero are pure constraints (single generator vanishing)
+- 30-39 of the 40 null vectors mix generators across bracket levels (cross-level syzygies)
 
 ### The epsilon scaling proof
 
@@ -253,15 +259,15 @@ The most decisive evidence comes from the epsilon scaling exponents, fitted as S
 The decompositions are independent:
 
 ```
-156 generators
-├── 116 SIGNIFICANT (organized by dynamical hierarchy + S₃ representation theory)
+156 generators (ALL nonzero as individual phase-space functions)
+├── 116 SIGNIFICANT (linearly independent — organized by S₃ rep theory)
 │   ├── Tier 1 (52): dominant E-doublet components — zeroth-order observables
 │   ├── Tier 2 (44): E-doublet partners + A/A' generators — first-order variation
 │   ├── Tier 3 (16): subdominant generators — second-order variation
 │   └── Tier 4 (4): marginal generators — third-order variation
-└── 40 NULL (organized by algebraic identities)
-    ├── 32 Syzygies: Jacobi identity consequences (config-dependent)
-    └──  8 True zeros: translation invariance consequences (universal)
+└── 40 LINEARLY DEPENDENT (syzygies — linear combinations that vanish)
+    ├── 32 Soft syzygies: config-dependent (break at collinear submanifold)
+    └──  8 Deep syzygies: universal (vanish to machine epsilon everywhere)
 ```
 
 The tier boundaries reflect dynamical significance mediated by S₃ representation theory (which generators carry the most geometric information). The constraint boundary reflects algebraic redundancy (which generators are expressible as combinations of others). These are orthogonal classifications.
@@ -295,7 +301,7 @@ At the physically relevant threshold (1e-10), rank is 116 at 79.2% of configurat
 
 6. **The universal ratio ~4.27** (gap(1/r^2)/gap(1/r)) reflects a systematic difference in how the two potentials populate the same algebraic subspaces, not a fundamental constant.
 
-7. **The 40 noise-floor generators are NOT Dirac constraints** in the traditional sense. They decompose into 8 identically zero generators (translation-invariance consequences, first-class) and 32 syzygies (Jacobi identity consequences that break at special submanifolds like the collinear configuration). The tier structure is orthogonal to this constraint structure — it reflects S₃ representation theory, not first-class/second-class classification.
+7. **The 40 noise-floor directions are NOT Dirac constraints.** All 156 generators are individually nonzero as phase-space functions. The 40 null SVD directions are syzygies — linear combinations of generators that cancel. Of these, 8 are "deep" (vanish to machine epsilon everywhere) and 32 are "soft" (break at special submanifolds like collinear). The null space is 96% concentrated in level-3 generators. The tier structure is orthogonal to this syzygy structure.
 
 8. **The tier scaling exponents are integer-quantized**: α = 0, 1, 2, 3 for Tiers 1-4 respectively. This reveals that tiers correspond to different orders in the Taylor expansion of generator functions, with the noise floor at exactly zero (no epsilon dependence). The gap at rank 116 grows as ~ε², from 5.5× to 67,472× across the epsilon range.
 

@@ -553,7 +553,7 @@ def run_analysis(potential_type, charges=None):
         plt.colorbar(im3, ax=axes[1, 1])
         draw_isosceles(axes[1, 1], mu_range, phi_range)
 
-        plt.tight_layout()
+        fig.tight_layout(rect=[0, 0, 1, 0.93])
         path = os.path.join(out, f'{name}_overview.png')
         fig.savefig(path, dpi=200, bbox_inches='tight')
         plt.close(fig)
