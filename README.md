@@ -36,6 +36,7 @@ The harmonic potential (r²), by contrast, produces a finite-dimensional algebra
 | `stability_atlas.py` | Exact-engine atlas scanner |
 | `atlas_1000.py` | 1000×1000 full atlas scan |
 | `multi_epsilon_atlas.py` | Multi-epsilon & adaptive structure analysis (supports `--charges`, multiprocessing, spot instances) |
+| `targeted_adaptive_scan.py` | High-resolution adaptive scans of specific regions of interest (Lagrange, Euler, charge hotspot, etc.) |
 | `sv_landscape_viz.py` | Singular value landscape visualizations |
 | `nbody/helium_atlas.py` | Charge-sign invariance comparison tool |
 | `nbody/run_helium.py` | Helium Coulomb algebra experiments |
@@ -82,6 +83,12 @@ python multi_epsilon_atlas.py adaptive --potential 1/r2 --workers 15
 python multi_epsilon_atlas.py adaptive --potential 1/r2 --start-row 0 --end-row 50 --workers 15
 python multi_epsilon_atlas.py adaptive-merge --potential 1/r2
 python multi_epsilon_atlas.py adaptive-verify --potential 1/r2
+
+# Targeted high-resolution scans of specific regions
+python targeted_adaptive_scan.py --list                    # list regions
+python targeted_adaptive_scan.py --region lagrange         # one region
+python targeted_adaptive_scan.py --both                    # reference + charged
+python targeted_adaptive_scan.py --analyze --potential 1/r2 # generate plots
 ```
 
 ## Key insight

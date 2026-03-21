@@ -46,18 +46,22 @@ faulthandler.enable()
 
 S3_BUCKET = os.environ.get("S3_BUCKET", "")
 
-def s3_sync(local_dir, s3_prefix=""):
-    """If S3_BUCKET is set, sync local dir to S3 (non-blocking best-effort)."""
+def s3_sync(local_dir, s3_prefix="", include_all=False):
+    """If S3_BUCKET is set, sync local dir to S3 (non-blocking best-effort).
+
+    Args:
+        include_all: If True, sync everything. If False, exclude .html/.png
+                     (for large atlas scans where plots are regenerated).
+    """
     if not S3_BUCKET:
         return
     import subprocess
     dest = f"s3://{S3_BUCKET}/{s3_prefix}" if s3_prefix else f"s3://{S3_BUCKET}/{local_dir}"
+    cmd = ["aws", "s3", "sync", local_dir, dest]
+    if not include_all:
+        cmd += ["--exclude", "*.html", "--exclude", "*.png"]
     try:
-        subprocess.run(
-            ["aws", "s3", "sync", local_dir, dest,
-             "--exclude", "*.html", "--exclude", "*.png"],
-            capture_output=True, timeout=120
-        )
+        subprocess.run(cmd, capture_output=True, timeout=120)
     except Exception as e:
         print(f"  [S3 sync warning: {e}]", flush=True)
 
@@ -1105,7 +1109,10 @@ def run_adaptive_scan(potential_type, charges=None,
                               ('gap_score_map', gap_score_map),
                               ('tier_map', tier_map),
                               ('n_tested_map', n_tested_map)]:
-            np.save(os.path.join(out_dir, f'{arr_name}.npy'), arr)
+            dst = os.path.join(out_dir, f'{arr_name}.npy')
+            tmp = os.path.join(out_dir, f'{arr_name}.tmp.npy')
+            np.save(tmp, arr)
+            os.replace(tmp, dst)
 
     def _unpack_result(local_i, j, result):
         rank, svs, max_gap, opt_e, g_score, n_tried, tiers = result

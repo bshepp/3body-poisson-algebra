@@ -1789,3 +1789,72 @@ All infrastructure was validated with a 5-test suite
 | Verification report (9 checksums) | PASS |
 | Checkpoint recovery (resume from row 2) | PASS |
 | Block scan (0-3, 3-5) + merge | PASS |
+
+---
+
+## Session: Targeted High-Resolution Adaptive Scans
+
+### Motivation
+
+The 100×100 adaptive atlas revealed several regions with rich algebraic
+structure that warranted closer examination at higher resolution:
+
+- **Euler strip** (near-collinear, low phi): anomalous ranks 117-130,
+  lowest gap scores
+- **Lagrange neighborhood**: 5-tier point, tier count transition zone
+- **Charge hotspot**: largest gap score difference between charged and
+  uncharged configurations
+- **Tier cluster**: 18 points with 4 tiers, displaced from equilateral
+- **Isosceles ridge**: narrow mu≈1 strip tracking structure along symmetry
+- **Small mu**: extreme mass ratios, finest epsilon requirements
+
+### Implementation: `targeted_adaptive_scan.py`
+
+New script for running localized adaptive scans with enhanced parameters
+(800 samples/point, 12 epsilon candidates) on 30×30 to 50×50 grids.
+
+**Robustness features added to the pipeline:**
+
+| Feature | Description |
+|---------|-------------|
+| Atomic array saves | `.npy` files written to `.tmp.npy`, then `os.replace` |
+| S3 pull on start | `sync_down_region` downloads existing data before each region |
+| Shape validation | Array dimensions checked against grid config on resume |
+| Status file | `status.json` written atomically every row for remote monitoring |
+| S3 sync every 3 rows | Frequent pushes; max data loss = 3 rows |
+| SIGTERM propagation | Bash traps SIGTERM → forwards to Python → graceful save + sync |
+| Skip verification on shutdown | Don't waste spot termination window on checksums |
+| Main loop respects shutdown | Stops iterating through remaining regions |
+| Background log sync | Heartbeat + log pushed to S3 every 60s |
+| Retry on final sync | 3 attempts with 10s backoff |
+| Completion marker | `targeted_completion.json` with exit codes and metadata |
+
+**Bug fix:** `np.save('file.npy.tmp', arr)` auto-appends `.npy` when
+the filename doesn't already end in `.npy`, creating `file.npy.tmp.npy`.
+Fixed by using `file.tmp.npy` as the temp name.
+
+**Bug fix:** `nproc` returns 1 during EC2 userdata execution (cgroup
+restriction during cloud-init). Fixed by removing explicit `--workers`
+from userdata and letting Python's `multiprocessing.cpu_count()` detect
+cores directly.
+
+### AWS Execution
+
+Launched on c6i.8xlarge spot instance (32 vCPU, 31 workers).
+Algebra build: ~19 min. Row processing: ~18-30s (vs 275s sequential).
+
+**Early results (reference 1/r², Euler strip, 40×40):**
+
+| Metric | Value |
+|--------|-------|
+| Rank range | [116, 130] |
+| Rank 116 count | 879 / 1600 |
+| Rank 122 (secondary peak) | 100 / 1600 |
+| Anomalous rank points | 721 / 1600 (45%) |
+| Gap score range | [16.0, 17.85] |
+| Tier count | [1, 4], median 2.0 |
+| Scan time | 13.2 min |
+
+The near-collinear regime shows ranks up to 130, with rank 122 as a
+secondary peak. This likely reflects the potential singularity structure
+near two-body collision rather than genuinely new algebraic generators.
