@@ -18,9 +18,9 @@ The sequence **[3, 6, 17, 116]** is:
 
 The harmonic potential (r²), by contrast, produces a finite-dimensional algebra that closes at dimension 15.
 
-![Stability atlas: log₁₀(gap ratio) for the 1/r² potential over shape space](fig_atlas_teaser.png)
+![Gap ratio landscape: gravitational vs helium Coulomb at epsilon=1e-3](fig_atlas_teaser.png)
 
-*Preliminary stability atlas: SVD gap ratio of the level-3 Poisson algebra mapped over shape space (μ, φ) for the Calogero-Moser potential. The Lagrange equilateral point and isosceles symmetry curves are visible as local minima in gap strength.*
+*Gap ratio landscape at ε = 10⁻³ comparing all-attractive gravitational 1/r (left) and helium Coulomb +2, −1, −1 (center), with the log₁₀ differential (right). Pearson r = 0.91 confirms charge-sign invariance of the algebraic structure, while the differential reveals charge-sensitive regions near collinear configurations and small mass ratios.*
 
 ## Repository structure
 
