@@ -3,6 +3,17 @@
 **Reviewer:** Claude (Opus 4.6), prompted for critical/adversarial review
 **Date:** 2026-02-14
 **Updated:** 2026-02-15 (deep adversarial analysis added; see `adversarial_analysis.md` for full details)
+**Updated:** 2026-03-17 (all major recommendations implemented across three-paper trilogy)
+
+**Resolution status:** The fatal attacks on the non-integrability certificate
+(Attacks 1 and 3 in `adversarial_analysis.md`) led to the fundamental reframing
+recommended in Part IV, Option A.  Paper 1 (`preprint.tex`) now presents the
+dimension sequence as a structural algebraic invariant rather than a
+non-integrability certificate.  Paper 2 (`paper2_s3_filtration.tex`) reveals
+the internal S₃ structure.  Paper 3 (`paper3_universality.tex`) formalizes
+the universality conjecture with explicit "what the conjecture does NOT
+claim" caveats.  The Calogero-Moser comparison (Part V) is now positioned
+as the key result motivating the structural interpretation.
 
 ---
 

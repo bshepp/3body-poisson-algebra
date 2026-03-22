@@ -1,6 +1,10 @@
 # Track: 3D Extension — Spatial Three-Body Poisson Algebra
 
-**Parent project:** `../preprint.tex` (planar/2D results: dimension sequence 3, 6, 17, 116)
+**Parent project:** `../preprint.tex` (Paper 1: planar/2D results)
+
+**Paper:** Results in this directory are presented in
+[`../paper3_universality.tex`](../paper3_universality.tex) (Paper 3:
+universality conjecture, Section 5: Spatial Dimension Independence).
 
 ## Scientific Question
 

@@ -530,30 +530,43 @@ def run_analysis(potential_type, charges=None):
                      fontsize=13, fontweight='bold')
 
         log_eps = np.log10(np.where(opt_eps > 0, opt_eps, 1e-5))
+        eps_lo = np.percentile(log_eps, 1)
+        eps_hi = np.percentile(log_eps, 99)
+        if eps_hi - eps_lo < 0.1:
+            eps_lo = log_eps.min() - 0.05
+            eps_hi = log_eps.max() + 0.05
         im0 = axes[0, 0].pcolormesh(phi_deg, mu, log_eps, cmap='viridis',
-                                      shading='auto')
+                                      shading='auto', vmin=eps_lo, vmax=eps_hi)
         axes[0, 0].set_title('Optimal log10(eps)')
         axes[0, 0].set_ylabel('mu')
         plt.colorbar(im0, ax=axes[0, 0])
         draw_isosceles(axes[0, 0], mu_range, phi_range)
 
+        gap_lo = np.percentile(gap_score, 1)
+        gap_hi = np.percentile(gap_score, 99)
+        if gap_hi - gap_lo < 0.1:
+            gap_lo = gap_score.min() - 0.05
+            gap_hi = gap_score.max() + 0.05
         im1 = axes[0, 1].pcolormesh(phi_deg, mu, gap_score, cmap='inferno',
-                                      shading='auto')
+                                      shading='auto', vmin=gap_lo, vmax=gap_hi)
         axes[0, 1].set_title('Gap Score')
         plt.colorbar(im1, ax=axes[0, 1])
         draw_isosceles(axes[0, 1], mu_range, phi_range)
 
+        rank_lo = max(rank.min() - 1, 112)
+        rank_hi = max(rank.max() + 1, 118)
         im2 = axes[1, 0].pcolormesh(phi_deg, mu, rank, cmap='RdYlGn',
-                                      shading='auto', vmin=114, vmax=126)
-        axes[1, 0].set_title('SVD Rank')
+                                      shading='auto', vmin=rank_lo, vmax=rank_hi)
+        axes[1, 0].set_title(f'SVD Rank [{rank.min()}\u2013{rank.max()}]')
         axes[1, 0].set_xlabel('phi (deg)')
         axes[1, 0].set_ylabel('mu')
         plt.colorbar(im2, ax=axes[1, 0])
         draw_isosceles(axes[1, 0], mu_range, phi_range)
 
+        tier_hi = max(n_tiers.max(), 4)
         im3 = axes[1, 1].pcolormesh(phi_deg, mu, n_tiers, cmap='YlOrRd',
-                                      shading='auto', vmin=1, vmax=6)
-        axes[1, 1].set_title('Number of Tiers')
+                                      shading='auto', vmin=1, vmax=tier_hi)
+        axes[1, 1].set_title(f'Number of Tiers [1\u2013{n_tiers.max()}]')
         axes[1, 1].set_xlabel('phi (deg)')
         plt.colorbar(im3, ax=axes[1, 1])
         draw_isosceles(axes[1, 1], mu_range, phi_range)

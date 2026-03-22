@@ -3,6 +3,15 @@
 **Date:** 2026-02-15
 **Method:** Three independent Claude Opus 4.6 agents — one constructive literature search, two adversarial reviewers (one targeting non-integrability claim, one targeting mass invariance claim), plus coordinating analysis with web search across mathematical physics literature.
 
+**Resolution (Mar 2026):** All major recommendations have been implemented.
+Paper 1 (`preprint.tex`) was reframed per Option A (Part IV): the dimension
+sequence is presented as a structural algebraic invariant, not a
+non-integrability certificate.  The CM comparison is positioned as the key
+evidence for this structural interpretation.  Paper 3
+(`paper3_universality.tex`) includes an explicit "what the conjecture does
+NOT claim" subsection addressing Attacks 1 and 3.  The mass invariance
+statement (Attack 2 on Theorem 2) uses the Zariski argument correctly.
+
 ---
 
 ## Part I: Literature Search — Does the Theorem Exist?

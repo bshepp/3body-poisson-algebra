@@ -1,6 +1,10 @@
 # Track: N-Body Extension -- Poisson Algebra for Arbitrary Particle Count
 
-**Parent project:** `../preprint.tex` (planar 3-body results: dimension sequence [3, 6, 17, 116])
+**Parent project:** `../preprint.tex` (Paper 1: planar 3-body results)
+
+**Paper:** All results in this directory are presented in
+[`../paper3_universality.tex`](../paper3_universality.tex) (Paper 3:
+universality conjecture).
 
 ## Scientific Questions
 
@@ -128,7 +132,8 @@ python exact_growth_nbody.py -N 5 -d 2 --max-level 1    # N=5 (expensive)
 
 ## Implications for the Conjecture
 
-The conjecture (from `../conjectures.md`) now has evidence at TWO values of N:
+The conjecture (formally stated in [`../paper3_universality.tex`](../paper3_universality.tex),
+Conjecture 7) now has evidence at TWO values of N:
 
 - **N=3**: sequence [3, 6, 17, 116] -- mass-invariant, d-independent, potential-type-independent, charge-sign-invariant
 - **N=4**: sequence [6, 14, 62, ...] -- mass-invariant, d-independent (through L2)
