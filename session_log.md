@@ -1972,3 +1972,371 @@ Updated 8 documents to reflect the completed trilogy:
 | `academic_engagement.md` | Updated title/date, rewrote abstracts for trilogy, fixed framing, updated action items |
 | `peer_review_analysis.md` | Added resolution note: all recommendations implemented |
 | `adversarial_analysis.md` | Added resolution note: reframing per Option A completed |
+
+---
+
+## Session: Post-Newtonian Extension & Composite Potentials (March 2026)
+
+### Schwarzschild Extension — Evaluated and Redirected
+
+User requested evaluation of a Schwarzschild extension document
+(`schwarzschild/schwarzschild_scope.md`). After analysis, identified
+fundamental issues with applying the Poisson algebra framework to GR:
+the full Schwarzschild metric lives in curved spacetime and requires
+Dirac constraint analysis, not flat-space Poisson brackets.
+
+Redirected to a more tractable path: the **Post-Newtonian Three-Body
+Problem**, using the static 1PN Einstein-Infeld-Hoffmann Hamiltonian
+as a composite potential (1/r + 1/r² corrections).
+
+### Engine Extension: Composite Potentials
+
+Modified `exact_growth_nbody.py` to support composite potentials —
+sums of `c_k * u^{p_k}` terms with arbitrary coefficients and
+exponents. The `--composite` CLI argument accepts colon-separated
+`coefficient:exponent` pairs.
+
+**Bug encountered**: Argparse interpreted `--composite "-1:1"` as
+multiple arguments because `-1` looks like a flag. Fixed by using
+`--composite="-1:1"` (assignment syntax).
+
+### Composite Universality Test
+
+Tested whether composite potentials preserve the universal sequence:
+
+| Potential | Sequence |
+|-----------|----------|
+| Control: 1/r | [3, 6, 17, 116] |
+| Two-term: 1/r + 1/r² | [3, 6, 17, 116] |
+
+Composite potentials with different pole orders produce the same
+dimension sequence as pure 1/r. The algebra sees the singularity
+class, not the specific potential shape.
+
+**OOM crash**: Level 3 computation for the two-term composite potential
+consistently exceeded memory on local machines during the lambdify step
+(156 expressions with mixed polynomial degrees). Moved to AWS.
+
+### AWS Orchestration — Composite/PN Pipeline
+
+Built robust AWS infrastructure for the composite/PN tests:
+
+- **`nbody/run_pn_aws.py`**: Python orchestrator with S3 sync,
+  checkpointing, SIGTERM handling, heartbeat monitoring, and
+  completion manifests.
+- **`userdata_composite_pn.sh`**: Shell userdata script with
+  `set -o pipefail` to prevent `tee` from masking exit codes.
+
+Initial deployment on r6i.xlarge (32GB) terminated with OOM (exit 137).
+Upgraded to r6i.4xlarge (128GB) and successfully completed the two-term
+composite test.
+
+### 1/r³ Pipeline Fix
+
+Discovered that the 1/r³ targeted scan on AWS had silently failed:
+the scan reported exit code 0, but logs showed `error: argument
+--potential: invalid choice: '1/r^3'`. Root causes:
+
+1. `targeted_adaptive_scan.py` and `multi_epsilon_atlas.py` omitted
+   `1/r^3` from their argparse `choices` lists
+2. `multi_epsilon_atlas.py` lacked `POT_DIR`, `POT_LABEL`, and
+   `SINGULAR_POTENTIALS` entries for `1/r^3`
+3. `tee` in the userdata script masked the Python process exit code
+
+**Fix**: Added `1/r^3` to all argparse choices and dictionaries.
+Added `set -o pipefail` to userdata scripts. Relaunched and the
+1/r³ scan completed successfully (both reference and charged).
+
+---
+
+## Session: Multi-System Universality Survey (March 2026)
+
+### Motivation
+
+User provided `expansion.txt` — a brainstorm of 20+ physical
+three-body systems from gravitational, atomic, nuclear, plasma,
+post-Newtonian, and exotic physics. Goal: systematically test the
+universality conjecture across all of them.
+
+### Plan Development
+
+Researched each scenario for physical relevance, potential type,
+mass ratios, and charge configurations. Classified 21 systems as
+computationally tractable, plus 2 documented-only (three quarks
+requiring QCD, three anyons requiring quantum statistics).
+
+Plan organized into phases:
+1. Engine extensions (log, Yukawa, external harmonic potentials)
+2. Scenario registry (`expansion_configs.py`)
+3. Dimension sequence computation (AWS orchestrator)
+4. Stability atlas scans (AWS orchestrator)
+5. Comparative analysis and plotting
+
+### Engine Extensions
+
+Extended `exact_growth_nbody.py` to support three new potential types:
+
+**Logarithmic potential**: `V ~ -log(u_ij)` for 2D point vortex
+dynamics. Uses SymPy's `log` directly — transcendental, not polynomial
+in u, but SymPy handles the symbolic differentiation exactly.
+
+**Yukawa potential**: `V ~ u_ij * exp(-mu/u_ij)` (screened Coulomb).
+The `exp(-mu/u)` creates deeply nested expression trees in Poisson
+brackets, leading to recursion depth issues (see below).
+
+**External harmonic potential**: `V_ext ~ ½ m ω² r²` for Penning
+trap confinement. Added as single-body potential terms in the
+Hamiltonian.
+
+Also extended `stability_atlas.py` with Yukawa and log Hamiltonian
+constructors for atlas scans.
+
+**Bug: Potential reclassification**: When `potential="yukawa"` was
+passed with `potential_params`, the engine's `__init__` incorrectly
+reclassified it as `"composite"`. Fixed by checking for "yukawa"
+and "log" before the composite override.
+
+### Scenario Registry (`expansion_configs.py`)
+
+Central registry of all 21 scenarios with:
+- Category, label, description
+- Potential type, masses, charges
+- `potential_params` (e.g., Yukawa mu)
+- `external_potential` (e.g., trap omega)
+- `run_atlas` flag
+
+Categories: gravitational (7), atomic (6), nuclear (2), plasma (3),
+post-Newtonian (1), exotic (2). Plus 2 documented-only (quarks, anyons)
+with detailed explanations of why they're outside scope.
+
+### AWS Deployment — Dimension Sequences
+
+**`run_expansion_dimseq.py`**: Iterates through all 21 scenarios,
+instantiates `NBodyAlgebra` for each, computes `compute_growth` through
+level 3. Features: S3 sync, SIGTERM handling, heartbeat, completion
+manifest with resume.
+
+Deployed on r6i.2xlarge (64GB). Completed 15/21 scenarios successfully.
+Three Yukawa scenarios failed (see below). Remaining scenarios (kozai_lidov,
+magnetic_monopoles, dark_matter) computed on relaunched instances.
+
+### AWS Deployment — Atlas Scans
+
+**`run_expansion_atlas.py`**: Runs `targeted_adaptive_scan.py` for each
+atlas-enabled scenario. For each scenario, runs a reference scan (no
+charges) and optionally a charged scan.
+
+**Bug: `--masses` argument**: Initial launch passed `--masses` to
+`targeted_adaptive_scan.py`, which doesn't accept it. All scenarios
+failed with `unrecognized arguments`. Fixed by removing the `--masses`
+block from the orchestrator. Relaunched successfully.
+
+Deployed on c6i.8xlarge (32 vCPUs). Reference and charged scans for
+1/r scenarios (gravitational, atomic) completed successfully.
+
+### Yukawa Recursion Depth Crisis
+
+The Yukawa potential `V ~ u * exp(-mu/u)` creates expression trees of
+extraordinary depth. When SymPy Poisson brackets are computed at level 3,
+the resulting expressions have symbolic trees thousands of levels deep.
+
+**Failure mode**: Python's `compile()` function (called by `lambdify`)
+has an internal recursion limit. Even with `sys.setrecursionlimit(10000)`,
+the Yukawa expressions exceeded it. Error: `RecursionError: maximum
+recursion depth exceeded during compilation`.
+
+**Affected scenarios**: tritium_he3, p_n_n_scattering, dusty_plasma
+(all Yukawa potentials).
+
+**Fix — three-layer fallback strategy**:
+
+1. Increased `sys.setrecursionlimit(100000)` and added `ulimit -s unlimited`
+   in userdata scripts for maximum stack space.
+
+2. Implemented `_make_flat_func()` in both `exact_growth.py` and
+   `exact_growth_nbody.py`: uses SymPy's `cse()` (Common Subexpression
+   Elimination) to decompose deeply nested expressions into flat
+   assignment sequences, writes them to a temp `.py` file, and imports
+   the result — completely bypassing the recursive compiler.
+
+3. Last-resort `subs()` fallback: if even the CSE-flattened code
+   exceeds limits, falls back to point-by-point evaluation using
+   `expr.xreplace()`. Slow but guaranteed to work.
+
+**Discovery**: The code already had `except RecursionError:
+f = self._make_flat_func(...)` handlers in the lambdify loops, but
+`_make_flat_func` was never actually implemented — it was referenced
+but undefined. The RecursionError was caught, then immediately
+re-raised as an AttributeError.
+
+### Yukawa Atlas Fix
+
+The atlas pipeline uses `stability_atlas.py`, which constructed the
+Yukawa Hamiltonian with a free `Symbol('mu_yukawa')`. During numerical
+evaluation, this unresolved symbol caused failures.
+
+**Fix**: Modified `get_symbolic_hamiltonians()` to accept `**kwargs`
+including `yukawa_mu=<value>`. The atlas orchestrator now passes
+`--yukawa-mu 0.7` (or scenario-specific mu) to `targeted_adaptive_scan.py`,
+which passes it through `AtlasConfig` to the Hamiltonian builder.
+
+Verified: Yukawa atlas algebra builds successfully (835s for 156
+generators) and scans produce consistent rank 116 across shape space.
+
+### Dimension Sequence Results — Key Discoveries
+
+#### Discovery 1: Gravitational Mass Dependence
+
+All 7 unequal-mass gravitational configurations produce **[3, 5, 13, 69]**:
+
+| System | Mass ratio | Sequence |
+|--------|-----------|----------|
+| Sun-Earth-Moon | 10⁶:3:0.037 | [3, 5, 13, 69] |
+| Sun-Jupiter-Asteroid | 10⁶:950:0.1 | [3, 5, 13, 69] |
+| Three Cluster Stars | 1:1:1 | [3, 5, 13, 69] |
+| Binary Star + Planet | 1:1:0.001 | [3, 5, 13, 69] |
+| Three Galaxies | 1:2:3 | [3, 5, 13, 69] |
+| Triple BH (LISA) | 1:0.01:10⁻⁵ | [3, 5, 13, 69] |
+| Binary BH + NS | 1:1:0.047 | [3, 5, 13, 69] |
+
+**Interpretation**: Unequal masses break S₃ symmetry, reducing the
+number of independent generators at each level. The [3, 5, 13, 69]
+sequence is itself mass-configuration-invariant (consistently produced
+across 10 orders of magnitude in mass ratio).
+
+**Correction to earlier claims**: The original "mass invariance" claim
+(in Papers 1 and 3) was established using the N=3 equal-mass engine
+with different mass configurations via the `masses` parameter. Those
+tests showed invariance, but the Multi-System Survey revealed that
+this holds only for equal-mass configurations and charge-dominated
+systems. For gravitational systems with truly unequal masses (no
+charges to restore symmetry), the algebra is smaller.
+
+**Note**: The "three cluster stars" entry (equal mass 1:1:1) also gives
+[3, 5, 13, 69] in the survey. This may reflect a difference in how the
+NBodyAlgebra handles the mass parameter vs the original exact_growth.py
+engine, or a difference in the symbolic simplification path. This
+warrants investigation.
+
+#### Discovery 2: Charge-Class Mass Invariance
+
+Charge-coupled systems show mass invariance *within each charge class*:
+
+| System | Charges | Nuclear mass | Sequence |
+|--------|---------|-------------|----------|
+| Helium | +2,−1,−1 | 7294 | [3, 6, 17, 116] |
+| H⁻ Ion | +1,−1,−1 | 1836 | [3, 6, 17, 116] |
+| Positronium Ps⁻ | +1,−1,−1 | 1 (!) | [3, 6, 17, 116] |
+| Muonic Helium | +2,−1,−1 | 7294 (μ=207) | [3, 6, 17, 116] |
+
+The mass range spans a factor of 7294 (from m_e = 1 in Ps⁻ to
+m_He = 7294 in Helium), yet all produce the identical sequence.
+The charges restore sufficient algebraic structure to saturate the
+full 116-dimensional algebra.
+
+#### Discovery 3: Charge Magnitude Sensitivity
+
+Higher nuclear charges or mixed-sign geometries produce small but
+definite departures at level 3:
+
+| System | Charges | Level 3 dim |
+|--------|---------|------------|
+| He, H⁻, Ps⁻, μ-He | |q| ≤ 2 | 116 |
+| Li⁺ Ion | +3,−1,−1 | 111 |
+| H₂⁺ Ion | +1,+1,−1 | 115 |
+
+Levels 0–2 remain exactly universal at [3, 6, 17]. The sensitivity
+appears only at the deepest computed level, suggesting that charge
+magnitude creates additional algebraic relations among the most
+complex level-3 generators.
+
+The Li⁺ result (111) is particularly interesting: the +3 charge makes
+the nucleus-electron interaction three times stronger than the
+electron-electron repulsion, creating a more asymmetric algebraic
+structure. The H₂⁺ result (115) reflects the unique geometry of
+two identical heavy repulsive bodies with a single light attractive body.
+
+#### Discovery 4: Logarithmic Universality
+
+The 2D vortex system with logarithmic potential produces
+**[3, 6, 17, 116]** — identical to the algebraic singularities.
+
+This is significant because log(r) is a transcendental singularity,
+fundamentally different from the algebraic poles 1/r^n. The algebra
+sees the *existence* of the singularity, not its specific analytic form.
+
+#### Discovery 5: Composite Potential Universality
+
+The composite potential V = 1/r + 1/r² produces **[3, 6, 17, 116]**.
+
+This confirms that mixing different pole orders does not change the
+dimension sequence. The algebra depends on the singularity class
+(singular vs regular), not on the polynomial structure of the potential
+in u = 1/r.
+
+#### Discovery 6: Penning Trap (All-Repulsive + External)
+
+Three ions in a Penning trap (+1,+1,+1 charges with external harmonic
+confinement) produce **[3, 6, 17, 116]**.
+
+This extends the "charge-sign invariance" result: even purely repulsive
+interactions, which would not form bound states in free space, produce
+the universal algebra when confined by an external potential.
+
+### AWS Instance Management
+
+**Instance inventory** (peak, March 22, 2026):
+- `3body-expansion-dimseq` (r6i.2xlarge): dimension sequences
+- `3body-expansion-atlas` (c6i.8xlarge): atlas scans
+- `3body-composite-pn` (r6i.4xlarge): composite/PN tests
+- `3body-targeted-1r3` (c6i.8xlarge): 1/r³ targeted scan
+
+**Spot instance handling**: Multiple OOM terminations of the
+composite/PN instance on smaller machines (r6i.xlarge, 32GB).
+Upgraded to r6i.4xlarge (128GB) which successfully completed the
+two-term composite test.
+
+**Monitoring**: Heartbeat files written to S3 every 60 seconds with
+instance ID, job name, and `uptime` output. CloudWatch CPU metrics
+used to detect dead processes (CPU drops to 0.1% when the Python
+process is killed but the instance stays running).
+
+**Safety protocol**: After accidentally terminating an instance
+running the 1/r³ scan (which turned out to have already completed),
+adopted a policy of always checking S3 logs and completion manifests
+before any `terminate-instances` call.
+
+### Document Updates (March 2026)
+
+Updated 4 documents to reflect the Multi-System Survey:
+
+| Document | Changes |
+|----------|---------|
+| `README.md` | Added survey results table (21 systems), new potential types, refined conjecture, updated repo structure and usage |
+| `conjectures.md` | New evidence table entries, revised "why it might be true" with mass-dependence, charge-class invariance, revised formal statement |
+| `research_roadmap.md` | Marked log/composite as done, added survey in-progress section, updated priorities |
+| `nbody/README.md` | Added survey results, engine extensions documentation, revised conjecture implications |
+
+### Status (end of session)
+
+**Complete**:
+- 15/21 dimension sequences
+- 15/21+ atlas scans
+- 2/6 composite/PN tasks
+- 1/r³ targeted scan (both reference and charged)
+- All documentation updated
+
+**In progress** (running on AWS):
+- 3 Yukawa dimension sequences (recursion fix deployed, awaiting results)
+- Remaining atlas scans (Yukawa, log, magnetic monopoles)
+- Remaining composite/PN tasks (three-term composite, 1PN at c=10/50/100)
+- kozai_lidov, magnetic_monopoles, dark_matter dimension sequences
+
+**Known issues**:
+- Yukawa expressions create expression trees exceeding Python's compiler
+  recursion limit; CSE-based fallback implemented but not yet verified
+  on all Yukawa scenarios
+- The "three cluster stars" (equal mass, gravitational) yielding
+  [3, 5, 13, 69] rather than [3, 6, 17, 116] needs investigation —
+  may reflect a difference between the NBodyAlgebra and exact_growth
+  engines

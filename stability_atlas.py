@@ -69,9 +69,12 @@ class AtlasConfig:
     masses: Tuple[float, float, float] = (1.0, 1.0, 1.0)
     G: float = 1.0
     
-    # Potential type: '1/r', '1/r2', 'harmonic'
+    # Potential type: '1/r', '1/r2', 'harmonic', 'log', 'yukawa'
     potential_type: str = '1/r'
-    
+
+    # Yukawa screening parameter (only used when potential_type='yukawa')
+    yukawa_mu: float = None
+
     # Bracket level to compute (0, 1, 2, 3)
     max_level: int = 3
     
@@ -221,6 +224,16 @@ class Potential:
             'integrable': False,
             'singular': True,
         },
+        'log': {
+            'name': 'Logarithmic (log r)',
+            'integrable': False,
+            'singular': True,
+        },
+        'yukawa': {
+            'name': 'Yukawa (e^{-mu r}/r)',
+            'integrable': False,
+            'singular': True,
+        },
     }
 
     @staticmethod
@@ -249,7 +262,7 @@ class Potential:
         return None
 
     @staticmethod
-    def get_symbolic_hamiltonians(potential_type: str, charges=None):
+    def get_symbolic_hamiltonians(potential_type: str, charges=None, **kwargs):
         """
         Return (H12, H13, H23) as SymPy expressions in the polynomial
         u_ij representation used by exact_growth.py.
@@ -257,6 +270,9 @@ class Potential:
         Accepts '1/r^n' for any real exponent n (e.g. '1/r^1.5').
         When charges=(q1,q2,q3) is provided with a 1/r^n potential,
         constructs H_ij = T_i + T_j + q_i*q_j*u_ij^n.
+
+        For yukawa potentials, pass yukawa_mu=<value> to set the
+        screening parameter (default 7/10).
         """
         from sympy import Integer as _Int
 
@@ -301,6 +317,19 @@ class Potential:
                     T1 + T3 + r13_sq,
                     T2 + T3 + r23_sq)
 
+        if potential_type == 'log':
+            from sympy import log as _log
+            return (T1 + T2 - _log(u12),
+                    T1 + T3 - _log(u13),
+                    T2 + T3 - _log(u23))
+
+        if potential_type == 'yukawa':
+            from sympy import exp as _exp, Rational as _Rat
+            mu = kwargs.get('yukawa_mu', _Rat(7, 10))
+            return (T1 + T2 - u12 * _exp(-mu / u12),
+                    T1 + T3 - u13 * _exp(-mu / u13),
+                    T2 + T3 - u23 * _exp(-mu / u23))
+
         raise ValueError(f"No symbolic Hamiltonians for '{potential_type}'")
 
 
@@ -331,8 +360,13 @@ class PoissonAlgebra:
         print(f"  Building symbolic generators for {self.pot_meta['name']}...")
         t0 = time()
 
+        ham_kwargs = {}
+        if config.yukawa_mu is not None:
+            from sympy import nsimplify
+            ham_kwargs['yukawa_mu'] = nsimplify(config.yukawa_mu, rational=True)
+
         H12, H13, H23 = Potential.get_symbolic_hamiltonians(
-            config.potential_type, charges=config.charges)
+            config.potential_type, charges=config.charges, **ham_kwargs)
 
         all_exprs = []
         all_names = []

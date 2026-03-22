@@ -68,11 +68,17 @@ def s3_sync(local_dir, s3_prefix="", include_all=False):
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
-POT_DIR = {'1/r': '1_r', '1/r2': '1_r2', 'harmonic': 'harmonic'}
+POT_DIR = {
+    '1/r': '1_r', '1/r2': '1_r2', '1/r^3': '1_r3',
+    'harmonic': 'harmonic', 'log': 'log', 'yukawa': 'yukawa',
+}
 POT_LABEL = {
     '1/r':      '1/r (Newton)',
     '1/r2':     '1/r^2 (Calogero-Moser)',
+    '1/r^3':    '1/r^3 (Inverse Cube)',
     'harmonic': 'r^2 (Harmonic)',
+    'log':      'log(r) (Logarithmic)',
+    'yukawa':   'Yukawa (e^{-mu r}/r)',
 }
 
 HIRES_DIR = 'atlas_output_hires'
@@ -84,7 +90,7 @@ PHI_RANGE = (0.1, np.pi - 0.1)
 
 EPSILONS = [5e-3, 2e-3, 1e-3, 5e-4, 2e-4, 1e-4]
 
-SINGULAR_POTENTIALS = ['1/r', '1/r2']
+SINGULAR_POTENTIALS = ['1/r', '1/r2', '1/r^3', 'log', 'yukawa']
 
 
 def charges_dir_tag(charges, potential_type='1/r'):
@@ -1705,7 +1711,7 @@ def main():
                                  'adaptive-verify', 'adaptive-merge'],
                         help='Which phase(s) to run')
     parser.add_argument('--potential', type=str, default=None,
-                        choices=['1/r', '1/r2', 'harmonic'],
+                        choices=['1/r', '1/r2', '1/r^3', 'harmonic', 'log', 'yukawa'],
                         help='Run only one potential (default: singular potentials)')
     parser.add_argument('--charges', nargs='+', type=int, default=None,
                         metavar='Q',

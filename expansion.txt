@@ -1,0 +1,41 @@
+Gravitational
+
+Sun-Earth-Moon (the original)
+Sun-Jupiter-asteroid (restricted three-body, Lagrange points)
+Three stars in a globular cluster
+Binary star + planet
+Three galaxies merging
+Hierarchical triple black holes (LISA sources)
+Binary black hole + neutron star in dense cluster
+
+Atomic / Coulomb
+
+Helium atom (nucleus + 2 electrons) — you've done this one
+Lithium ion Li⁺ (nucleus + 2 electrons)
+H⁻ ion (proton + 2 electrons)
+Positronium negative ion (positron + 2 electrons)
+Muonic helium (nucleus + electron + muon)
+Proton-proton-electron (H₂⁺ molecular ion)
+
+Nuclear
+
+Tritium / He-3 (three nucleons)
+Proton-neutron-neutron scattering
+Three-quark bound states (proton, neutron — though this is QCD, not Coulomb)
+
+Plasma / Charged particle
+
+Three ions in a Penning trap
+Three charged dust grains in a dusty plasma
+Three vortices in a 2D fluid (logarithmic potential)
+
+Post-Newtonian / GR
+
+Three compact objects with 1PN corrections — what you just scoped
+Kozai-Lidov oscillation (inner binary + distant perturber with GR precession)
+
+Exotic
+
+Three magnetic monopoles (hypothetical, 1/r²)
+Three anyons in 2D
+Dark matter halo three-body scattering

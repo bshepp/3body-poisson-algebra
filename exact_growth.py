@@ -25,6 +25,8 @@ import pickle
 import numpy as np
 from time import time
 
+sys.setrecursionlimit(100000)
+
 import sympy as sp
 from sympy import symbols, diff, Integer, cancel, Rational, expand
 
@@ -398,6 +400,62 @@ def _make_flat_func(expr, func_name="_f"):
     }
     exec(compile(code, "<generated>", "exec"), namespace)
     return namespace[func_name]
+
+
+def _make_flat_func(expr, label="_f"):
+    """Fallback for expressions too deeply nested for compile().
+
+    Uses CSE to flatten the expression tree, writes flat assignment code
+    to a temp file, and imports it -- bypassing the recursive compiler.
+    """
+    import tempfile
+    import importlib.util
+    from sympy import cse as _cse, pycode
+
+    replacements, (reduced,) = _cse(expr, optimizations='basic')
+
+    var_names = [str(v) for v in ALL_VARS]
+    sig = ", ".join(var_names)
+    lines = [
+        "import numpy as _np",
+        "from numpy import exp, log, sqrt, sin, cos, abs",
+        f"def {label}({sig}):",
+    ]
+    for sym, sub in replacements:
+        lines.append(f"    {sym} = {pycode(sub)}")
+    lines.append(f"    return {pycode(reduced)}")
+    code = "\n".join(lines)
+
+    tmp = tempfile.NamedTemporaryFile(
+        mode="w", suffix=".py", delete=False, prefix="flat_")
+    tmp.write(code)
+    tmp.flush()
+    tmp.close()
+
+    spec = importlib.util.spec_from_file_location(f"_flat_{label}", tmp.name)
+    mod = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(mod)
+    except RecursionError:
+        print(f"      [{label}] CSE flat compile also failed, "
+              f"using subs() fallback", flush=True)
+        var_syms = list(ALL_VARS)
+
+        def _subs_eval(*args):
+            n_pts = len(args[0]) if hasattr(args[0], '__len__') else 1
+            result = np.empty(n_pts)
+            for i in range(n_pts):
+                pt = {v: (float(a[i]) if hasattr(a, '__len__') else float(a))
+                      for v, a in zip(var_syms, args)}
+                try:
+                    result[i] = float(expr.xreplace(pt))
+                except Exception:
+                    result[i] = 0.0
+            return result
+
+        return _subs_eval
+
+    return getattr(mod, label)
 
 
 def lambdify_generators(exprs):

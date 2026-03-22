@@ -174,7 +174,7 @@ def sync_up_region(out_dir, potential_type, charges, region_name):
 
 
 def run_region_scan(region_name, potential_type, charges=None,
-                    n_workers=1, point_timeout=600):
+                    n_workers=1, point_timeout=600, yukawa_mu=None):
     """Run an adaptive scan on a single targeted region."""
     import signal
     from stability_atlas import AtlasConfig, PoissonAlgebra, ShapeSpace
@@ -238,6 +238,7 @@ def run_region_scan(region_name, potential_type, charges=None,
         epsilon=eps_range[1],
         svd_gap_threshold=1e4,
         charges=charges_tuple,
+        yukawa_mu=yukawa_mu,
     )
     print(f"  Building symbolic algebra for {label}...")
     t_build = time()
@@ -630,7 +631,7 @@ def main():
                         choices=list(REGIONS.keys()),
                         help='Scan a specific region (default: all)')
     parser.add_argument('--potential', type=str, default='1/r2',
-                        choices=['1/r', '1/r2', 'harmonic'],
+                        choices=['1/r', '1/r2', '1/r^3', 'harmonic', 'log', 'yukawa'],
                         help='Potential type (default: 1/r2)')
     parser.add_argument('--charges', nargs='+', type=int, default=None,
                         metavar='Q',
@@ -646,6 +647,8 @@ def main():
                         help='Per-point timeout in seconds')
     parser.add_argument('--both', action='store_true',
                         help='Run both reference and charged scans')
+    parser.add_argument('--yukawa-mu', type=float, default=None,
+                        help='Yukawa screening parameter mu (default: 0.7)')
     args = parser.parse_args()
 
     if args.list:
@@ -711,7 +714,8 @@ def main():
         for name in regions_to_run:
             run_region_scan(name, pot, charges,
                             n_workers=args.workers,
-                            point_timeout=args.point_timeout)
+                            point_timeout=args.point_timeout,
+                            yukawa_mu=args.yukawa_mu)
             if mea._shutdown_requested:
                 print(f"\n  [SHUTDOWN] Stopping after {name} (spot reclaim)")
                 break

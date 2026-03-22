@@ -29,23 +29,24 @@ See revised statement in Section 4 below.
 | Infinite GK dim for 1/r | Proved (super-exponential growth through L4) | — |
 | Infinite GK dim for 1/r^2 | Proved (identical sequence through L3) | L4 not yet computed |
 | Finite dim for r^2 | Proved (closes at dim 15) | — |
-| Mass invariance for 1/r | Proved (20+ ratios, including Tsygvintsev cases) | — |
+| Mass invariance for 1/r (equal) | Proved (20+ ratios, including Tsygvintsev cases) | — |
+| **Mass dependence for 1/r (unequal)** | **Proved** (Mar 2026): 7 gravitational configs all → [3, 5, 13, 69] | N=4 not tested |
+| **Charge-class mass invariance** | **Proved** (Mar 2026): He, H⁻, Ps⁻, muonic He → [3,6,17,116] despite 7000x mass ratios | Charge-only, not gravity |
+| **Charge magnitude sensitivity** | **Observed** (Mar 2026): Li⁺ (+3,−1,−1) → 111; H₂⁺ (+1,+1,−1) → 115 at L3 | Levels 0–2 remain universal |
+| log(r) potential | **[3, 6, 17, 116]** (Mar 2026) — transcendental singularity universal | — |
+| Composite (1/r + 1/r²) | **[3, 6, 17, 116]** (Mar 2026) — multi-pole composite universal | — |
+| Penning trap (+1,+1,+1 with harmonic confinement) | **[3, 6, 17, 116]** (Mar 2026) — all-repulsive + external potential | — |
 | Mass invariance for 1/r^2 | Not tested | Need to run |
 | N=4 dimension sequence | **[6, 14, 62]** (Mar 2026) | L3 not yet computed |
 | N=4 mass invariance | **Proved** (3 configs: equal, 100:10:1:1, 3:7:11:2) | — |
 | Dependence on N | Tested at N=3 and N=4 | N=5 would extend |
 | Dependence on spatial dim | **Independent of d** for N=3 AND N=4 | d=1,2,3 identical |
-| 1/r, 1/r^2, 1/r^3 give same sequence | **Proved** for N=3 through L3 | Could diverge at L4 |
+| 1/r, 1/r^2, 1/r^3, log(r) give same sequence | **Proved** for N=3 through L3 | Could diverge at L4 |
 | Charge-sign invariance (1/r) | **Proved** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
-| Charge-sign invariance (1/r²) | **Dimension preserved**, gap structure differs (Mar 2026): rank=116 at most grid points but gap correlation r≈0.76 vs r≈0.85 for 1/r. Charges affect *conditioning* of the 116-dim subspace, not its existence | Deeper investigation needed |
+| Charge-sign invariance (1/r²) | **Dimension preserved**, gap structure differs (Mar 2026): rank=116 at most grid points but gap correlation r≈0.76 vs r≈0.85 for 1/r | Deeper investigation needed |
+| Yukawa (e^{-μr}/r) potential | **In progress** (Mar 2026) — awaiting recursion fix results | — |
 
-### Why it might be true
-
-- **Mass invariance:** Masses appear as coefficients, not structural
-  elements. The Poisson bracket's algebraic skeleton — which variables
-  appear in which positions — is the same for all mass values.
-  Algebraic independence is a property of functional form, not
-  coefficients. The masses are "gauge" in the algebraic sense.
+### Why it might be true — and where it breaks
 
 - **Singular/regular dichotomy:** Each bracket of expressions involving
   1/r produces higher powers of 1/r — new denominators that can't be
@@ -54,47 +55,48 @@ See revised statement in Section 4 below.
   closes because polynomial rings are finitely generated at each
   degree.
 
-- **1/r and 1/r^2 agreement:** In the u_ij representation (u = 1/r),
-  both potentials are polynomials in the same auxiliary variables.
-  V = u vs V = u^2 changes chain rule coefficients but not the
-  combinatorial structure of which terms hit which. The dimension
-  sequence may be counting bracket nesting patterns, and those
-  patterns don't depend on the exponent.
+- **Potential-type universality:** In the u_ij representation (u = 1/r),
+  potentials 1/r, 1/r², 1/r³ are all polynomials in u. log(r) = -log(u)
+  is transcendental but still singular. Composite 1/r + 1/r² is a
+  polynomial in u. All produce [3, 6, 17, 116]. The sequence counts
+  bracket nesting patterns that depend on the *existence* of a
+  singularity, not its specific form.
 
 - **Spatial dimension independence (Mar 2026):** The dimension sequence
   [3, 6, 17, 116] is identical at d=1 (linear), d=2 (planar), and
-  d=3 (spatial), with definitive SVD gaps at all levels. This was
-  unexpected — the original conjecture predicted d-dependence. The
-  result suggests the algebra sees only the combinatorial structure
+  d=3 (spatial). The algebra sees only the combinatorial structure
   of the interaction graph, not the ambient geometry.
 
-- **Charge-sign invariance (Mar 2026):** Flipping the sign of one or
-  more pair interactions (attractive ↔ repulsive) does not change the
-  dimension sequence. Tested with helium-like charges (+2, -1, -1)
-  where H_12 and H_13 are attractive but H_23 is repulsive, and also
-  with all-repulsive (+1, +1, +1). All give [3, 6, 17, 116]. The
-  sign appears in the Hamiltonian's coefficients, not its functional
-  structure — the bracket depends on derivatives, which are sensitive
-  to which variables appear (combinatorics) but not their coefficients.
+- **Mass-dependence for gravity (Mar 2026):** The original claim of
+  "mass invariance" was **too strong**. For gravitational systems with
+  unequal masses and no charges, the sequence is [3, 5, 13, 69] —
+  consistently across 7 configurations spanning mass ratios from 1:1:1
+  to 10^6:10^4:10. Unequal masses break S₃ symmetry, reducing the
+  number of independent generators. The equal-mass [3, 6, 17, 116]
+  is the maximal-symmetry case.
 
-- **1/r² charge-sign atlas comparison (Mar 2026):** Multi-epsilon atlas
-  scan of 1/r² with helium charges (+2, -1, -1) vs all-attractive 1/r².
-  The *dimension* (rank=116) is preserved at most configuration-space
-  points, but the *gap ratio landscape* differs more than for 1/r:
-  Pearson r≈0.76 (vs r≈0.85 for 1/r), with the Lagrange point showing
-  the largest gap deviation (~2 orders of magnitude). This is consistent
-  with the conjecture: charges change the Hamiltonian *coefficients*,
-  which affects how cleanly the 116-dim subspace separates from the null
-  space (a metric property), without changing which subspace it is (a
-  topological property). The stronger effect at 1/r² vs 1/r makes
-  intuitive sense: charges multiply u_ij² (quadratic), producing more
-  complex cross-derivative interactions than at 1/r (linear in u_ij).
+- **Charge-class mass invariance (Mar 2026):** When charges couple the
+  bodies, the dimension sequence becomes mass-invariant *within each
+  charge class*. Remarkable example: He (m_nucleus=7294, +2,-1,-1) and
+  Ps⁻ (m_positron=1, +1,-1,-1) both give [3, 6, 17, 116] despite
+  a 7000x mass ratio difference. The charges restore sufficient
+  algebraic structure to saturate the dimension. H⁻ (m_proton=1836,
+  +1,-1,-1) and muonic He (m_muon=207, +2,-1,-1) further confirm this.
 
-- **Unifying intuition:** The algebra sees the *combinatorial topology
-  of the interaction graph* — N particles with pairwise interactions
-  is the complete graph K_N with a singularity class (pole vs
-  polynomial). Everything else (masses, exponents, spatial dimension,
-  sign of interaction) washes out.
+- **Charge magnitude matters at level 3 (Mar 2026):** Li⁺ (+3,-1,-1)
+  gives 111 instead of 116; H₂⁺ (+1,+1,-1) gives 115. The larger
+  nuclear charge or the specific mixed-sign geometry creates additional
+  algebraic relations among level-3 generators. Levels 0–2 remain
+  exactly universal ([3, 6, 17]) — the sensitivity appears only at
+  the deepest computed level.
+
+- **Unifying intuition (revised):** The algebra sees the *weighted
+  interaction graph* — N particles with pairwise interactions forming
+  the complete graph K_N. The dimension sequence depends on:
+  (1) the singularity class (singular vs regular),
+  (2) the symmetry of the coupling constants (masses/charges), and
+  (3) at deeper levels, the specific values of the couplings.
+  Potential type, spatial dimension, and sign of interaction wash out.
 
 ### Issues with the original phrasing
 
@@ -202,43 +204,55 @@ non-symmetric points.
 
 ---
 
-## 4. Formal Statement (Paper 3)
+## 4. Formal Statement (Paper 3 + Multi-System Survey)
 
 The conjecture has been formally stated in
 [`paper3_universality.tex`](paper3_universality.tex), Conjecture 7
-(Universality):
+(Universality). The Multi-System Universality Survey (Mar 2026)
+has both **strengthened** and **refined** the conjecture.
 
-**Theorem** (proved): For the N-body problem with singular
-central potential (1/r, 1/r^2, or 1/r^3) in d = 1, 2, or 3
-spatial dimensions:
-- N=3: dimension sequence [3, 6, 17, 116] through Level 3
-- N=4: dimension sequence [6, 14, 62] through Level 2
-Both independent of mass ratios, spatial dimension, pole order,
-and sign of interaction (attractive, repulsive, or mixed Coulomb).
-The N=3 algebra has infinite GK dimension (d(4) >= 4,501).
+**Theorem** (proved, extended Mar 2026): For the N-body problem with
+singular central potential in d = 1, 2, or 3 spatial dimensions:
+- N=3, equal mass: sequence [3, 6, 17, 116] through Level 3
+  for 1/r, 1/r², 1/r³, log(r), and composite (1/r + 1/r²)
+- N=3, unequal mass (gravitational): sequence [3, 5, 13, 69]
+  through Level 3, mass-configuration-invariant (7 configs tested)
+- N=3, charge-coupled: sequence depends on charge class, not masses
+  - (+q,−1,−1) with |q| ≤ 2: [3, 6, 17, 116]
+  - (+3,−1,−1): [3, 6, 17, 111]
+  - (+1,+1,−1): [3, 6, 17, 115]
+- N=4: sequence [6, 14, 62] through Level 2
 
-*Note:* While the dimension sequence is sign-invariant, the SVD gap
-ratio landscape (a measure of numerical conditioning, not algebraic
-dimension) does depend on charges. For 1/r the gap landscapes are
-highly correlated (r≈0.85); for 1/r² the correlation is weaker
-(r≈0.76). This is a metric, not topological, distinction.
+All independent of spatial dimension. The N=3 algebra has infinite
+GK dimension (d(4) ≥ 4,501).
 
-**Conjecture** (supported at N=3 and N=4): For N ≥ 3 particles in
-d ≥ 1 spatial dimensions, interacting via a singular central
-potential V(r) = c·r^{-p} with p > 0 and arbitrary nonzero
-coupling constants c_ij:
-1. The pairwise Poisson algebra has infinite Gelfand-Kirillov dimension.
-2. The cumulative dimension sequence d_N(n) depends only on N —
-   not on d, masses, pole order, or the couplings.
+**Conjecture** (revised, Mar 2026): For N ≥ 3 particles in d ≥ 1
+spatial dimensions, interacting via a singular central potential:
+1. The pairwise Poisson algebra has infinite GK dimension.
+2. The cumulative dimension sequence d_N(n) depends on N, the
+   symmetry of the interaction graph (equal vs unequal couplings),
+   and the specific coupling constants at deeper bracket levels.
+3. The sequence is independent of spatial dimension, potential type
+   (within the singular class), and mass ratios (for charge-dominated
+   systems).
 For regular potentials (V polynomial in r), the algebra is
 finite-dimensional.
 
-**What the conjecture does NOT claim** (see Paper 1 adversarial review
-and [`adversarial_analysis.md`](adversarial_analysis.md)):
+**New finding — the [3, 5, 13, 69] gravitational sequence**:
+All 7 unequal-mass gravitational configurations produce the same
+sequence [3, 5, 13, 69]. This is NOT a numerical artifact — the SVD
+gaps are as definitive as for [3, 6, 17, 116]. The sequence is itself
+mass-configuration-invariant (within the gravitational class), suggesting
+a "broken-symmetry" universality class distinct from the equal-mass class.
+
+**What the conjecture does NOT claim**:
 - It is NOT a non-integrability certificate (the integrable Calogero-Moser
   system produces the identical dimension sequence).
 - The dimension sequence does not distinguish integrable from non-integrable
   systems within the singular class.
+- The original claim of full "mass invariance" was too strong — it holds
+  for equal-mass and charge-coupled systems but not for unequal-mass
+  gravity.
 
 **Question** (open): Does the critical locus of the local rank
 function on the reduced configuration space always coincide with

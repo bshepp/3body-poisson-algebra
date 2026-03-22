@@ -29,7 +29,8 @@ from time import time
 from itertools import combinations
 
 import sympy as sp
-from sympy import Symbol, symbols, diff, Integer, Rational, cancel, expand
+from sympy import (Symbol, symbols, diff, Integer, Rational, cancel, expand,
+                   log as sp_log, exp as sp_exp)
 
 os.environ["PYTHONUNBUFFERED"] = "1"
 
@@ -37,7 +38,7 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 COORD_LABELS = {1: ["x"], 2: ["x", "y"], 3: ["x", "y", "z"]}
 
-VALID_POTENTIALS = ("1/r", "1/r^2", "1/r^3")
+VALID_POTENTIALS = ("1/r", "1/r^2", "1/r^3", "log", "yukawa")
 
 
 class NBodyAlgebra:
@@ -50,30 +51,43 @@ class NBodyAlgebra:
     d_spatial : int
         Spatial dimension (1, 2, or 3).
     potential : str
-        Potential type: '1/r', '1/r^2', or '1/r^3'.
+        Potential type: '1/r', '1/r^2', '1/r^3', or 'composite'.
     masses : dict, optional
         Masses {1: m1, 2: m2, ...}.  Defaults to equal unit masses.
     charges : dict, optional
         Charges {1: q1, 2: q2, ...}.  When provided, the potential for
         pair (i,j) is q_i * q_j * u_ij^p (positive = repulsive, negative
         = attractive).  When None, uses -m_i * m_j * u_ij^p (all-attractive).
+    potential_params : list of (coefficient, power) tuples, optional
+        Required when potential='composite'.  Each tuple (c, p) contributes
+        c * u_ij^p to the pairwise potential.  Coefficients can be numeric
+        or SymPy expressions.  Example for Newton + static 1PN:
+        [(-1, 1), (-0.005, 2)].
     checkpoint_dir : str, optional
         Directory for checkpoint files.
     """
 
     def __init__(self, n_bodies=3, d_spatial=2, potential="1/r",
-                 masses=None, charges=None, checkpoint_dir=None):
+                 masses=None, charges=None, potential_params=None,
+                 checkpoint_dir=None, external_potential=None):
         if n_bodies < 2:
             raise ValueError(f"n_bodies must be >= 2 (got {n_bodies})")
         if d_spatial not in (1, 2, 3):
             raise ValueError(f"d_spatial must be 1, 2, or 3 (got {d_spatial})")
-        if potential not in VALID_POTENTIALS:
+
+        if potential_params is not None and potential not in ("yukawa", "log"):
+            potential = "composite"
+        if (potential not in ("composite", "yukawa", "log")
+                and potential not in VALID_POTENTIALS):
             raise ValueError(f"potential must be one of {VALID_POTENTIALS} "
-                             f"(got {potential!r})")
+                             f"or 'composite' (got {potential!r})")
+        if potential == "composite" and not potential_params:
+            raise ValueError("potential_params required for composite potential")
 
         self.N = n_bodies
         self.d = d_spatial
         self.potential = potential
+        self.potential_params = potential_params
         self.n_q = n_bodies * d_spatial
         self.n_p = n_bodies * d_spatial
         self.n_phase = 2 * n_bodies * d_spatial
@@ -81,8 +95,16 @@ class NBodyAlgebra:
         self.body_pairs = list(combinations(range(1, n_bodies + 1), 2))
         self.n_pairs = len(self.body_pairs)
         self.charges = charges
+        self.external_potential = external_potential
 
-        tag = f"N{n_bodies}_d{d_spatial}_{potential.replace('/', '').replace('^', '')}"
+        if potential == "composite":
+            powers_str = "_".join(str(p) for _, p in potential_params)
+            tag = f"N{n_bodies}_d{d_spatial}_composite_p{powers_str}"
+        elif potential == "yukawa":
+            mu_val = potential_params[0][1] if potential_params else "default"
+            tag = f"N{n_bodies}_d{d_spatial}_yukawa_mu{mu_val}"
+        else:
+            tag = f"N{n_bodies}_d{d_spatial}_{potential.replace('/', '').replace('^', '')}"
         if charges is not None:
             charge_str = "_".join(f"q{k}{v:+g}" for k, v in sorted(charges.items()))
             tag += f"_{charge_str}"
@@ -152,8 +174,6 @@ class NBodyAlgebra:
             m = masses[body]
             return sum(p ** 2 for p in self.p_by_body[body]) / (2 * m)
 
-        pot_power = {"1/r": 1, "1/r^2": 2, "1/r^3": 3}[self.potential]
-
         self.hamiltonians = {}
         self.hamiltonian_list = []
         self.hamiltonian_names = []
@@ -161,12 +181,47 @@ class NBodyAlgebra:
         for bi, bj in self.body_pairs:
             u = self.u_by_pair[(bi, bj)]
             mi, mj = masses[bi], masses[bj]
-            if charges is not None:
+
+            if self.potential == "composite":
+                V = Integer(0)
+                for coeff, power in self.potential_params:
+                    V += coeff * u ** power
+                H = kinetic(bi) + kinetic(bj) + V
+            elif self.potential == "log":
+                if charges is not None:
+                    qi = Integer(charges[bi]) if isinstance(charges[bi], int) else charges[bi]
+                    qj = Integer(charges[bj]) if isinstance(charges[bj], int) else charges[bj]
+                    V = qi * qj * sp_log(u)
+                else:
+                    V = -mi * mj * sp_log(u)
+                H = kinetic(bi) + kinetic(bj) + V
+            elif self.potential == "yukawa":
+                mu_param = self.potential_params[0][1] if self.potential_params else Rational(1)
+                if charges is not None:
+                    qi = Integer(charges[bi]) if isinstance(charges[bi], int) else charges[bi]
+                    qj = Integer(charges[bj]) if isinstance(charges[bj], int) else charges[bj]
+                    V = qi * qj * u * sp_exp(-mu_param / u)
+                else:
+                    V = -mi * mj * u * sp_exp(-mu_param / u)
+                H = kinetic(bi) + kinetic(bj) + V
+            elif charges is not None:
+                pot_power = {"1/r": 1, "1/r^2": 2, "1/r^3": 3}[self.potential]
                 qi = Integer(charges[bi]) if isinstance(charges[bi], int) else charges[bi]
                 qj = Integer(charges[bj]) if isinstance(charges[bj], int) else charges[bj]
                 H = kinetic(bi) + kinetic(bj) + qi * qj * u ** pot_power
             else:
+                pot_power = {"1/r": 1, "1/r^2": 2, "1/r^3": 3}[self.potential]
                 H = kinetic(bi) + kinetic(bj) - mi * mj * u ** pot_power
+
+            if self.external_potential is not None:
+                n_minus_1 = Integer(self.N - 1)
+                for body in (bi, bj):
+                    q_body = self.q_by_body[body]
+                    m_body = masses[body]
+                    omega = self.external_potential.get("omega", Integer(1))
+                    r_sq = sum(qc ** 2 for qc in q_body)
+                    H += m_body * omega**2 * r_sq / (2 * n_minus_1)
+
             name = f"H{bi}{bj}"
             self.hamiltonians[name] = H
             self.hamiltonian_list.append(H)
@@ -314,6 +369,65 @@ class NBodyAlgebra:
         namespace = {"sqrt": np.sqrt, "math": __import__("math")}
         exec(compile(code, "<generated>", "exec"), namespace)
         return namespace[func_name]
+
+    def _make_flat_func(self, expr, label=""):
+        """Fallback for expressions too deeply nested for compile().
+
+        Uses CSE to flatten the expression tree, then writes flat
+        assignment code to a temp file and imports it, bypassing the
+        recursive compiler entirely.
+        """
+        import tempfile
+        import importlib.util
+        from sympy import cse as _cse, pycode
+
+        replacements, (reduced,) = _cse(expr, optimizations='basic')
+
+        var_names = [str(v) for v in self.all_vars]
+        sig = ", ".join(var_names)
+        lines = [
+            "import numpy as _np",
+            "from numpy import exp, log, sqrt, sin, cos, abs",
+            f"def {label}({sig}):",
+        ]
+        for sym, sub in replacements:
+            lines.append(f"    {sym} = {pycode(sub)}")
+        lines.append(f"    return {pycode(reduced)}")
+        code = "\n".join(lines)
+
+        tmp = tempfile.NamedTemporaryFile(
+            mode="w", suffix=".py", delete=False, prefix="flat_")
+        tmp.write(code)
+        tmp.flush()
+        tmp.close()
+
+        spec = importlib.util.spec_from_file_location(
+            f"_flat_{label}", tmp.name)
+        mod = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(mod)
+        except RecursionError:
+            print(f"      [{label}] CSE flat compile also failed, "
+                  f"using subs() fallback", flush=True)
+            var_syms = list(self.all_vars)
+
+            def _subs_eval(*args):
+                subs = dict(zip(var_syms, args))
+                try:
+                    vals = [complex(expr.xreplace(
+                        {k: v[i] if hasattr(v, '__len__') else v
+                         for k, v in subs.items()})).real
+                        for i in range(
+                            len(args[0]) if hasattr(args[0], '__len__') else 1)]
+                    return _np.array(vals)
+                except Exception:
+                    n = len(args[0]) if hasattr(args[0], '__len__') else 1
+                    return _np.zeros(n)
+
+            import numpy as _np
+            return _subs_eval
+
+        return getattr(mod, label)
 
     def lambdify_generators(self, exprs):
         n = len(exprs)
@@ -504,6 +618,7 @@ class NBodyAlgebra:
             "n_bodies": self.N,
             "d_spatial": self.d,
             "potential": self.potential,
+            "potential_params": self.potential_params,
             "charges": self.charges,
             "exprs": all_exprs,
             "names": all_names,
@@ -549,10 +664,21 @@ class NBodyAlgebra:
         n_pairs = self.n_pairs
         dim_label = {1: "1D (linear)", 2: "2D (planar)", 3: "3D (spatial)"}
 
+        if self.potential == "composite":
+            powers = [p for _, p in self.potential_params]
+            pot_label = f"composite [{', '.join(f'u^{p}' for p in powers)}]"
+        elif self.potential == "yukawa":
+            mu_val = self.potential_params[0][1] if self.potential_params else "1"
+            pot_label = f"yukawa (mu={mu_val})"
+        elif self.potential == "log":
+            pot_label = "log(r)"
+        else:
+            pot_label = self.potential
+
         print("=" * 70)
         print(f"POISSON ALGEBRA GROWTH  —  "
               f"N={N} bodies, {dim_label.get(d, f'{d}D')}, "
-              f"V = {self.potential}")
+              f"V = {pot_label}")
         print(f"  Polynomial representation: u_ij = 1/r_ij")
         print("=" * 70)
         print(f"  Bodies: {N},  Pairs: {n_pairs}")
@@ -560,7 +686,10 @@ class NBodyAlgebra:
         print(f"  Phase space: {self.n_phase}D  "
               f"({self.n_q} positions + {self.n_p} momenta) "
               f"+ {n_pairs} auxiliary u_ij")
-        print(f"  Potential: {self.potential}")
+        print(f"  Potential: {pot_label}")
+        if self.potential == "composite":
+            for coeff, power in self.potential_params:
+                print(f"    term: {coeff} * u^{power}")
         if self.charges is not None:
             print(f"  Charges: {self.charges}")
             for bi, bj in self.body_pairs:
@@ -726,7 +855,7 @@ class NBodyAlgebra:
 
         # -- Summary --
         print("\n" + "=" * 70)
-        print(f"DIMENSION SUMMARY  (N={N}, d={d}, V={self.potential})")
+        print(f"DIMENSION SUMMARY  (N={N}, d={d}, V={pot_label})")
         print("=" * 70)
 
         ref_n3 = {0: 3, 1: 6, 2: 17, 3: 116}
@@ -758,7 +887,7 @@ class NBodyAlgebra:
             ax.set_xlabel("Index")
             ax.set_ylabel("Singular value (relative to max)")
             ax.set_title(f"Poisson Algebra SVD Spectrum "
-                         f"(N={N}, d={d}, V={self.potential})")
+                         f"(N={N}, d={d}, V={pot_label})")
             ax.grid(True, alpha=0.3)
             plt.tight_layout()
             fname = os.path.join(_SCRIPT_DIR,
@@ -780,8 +909,15 @@ def main():
     ap.add_argument("-d", "--dim", type=int, default=2,
                     help="Spatial dimension: 1, 2, or 3 (default: 2)")
     ap.add_argument("--potential", type=str, default="1/r",
-                    choices=VALID_POTENTIALS,
-                    help="Potential type (default: 1/r)")
+                    help="Potential type: 1/r, 1/r^2, 1/r^3, log, yukawa, "
+                         "or composite (default: 1/r)")
+    ap.add_argument("--yukawa-mu", type=float, default=None,
+                    help="Screening parameter mu for yukawa potential")
+    ap.add_argument("--trap-omega", type=float, default=None,
+                    help="Trap frequency omega for external harmonic potential")
+    ap.add_argument("--composite", type=str, default=None,
+                    help="Composite potential terms as coeff:power pairs, "
+                         "e.g. '-1:1,-0.5:2' for -u - 0.5*u^2")
     ap.add_argument("--max-level", type=int, default=2,
                     help="Maximum bracket level (default: 2)")
     ap.add_argument("--samples", type=int, default=500,
@@ -792,10 +928,26 @@ def main():
                     help="Resume from last checkpoint")
     args = ap.parse_args()
 
+    potential_params = None
+    if args.composite:
+        potential_params = []
+        for term in args.composite.split(","):
+            coeff_str, power_str = term.strip().split(":")
+            potential_params.append((sp.Rational(coeff_str), int(power_str)))
+
+    if args.yukawa_mu is not None and args.potential == "yukawa":
+        potential_params = [("mu", sp.Rational(str(args.yukawa_mu)))]
+
+    external_potential = None
+    if args.trap_omega is not None:
+        external_potential = {"omega": sp.Rational(str(args.trap_omega))}
+
     alg = NBodyAlgebra(
         n_bodies=args.bodies,
         d_spatial=args.dim,
         potential=args.potential,
+        potential_params=potential_params,
+        external_potential=external_potential,
     )
     alg.compute_growth(
         max_level=args.max_level,

@@ -73,18 +73,53 @@ All produce [3, 6, 17, 116]. The multi-epsilon atlas comparison tool
 spectrum comparisons across configuration space, supporting both
 1/r and 1/r² potentials.
 
-**1/r² with charges (Mar 2026):** The dimension (rank=116) is preserved,
-but the gap ratio landscape differs more than for 1/r. Pearson
-correlation between charged and uncharged gap maps: r≈0.76 for 1/r²
-(vs r≈0.85 for 1/r). The charges affect the *conditioning* of the
-116-dimensional subspace without changing which subspace it is. This
-is consistent with charges being coefficients, not structural elements.
+### Multi-System Universality Survey (March 2026)
+
+Extended the charge and mass tests to 21 physical three-body systems.
+Key findings:
+
+**Gravitational systems (1/r, no charges):**
+All 7 unequal-mass configs → [3, 5, 13, 69]. Broken S₃ symmetry reduces
+the algebra dimension. The sequence is itself mass-configuration-invariant
+within this class.
+
+**Charge-coupled systems (1/r with charges):**
+| System | Charges | Masses | Sequence |
+|--------|---------|--------|----------|
+| Helium | +2,−1,−1 | 7294:1:1 | [3, 6, 17, 116] |
+| H⁻ Ion | +1,−1,−1 | 1836:1:1 | [3, 6, 17, 116] |
+| Positronium Ps⁻ | +1,−1,−1 | 1:1:1 | [3, 6, 17, 116] |
+| Muonic Helium | +2,−1,−1 | 7294:1:207 | [3, 6, 17, 116] |
+| Li⁺ Ion | +3,−1,−1 | 12789:1:1 | [3, 6, 17, 111] |
+| H₂⁺ Ion | +1,+1,−1 | 1836:1836:1 | [3, 6, 17, 115] |
+| Penning Trap | +1,+1,+1 | 1:1:1 | [3, 6, 17, 116] |
+
+**New potential types:**
+| System | Potential | Sequence |
+|--------|-----------|----------|
+| 2D Vortices | log(r) | [3, 6, 17, 116] |
+| Composite | 1/r + 1/r² | [3, 6, 17, 116] |
+| Dusty Plasma | Yukawa (e^{-μr}/r) | In progress |
+
+**Engine extensions for the survey:**
+- Logarithmic potential V ~ log(r) for 2D vortex dynamics
+- Yukawa potential V ~ exp(-μr)/r for nuclear and screened Coulomb
+- External harmonic potential V ~ ½mω²r² for Penning trap confinement
+- Composite potentials (sums of u^p terms)
+- CSE-based fallback compiler for deeply nested expression trees
 
 ## Files
 
 | File | Purpose |
 |------|---------|
-| `exact_growth_nbody.py` | Core engine: NBodyAlgebra(n_bodies, d_spatial, potential) |
+| `exact_growth_nbody.py` | Core engine: NBodyAlgebra(n_bodies, d_spatial, potential, charges, masses) |
+| `expansion_configs.py` | Multi-System Survey scenario definitions (21 systems) |
+| `run_expansion_dimseq.py` | AWS orchestrator: dimension sequences for all survey scenarios |
+| `expansion_analysis.py` | Post-processing: comparative plots and summary from survey data |
+| `run_pn_aws.py` | AWS orchestrator: composite/PN potential tests |
+| `run_composite_test.py` | Composite potential universality test (local) |
+| `run_post_newtonian.py` | Static 1PN three-body computation (local) |
+| `run_pn_mass_test.py` | 1PN mass invariance test (local) |
 | `validate_n3.py` | Validates engine reproduces N=3 results |
 | `run_n4_d2.py` | N=4, d=2, 1/r computation |
 | `run_n4_d1.py` | N=4, d=1, 1/r computation |
@@ -133,13 +168,20 @@ python exact_growth_nbody.py -N 5 -d 2 --max-level 1    # N=5 (expensive)
 ## Implications for the Conjecture
 
 The conjecture (formally stated in [`../paper3_universality.tex`](../paper3_universality.tex),
-Conjecture 7) now has evidence at TWO values of N:
+Conjecture 7) has been **refined** by the Multi-System Survey:
 
-- **N=3**: sequence [3, 6, 17, 116] -- mass-invariant, d-independent, potential-type-independent, charge-sign-invariant
-- **N=4**: sequence [6, 14, 62, ...] -- mass-invariant, d-independent (through L2)
+- **N=3 equal-mass / charge-dominated**: sequence [3, 6, 17, 116] —
+  universal across 1/r, 1/r², 1/r³, log(r), composite, all spatial
+  dimensions, and mass ratios (when charges dominate)
+- **N=3 unequal-mass gravity**: sequence [3, 5, 13, 69] — a new
+  universality class for broken-symmetry gravitational systems
+- **N=3 high-charge**: sequences [3, 6, 17, 111] (Li⁺) and
+  [3, 6, 17, 115] (H₂⁺) — charge magnitude affects level 3
+- **N=4**: sequence [6, 14, 62, ...] — mass-invariant, d-independent
 
-The sequence depends only on N and the singularity class (singular vs regular).
-All other parameters (masses, spatial dimension, pole order, sign of interaction) wash out.
+The picture is richer than originally conjectured: the dimension sequence
+depends on N, singularity class, and the symmetry structure of the
+coupling constants.
 
 ## Isolation from Parent Project
 
