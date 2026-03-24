@@ -631,7 +631,7 @@ def main():
                         choices=list(REGIONS.keys()),
                         help='Scan a specific region (default: all)')
     parser.add_argument('--potential', type=str, default='1/r2',
-                        choices=['1/r', '1/r2', '1/r^3', 'harmonic', 'log', 'yukawa'],
+                        choices=['1/r', '1/r2', '1/r^2', '1/r^3', 'harmonic', 'log', 'yukawa'],
                         help='Potential type (default: 1/r2)')
     parser.add_argument('--charges', nargs='+', type=int, default=None,
                         metavar='Q',
@@ -670,6 +670,9 @@ def main():
             print(f"    {r['description']}")
             print()
         return
+
+    if args.potential == '1/r^2':
+        args.potential = '1/r2'
 
     if args.analyze:
         run_analysis(args.potential, args.charges)

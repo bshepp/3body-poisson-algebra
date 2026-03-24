@@ -108,6 +108,13 @@ class NBodyAlgebra:
         if charges is not None:
             charge_str = "_".join(f"q{k}{v:+g}" for k, v in sorted(charges.items()))
             tag += f"_{charge_str}"
+        if masses is not None:
+            def _mass_label(v):
+                s = str(v)
+                return s.replace("/", "over").replace("-", "neg")
+            mass_str = "_".join(f"m{k}{_mass_label(v)}"
+                                for k, v in sorted(masses.items()))
+            tag += f"_{mass_str}"
         default_ckpt = os.path.join(_SCRIPT_DIR, f"checkpoints_{tag}")
         self.checkpoint_dir = checkpoint_dir or default_ckpt
 
@@ -305,17 +312,30 @@ class NBodyAlgebra:
 
     def sample_phase_space(self, n, seed=42, pos_range=3.0, mom_range=1.0,
                            min_sep=0.5):
-        """Sample n phase-space points with all pairwise separations > min_sep."""
+        """Sample n phase-space points with all pairwise separations > min_sep.
+
+        Momenta are scaled by sqrt(m_i) per body so that kinetic energies
+        T_i = p_i^2/(2*m_i) are O(1) regardless of mass hierarchy.
+        """
         N, d = self.N, self.d
         n_phase = self.n_phase
         rng = np.random.RandomState(seed)
         pts = np.empty((0, n_phase))
 
+        mom_scales = np.ones(N * d)
+        if self.masses is not None:
+            for body in range(1, N + 1):
+                m_val = float(self.masses[body])
+                scale = np.sqrt(abs(m_val)) if abs(m_val) > 1e-30 else 1e-15
+                for k in range(d):
+                    mom_scales[(body - 1) * d + k] = scale
+
         for _ in range(200):
             bs = max((n - pts.shape[0]) * 5, 256)
             b = np.zeros((bs, n_phase))
             b[:, :N * d] = rng.uniform(-pos_range, pos_range, (bs, N * d))
-            b[:, N * d:] = rng.uniform(-mom_range, mom_range, (bs, N * d))
+            raw_mom = rng.uniform(-mom_range, mom_range, (bs, N * d))
+            b[:, N * d:] = raw_mom * mom_scales[np.newaxis, :]
 
             ok = np.ones(bs, dtype=bool)
             for bi, bj in self.body_pairs:
@@ -459,30 +479,58 @@ class NBodyAlgebra:
         print(f"    Lambdifying {n} expressions individually...",
               flush=True)
         funcs = []
+        use_subs = []
         for idx, expr in enumerate(exprs):
             if (idx + 1) % 20 == 0 or idx == n - 1:
                 print(f"      {idx+1}/{n}  [{time()-t0:.1f}s]",
                       flush=True)
             try:
                 f = sp.lambdify(self.all_vars, expr,
-                                modules="numpy", cse=True)
+                                modules="numpy", cse=False)
+                funcs.append(f)
+                use_subs.append(False)
             except RecursionError:
-                f = self._make_flat_func(expr, f"_f{idx}")
-            funcs.append(f)
+                funcs.append(expr)
+                use_subs.append(True)
+                if idx < 3:
+                    print(f"      [{idx}] Using subs() evaluator "
+                          f"(expression too deep)", flush=True)
+
+        n_subs = sum(use_subs)
+        if n_subs > 0:
+            print(f"    {n_subs}/{n} expressions will use subs() evaluator",
+                  flush=True)
 
         print(f"    Total lambdify time: {time() - t0:.1f}s")
+
+        var_syms = list(self.all_vars)
 
         def evaluate(Z_qp, Z_u):
             n_pts = Z_qp.shape[0]
             args = ([Z_qp[:, i] for i in range(n_phase)] +
                     [Z_u[:, i] for i in range(n_u)])
             cols = []
-            for f in funcs:
-                val = f(*args)
-                arr = np.atleast_1d(np.asarray(val, dtype=float)).ravel()
-                if arr.shape[0] == 1:
-                    arr = np.full(n_pts, arr[0])
-                cols.append(arr)
+            for idx, (f, is_subs) in enumerate(zip(funcs, use_subs)):
+                if is_subs:
+                    result = np.zeros(n_pts)
+                    for i in range(n_pts):
+                        subs_dict = {var_syms[j]: float(args[j][i])
+                                     for j in range(len(var_syms))}
+                        try:
+                            result[i] = float(f.xreplace(subs_dict))
+                        except Exception:
+                            result[i] = 0.0
+                    cols.append(result)
+                else:
+                    val = f(*args)
+                    arr = np.atleast_1d(
+                        np.asarray(val, dtype=float)).ravel()
+                    if arr.shape[0] == 1:
+                        arr = np.full(n_pts, arr[0])
+                    cols.append(arr)
+                if (idx + 1) % 20 == 0:
+                    print(f"      eval {idx+1}/{n}  [{time()-t0:.1f}s]",
+                          flush=True)
             return np.column_stack(cols)
         return evaluate
 
@@ -507,7 +555,7 @@ class NBodyAlgebra:
                 gap = s[i] / s[i + 1]
             else:
                 gap = s[i] / max(s[i + 1], 1e-300)
-            if gap > best_gap_ratio and i >= 2:
+            if gap > best_gap_ratio:
                 best_gap_ratio = gap
                 best_gap_idx = i
 
@@ -536,20 +584,36 @@ class NBodyAlgebra:
                 print(f"  {i+1:>5} | {s[i]:>18.12f} | {gap:>12.2f} "
                       f"| {rel:>12.2e}{marker}")
 
-        if best_gap_ratio > 1e4:
+        below_noise = (best_gap_idx >= 0 and
+                       best_gap_idx + 1 < len(s) and
+                       s[best_gap_idx + 1] < noise_threshold)
+
+        if best_gap_ratio > 1e4 and below_noise:
             rank = best_gap_idx + 1
             print(f"\n  DEFINITIVE GAP at index {rank}: "
                   f"ratio {best_gap_ratio:.2e}x")
             print(f"    sv({rank}) = {s[rank-1]:.6e},  "
                   f"sv({rank+1}) = {s[rank]:.6e}")
-        elif best_gap_ratio > 10:
+        elif best_gap_ratio > 1e4:
             rank = best_gap_idx + 1
-            print(f"\n  Gap at index {rank}: ratio {best_gap_ratio:.1f}x "
-                  f"(moderate)")
+            rel_below = s[best_gap_idx + 1] / s[0] if s[0] > 0 else 0
+            print(f"\n  Large gap at index {rank}: ratio {best_gap_ratio:.2e}x")
+            print(f"    sv({rank+1})/sv(1) = {rel_below:.2e}")
+            if rel_below < 1e-6:
+                print(f"    Below-gap value negligible — treating as rank gap")
+            else:
+                rank = n_meaningful
+                print(f"    Below-gap value NOT negligible — "
+                      f"using noise-floor rank = {rank}")
         else:
             rank = n_meaningful
-            print(f"\n  No clear gap found "
-                  f"(best ratio {best_gap_ratio:.1f}x)")
+            if best_gap_ratio > 10:
+                print(f"\n  Conditioning gap at index {best_gap_idx+1}: "
+                      f"ratio {best_gap_ratio:.1f}x "
+                      f"(not a rank gap, sv still above noise)")
+            else:
+                print(f"\n  No clear gap found "
+                      f"(best ratio {best_gap_ratio:.1f}x)")
             print(f"  Using noise-floor threshold: rank = {rank}")
 
         return rank, s

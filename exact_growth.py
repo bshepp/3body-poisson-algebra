@@ -487,24 +487,52 @@ def lambdify_generators(exprs):
     print(f"    Lambdifying {n} expressions individually...", flush=True)
 
     funcs = []
+    use_subs = []
     for idx, expr in enumerate(exprs):
         if (idx + 1) % 20 == 0 or idx == n - 1:
             print(f"      {idx+1}/{n}  [{time()-t0:.1f}s]", flush=True)
         try:
-            f = sp.lambdify(ALL_VARS, expr, modules="numpy", cse=True)
+            f = sp.lambdify(ALL_VARS, expr, modules="numpy", cse=False)
+            funcs.append(f)
+            use_subs.append(False)
         except RecursionError:
-            f = _make_flat_func(expr, f"_f{idx}")
-        funcs.append(f)
+            funcs.append(expr)
+            use_subs.append(True)
+            if idx < 3:
+                print(f"      [{idx}] Using subs() evaluator "
+                      f"(expression too deep)", flush=True)
+
+    n_subs = sum(use_subs)
+    if n_subs > 0:
+        print(f"    {n_subs}/{n} expressions will use subs() evaluator",
+              flush=True)
 
     print(f"    Total lambdify time: {time() - t0:.1f}s")
+
+    var_syms = list(ALL_VARS)
 
     def evaluate(Z_qp, Z_u):
         args = ([Z_qp[:, i] for i in range(12)] +
                 [Z_u[:, i] for i in range(3)])
+        n_pts = Z_qp.shape[0]
         cols = []
-        for f in funcs:
-            val = f(*args)
-            cols.append(np.atleast_1d(val).ravel())
+        for idx, (f, is_subs) in enumerate(zip(funcs, use_subs)):
+            if is_subs:
+                result = np.zeros(n_pts)
+                for i in range(n_pts):
+                    subs_dict = {var_syms[j]: float(args[j][i])
+                                 for j in range(len(var_syms))}
+                    try:
+                        result[i] = float(f.xreplace(subs_dict))
+                    except Exception:
+                        result[i] = 0.0
+                cols.append(result)
+            else:
+                val = f(*args)
+                cols.append(np.atleast_1d(val).ravel())
+            if (idx + 1) % 20 == 0:
+                print(f"      eval {idx+1}/{n}  [{time()-t0:.1f}s]",
+                      flush=True)
         return np.column_stack(cols)
 
     return evaluate

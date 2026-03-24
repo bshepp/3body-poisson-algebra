@@ -79,9 +79,14 @@ Extended the charge and mass tests to 21 physical three-body systems.
 Key findings:
 
 **Gravitational systems (1/r, no charges):**
-All 7 unequal-mass configs → [3, 5, 13, 69]. Broken S₃ symmetry reduces
-the algebra dimension. The sequence is itself mass-configuration-invariant
-within this class.
+The original survey reported [3, 5, 13, 69] for all 7 unequal-mass configs.
+**This was a SymPy version artifact** (SymPy 1.10.1 on the original AWS AMI
+failed to lambdify 63/156 level-3 expressions, causing dimension undercounting).
+Re-validation with SymPy 1.13.3 confirms **[3, 6, 17, 116]** for both equal
+and unequal masses, including Three Galaxies (1:2:3) and Binary Star + Planet
+(1:1:0.001). A mass ratio sweep across 25 points from m₃=0.001 to 10⁶
+confirmed [3, 6, 17] at level 2 for all ratios.
+(Verified March 23, 2026 — see mass ratio sweep in session_log.md.)
 
 **Charge-coupled systems (1/r with charges):**
 | System | Charges | Masses | Sequence |
@@ -170,18 +175,19 @@ python exact_growth_nbody.py -N 5 -d 2 --max-level 1    # N=5 (expensive)
 The conjecture (formally stated in [`../paper3_universality.tex`](../paper3_universality.tex),
 Conjecture 7) has been **refined** by the Multi-System Survey:
 
-- **N=3 equal-mass / charge-dominated**: sequence [3, 6, 17, 116] —
+- **N=3 gravitational (all mass ratios)**: sequence [3, 6, 17, 116] —
   universal across 1/r, 1/r², 1/r³, log(r), composite, all spatial
-  dimensions, and mass ratios (when charges dominate)
-- **N=3 unequal-mass gravity**: sequence [3, 5, 13, 69] — a new
-  universality class for broken-symmetry gravitational systems
-- **N=3 high-charge**: sequences [3, 6, 17, 111] (Li⁺) and
-  [3, 6, 17, 115] (H₂⁺) — charge magnitude affects level 3
+  dimensions, and all mass ratios tested (0.001 to 10⁶)
+- **N=3 charge-coupled**: sequence [3, 6, 17, 116] for most charge
+  configs (He, H⁻, Ps⁻, muonic He, Penning trap)
+- **N=3 high-charge deviations**: sequences [3, 6, 17, 111] (Li⁺) and
+  [3, 6, 17, 115] (H₂⁺) — possible SVD conditioning artifacts at
+  level 3 (investigation pending)
 - **N=4**: sequence [6, 14, 62, ...] — mass-invariant, d-independent
 
-The picture is richer than originally conjectured: the dimension sequence
-depends on N, singularity class, and the symmetry structure of the
-coupling constants.
+**Note (March 23, 2026):** The original survey report of [3, 5, 13, 69] for
+unequal-mass gravitational systems was a SymPy version artifact, not a
+real second universality class. See session_log.md for full diagnostic.
 
 ## Isolation from Parent Project
 

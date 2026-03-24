@@ -1,0 +1,129 @@
+{
+  "targeted_configs": [
+    {
+      "config": "1_r",
+      "label": "$1/r$ (Newtonian / Coulomb)",
+      "n_regions": 6,
+      "rank_min": 112,
+      "rank_max": 131,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 89.28888888888889
+    },
+    {
+      "config": "1_r2",
+      "label": "$1/r^2$ (Calogero-Moser)",
+      "n_regions": 6,
+      "rank_min": 112,
+      "rank_max": 130,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 91.55555555555556
+    },
+    {
+      "config": "1_r3",
+      "label": "$1/r^3$",
+      "n_regions": 6,
+      "rank_min": 115,
+      "rank_max": 129,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 92.4
+    },
+    {
+      "config": "coulomb_+1_+1_+1",
+      "label": "Coulomb $(+1,+1,+1)$ \u2014 Penning trap",
+      "n_regions": 6,
+      "rank_min": 112,
+      "rank_max": 131,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 88.93333333333334
+    },
+    {
+      "config": "coulomb_+1_+1_-1",
+      "label": "Coulomb $(+1,+1,-1)$ \u2014 $\\mathrm{H}_2^+$",
+      "n_regions": 6,
+      "rank_min": 112,
+      "rank_max": 131,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 88.32222222222222
+    },
+    {
+      "config": "coulomb_+1_-1_-1",
+      "label": "Coulomb $(+1,-1,-1)$ \u2014 $\\mathrm{Ps}^- / \\mathrm{H}^-$",
+      "n_regions": 6,
+      "rank_min": 112,
+      "rank_max": 131,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 84.96666666666667
+    },
+    {
+      "config": "coulomb_+2_-1_-1",
+      "label": "Coulomb $(+2,-1,-1)$ \u2014 Helium",
+      "n_regions": 6,
+      "rank_min": 112,
+      "rank_max": 131,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 91.25555555555556
+    },
+    {
+      "config": "coulomb_+3_-1_-1",
+      "label": "Coulomb $(+3,-1,-1)$ \u2014 $\\mathrm{Li}^+$",
+      "n_regions": 6,
+      "rank_min": 116,
+      "rank_max": 131,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 92.86666666666666
+    },
+    {
+      "config": "coulomb_1_r2_+2_-1_-1",
+      "label": "$1/r^2$ Coulomb $(+2,-1,-1)$",
+      "n_regions": 6,
+      "rank_min": 115,
+      "rank_max": 131,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 91.58888888888889
+    },
+    {
+      "config": "coulomb_1_r3_+2_-1_-1",
+      "label": "$1/r^3$ Coulomb $(+2,-1,-1)$",
+      "n_regions": 6,
+      "rank_min": 116,
+      "rank_max": 130,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 92.62222222222222
+    },
+    {
+      "config": "log",
+      "label": "$\\log(r)$ (2D Vortices)",
+      "n_regions": 6,
+      "rank_min": 112,
+      "rank_max": 133,
+      "rank_mode": 116,
+      "n_points": 9000,
+      "pct_116": 74.82222222222222
+    }
+  ],
+  "hires_potentials": [
+    "1_r",
+    "1_r2",
+    "animations",
+    "coulomb_+2_-1_-1",
+    "coulomb_1_r2_+2_-1_-1",
+    "harmonic",
+    "sv_analysis"
+  ],
+  "total_targeted_files": 968,
+  "total_hires_files": 250,
+  "failed_scenarios": [
+    "tritium_he3 (yukawa)",
+    "dusty_plasma (yukawa)"
+  ]
+}

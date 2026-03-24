@@ -10,11 +10,11 @@ definitive SVD gap (ratio > 100) is found.
 Uses the global (full phase-space) sampling, which gave the highest
 d(4) bound in the multi-config run (3,959 at 20K samples).
 
-Memory budget (c5.4xlarge, 32 GB):
-  100K samples x 11,679 columns x 8 bytes = ~9.3 GB for eval matrix
-  SVD workspace ~10 GB (U, s, Vt)
-  Derivative arrays ~1.5 GB
-  Total ~21 GB -- fits with margin.
+Memory budget (r6i.4xlarge, 128 GB):
+  200K samples x 11,679 columns x 8 bytes = ~18.7 GB for eval matrix
+  SVD workspace ~20 GB (U, s, Vt)
+  Derivative arrays ~3 GB
+  Total ~42 GB -- fits with large margin on 128 GB instance.
 
 Usage:
     python level4_highsample.py
@@ -46,7 +46,7 @@ CHECKPOINT_DIR = "checkpoints"
 RESULTS_DIR = "results"
 STATUS_FILE = "results/highsample_status.json"
 
-SAMPLE_COUNTS = [30000, 40000, 50000, 75000, 100000]
+SAMPLE_COUNTS = [50000, 75000, 100000, 150000, 200000]
 MAX_SAMPLES = max(SAMPLE_COUNTS)
 GAP_THRESHOLD = 100.0
 
@@ -331,6 +331,8 @@ def main():
         print(f"  SVD complete in {svd_time:.1f}s", flush=True)
 
         # Compute gap ratios
+        noise_threshold = 1e-8 * s_full[0]
+        n_meaningful = int(np.sum(s_full > noise_threshold))
         gap_ratios = np.zeros(len(s_full) - 1)
         for i in range(len(s_full) - 1):
             if s_full[i + 1] > 1e-300:
@@ -338,6 +340,10 @@ def main():
 
         max_gap = float(np.max(gap_ratios))
         max_gap_idx = int(np.argmax(gap_ratios)) + 1
+
+        meaningful_gaps = gap_ratios[:n_meaningful]
+        meaningful_max_gap = float(np.max(meaningful_gaps)) if len(meaningful_gaps) > 0 else 1.0
+        meaningful_max_idx = int(np.argmax(meaningful_gaps)) + 1 if len(meaningful_gaps) > 0 else 0
 
         # Save spectrum immediately (survives any subsequent crash)
         out_dir = os.path.join(RESULTS_DIR, f"level4_global_{ns}")
@@ -368,12 +374,17 @@ def main():
 
         elapsed = time() - t5
 
+        boundary_gap = float(gap_ratios[d4 - 1]) if d4 > 0 and d4 < len(gap_ratios) else 1.0
+
         print(f"  dims = {dims}")
         print(f"  d(4) = {d4}")
-        print(f"  max gap ratio = {max_gap:.2e} at index {max_gap_idx}")
+        print(f"  n_meaningful = {n_meaningful}")
+        print(f"  boundary gap ratio (at d4={d4}) = {boundary_gap:.2e}")
+        print(f"  meaningful max gap = {meaningful_max_gap:.2e} at index {meaningful_max_idx}")
+        print(f"  overall max gap = {max_gap:.2e} at index {max_gap_idx} "
+              f"{'(noise tail)' if max_gap_idx > n_meaningful else ''}")
         print(f"  [{elapsed:.1f}s total]", flush=True)
 
-        # Save full results (updates the spectrum already saved above)
         results = {
             "config": "global_highsample",
             "n_samples": ns,
@@ -383,11 +394,15 @@ def main():
             "dims": dims,
             "d4_lower_bound": d4,
             "best_d4_so_far": best_d4,
+            "boundary_gap_ratio": boundary_gap,
+            "meaningful_max_gap_ratio": meaningful_max_gap,
+            "meaningful_max_gap_index": meaningful_max_idx,
             "max_gap_ratio": max_gap,
             "max_gap_index": max_gap_idx,
+            "n_meaningful": n_meaningful,
             "svd_time_seconds": svd_time,
             "elapsed_seconds": elapsed,
-            "definitive_gap": max_gap > GAP_THRESHOLD,
+            "definitive_gap": boundary_gap > GAP_THRESHOLD,
             "timestamp": strftime('%Y-%m-%d %H:%M:%S'),
             "seed": 137,
         }
@@ -402,15 +417,16 @@ def main():
             "completed_sample_count": ns,
             "d4_lower_bound": d4,
             "best_d4_so_far": best_d4,
-            "max_gap_ratio": max_gap,
-            "definitive": max_gap > GAP_THRESHOLD,
+            "boundary_gap_ratio": boundary_gap,
+            "meaningful_max_gap_ratio": meaningful_max_gap,
+            "definitive": boundary_gap > GAP_THRESHOLD,
             "remaining_counts": [c for c in SAMPLE_COUNTS if c > ns],
             "timestamp": strftime('%Y-%m-%d %H:%M:%S'),
         })
 
-        if max_gap > GAP_THRESHOLD:
-            print(f"\n  *** DEFINITIVE GAP FOUND ***")
-            print(f"  d(4) = {d4} (gap ratio {max_gap:.1e})")
+        if boundary_gap > GAP_THRESHOLD:
+            print(f"\n  *** DEFINITIVE BOUNDARY GAP FOUND ***")
+            print(f"  d(4) = {d4} (boundary gap ratio {boundary_gap:.1e})")
             print(f"  This is an exact result, not just a lower bound.",
                   flush=True)
             found_gap = True

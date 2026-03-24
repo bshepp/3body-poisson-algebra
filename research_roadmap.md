@@ -326,7 +326,7 @@ and results are documented.
 ### Completed (Multi-System Survey, Mar 2026)
 | Milestone | Result |
 |-----------|--------|
-| Gravitational mass-dependence | All 7 configs → [3, 5, 13, 69] with unequal masses |
+| ~~Gravitational mass-dependence~~ | ~~All 7 configs → [3, 5, 13, 69]~~ **RETRACTED** — SymPy artifact; mass invariance confirmed (Mar 23) |
 | Charge-class mass-invariance | He, H⁻, Ps⁻, muonic He all → [3, 6, 17, 116] (mass range 1 to 7294) |
 | Charge magnitude sensitivity | Li⁺ (+3,−1,−1) → [3, 6, 17, 111]; H₂⁺ (+1,+1,−1) → [3, 6, 17, 115] |
 | Penning trap ions (+1,+1,+1) | [3, 6, 17, 116] — all-repulsive with external harmonic trap |
@@ -344,7 +344,7 @@ and results are documented.
 | N=4 with 1/r² potential | HIGH | ~hours | Paper 3 falsifiable prediction #2 |
 | Survey analysis + comparative plots | MED-HIGH | ~0h | Post-processing once compute completes |
 | S₄ tier structure (N=4) | MED-HIGH | ~hours | Paper 2 → Paper 3 bridge |
-| OEIS submission | MEDIUM | ~0h | [3,6,17,116], [6,14,62], [3,5,13,69] |
+| OEIS submission | MEDIUM | ~0h | [3,6,17,116], [6,14,62] |
 | Collaborator outreach | MEDIUM | ~0h | Full trilogy + survey available |
 | Spectral depth mining | MEDIUM | ~0h (post-proc) | Existing data |
 | Lagrange hires 1000x1000 | MEDIUM | ~$3-12 AWS | Resolve ring/bead structure |
