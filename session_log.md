@@ -3091,3 +3091,111 @@ All instances checked via S3 heartbeat files. Summary:
 | atlas-tritium (Yukawa) | terminated | Failed | Never completed a row |
 
 No stalled instances. No terminations needed.
+
+## AWS Fleet Status Update (March 25, 2026 ~15:00 UTC)
+
+### Detailed Progress Check
+
+All 16 atlas instances running 100×100 grids (on-demand r6i.4xlarge), plus
+1 level4-mpmath (on-demand r6i.8xlarge). Heartbeats current for all.
+
+| Instance | Scenario | Row/100 | % | Notes |
+|----------|----------|---------|---|-------|
+| atlas-log | `log` | 72 | 72% | Leading — log potential numerically simpler |
+| atlas-1r2-q2m1m1 | `1r2_q+2_-1_-1` | 67 | 67% | |
+| atlas-1r3-q2m1m1 | `1r3_q+2_-1_-1` | 67 | 67% | |
+| atlas-positronium | `positronium_neg` | 67 | 67% | |
+| atlas-muonic-he | `muonic_helium` | 67 | 67% | |
+| atlas-h-minus | `h_minus_ion` | 67 | 67% | |
+| atlas-lithium | `lithium_ion` | 66 | 66% | |
+| atlas-h2plus | `h2_plus_ion` | 66 | 66% | |
+| atlas-q1m1m1 | `1r_q+1_-1_-1` | 65 | 65% | |
+| atlas-q1p1m1 | `1r_q+1_+1_-1` | 65 | 65% | |
+| atlas-q1p1p1 | `1r_q+1_+1_+1` | 65 | 65% | |
+| atlas-q3m1m1 | `1r_q+3_-1_-1` | 65 | 65% | |
+| atlas-1r3 | `1r3` | 65 | 65% | |
+| atlas-binary-star | `binary_star_planet` | 65 | 65% | |
+| atlas-q2m1m1 | `1r_q+2_-1_-1` | 64 | 64% | |
+| atlas-triple-bh | `triple_bh_lisa` | 61 | 61% | |
+| atlas-sun-earth | `sun_earth_moon` | 37 | 37% | Extreme mass ratio (3e-6) slows evals |
+| atlas-sun-jup | `sun_jupiter_asteroid` | 26 | 26% | Most extreme ratio (1e-10), slowest |
+
+**level4-mpmath**: Row 283/15000 (1.9%), ~127s/row, ETA ~520 hours (~22 days).
+Checkpoint robust at 192 MB. Will recover lower bound at whatever row when stopped.
+
+### Yukawa / Dusty / Tritium — Confirmed Terminated
+
+S3 directories exist with stale data. Instance IDs (`i-0bde458719dcefe43`,
+`i-0d425700723772dd4`) no longer exist in EC2. Dusty had `aws_completion.json`
+with exit_code 1. Both confirmed dead.
+
+### Cost Analysis
+
+All instances are **on-demand** (not spot). Confirmed via `describe-instances`:
+`Lifecycle: None`, no `SpotInstanceRequestId`.
+
+| Resource | Rate/hr | Daily |
+|----------|---------|-------|
+| 16× atlas r6i.4xlarge | $1.008 each | $387/day total |
+| 1× level4-mpmath r6i.8xlarge | $2.016 | $48/day |
+| **Fleet total** | $18.14/hr | **$435/day** |
+
+Spent so far (~20h atlas + ~14h mpmath + ~11h×2 Yukawa): **~$387**
+
+Projected total scenarios:
+- Atlas 48h + mpmath 3 more days: ~$990
+- Atlas 48h + mpmath 5 more days: ~$1,090
+- Atlas 72h + mpmath full run (22 days): ~$2,230
+
+### ETA Estimates
+
+- 14 of 16 atlas instances (61-72%): ~10-15 more hours
+- atlas-sun-earth (37%): ~30 more hours
+- atlas-sun-jup (26%): ~55 more hours
+- level4-mpmath: ~22 days (but checkpointing allows early termination)
+
+## Paper 4 Strategy — Value-Based Academic Engagement (March 25, 2026)
+
+### Problem with Cold Outreach
+
+Cold-emailing established academics claiming wild results from an
+unaffiliated researcher is unlikely to get attention. Need a different
+approach.
+
+### Strategy: Lead with Value
+
+Paper 4 (`paper4_calogero_integrability.tex`) is built directly on top of
+arXiv:1712.06698v3 by Aretxabaleta, Gonchenko, Harshman, Jackson, Olshanii,
+and Astrakharchik ("The Dynamics of Digits: Calculating Pi with Galperin's
+Billiards"). The paper:
+
+1. Takes their Calogero-Moser / Galperin billiard system
+2. Computes the pairwise Poisson algebra dimension sequence for it
+3. Shows that integrability (their key finding) is invisible to the
+   pairwise algebra — it detects singularity class instead
+4. Tests all their Galperin superintegrable mass ratios (q=3,4,5,6)
+5. Cites their work prominently (refs [1] and [2] in Paper 4)
+
+Instead of cold-calling saying "look at my claims," the approach is to
+hand these researchers a paper that extends *their* result and gives them
+something new to think about. This provides a natural conversation opener
+and demonstrates competence through engagement with their specific work.
+
+### Target Researchers (from arXiv:1712.06698v3)
+
+| Name | Institution | Role | Why target |
+|------|-------------|------|------------|
+| Maxim Olshanii | UMass Boston (Physics) | Senior author | Integrable systems expert; would understand Poisson algebra implications |
+| Nathan Harshman | American University (Physics) | Co-author | Symmetry / few-body physics; S₃ decomposition would interest him |
+| Steven G. Jackson | UMass Boston (Math) | Co-author | Mathematician; algebraic structure would appeal |
+| Marina Gonchenko | UPC Barcelona (Math) | Co-author | Dynamical systems; connection to Morales-Ramis |
+| Grigory Astrakharchik | UPC Barcelona (Physics) | Co-author | Quantum many-body; N-body universality angle |
+
+### Approach
+
+- Send Paper 4 directly to Olshanii and/or Harshman with a short note:
+  "Your Galperin billiards paper inspired us to test whether the
+  Calogero-Moser integrability leaves an imprint on the pairwise Poisson
+  algebra. It doesn't — here's the result."
+- Include the broader trilogy context as supplementary, not the lead
+- Let the quality of the engagement speak for itself
