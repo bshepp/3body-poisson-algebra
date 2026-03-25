@@ -419,6 +419,99 @@ of N.
 
 ---
 
+## 8. Bell Test / Nonlocal Correlation Investigation
+
+*Added March 25, 2026*
+
+**Observation**: The Poisson algebra generators are irreducibly
+whole-system objects. By Level 2, all 17 independent functions are
+functions on the full 12-dimensional phase space that cannot be
+decomposed into "body A's variables" and "body B's variables." By
+Level 3, 116. The tidal competition generators K_i = {H_ij, H_ik}
+encode the three-way relationship from birth.
+
+**Question**: Bell's theorem rules out *local* hidden variable theories,
+where "local" means the hidden variables factorize per particle. But
+the algebra generators don't factorize — they are hidden variables
+attached to *relationships between particles*, not to individual
+particles. When we project the full algebra state onto single-body
+observables, can the resulting correlations violate the CHSH inequality?
+
+**Why this matters**: If |S| > 2 is observed (even for a classical
+system), it would mean the nonlocal algebraic structure carries
+correlations that look quantum when projected onto local observables.
+If |S| <= 2 always, the algebra is rich but still classical in the
+Bell sense — and the interpretation needs to go a different direction.
+
+**What we know so far**:
+
+| Claim | Status | Evidence |
+|-------|--------|----------|
+| N=2 algebra is trivial (dim=1) | **Proved** | `bell_test.py --part A`: dimension 1 through Level 5 |
+| N=2 has no Bell-relevant structure | **Proved** | Only one generator (H12), all brackets vanish |
+| All Bell-relevant structure requires N >= 3 | **Inferred** | N=3 has 116 independent generators; N=2 has 1 |
+| CHSH |S| <= 2 for momentum projections | **Confirmed** | max |S| = 0.11 across all strata (smoke test, 2k samples) |
+| CHSH |S| <= 2 for algebra-projected measurements | **Confirmed** | max |S| = 0.60 across all strata (smoke test, 2k samples) |
+| CHSH |S| <= 2 for body-3-mediated measurements | **Confirmed** | max |S| = 1.77 (equilateral stratum, smoke test, 2k samples) |
+| Tidal generators carry strongest inter-body correlations | **Observed** | Variant 3 (K1,K2,K3-based) gives |S| = 1.77 vs 0.11 for raw momenta |
+| Correlations collapse when apparatus (body 3) is far | **Observed** | Variant 3 pair+apparatus |S| = 0.09 vs equilateral |S| = 1.77 |
+
+**Gradient-based locality score**: Each generator g_k has a continuous
+body-locality score L(body_j) = sum(|dg_k/dvar|^2 for var in body_j) /
+sum(|dg_k/dvar|^2 for all vars), computed via numerical finite
+differences at sampled phase-space points. This captures actual
+numerical sensitivity rather than just symbolic variable presence.
+
+**Key insight**: Regardless of whether CHSH is violated, the *value* of
+S, the *shape* of marginal distributions, and the correlation structure
+across strata (equilateral, pair+apparatus, separated) are unknown and
+potentially informative. Even |S| = 1.9 (just below the classical bound)
+from a classical system would be remarkable and would indicate that the
+algebraic structure is carrying near-maximal classical correlations.
+
+**Kochen-Specker follow-up**: Even if CHSH stays below 2, the algebraic
+dependencies (39 syzygies at Level 3) may create contextuality — where
+the value assigned to a generator depends on which other generators are
+measured alongside it. This is a separate question from Bell and would
+require a different computational test.
+
+---
+
+---
+
+## Singularity Class Invariance (Proved, March 25, 2026)
+
+*The Calogero-Moser integrability diagnostic has been completed.*
+
+**Result**: The exactly integrable 1D Calogero-Moser system (N=3, d=1,
+1/r² potential) produces d(k) = [3, 6, 17, 116] — identical to
+non-integrable Newtonian gravity.
+
+**Implication**: The Poisson algebra dimension sequence is a
+**singularity class invariant**, not an integrability diagnostic.
+
+| Claim | Status | Evidence |
+|-------|--------|----------|
+| 1D Calogero (integrable) gives [3,6,17,116] | **Proved** | `exact_growth_nbody.py -N 3 -d 1 --potential 1/r^2`, gap ratio 6.85×10⁷ |
+| Sequence is mass-ratio invariant for 1/r² in 1D | **Proved** | Tested q=3,4,5,6 superintegrable + generic masses |
+| Singular potentials → infinite algebra | **Proved** | 1/r, 1/r², 1/r³, log, Yukawa all give [3,6,17,116] in d=1 and d=2 |
+| Regular potentials → finite algebra | **Proved** | Harmonic r² gives [3,6,13,15,15], saturating at d=15 |
+| Integrability is invisible to pairwise algebra | **Proved** | CM integrals (L², Chevalley J) are non-pairwise; algebra can't see them |
+| Dimension sequence is d-independent for all singular V | **Proved** | 1/r tested at d=1,2,3; 1/r² at d=1,2; 1/r³ at d=1 — all [3,6,17,116] |
+
+**The singularity dichotomy**: The dimension sequence distinguishes
+potentials with an essential singularity at r=0 (polynomial in u=1/r)
+from those that are analytic in physical coordinates. The harmonic
+potential V=r² requires no auxiliary variables and generates a finite
+algebra. All singular potentials share the same infinite algebra growth.
+
+This resolves the open question from the Calogero-Moser reckoning
+(Phase 5). The growth sequence is universal across singular potentials
+regardless of integrability, spatial dimension, mass ratios, or
+coupling constants.
+
+---
+
 *This document is a scratch pad. If any of these ideas survive
 contact with further computation, they'll be promoted to the
 preprint or research roadmap.*

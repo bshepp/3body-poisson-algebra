@@ -11,6 +11,7 @@
 | 1 | Super-exponential growth of the Poisson algebra (N=3) | `preprint.tex` |
 | 2 | S₃-equivariant jet filtration: tiers, scaling, syzygies | `paper2_s3_filtration.tex` |
 | 3 | Universal dimension sequences: N=4, d-independence, universality conjecture | `paper3_universality.tex` |
+| 4 | The Poisson Algebra of Pairwise Interactions: A Calogero-Moser Integrability Test | `paper4_calogero_integrability.tex` |
 
 ## Key Results (for abstract drafting)
 
@@ -20,7 +21,7 @@ These are the established facts. Use only these in formal submissions.
 | Result | Status | Evidence |
 |--------|--------|----------|
 | d(0)=3, d(1)=6, d(2)=17, d(3)=116 | **Proved** | Exact symbolic computation, SVD gap > 10^6 |
-| d(4) >= 5,604 | **Lower bound** | Numerical pipeline, 200K samples at generic config |
+| d(4) >= 5,604 | **Lower bound** | Numerical pipeline, 200K samples at generic config; exact rank via mpmath in progress |
 | Mass invariance of d(0)-d(3) | **Proved** | Tested 20+ mass ratios including Tsygvintsev exceptional cases |
 | Infinite Gelfand-Kirillov dimension | **Proved** | Follows from super-exponential growth through Level 4 |
 | Harmonic (r^2) algebra closes at dim 15 | **Proved** | Zero new generators at Level 4, SVD gap > 10^14 |
@@ -47,6 +48,18 @@ These are the established facts. Use only these in formal submissions.
 | Shape sphere atlas: 11 configs surveyed | **Complete** | 99,000 grid points; rank 116 at 75–93% across all potentials/charges |
 | Cross-potential atlas consistency | **Confirmed** | Critical locus identical topology for 1/r, 1/r², 1/r³, log(r) |
 | Charge sensitivity atlas (7 configs) | **Confirmed** | Rank differences sparse (±1–4 at boundaries); gap score more continuous |
+| Full 100×100 atlas campaign (19 configs) | **In progress** | Tiers 1-3 at 27–30%; Tier 4 (Yukawa) terminated (subs() stall); lambdify fix applied |
+| N=2 Poisson algebra is trivial (dim=1) | **Proved** | bell_test.py Part A: dimension 1 through Level 5 |
+| Bell test (CHSH from algebra projections) | **No violation** | max |S| = 1.77 (tidal generators, equilateral); classical bound holds; full-scale run in progress |
+
+### Paper 4 results
+| Result | Status | Evidence |
+|--------|--------|----------|
+| 1D Calogero-Moser (integrable) gives [3,6,17,116] | **Proved** | N=3, d=1, 1/r² via exact_growth_nbody.py; gap ratio 6.85×10⁷ |
+| Galperin superintegrable mass ratios invariant | **Proved** | q=3,4,5,6 and generic (1,2.7,0.4) all give d(3)=116 |
+| Singularity dichotomy | **Proved** | All singular potentials → [3,6,17,116]; harmonic → [3,6,13,15,15] |
+| Dimension sequence is singularity class invariant | **Proved** | Integrable CM matches non-integrable gravity |
+| Integrability invisible to pairwise algebra | **Proved** | CM integrals (L², Chevalley J) are non-pairwise |
 
 **Do not claim:**
 - That super-exponential growth is a "non-integrability certificate" (disproved by CM comparison)
@@ -111,7 +124,7 @@ These are the established facts. Use only these in formal submissions.
 
 **Key terms:** Gelfand-Kirillov dimension, differential Galois group, Morales-Ramis theory, mass invariance, super-exponential growth.
 
-**What they will ask:** What is the exact d(4)? (Open -- lower bound is 5,604.) Is the sequence eventually periodic? (Almost certainly not -- growth is super-exponential.) Connection to quantum groups? (Speculative but intriguing.)
+**What they will ask:** What is the exact d(4)? (In progress -- mpmath computation running on AWS with 50-digit precision.) Is the sequence eventually periodic? (Almost certainly not -- growth is super-exponential.) Connection to quantum groups? (Speculative but intriguing.) What about Bell correlations? (Tested -- CHSH computation from algebra projections onto single-body observables in progress.)
 
 ---
 

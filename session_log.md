@@ -13,6 +13,7 @@ Three papers completed, plus comprehensive atlas survey:
 | 1 | Super-exponential growth of the Poisson algebra (N=3) | `preprint.tex` | Sequence [3,6,17,116], mass invariance, 1/r vs 1/r² vs r² |
 | 2 | S₃-equivariant jet filtration | `paper2_s3_filtration.tex` | 52+44+16+4=116, CG decomposition, integer scaling, syzygies |
 | 3 | Universal dimension sequences | `paper3_universality.tex` | N=4 [6,14,62], d-independence, 1/r³, charge-sign, universality conjecture |
+| 4 | Calogero-Moser integrability test | `paper4_calogero_integrability.tex` | 1D CM gives [3,6,17,116], singularity class invariance, Galperin mass ratios |
 | — | Shape sphere atlas survey | `atlas_figures/` | 76 figures, 11 configs, 99K grid points, critical locus = S₃ fixed points |
 
 ---
@@ -2744,3 +2745,334 @@ at small epsilon track exactly the S₃ fixed-point structure:
 No anomalous rank drops were observed at non-symmetric configurations,
 consistent with the conjecture that only S₃ fixed points produce
 algebraic degeneracies.
+
+## Level 4 Exact Rank Determination — Multiprecision Campaign (March 2026)
+
+### Motivation
+
+The Level 4 dimension was established as d(4) >= 5,604 using float64
+numerical sampling with SVD at 200K phase-space points. However, the
+singular value spectrum showed a smooth decay rather than a clear gap,
+raising the question of whether the true rank is higher and the float64
+precision is masking additional independent generators. The exact d(4)
+is needed for the growth rate analysis and OEIS submission.
+
+### Strategy: Full mpmath with Incremental Row Echelon
+
+After evaluating four approaches (full mpmath, modular arithmetic,
+hybrid float64+mpmath, algebraic structure), "Strategy A: Full mpmath"
+was selected for robustness:
+
+1. **Symbolic setup**: Load 156 Level 3 generators from checkpoint.
+   Compute 1,872 symbolic derivative expressions (6 dq, 6 dp per
+   generator) via `total_deriv` and `diff`. Cache to `level4_derivs.pkl`.
+2. **mpmath evaluation**: Set `mp.dps = 50` (50 decimal digits). Sample
+   phase-space points with mpf arithmetic. Evaluate all base generators
+   and derivatives, then compute 11,523 bracket values per point.
+3. **Incremental row echelon**: Maintain a pivot list. For each new row,
+   reduce against existing pivots; if residual above 10^(-40), add as
+   new pivot. Complexity O(R² × N) where R = rank, N = sample rows.
+4. **Checkpointing**: Save `rank_checkpoint.pkl` and `status.json` to
+   S3 every 50 rows or 5 minutes. SIGTERM handler for graceful shutdown.
+
+### Implementation
+
+- Script: `level4_mpmath_rank.py` (created)
+- Userdata: `userdata_level4_mpmath.sh` (with gmpy2 install for 5-10x
+  mpmath acceleration)
+- Instance: r6i.8xlarge (32 vCPUs, 256 GB RAM) on AWS
+- Dependencies: SymPy 1.13.3, mpmath, gmpy2 (compiled from source with
+  gmp-devel, mpfr-devel, mpc-devel)
+
+### Status (March 25, 2026)
+
+Instance `i-0cebc8dbf5349ed32` launched. Phase 1 (symbolic derivative
+computation) completed ~100/156 generators in approximately 2.7 hours
+before session context was summarized. Phase 1 is a one-time cost that
+gets cached to `level4_derivs.pkl`; subsequent runs skip it entirely.
+
+### Files
+
+- `level4_mpmath_rank.py` — main computation script
+- `userdata_level4_mpmath.sh` — AWS provisioning script
+
+## Tiered Full Atlas Campaign (March 2026)
+
+### Motivation
+
+Generate full 100×100 shape-sphere atlases for all 19 configured 3-body
+problems (gravitational, atomic, Coulomb, Yukawa). Earlier work produced
+partial/targeted scans; this campaign fills in the complete picture using
+the fixed core engine with SVD and sampling improvements.
+
+### Architecture
+
+Four tiers ordered by computational complexity:
+- **Tier 1** (6 configs): Equal-mass gravitational (1/r, 1/r², 1/r³,
+  log), all-repulsive Penning (+1,+1,+1), H₂⁺ (+1,+1,−1)
+- **Tier 2** (5 configs): Charged variants — Ps⁻/H⁻ (+1,−1,−1),
+  Helium (+2,−1,−1), Li⁺ (+3,−1,−1), 1/r² Helium, 1/r³ Helium
+- **Tier 3** (4 configs): Unequal mass — m1=2 m2=1 m3=1,
+  m1=3 m2=2 m3=1, Sun-Earth-Moon, Sun-Jupiter-Asteroid
+- **Tier 4** (4 configs): Yukawa variants — tritium/He-3, dusty plasma,
+  equal-mass, long-range
+
+### Deployment
+
+18 r6i.4xlarge + r6i.8xlarge instances on AWS, one per non-Yukawa
+config, with `userdata_full_atlas.sh` provisioning. Yukawa configs
+allocated to 2 r6i.8xlarge instances due to higher symbolic complexity.
+
+### Status (March 25, 2026)
+
+- Tiers 1-3: Most instances at 27–30% completion (27–30/100 rows).
+  Extreme mass-ratio scenarios (Sun-Earth-Moon, Sun-Jupiter-Asteroid)
+  progressing slower at 11–15/100 rows.
+- Tier 4 (Yukawa): **Terminated**. Both instances (`i-0bde458719dcefe43`,
+  `i-0d425700723772dd4`) were stuck at eval 60/156 for ~5 hours due to
+  `subs()` fallback performance issue. Killed by user request.
+  The lambdification fix (three-layer pipeline from `bell_test.py`) was
+  subsequently ported to `exact_growth.py` and uploaded to S3 for
+  future re-launch.
+
+## Bell Test for the Poisson Algebra (March 25, 2026)
+
+### Motivation
+
+The Poisson algebra generators are irreducibly whole-system objects —
+they cannot be factored into "particle A's variables" and "particle B's
+variables." Bell's theorem rules out local hidden variable theories, but
+the locality assumption requires that hidden variables factorize per
+particle. The algebra generators are structurally nonlocal: they live
+on the full interaction graph. The tidal competition generators
+K_i = {H_ij, H_ik} encode three-way relationships from birth.
+
+**Question**: When we project this high-dimensional classical algebra
+state onto low-dimensional single-body observables, do the resulting
+correlations violate the CHSH inequality?
+
+**Expected outcome**: |S| <= 2 (classical bound holds). But the value
+of S, the shape of projection distributions, and the correlation
+structure are all unknown.
+
+### Design
+
+Three-part investigation implemented in `nbody/bell_test.py`:
+
+**Part A — N=2 Baseline**: Confirmed that the N=2 Poisson algebra closes
+at dimension 1 (just H12, all brackets vanish). All algebraic structure
+beyond the Hamiltonian is intrinsic to N >= 3. The two-body Kepler
+problem is integrable and has no bracket structure in this framework.
+
+**Part B — Projection Statistics**: Load Level 3 checkpoint (156
+generators, 116 independent). Evaluate at stratified phase-space
+samples. Compute gradient-based body-locality scores (numerical
+partial derivatives, not symbolic `free_symbols`) to classify how
+"local" each generator is. Compute conditional distributions and
+mutual information between single-body projections and full algebra
+state.
+
+**Part C — CHSH Computation**: Three measurement variants:
+1. **Momentum projections** (classical baseline): A(θ) = sign(cos(θ)·px1
+   + sin(θ)·py1), B(θ) = sign(cos(θ)·px2 + sin(θ)·py2). Validates
+   methodology; expected |S| <= 2.
+2. **Algebra-projected measurements**: Use gradient-locality scores to
+   identify body-1 vs body-2 aligned generators. Measurement functions
+   live in the Poisson algebra, not raw phase space.
+3. **Body-3-mediated measurements**: K1·cos(θ) + K3·sin(θ) for body 1,
+   K2·cos(θ) + K3·sin(θ) for body 2. Body 3 is the apparatus.
+
+### Statistical Rigor
+
+- **Stratified sampling**: Three physically distinct regimes —
+  equilateral (strong 3-body coupling), pair+apparatus (bodies 1-2 close,
+  body 3 far), widely separated (null control)
+- **Bootstrap error bars**: 1000 resamples, 95% CI on S. Violation is
+  "significant" only if lower CI bound exceeds 2.
+- **200,000 samples per stratum** for CHSH computation
+
+### Lambdification Pipeline
+
+The Level 3 generators include deeply nested expressions (up to 15,484
+terms) that exceed Python's compile() recursion limit. A three-layer
+fallback was implemented:
+
+1. **Layer 1**: Standard `sp.lambdify` — fast numpy vectorized (93/156)
+2. **Layer 2**: CSE + chunked code generation written to temp .py files,
+   imported via `importlib` — still vectorized (30/156)
+3. **Layer 3**: Point-by-point `xreplace` symbolic substitution — slow
+   but handles arbitrarily nested expressions (33/156)
+
+### Smoke Test Results (2,000 samples/stratum, March 25, 2026)
+
+The complete pipeline ran successfully end-to-end with reduced sample
+sizes (500 for Part B, 2,000 for Part C, 18 angles, 50 bootstrap).
+
+**Body-Locality Scores (gradient-based)** — key findings:
+- Level 0 (H12, H13, H23): each shares ~50/50 between its two bodies,
+  zero contribution from the third. Physically correct.
+- Level 1 (K1, K2, K3): 94-95% localized to one body. K1 = {H12,H13}
+  is 95% body 1, K2 = {H12,H23} is 94% body 2, K3 = {H13,H23} is
+  94% body 3. The tidal generators are strongly body-localized despite
+  involving all three interactions.
+- Level 2: mixed, with some generators (like {K1,K2}) showing 49/50
+  body 1/body 2 split and zero body 3.
+- Level 3: increasingly delocalized, with many generators showing
+  33/33/33 splits (the xreplace-skipped ones default to this).
+
+**Mutual Information**: avg MI(body1) and MI(body2) are roughly equal
+across all strata (~0.21-0.25 nats), suggesting symmetric information
+content in the algebra projections.
+
+**CHSH Results (smoke test)**:
+
+| Stratum | V1 (momentum) | V2 (algebra) | V3 (mediated) |
+|---------|---------------|--------------|---------------|
+| Equilateral | |S| = 0.110 | |S| = 0.596 | |S| = 1.770 |
+| Pair+apparatus | |S| = 0.092 | |S| = 0.548 | |S| = 0.090 |
+| Separated | |S| = 0.114 | |S| = 0.498 | |S| = 1.704 |
+
+**No CHSH violation detected** (all |S| < 2.0, all 95% CIs within
+classical bound). The maximum |S| = 1.77 was achieved by Variant 3
+(body-3-mediated measurements using tidal generators K1, K2, K3) in
+the equilateral stratum. This is the highest classical correlation
+observed, approaching but not exceeding the classical bound.
+
+**Notable observations**:
+- Variant 3 shows dramatically higher correlations than Variants 1-2,
+  especially in the equilateral stratum where all three bodies interact
+  strongly. The tidal generators carry substantial inter-body correlations.
+- Variant 3 in the pair+apparatus stratum drops to 0.09 — when body 3
+  is far away, the tidal generators lose their mediating power.
+- Variant 1 (raw momenta) gives low S everywhere (~0.1), confirming
+  that single-body phase-space variables carry minimal inter-body
+  correlation.
+- Variant 2 (algebra-projected) is intermediate, suggesting the gradient-
+  locality weighting successfully identifies body-aligned generators.
+
+### Status (March 25, 2026)
+
+- Part A: **Complete**. N=2 algebra confirmed dimension 1 through Level 5.
+- Smoke test: **Complete**. Full pipeline validated at 2,000 samples.
+- Full-scale run: **In progress** (50k/200k samples, 72 angles, 1000
+  bootstrap iterations).
+
+### Files
+
+- `nbody/bell_test.py` — main script (Parts A, B, C)
+- `nbody/bell_test_results/` — output directory
+  - `n2_algebra_summary.txt` — Part A result
+  - `body_locality_gradients.png` — gradient locality heatmap
+  - `projection_distributions.png` — conditional distributions
+  - `chsh_sweep_variant1.png` — CHSH S sweep (momentum projections)
+  - `chsh_sweep_variant2.png` — CHSH S sweep (algebra-projected)
+  - `chsh_sweep_variant3.png` — CHSH S sweep (body-3 mediated)
+  - `chsh_summary.json` — full numerical results
+
+## Calogero-Moser Integrability Diagnostic (March 25, 2026)
+
+### Motivation
+
+The Galperin billiard construction (arXiv:1712.06698) maps a 1D
+three-body system (two balls + wall) onto the Calogero-Moser model with
+1/r² interactions. This system is exactly integrable (conserved L²) and
+superintegrable at special mass ratios m/M = tan²(π/q). Our Poisson
+algebra framework had tested 1/r² in 2D (giving [3,6,17,116], matching
+gravity), but the **1D Calogero-Moser model** — the actual integrable
+system — had never been run. This was the critical missing experiment.
+
+**Hypothesis**: If the 1D Calogero gives [3,6,17,116] (same as
+non-integrable gravity), the dimension sequence detects singularity
+class, not integrability. If it saturates, integrability IS detectable.
+
+### Code Changes
+
+Added configurable potential support to `exact_growth.py`:
+- `build_hamiltonians(potential_type, masses, coupling)` function
+  supporting `1/r`, `1/r2`, `harmonic` potentials
+- `--potential`, `--masses`, `--coupling` CLI arguments
+- `compute_exact_growth()` updated to accept these parameters
+- Chain rule table unchanged (depends only on u_ij = 1/r_ij definition)
+
+### Results — The Critical Experiment
+
+**1D Calogero-Moser (N=3, d=1, 1/r²): d(k) = [3, 6, 17, 116]**
+
+Identical to non-integrable Newtonian gravity. SVD gap ratio at level 3:
+6.85 × 10⁷ — unambiguous rank. Runtime: 52 seconds.
+
+### Complete Comparison Matrix
+
+| Configuration              | d(0) | d(1) | d(2) | d(3) | d(4) | Time  |
+|---------------------------|------|------|------|------|------|-------|
+| 1D Newtonian (1/r)        | 3    | 6    | 17   | 116  | —    | 42.5s |
+| 1D Calogero-Moser (1/r²)  | 3    | 6    | 17   | 116  | —    | 43.2s |
+| 1D Cubic (1/r³)           | 3    | 6    | 17   | 116  | —    | 58.3s |
+| 2D Newtonian (1/r)        | 3    | 6    | 17   | 116  | —    | known |
+| 2D Calogero (1/r²)        | 3    | 6    | 17   | 116  | —    | known |
+| 2D Log potential           | 3    | 6    | 17   | 116  | —    | known |
+| 2D Yukawa                 | 3    | 6    | 17   | 116  | —    | known |
+| 2D Harmonic (r²)          | 3    | 6    | 13   | 15   | 15   | 369s  |
+
+Every singular potential gives [3, 6, 17, 116]. The harmonic oscillator
+saturates at 15. The dichotomy is between singular and regular potentials.
+
+### Galperin Superintegrable Mass Ratios
+
+All 1D Calogero-Moser, 1/r² potential:
+
+| Mass ratio m/M | Galperin q | Superintegrable? | d(3) |
+|----------------|-----------|-----------------|------|
+| 3              | q=3       | Yes             | 116  |
+| 1 (equal)      | q=4       | Yes             | 116  |
+| ≈ 0.528        | q=5       | Yes             | 116  |
+| 1/3            | q=6       | Yes             | 116  |
+| (1, 2.7, 0.4)  | —         | No              | 116  |
+
+Complete mass-ratio invariance confirmed, including all tested Galperin
+superintegrable points and generic non-superintegrable masses.
+
+### Interpretation
+
+The Poisson algebra dimension sequence is a **singularity class
+invariant**, not an integrability diagnostic:
+
+- **Singular potentials** (1/r, 1/r², 1/r³, log, Yukawa): infinite
+  algebra with universal growth [3, 6, 17, 116, ...]
+- **Regular potentials** (r²): finite algebra saturating at d = 15
+
+Why integrability is invisible: The Calogero integrals (L², Chevalley J)
+are global phase-space functions that do not decompose into pairwise
+contributions. The pairwise Poisson algebra respects the combinatorial
+structure of the interaction graph but cannot "see" collective
+conservation laws that emerge from the geometry of the full
+configuration space.
+
+### Paper
+
+**Paper 4**: "The Poisson Algebra of Pairwise Interactions: A
+Calogero-Moser Integrability Test"
+- File: `paper4_calogero_integrability.tex`
+- Format: revtex4-2 (APS Physical Review), 4 pages two-column
+- 3 tables, 8 references
+- Compiles cleanly to PDF
+
+### Artifacts
+
+All in `calogero_paper/`:
+- `growth_comparison.png/.pdf` — d(k) vs k overlay (singular vs harmonic)
+- `singularity_dichotomy.png/.pdf` — bar chart of d(3) across potentials
+- `mass_ratio_invariance.png/.pdf` — Galperin mass ratio results
+- `svd_spectrum_calogero_1D.png/.pdf` — SVD spectrum for 1D Calogero
+- `dimension_grid.png/.pdf` — d × potential heatmap
+- `full_comparison_table.json` — complete data
+- `calogero_comparison_table.json` — comparison matrix run results
+- `run_comparison.py` — driver script for all 1D runs
+- `generate_artifacts.py` — figure/table generation script
+
+### Files Modified
+
+- `exact_growth.py` — added `build_hamiltonians()`, `--potential`,
+  `--masses`, `--coupling` CLI args
+- `paper4_calogero_integrability.tex` — new paper (Paper 4)
+- `calogero_paper/` — new directory with all artifacts

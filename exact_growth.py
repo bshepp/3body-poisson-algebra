@@ -281,6 +281,55 @@ H12 = T1 + T2 - u12         # V12 = -1/r12 = -u12
 H13 = T1 + T3 - u13
 H23 = T2 + T3 - u23
 
+VALID_POTENTIALS = ('1/r', '1/r2', 'harmonic')
+
+
+def build_hamiltonians(potential_type='1/r', masses=None, coupling=1):
+    """Build pairwise Hamiltonians for a given potential type.
+
+    Parameters
+    ----------
+    potential_type : str
+        '1/r' (Newtonian), '1/r2' (Calogero-Moser), or 'harmonic'.
+    masses : tuple of 3 floats, optional
+        Particle masses (m1, m2, m3). Default (1, 1, 1).
+    coupling : float
+        Coupling constant (default 1).
+
+    Returns (H12, H13, H23) as SymPy expressions.
+    """
+    if masses is None:
+        masses = (1, 1, 1)
+    m1, m2, m3 = [Rational(m).limit_denominator(100000) if isinstance(m, float)
+                  else m for m in masses]
+
+    KE1 = (px1**2 + py1**2) / (2 * m1)
+    KE2 = (px2**2 + py2**2) / (2 * m2)
+    KE3 = (px3**2 + py3**2) / (2 * m3)
+
+    g = Rational(coupling).limit_denominator(100000) if isinstance(coupling, float) else coupling
+
+    if potential_type == '1/r':
+        return (KE1 + KE2 - g * m1 * m2 * u12,
+                KE1 + KE3 - g * m1 * m3 * u13,
+                KE2 + KE3 - g * m2 * m3 * u23)
+
+    if potential_type == '1/r2':
+        return (KE1 + KE2 - g * m1 * m2 * u12**2,
+                KE1 + KE3 - g * m1 * m3 * u13**2,
+                KE2 + KE3 - g * m2 * m3 * u23**2)
+
+    if potential_type == 'harmonic':
+        r12_sq = (x1 - x2)**2 + (y1 - y2)**2
+        r13_sq = (x1 - x3)**2 + (y1 - y3)**2
+        r23_sq = (x2 - x3)**2 + (y2 - y3)**2
+        return (KE1 + KE2 + g * r12_sq,
+                KE1 + KE3 + g * r13_sq,
+                KE2 + KE3 + g * r23_sq)
+
+    raise ValueError(f"Unknown potential type: {potential_type!r}. "
+                     f"Valid: {VALID_POTENTIALS}")
+
 
 # =====================================================================
 # Checkpoint helpers
@@ -402,11 +451,27 @@ def _make_flat_func(expr, func_name="_f"):
     return namespace[func_name]
 
 
+def _expr_to_chunked_lines(expr, target_var, indent="    ",
+                           max_terms_per_line=50):
+    """Break large additions into chunked += lines to avoid deep AST."""
+    from sympy import pycode
+    terms = sp.Add.make_args(expr)
+    if len(terms) <= max_terms_per_line:
+        return [f"{indent}{target_var} = {pycode(expr)}"]
+    lines = [f"{indent}{target_var} = 0"]
+    for i in range(0, len(terms), max_terms_per_line):
+        chunk_expr = sp.Add(*terms[i:i + max_terms_per_line])
+        lines.append(
+            f"{indent}{target_var} += {pycode(chunk_expr)}")
+    return lines
+
+
 def _make_flat_func(expr, label="_f"):
     """Fallback for expressions too deeply nested for compile().
 
-    Uses CSE to flatten the expression tree, writes flat assignment code
-    to a temp file, and imports it -- bypassing the recursive compiler.
+    Uses CSE to flatten the expression tree, writes chunked assignment
+    code to a temp file, and imports it -- bypassing the recursive
+    compiler even for very large Yukawa-type expressions.
     """
     import tempfile
     import importlib.util
@@ -418,12 +483,13 @@ def _make_flat_func(expr, label="_f"):
     sig = ", ".join(var_names)
     lines = [
         "import numpy as _np",
-        "from numpy import exp, log, sqrt, sin, cos, abs",
+        "from numpy import exp, log, sqrt, sin, cos, abs, power",
         f"def {label}({sig}):",
     ]
     for sym, sub in replacements:
-        lines.append(f"    {sym} = {pycode(sub)}")
-    lines.append(f"    return {pycode(reduced)}")
+        lines.extend(_expr_to_chunked_lines(sub, str(sym)))
+    lines.extend(_expr_to_chunked_lines(reduced, "_result"))
+    lines.append("    return _result")
     code = "\n".join(lines)
 
     tmp = tempfile.NamedTemporaryFile(
@@ -434,27 +500,7 @@ def _make_flat_func(expr, label="_f"):
 
     spec = importlib.util.spec_from_file_location(f"_flat_{label}", tmp.name)
     mod = importlib.util.module_from_spec(spec)
-    try:
-        spec.loader.exec_module(mod)
-    except RecursionError:
-        print(f"      [{label}] CSE flat compile also failed, "
-              f"using subs() fallback", flush=True)
-        var_syms = list(ALL_VARS)
-
-        def _subs_eval(*args):
-            n_pts = len(args[0]) if hasattr(args[0], '__len__') else 1
-            result = np.empty(n_pts)
-            for i in range(n_pts):
-                pt = {v: (float(a[i]) if hasattr(a, '__len__') else float(a))
-                      for v, a in zip(var_syms, args)}
-                try:
-                    result[i] = float(expr.xreplace(pt))
-                except Exception:
-                    result[i] = 0.0
-            return result
-
-        return _subs_eval
-
+    spec.loader.exec_module(mod)
     return getattr(mod, label)
 
 
@@ -483,55 +529,88 @@ def lambdify_generators(exprs):
 
         return evaluate
 
-    # For large sets: build individual functions
+    LAYER_LAMBDIFY = 0
+    LAYER_FLAT_CSE = 1
+    LAYER_XREPLACE = 2
+
     print(f"    Lambdifying {n} expressions individually...", flush=True)
 
     funcs = []
-    use_subs = []
+    layers = []
+    counts = [0, 0, 0]
+
     for idx, expr in enumerate(exprs):
         if (idx + 1) % 20 == 0 or idx == n - 1:
-            print(f"      {idx+1}/{n}  [{time()-t0:.1f}s]", flush=True)
+            print(f"      {idx+1}/{n}  [{time()-t0:.1f}s]  "
+                  f"(lambdify:{counts[0]} flat:{counts[1]} "
+                  f"xreplace:{counts[2]})", flush=True)
+
+        # Layer 1: standard lambdify
         try:
             f = sp.lambdify(ALL_VARS, expr, modules="numpy", cse=False)
             funcs.append(f)
-            use_subs.append(False)
-        except RecursionError:
-            funcs.append(expr)
-            use_subs.append(True)
-            if idx < 3:
-                print(f"      [{idx}] Using subs() evaluator "
-                      f"(expression too deep)", flush=True)
+            layers.append(LAYER_LAMBDIFY)
+            counts[0] += 1
+            continue
+        except (RecursionError, Exception):
+            pass
 
-    n_subs = sum(use_subs)
-    if n_subs > 0:
-        print(f"    {n_subs}/{n} expressions will use subs() evaluator",
-              flush=True)
+        # Layer 2: CSE + chunked temp-file (still vectorised)
+        try:
+            f = _make_flat_func(expr, label=f"g{idx}")
+            funcs.append(f)
+            layers.append(LAYER_FLAT_CSE)
+            counts[1] += 1
+            continue
+        except (RecursionError, Exception) as e:
+            print(f"      [{idx}] flat-CSE also failed ({e.__class__.__name__}), "
+                  f"falling back to xreplace", flush=True)
 
+        # Layer 3: point-by-point xreplace (slow, last resort)
+        var_syms = list(ALL_VARS)
+        captured_expr = expr
+
+        def _make_xreplace(ex, vs):
+            def _subs_eval(*args):
+                n_pts = len(args[0]) if hasattr(args[0], '__len__') else 1
+                result = np.empty(n_pts)
+                for i in range(n_pts):
+                    pt = {v: (float(a[i]) if hasattr(a, '__len__') else float(a))
+                          for v, a in zip(vs, args)}
+                    try:
+                        result[i] = complex(ex.xreplace(pt)).real
+                    except Exception:
+                        result[i] = 0.0
+                return result
+            return _subs_eval
+
+        funcs.append(_make_xreplace(captured_expr, var_syms))
+        layers.append(LAYER_XREPLACE)
+        counts[2] += 1
+
+    print(f"    Lambdify results: {counts[0]} lambdify, "
+          f"{counts[1]} flat-CSE, {counts[2]} xreplace")
     print(f"    Total lambdify time: {time() - t0:.1f}s")
-
-    var_syms = list(ALL_VARS)
 
     def evaluate(Z_qp, Z_u):
         args = ([Z_qp[:, i] for i in range(12)] +
                 [Z_u[:, i] for i in range(3)])
         n_pts = Z_qp.shape[0]
         cols = []
-        for idx, (f, is_subs) in enumerate(zip(funcs, use_subs)):
-            if is_subs:
-                result = np.zeros(n_pts)
-                for i in range(n_pts):
-                    subs_dict = {var_syms[j]: float(args[j][i])
-                                 for j in range(len(var_syms))}
-                    try:
-                        result[i] = float(f.xreplace(subs_dict))
-                    except Exception:
-                        result[i] = 0.0
-                cols.append(result)
-            else:
-                val = f(*args)
-                cols.append(np.atleast_1d(val).ravel())
+        t_eval = time()
+        for idx, (f, layer) in enumerate(zip(funcs, layers)):
+            if layer == LAYER_XREPLACE:
+                print(f"      WARNING: eval {idx+1}/{n} using xreplace "
+                      f"(slow!)", flush=True)
+            val = f(*args)
+            arr = np.atleast_1d(np.asarray(val, dtype=float)).ravel()
+            if arr.shape[0] == 1:
+                arr = np.full(n_pts, arr[0])
+            elif arr.shape[0] < n_pts:
+                arr = np.resize(arr, n_pts)
+            cols.append(arr[:n_pts])
             if (idx + 1) % 20 == 0:
-                print(f"      eval {idx+1}/{n}  [{time()-t0:.1f}s]",
+                print(f"      eval {idx+1}/{n}  [{time()-t_eval:.1f}s]",
                       flush=True)
         return np.column_stack(cols)
 
@@ -702,12 +781,18 @@ def verify_jacobi_numerical(a_expr, b_expr, c_expr,
 # Main computation
 # =====================================================================
 def compute_exact_growth(max_level=3, n_samples=500, seed=42,
-                         resume=False):
+                         resume=False, potential_type='1/r',
+                         masses=None, coupling=1):
+    pot_label = {'1/r': 'Newtonian (1/r)',
+                 '1/r2': 'Calogero-Moser (1/r²)',
+                 'harmonic': 'Harmonic (r²)'}.get(potential_type, potential_type)
+    mass_str = (f"m=({masses[0]},{masses[1]},{masses[2]})"
+                if masses else "m1=m2=m3=1")
     print("=" * 70)
     print("EXACT LIE ALGEBRA GROWTH  (SymPy symbolic computation)")
     print("  Polynomial representation: u_ij = 1/r_ij auxiliary vars")
     print("=" * 70)
-    print(f"  Equal masses m1=m2=m3=1, G=1")
+    print(f"  Potential: {pot_label},  {mass_str},  g={coupling}")
     print(f"  Max level: {max_level},  Samples: {n_samples},  Seed: {seed}")
     print()
 
@@ -734,7 +819,11 @@ def compute_exact_growth(max_level=3, n_samples=500, seed=42,
     # ------------------------------------------------------------------
     if start_level <= 0:
         print("--- Level 0: Pairwise Hamiltonians ---")
-        for name, expr in [("H12", H12), ("H13", H13), ("H23", H23)]:
+        if potential_type == '1/r' and masses is None and coupling == 1:
+            h12, h13, h23 = H12, H13, H23
+        else:
+            h12, h13, h23 = build_hamiltonians(potential_type, masses, coupling)
+        for name, expr in [("H12", h12), ("H13", h13), ("H23", h23)]:
             all_exprs.append(expr)
             all_names.append(name)
             all_levels.append(0)
@@ -940,6 +1029,14 @@ def main():
                     help="Random seed (default: 42)")
     ap.add_argument("--resume", action="store_true",
                     help="Resume from last checkpoint")
+    ap.add_argument("--potential", default="1/r",
+                    choices=VALID_POTENTIALS,
+                    help="Potential type (default: 1/r)")
+    ap.add_argument("--masses", nargs=3, type=float, default=None,
+                    metavar=("M1", "M2", "M3"),
+                    help="Particle masses (default: 1 1 1)")
+    ap.add_argument("--coupling", type=float, default=1.0,
+                    help="Coupling constant (default: 1.0)")
     args = ap.parse_args()
 
     compute_exact_growth(
@@ -947,6 +1044,9 @@ def main():
         n_samples=args.samples,
         seed=args.seed,
         resume=args.resume,
+        potential_type=args.potential,
+        masses=tuple(args.masses) if args.masses else None,
+        coupling=args.coupling,
     )
 
 
