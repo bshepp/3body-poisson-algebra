@@ -3076,3 +3076,18 @@ All in `calogero_paper/`:
   `--masses`, `--coupling` CLI args
 - `paper4_calogero_integrability.tex` — new paper (Paper 4)
 - `calogero_paper/` — new directory with all artifacts
+
+## AWS Instance Audit (March 25, 2026 14:30 UTC)
+
+All instances checked via S3 heartbeat files. Summary:
+
+| Instance | Type | Status | Progress |
+|----------|------|--------|----------|
+| 3body-level4-mpmath | r6i.8xlarge | Active | Row 268/5604, 9.5h in, ETA 519h |
+| 3body-atlas-q1m1m1 | r6i.4xlarge | Active | 64/100 rows (64%) |
+| 3body-atlas-sun-earth | r6i.4xlarge | Active | 37/100 rows (37%) |
+| 14 other atlas instances | r6i.4xlarge | Active | 37-64% range |
+| atlas-dusty (Yukawa) | terminated | Failed | ValueError on charges+yukawa |
+| atlas-tritium (Yukawa) | terminated | Failed | Never completed a row |
+
+No stalled instances. No terminations needed.
