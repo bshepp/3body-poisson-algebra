@@ -19,6 +19,7 @@ import json
 import os
 import sys
 import signal
+import multiprocessing
 import numpy as np
 from time import time, strftime
 
@@ -30,11 +31,44 @@ from stability_atlas import (
 
 _shutdown_requested = False
 
+# Module-level globals for multiprocessing workers (inherited via fork)
+_worker_algebra = None
+_worker_level = 3
+_worker_n_samples = 400
+
 
 def _sigterm_handler(signum, frame):
     global _shutdown_requested
     _shutdown_requested = True
     print("\n[SIGTERM] Graceful shutdown requested — finishing current row...")
+
+
+def _compute_cell(args):
+    """Worker function for parallel grid evaluation."""
+    j, mu, phi = args
+    positions = ShapeSpace.shape_to_positions(mu, phi)
+    try:
+        rank, svs, info = _worker_algebra.compute_rank_at_configuration(
+            positions, _worker_level, n_samples=_worker_n_samples)
+        return j, rank, info.get("max_gap_ratio", 0)
+    except Exception:
+        return j, -1, 0.0
+
+
+def _compute_cell_adaptive(args):
+    """Worker function for parallel adaptive grid evaluation."""
+    j, mu, phi, eps_range, n_eps = args
+    positions = ShapeSpace.shape_to_positions(mu, phi)
+    try:
+        rank, svs, info = _worker_algebra.compute_adaptive_rank(
+            positions, _worker_level,
+            eps_range=eps_range, n_eps=n_eps,
+            n_samples=_worker_n_samples)
+        return (j, rank, info.get("max_gap_ratio", 0),
+                info.get("optimal_eps", 0), info.get("gap_score", 0),
+                info.get("tiers", []))
+    except Exception:
+        return j, -1, 0.0, 0.0, 0.0, []
 
 
 def scenario_to_config(scenario_dict, resolution, samples, level):
@@ -114,8 +148,8 @@ def flush_arrays(out_dir, mu_vals, phi_vals, rank_map, gap_map,
 
 
 def run_single_scan(config, label, out_dir, adaptive=False,
-                    eps_range=(1e-4, 5e-3), n_eps=8):
-    global _shutdown_requested
+                    eps_range=(1e-4, 5e-3), n_eps=8, n_workers=1):
+    global _shutdown_requested, _worker_algebra, _worker_level, _worker_n_samples
 
     os.makedirs(out_dir, exist_ok=True)
     grid_n = config.grid_sizes.get(config.resolution, 100)
@@ -129,7 +163,7 @@ def run_single_scan(config, label, out_dir, adaptive=False,
     if config.yukawa_mu:
         print(f"  Yukawa mu: {config.yukawa_mu}")
     print(f"  Adaptive: {adaptive}  |  Level: {config.max_level}")
-    print(f"  Output: {out_dir}")
+    print(f"  Workers: {n_workers}  |  Output: {out_dir}")
     print(f"{'='*70}\n")
 
     print("  Building symbolic algebra...")
@@ -137,6 +171,10 @@ def run_single_scan(config, label, out_dir, adaptive=False,
     algebra = PoissonAlgebra(config)
     n_gen = algebra._n_generators
     print(f"  Algebra ready ({time()-t_build:.1f}s, {n_gen} generators)\n")
+
+    _worker_algebra = algebra
+    _worker_level = config.max_level
+    _worker_n_samples = config.n_phase_samples
 
     mu_range = (0.2, 3.0)
     phi_range = (0.1, np.pi - 0.1)
@@ -194,60 +232,92 @@ def run_single_scan(config, label, out_dir, adaptive=False,
     total_points = grid_n * grid_n
     done_before = start_row * grid_n
 
-    for i in range(start_row, grid_n):
-        if _shutdown_requested:
-            print(f"\n  [SHUTDOWN] Saving at row {i}...")
+    use_parallel = n_workers > 1
+    pool = None
+    if use_parallel:
+        pool = multiprocessing.Pool(n_workers)
+        print(f"  Worker pool created ({n_workers} processes)\n")
+
+    try:
+        for i in range(start_row, grid_n):
+            if _shutdown_requested:
+                print(f"\n  [SHUTDOWN] Saving at row {i}...")
+                flush_arrays(out_dir, mu_vals, phi_vals, rank_map, gap_map,
+                             optimal_eps_map, gap_score_map, tier_map)
+                save_checkpoint_atomic(out_dir, i - 1, grid_n)
+                print(f"  Checkpoint saved. Exiting.")
+                return
+
+            row_t0 = time()
+            mu = mu_vals[i]
+
+            if use_parallel:
+                if adaptive:
+                    tasks = [(j, mu, phi_vals[j], eps_range, n_eps)
+                             for j in range(grid_n)]
+                    results = pool.map(_compute_cell_adaptive, tasks)
+                    for res in results:
+                        j, rank, gap, opt_eps, gscore, tiers = res
+                        rank_map[i, j] = rank
+                        gap_map[i, j] = gap
+                        optimal_eps_map[i, j] = opt_eps
+                        gap_score_map[i, j] = gscore
+                        for t_idx, (t_pos, t_ratio) in enumerate(tiers):
+                            if t_idx < tier_map.shape[2]:
+                                tier_map[i, j, t_idx] = [t_pos, t_ratio]
+                else:
+                    tasks = [(j, mu, phi_vals[j]) for j in range(grid_n)]
+                    results = pool.map(_compute_cell, tasks)
+                    for j, rank, gap in results:
+                        rank_map[i, j] = rank
+                        gap_map[i, j] = gap
+            else:
+                for j in range(grid_n):
+                    phi = phi_vals[j]
+                    positions = ShapeSpace.shape_to_positions(mu, phi)
+
+                    try:
+                        if adaptive:
+                            rank, svs, info = algebra.compute_adaptive_rank(
+                                positions, config.max_level,
+                                eps_range=eps_range, n_eps=n_eps,
+                                n_samples=config.n_phase_samples)
+                            rank_map[i, j] = rank
+                            gap_map[i, j] = info.get("max_gap_ratio", 0)
+                            optimal_eps_map[i, j] = info.get("optimal_eps", 0)
+                            gap_score_map[i, j] = info.get("gap_score", 0)
+                            tiers = info.get("tiers", [])
+                            for t_idx, (t_pos, t_ratio) in enumerate(tiers):
+                                if t_idx < tier_map.shape[2]:
+                                    tier_map[i, j, t_idx] = [t_pos, t_ratio]
+                        else:
+                            rank, svs, info = algebra.compute_rank_at_configuration(
+                                positions, config.max_level)
+                            rank_map[i, j] = rank
+                            gap_map[i, j] = info.get("max_gap_ratio", 0)
+                    except Exception:
+                        rank_map[i, j] = -1
+                        gap_map[i, j] = 0
+
+            row_time = time() - row_t0
+            done_now = (i + 1) * grid_n
+            elapsed = time() - t_scan
+            rate = (done_now - done_before) / elapsed if elapsed > 0 else 0
+            eta = (total_points - done_now) / rate if rate > 0 else 0
+
+            rank_116 = np.sum(rank_map[i] == 116)
+            print(f"  Row {i+1:>4}/{grid_n}  mu={mu:.3f}  "
+                  f"rank-116: {rank_116}/{grid_n}  "
+                  f"row: {row_time:.1f}s  "
+                  f"ETA: {eta/60:.0f}min")
+
             flush_arrays(out_dir, mu_vals, phi_vals, rank_map, gap_map,
                          optimal_eps_map, gap_score_map, tier_map)
-            save_checkpoint_atomic(out_dir, i - 1, grid_n)
-            print(f"  Checkpoint saved. Exiting.")
-            return
-
-        row_t0 = time()
-        mu = mu_vals[i]
-
-        for j in range(grid_n):
-            phi = phi_vals[j]
-            positions = ShapeSpace.shape_to_positions(mu, phi)
-
-            try:
-                if adaptive:
-                    rank, svs, info = algebra.compute_adaptive_rank(
-                        positions, config.max_level,
-                        eps_range=eps_range, n_eps=n_eps,
-                        n_samples=config.n_phase_samples)
-                    rank_map[i, j] = rank
-                    gap_map[i, j] = info.get("max_gap_ratio", 0)
-                    optimal_eps_map[i, j] = info.get("optimal_eps", 0)
-                    gap_score_map[i, j] = info.get("gap_score", 0)
-                    tiers = info.get("tiers", [])
-                    for t_idx, (t_pos, t_ratio) in enumerate(tiers):
-                        if t_idx < tier_map.shape[2]:
-                            tier_map[i, j, t_idx] = [t_pos, t_ratio]
-                else:
-                    rank, svs, info = algebra.compute_rank_at_configuration(
-                        positions, config.max_level)
-                    rank_map[i, j] = rank
-                    gap_map[i, j] = info.get("max_gap_ratio", 0)
-            except Exception as e:
-                rank_map[i, j] = -1
-                gap_map[i, j] = 0
-
-        row_time = time() - row_t0
-        done_now = (i + 1) * grid_n
-        elapsed = time() - t_scan
-        rate = (done_now - done_before) / elapsed if elapsed > 0 else 0
-        eta = (total_points - done_now) / rate if rate > 0 else 0
-
-        rank_116 = np.sum(rank_map[i] == 116)
-        print(f"  Row {i+1:>4}/{grid_n}  mu={mu:.3f}  "
-              f"rank-116: {rank_116}/{grid_n}  "
-              f"row: {row_time:.1f}s  "
-              f"ETA: {eta/60:.0f}min")
-
-        flush_arrays(out_dir, mu_vals, phi_vals, rank_map, gap_map,
-                     optimal_eps_map, gap_score_map, tier_map)
-        save_checkpoint_atomic(out_dir, i, grid_n)
+            save_checkpoint_atomic(out_dir, i, grid_n)
+    finally:
+        if pool is not None:
+            pool.terminate()
+            pool.join()
 
     total_time = time() - t_scan
     n_116 = int(np.sum(rank_map == 116))
@@ -283,9 +353,7 @@ def main():
     parser.add_argument("--resolution", type=int, default=100,
                         help="Grid resolution NxN (default: 100)")
     parser.add_argument("--potential", type=str, default=None,
-                        choices=["1/r", "1/r2", "1/r^2", "1/r^3",
-                                 "harmonic", "log", "yukawa"],
-                        help="Potential type")
+                        help="Potential type (1/r, 1/r^N for any N, harmonic, log, yukawa)")
     parser.add_argument("--masses", nargs=3, type=float, default=None,
                         metavar=("M1", "M2", "M3"),
                         help="Body masses (default: 1 1 1)")
@@ -311,8 +379,12 @@ def main():
                         help="Run all atlas-enabled scenarios")
     parser.add_argument("--output-dir", type=str, default="atlas_full",
                         help="Base output directory (default: atlas_full)")
+    parser.add_argument("--workers", type=int, default=None,
+                        help="Number of parallel workers (default: cpu_count)")
 
     args = parser.parse_args()
+
+    n_workers = args.workers if args.workers else (os.cpu_count() or 1)
 
     eps_range = tuple(args.eps_range) if args.eps_range else (1e-4, 5e-3)
 
@@ -328,7 +400,8 @@ def main():
             out_dir = os.path.join(args.output_dir, f"{key}_{tag}")
             run_single_scan(config, sc["label"], out_dir,
                             adaptive=args.adaptive,
-                            eps_range=eps_range, n_eps=args.n_eps)
+                            eps_range=eps_range, n_eps=args.n_eps,
+                            n_workers=n_workers)
             if _shutdown_requested:
                 break
 
@@ -347,7 +420,8 @@ def main():
         out_dir = os.path.join(args.output_dir, f"{args.scenario}_{tag}")
         run_single_scan(config, sc["label"], out_dir,
                         adaptive=args.adaptive,
-                        eps_range=eps_range, n_eps=args.n_eps)
+                        eps_range=eps_range, n_eps=args.n_eps,
+                        n_workers=n_workers)
 
     elif args.potential:
         masses = tuple(args.masses) if args.masses else (1.0, 1.0, 1.0)
@@ -371,7 +445,8 @@ def main():
         out_dir = os.path.join(args.output_dir, tag)
         run_single_scan(config, label, out_dir,
                         adaptive=args.adaptive,
-                        eps_range=eps_range, n_eps=args.n_eps)
+                        eps_range=eps_range, n_eps=args.n_eps,
+                        n_workers=n_workers)
 
     else:
         parser.print_help()

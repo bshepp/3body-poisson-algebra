@@ -36,7 +36,7 @@ See revised statement in Section 4 below.
 | log(r) potential | **[3, 6, 17, 116]** (Mar 2026) — transcendental singularity universal | — |
 | Composite (1/r + 1/r²) | **[3, 6, 17, 116]** (Mar 2026) — multi-pole composite universal | — |
 | Penning trap (+1,+1,+1 with harmonic confinement) | **[3, 6, 17, 116]** (Mar 2026) — all-repulsive + external potential | — |
-| Mass invariance for 1/r^2 | Not tested | Need to run |
+| Mass invariance for 1/r^2 | Not tested | 100×100 atlas running (instance `i-05548f68fbcbd54e5`, ETA ~3.5h) |
 | N=4 dimension sequence | **[6, 14, 62]** (Mar 2026) | L3 not yet computed |
 | N=4 mass invariance | **Proved** (3 configs: equal, 100:10:1:1, 3:7:11:2) | — |
 | Dependence on N | Tested at N=3 and N=4 | N=5 would extend |
@@ -512,6 +512,47 @@ This resolves the open question from the Calogero-Moser reckoning
 (Phase 5). The growth sequence is universal across singular potentials
 regardless of integrability, spatial dimension, mass ratios, or
 coupling constants.
+
+---
+
+## Continuous Exponent Landscape (Proposed, March 26, 2026)
+
+*How does the algebraic landscape depend continuously on the potential
+exponent n in V ~ 1/r^n?*
+
+### Observations motivating this direction
+
+The completed atlas campaign revealed a **Jahn-Teller-like ring** in the
+1/r^3 gap landscape: the Lagrange equilateral point (mu=1, phi=60°) is a
+local gap *minimum* surrounded by an annulus of gap *maxima* over an order
+of magnitude higher. This ring is barely visible for 1/r and absent for
+regular potentials. The steeper singularity amplifies symmetry-breaking
+effects on the SVD gap.
+
+### Conjectures to test
+
+| Conjecture | Testable prediction |
+|------------|-------------------|
+| Ring radius ~ 1/n | Jahn-Teller ring tightens monotonically with exponent |
+| Phase boundary at n=0 | Sharp transition between finite (regular) and infinite (singular) algebra |
+| Integrable points are not special | n=2 (Calogero-Moser) and n=-2 (harmonic) show no distinctive gap structure vs neighbors |
+| Confining potentials (n<0) preserve rank-116 | Negative exponents (V ~ r^|n|) still generate the full algebra despite no collision singularity |
+| Irrational exponents are generic | n=pi, e, sqrt(2), phi produce landscapes indistinguishable from nearby rationals |
+
+### Feasibility
+
+The **parametric n trick** allows building the Poisson algebra once with n
+as a SymPy Symbol, then sweeping ~1000 values of n at zero additional
+symbolic cost. Both NumPy lambdify and C code generation confirmed working
+with parametric n. Estimated cost for full sweep: $13-50 on AWS spot
+(Tier 3).
+
+### Key question
+
+Does the singularity dichotomy (Conjecture 1, Section 4 above) have a
+**sharp boundary** at n=0, or does the algebra dimension degrade
+continuously as n → 0+? The sub-Coulomb region (0 < n < 1) has never
+been explored and could reveal intermediate behavior.
 
 ---
 

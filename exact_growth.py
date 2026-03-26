@@ -25,7 +25,7 @@ import pickle
 import numpy as np
 from time import time
 
-sys.setrecursionlimit(100000)
+sys.setrecursionlimit(500000)
 
 import sympy as sp
 from sympy import symbols, diff, Integer, cancel, Rational, expand
@@ -466,18 +466,19 @@ def _expr_to_chunked_lines(expr, target_var, indent="    ",
     return lines
 
 
-def _make_flat_func(expr, label="_f"):
+def _make_flat_func(expr, label="_f", use_cse=True):
     """Fallback for expressions too deeply nested for compile().
 
     Uses CSE to flatten the expression tree, writes chunked assignment
     code to a temp file, and imports it -- bypassing the recursive
     compiler even for very large Yukawa-type expressions.
+
+    If use_cse=False, skips CSE and writes the expression directly
+    via chunked pycode (still vectorised, avoids CSE recursion issues).
     """
     import tempfile
     import importlib.util
     from sympy import cse as _cse, pycode
-
-    replacements, (reduced,) = _cse(expr, optimizations='basic')
 
     var_names = [str(v) for v in ALL_VARS]
     sig = ", ".join(var_names)
@@ -486,9 +487,15 @@ def _make_flat_func(expr, label="_f"):
         "from numpy import exp, log, sqrt, sin, cos, abs, power",
         f"def {label}({sig}):",
     ]
-    for sym, sub in replacements:
-        lines.extend(_expr_to_chunked_lines(sub, str(sym)))
-    lines.extend(_expr_to_chunked_lines(reduced, "_result"))
+
+    if use_cse:
+        replacements, (reduced,) = _cse(expr, optimizations='basic')
+        for sym, sub in replacements:
+            lines.extend(_expr_to_chunked_lines(sub, str(sym)))
+        lines.extend(_expr_to_chunked_lines(reduced, "_result"))
+    else:
+        lines.extend(_expr_to_chunked_lines(expr, "_result"))
+
     lines.append("    return _result")
     code = "\n".join(lines)
 
@@ -530,22 +537,25 @@ def lambdify_generators(exprs):
         return evaluate
 
     LAYER_LAMBDIFY = 0
-    LAYER_FLAT_CSE = 1
-    LAYER_XREPLACE = 2
+    LAYER_FLAT_NOCSE = 1
+    LAYER_FLAT_CSE = 2
+    LAYER_XREPLACE = 3
 
     print(f"    Lambdifying {n} expressions individually...", flush=True)
 
     funcs = []
     layers = []
-    counts = [0, 0, 0]
+    counts = [0, 0, 0, 0]
+    layer_names = ["lambdify", "flat-nocse", "flat-cse", "xreplace"]
 
     for idx, expr in enumerate(exprs):
         if (idx + 1) % 20 == 0 or idx == n - 1:
-            print(f"      {idx+1}/{n}  [{time()-t0:.1f}s]  "
-                  f"(lambdify:{counts[0]} flat:{counts[1]} "
-                  f"xreplace:{counts[2]})", flush=True)
+            parts = " ".join(f"{layer_names[i]}:{counts[i]}"
+                             for i in range(4) if counts[i] > 0)
+            print(f"      {idx+1}/{n}  [{time()-t0:.1f}s]  ({parts})",
+                  flush=True)
 
-        # Layer 1: standard lambdify
+        # Layer 1: standard lambdify (no CSE — fast when it works)
         try:
             f = sp.lambdify(ALL_VARS, expr, modules="numpy", cse=False)
             funcs.append(f)
@@ -555,18 +565,32 @@ def lambdify_generators(exprs):
         except (RecursionError, Exception):
             pass
 
-        # Layer 2: CSE + chunked temp-file (still vectorised)
+        # Layer 2: chunked temp-file WITHOUT CSE
+        # Writes pycode to a .py file and imports it, bypassing
+        # compile() recursion limits without expensive CSE.
         try:
-            f = _make_flat_func(expr, label=f"g{idx}")
+            f = _make_flat_func(expr, label=f"g{idx}", use_cse=False)
             funcs.append(f)
-            layers.append(LAYER_FLAT_CSE)
+            layers.append(LAYER_FLAT_NOCSE)
             counts[1] += 1
             continue
-        except (RecursionError, Exception) as e:
-            print(f"      [{idx}] flat-CSE also failed ({e.__class__.__name__}), "
-                  f"falling back to xreplace", flush=True)
+        except (RecursionError, Exception):
+            pass
 
-        # Layer 3: point-by-point xreplace (slow, last resort)
+        # Layer 3: CSE + chunked temp-file (slower CSE step but
+        # produces smaller code; only tried if no-CSE also failed)
+        try:
+            f = _make_flat_func(expr, label=f"g{idx}", use_cse=True)
+            funcs.append(f)
+            layers.append(LAYER_FLAT_CSE)
+            counts[2] += 1
+            continue
+        except (RecursionError, Exception) as e:
+            print(f"      [{idx}] all vectorised paths failed "
+                  f"({e.__class__.__name__}), falling back to xreplace",
+                  flush=True)
+
+        # Layer 4: point-by-point xreplace (slow, last resort)
         var_syms = list(ALL_VARS)
         captured_expr = expr
 
@@ -586,11 +610,14 @@ def lambdify_generators(exprs):
 
         funcs.append(_make_xreplace(captured_expr, var_syms))
         layers.append(LAYER_XREPLACE)
-        counts[2] += 1
+        counts[3] += 1
 
-    print(f"    Lambdify results: {counts[0]} lambdify, "
-          f"{counts[1]} flat-CSE, {counts[2]} xreplace")
+    parts = " ".join(f"{layer_names[i]}:{counts[i]}"
+                     for i in range(4) if counts[i] > 0)
+    print(f"    Lambdify results: {parts}")
     print(f"    Total lambdify time: {time() - t0:.1f}s")
+
+    n_xreplace = counts[3]
 
     def evaluate(Z_qp, Z_u):
         args = ([Z_qp[:, i] for i in range(12)] +
@@ -609,7 +636,7 @@ def lambdify_generators(exprs):
             elif arr.shape[0] < n_pts:
                 arr = np.resize(arr, n_pts)
             cols.append(arr[:n_pts])
-            if (idx + 1) % 20 == 0:
+            if n_xreplace > 0 and (idx + 1) % 20 == 0:
                 print(f"      eval {idx+1}/{n}  [{time()-t_eval:.1f}s]",
                       flush=True)
         return np.column_stack(cols)

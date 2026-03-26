@@ -3504,3 +3504,194 @@ level4-mpmath rank checkpoint safe at row 436 (rank=436, plateau=0).
 
 Local bell test (PID 23444) still running: ~74,400s CPU (~20.7h),
 228 MB RAM. No checkpointing — AWS run is the insured copy.
+
+## Atlas Figure Generation (March 26, 2026 ~04:00 UTC)
+
+Rendered visualizations for all 15 completed atlas configurations.
+Two output types per config in `aws_results/atlas_figures/`:
+
+- **Clean singles** (`atlas_*.png`): flat heatmap + 3D shape sphere,
+  no annotation markers or contour overlays.
+- **Triptychs** (`triptych_*.png`): three-panel comparison showing
+  1:1:1 gravitational baseline (left), the config (center), and
+  their difference on a diverging RdBu colormap (right).
+
+Key observations from the atlas figures:
+
+- **Charge asymmetry strengthens the algebra**: 1/r q=(2,-1,-1) reaches
+  99.3% rank-116, up from 87.9% for equal charges. The triptych
+  difference panel is almost entirely red (higher gap ratio).
+- **Mass ratio causes Born-Oppenheimer decoupling**: H- ion (1836:1:1)
+  has 0% rank-116, median log gap drops from 8.05 to 4.23. The heavy
+  proton's generators become functionally dependent on the electrons'.
+  H2+ (1836:1836:1, two heavy + one light) still reaches 2.1% rank-116
+  at the same mass ratio — confirming this is algebraic, not numerical.
+- **Muonic helium's 3-scale hierarchy** (7294:207:1) shows the widest
+  rank spread (107-116) and distinctive band structure from the muon's
+  intermediate mass.
+- **1/r^3 Jahn-Teller ring**: A bright annulus of high gap ratio forms
+  around the Lagrange equilateral point (mu=1, phi=60°). The Lagrange
+  point itself is a local gap minimum (10^8.6) surrounded by a ring
+  reaching 10^9.8 — over an order of magnitude higher. This is absent
+  in the 1/r baseline (which is flat at ~10^8.3 there). Interpreted as
+  a Jahn-Teller-like symmetry breaking: the S3-symmetric Lagrange
+  configuration constrains certain generators to near-degeneracy, and
+  breaking the symmetry lifts those degeneracies more sharply for
+  steeper potentials.
+
+## Parametric Exponent Sweep — Research Direction (March 26, 2026)
+
+### Motivation
+
+The Jahn-Teller ring at Lagrange in 1/r^3 raises the question: how
+does the algebraic landscape evolve continuously as a function of the
+potential exponent n in V ~ 1/r^n? Does the ring tighten for steeper
+potentials? Are there phase transitions at specific values of n?
+
+### Parametric n Trick
+
+**Key insight**: Declaring n as a SymPy Symbol rather than a numeric
+value allows building the entire Poisson algebra (all 156 L3 generators)
+**once**, then sweeping n at evaluation time with zero additional
+symbolic cost.
+
+Confirmed working (March 26):
+- `lambdify` with n as the 16th input argument produces correct
+  numerical output for n = 1, 2, 3, pi, -1.
+- `ccode()` emits valid C with `pow(u12, n)` for compiled evaluation.
+- Expression complexity is identical across all n values (only exponents
+  change, not bracket structure).
+
+### Proposed Sweep Regions
+
+| Region | n range | Step | Count | Physics |
+|--------|---------|------|-------|---------|
+| Sub-Coulomb | 0.01 to 0.99 | 0.01 | 99 | Weak singularity → near-constant |
+| Coulomb to strong | 1.00 to 5.00 | 0.01 | 401 | Standard → dipole → extreme |
+| Confining (negative) | -5.00 to -0.01 | 0.01 | 500 | V ~ r^|n|, confinement |
+| Special values | pi, e, sqrt(2), phi, etc. | — | ~15 | Irrational/transcendental |
+
+Total: ~1,015 exponent values.
+
+### Special Values of Interest
+
+- **n = 2**: Calogero-Moser (integrable), calibration point
+- **n = -2**: Harmonic oscillator (integrable), confining calibration
+- **n = 1**: Newtonian/Coulomb baseline
+- **n = -1**: Linear confining potential (QCD-inspired)
+- **n = phi = 1.618...**: Golden ratio (irrational)
+- **n = pi, e**: Transcendental exponents
+- **n = sqrt(2)**: Algebraic irrational
+- **n = 1/2**: Square-root potential (soft singularity)
+- **n = 0+ (limit)**: Logarithmic (already tested separately)
+
+### Implementation Tiers
+
+**Tier 1 (Parametric Python, ~$200-400)**:
+Modify `stability_atlas.py` to build algebra with symbolic n, lambdify
+with n as extra parameter, sweep n in a loop. Use 50x50 grid, 200
+samples for the coarse sweep.
+
+**Tier 2 (C code generation, ~$50-100)**:
+Use SymPy `ccode()` to emit C evaluators with n as a `double`
+parameter, link against LAPACK for SVD. 10-50x faster evaluation.
+
+**Tier 3 (Pragmatic hybrid, ~$13-50)**:
+Tier 1 at reduced resolution (50x50, 200 samples), batch 50 n-values
+per spot instance (c6a.xlarge at $0.04/hr). Re-run interesting values
+at full 100x100.
+
+### Expected Science
+
+- Gap ratio at Lagrange vs n: continuous curve, possible cusps
+- Jahn-Teller ring radius vs n: should tighten for steeper potentials
+- Phase boundary at n=0 between singular (infinite algebra) and
+  regular (finite algebra) potentials
+- Behavior at integrable points (n=2, n=-2): any distinctive signature?
+- Negative n (confining): fundamentally different regime — no collision
+  singularity, potential grows at large r
+
+## Multiprocessing and 1/r^2 Lambdify Fix (March 26, 2026, evening)
+
+### Problem
+
+The plain 1/r^2 (Calogero-Moser, equal mass/charge) 100×100 atlas was
+stuck at 18/100 rows. Two independent issues:
+
+1. **RecursionError in `lambdify`**: 33 of 156 Level-3 generators
+   produced deeply nested SymPy expression trees for the 1/r^2 potential.
+   These exceeded Python's compiler recursion depth during `sp.lambdify()`,
+   and the CSE-based flat-file fallback (`_make_flat_func`) also failed.
+   All 33 generators fell to point-by-point `xreplace` evaluation —
+   roughly 1000× slower per sample point than vectorised numpy evaluation.
+   This made each grid point take minutes rather than milliseconds.
+
+2. **Single-threaded execution**: All prior atlas runs used a single
+   Python process. On 16-vCPU AWS instances (r6i.4xlarge), 15 cores
+   sat idle. This wasted ~$200+ in compute costs across the campaign.
+
+### Fix 1: Lambdify fallback chain (exact_growth.py)
+
+Rewrote `lambdify_generators()` with a 4-layer fallback chain:
+
+| Layer | Method | What it does |
+|-------|--------|--------------|
+| 1 | `sp.lambdify(cse=False)` | Standard lambdify — fast when it works |
+| 2 | `_make_flat_func(use_cse=False)` | Writes expression via `pycode()` to temp .py file, bypassing `compile()` recursion limit |
+| 3 | `_make_flat_func(use_cse=True)` | Same but with CSE pre-flattening (slower but smaller code) |
+| 4 | `xreplace` | Point-by-point substitution (last resort) |
+
+Key changes:
+- Removed the `sp.lambdify(cse=True)` layer which hung indefinitely
+  (SymPy CSE on deeply nested single expressions takes exponential time
+  without ever raising an exception).
+- Added no-CSE flat-file path: `_make_flat_func(use_cse=False)` uses
+  `sympy.pycode()` to write the expression directly as chunked Python
+  code to a temp file, then imports it. This bypasses both the
+  `compile()` recursion limit (file-based import) and the CSE slowness.
+- Bumped `sys.setrecursionlimit` from 100,000 to 500,000.
+
+**Result**: All 156 generators compile successfully for 1/r^2:
+92 via standard lambdify, 63 via flat-nocse, **zero xreplace**.
+
+### Fix 2: Multiprocessing (full_atlas_scan.py)
+
+Added `multiprocessing.Pool` parallelisation of the inner (column) loop:
+
+- New `--workers N` CLI argument (default: `os.cpu_count()`)
+- Module-level `_compute_cell()` and `_compute_cell_adaptive()` worker
+  functions for the Pool. On Linux (AWS), `fork()` start method means
+  workers inherit the parent's compiled algebra object via copy-on-write
+  — no pickling needed.
+- Per-row checkpointing preserved: after each row's parallel results
+  are gathered, arrays are flushed and checkpoint.json is written,
+  identical to the previous sequential behaviour.
+- `OMP_NUM_THREADS=1` (already in userdata) ensures numpy doesn't
+  compete with our multiprocessing for cores.
+
+### AWS Launch
+
+- Instance: `i-05548f68fbcbd54e5` (c6i.4xlarge, 16 vCPUs, on-demand)
+- Args: `--resolution 100 --potential 1/r^2 --samples 400 --workers 16`
+- Stale checkpoint deleted from S3 (18 rows from old broken run)
+- Early results: Row 1 at 134s, rank-116 detected at 86-100% of points,
+  load average 12-14 (all 16 cores busy)
+- ETA: ~3.5 hours total, ~$2.50 cost
+- Previous estimate: 28+ hours single-threaded, ~$28 cost
+
+### Performance comparison
+
+| Metric | Old (single-thread + xreplace) | New (16 workers + flat-nocse) |
+|--------|-------------------------------|-------------------------------|
+| Lambdify failures | 33/156 → xreplace | 0/156 |
+| Time per row (100 cols) | ~17 min | ~2.2 min |
+| Est. total time | 28+ hours | ~3.5 hours |
+| CPU utilisation | 6% (1/16 cores) | ~80% (16 cores) |
+| Est. cost | ~$28 | ~$2.50 |
+
+### S3 Data Sync
+
+Completed a full mirror of all S3 data locally (9.04 GB):
+atlas_full, results, checkpoints, diagnostic, nbody_checkpoints,
+atlas_targeted, atlas_output_hires, atlas_1000 — all verified complete
+with zero remaining differences.
