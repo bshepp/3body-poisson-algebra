@@ -56,12 +56,13 @@ See revised statement in Section 4 below.
   closes because polynomial rings are finitely generated at each
   degree.
 
-- **Potential-type universality:** In the u_ij representation (u = 1/r),
-  potentials 1/r, 1/r², 1/r³ are all polynomials in u. log(r) = -log(u)
-  is transcendental but still singular. Composite 1/r + 1/r² is a
-  polynomial in u. All produce [3, 6, 17, 116]. The sequence counts
-  bracket nesting patterns that depend on the *existence* of a
-  singularity, not its specific form.
+- **Potential-type universality:** All potentials singular at r=0 produce
+  [3, 6, 17, 116], regardless of whether they are polynomial in
+  u = 1/r (like 1/r, 1/r², 1/r³, composite 1/r + 1/r²) or
+  transcendental in u (like log(r) = -log(u), Yukawa e^{-μr}/r = ue^{-μ/u}).
+  What they share is the universal cubic chain rule du/dq ~ u³, which
+  arises from the substitution u = 1/r itself, not from the form of V(u).
+  Regular potentials (r²) need no auxiliary variables and the algebra closes.
 
 - **Spatial dimension independence (Mar 2026):** The dimension sequence
   [3, 6, 17, 116] is identical at d=1 (linear), d=2 (planar), and
@@ -500,8 +501,10 @@ non-integrable Newtonian gravity.
 | Dimension sequence is d-independent for all singular V | **Proved** | 1/r tested at d=1,2,3; 1/r² at d=1,2; 1/r³ at d=1 — all [3,6,17,116] |
 
 **The singularity dichotomy**: The dimension sequence distinguishes
-potentials with an essential singularity at r=0 (polynomial in u=1/r)
-from those that are analytic in physical coordinates. The harmonic
+potentials singular at r=0 from those that are analytic there. This
+holds for potentials polynomial in u=1/r (power-law singularities) and
+for transcendental cases (log, Yukawa). The shared mechanism is the
+universal cubic chain rule du/dq ~ u³ arising from u=1/r. The harmonic
 potential V=r² requires no auxiliary variables and generates a finite
 algebra. All singular potentials share the same infinite algebra growth.
 

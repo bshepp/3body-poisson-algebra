@@ -26,6 +26,7 @@ import sys
 import json
 import argparse
 import pickle
+import signal
 import numpy as np
 from time import time
 from itertools import product
@@ -38,6 +39,41 @@ RESULTS_DIR = os.path.join(SCRIPT_DIR, "bell_test_results")
 CHECKPOINT_PATH = os.path.join(PROJECT_DIR, "checkpoints", "level_3.pkl")
 
 os.makedirs(RESULTS_DIR, exist_ok=True)
+
+_shutdown_requested = False
+
+def _sigterm_handler(signum, frame):
+    global _shutdown_requested
+    _shutdown_requested = True
+    print("\n[SIGTERM] Graceful shutdown requested — "
+          "finishing current CHSH sweep...")
+
+
+def _save_strata_npz(path, strata):
+    arrays = {}
+    for sname, (Z_qp, Z_u) in strata.items():
+        arrays[f"{sname}_Z_qp"] = Z_qp
+        arrays[f"{sname}_Z_u"] = Z_u
+    np.savez(path, **arrays)
+
+
+def _load_strata_npz(path):
+    data = np.load(path)
+    strata = {}
+    for key in data.files:
+        if key.endswith("_Z_qp"):
+            sname = key[:-5]
+            strata[sname] = (data[f"{sname}_Z_qp"], data[f"{sname}_Z_u"])
+    return strata
+
+
+def _save_evals_npz(path, evals):
+    np.savez(path, **evals)
+
+
+def _load_evals_npz(path):
+    data = np.load(path)
+    return {k: data[k] for k in data.files}
 
 
 # =====================================================================
@@ -765,66 +801,76 @@ def variant3_mediated_measurements(eval_matrix, names, angles):
 
 
 def run_part_c(strata, evals, names, locality, usable, n_angles=72,
-               n_bootstrap=1000):
+               n_bootstrap=1000, checkpoint_dir=None):
     """Run all three CHSH variants with bootstrap CIs."""
     print("\n" + "=" * 70)
     print("PART C: CHSH COMPUTATION")
     print("=" * 70)
 
     angles = np.linspace(0, 2 * np.pi, n_angles, endpoint=False)
+
     results = {}
+    if checkpoint_dir:
+        partial_path = os.path.join(checkpoint_dir, "chsh_partial.json")
+        if os.path.exists(partial_path):
+            with open(partial_path) as f:
+                results = json.load(f)
+            done = sum(len(v) for v in results.values())
+            print(f"  Resumed from checkpoint: {done}/9 variant results loaded")
 
     for stratum_name in ["equilateral", "pair_apparatus", "separated"]:
         Z_qp = strata[stratum_name][0]
         M = evals[stratum_name]
         n_pts = Z_qp.shape[0]
 
+        if stratum_name not in results:
+            results[stratum_name] = {}
+
         print(f"\n  --- Stratum: {stratum_name} ({n_pts} points) ---")
 
-        # Variant 1
-        print(f"\n  Variant 1: Momentum projections...")
-        t0 = time()
-        A1, B1 = variant1_momentum_projections(Z_qp, angles)
-        r1 = compute_chsh_sweep(A1, B1, angles, n_bootstrap)
-        print(f"    max |S| = {abs(r1['max_S']):.6f}  "
-              f"95% CI: [{r1['ci_95'][0]:.4f}, {r1['ci_95'][1]:.4f}]  "
-              f"[{time()-t0:.1f}s]")
-        if r1["significant"]:
-            print(f"    *** SIGNIFICANT VIOLATION ***")
-        else:
-            print(f"    No significant violation (as expected)")
+        variants = [
+            ("variant1", "Momentum projections",
+             lambda: variant1_momentum_projections(Z_qp, angles)),
+            ("variant2", "Algebra-projected measurements",
+             lambda: variant2_algebra_projections(M, locality, angles, usable)),
+            ("variant3", "Body-3-mediated measurements",
+             lambda: variant3_mediated_measurements(M, names, angles)),
+        ]
 
-        # Variant 2
-        print(f"\n  Variant 2: Algebra-projected measurements...")
-        t0 = time()
-        A2, B2 = variant2_algebra_projections(M, locality, angles, usable)
-        r2 = compute_chsh_sweep(A2, B2, angles, n_bootstrap)
-        print(f"    max |S| = {abs(r2['max_S']):.6f}  "
-              f"95% CI: [{r2['ci_95'][0]:.4f}, {r2['ci_95'][1]:.4f}]  "
-              f"[{time()-t0:.1f}s]")
-        if r2["significant"]:
-            print(f"    *** SIGNIFICANT VIOLATION ***")
-        else:
-            print(f"    No significant violation")
+        for vkey, vlabel, make_measurements in variants:
+            if vkey in results[stratum_name]:
+                r = results[stratum_name][vkey]
+                print(f"\n  {vlabel}: loaded from checkpoint "
+                      f"(max |S| = {abs(r['max_S']):.6f})")
+                continue
 
-        # Variant 3
-        print(f"\n  Variant 3: Body-3-mediated measurements...")
-        t0 = time()
-        A3, B3 = variant3_mediated_measurements(M, names, angles)
-        r3 = compute_chsh_sweep(A3, B3, angles, n_bootstrap)
-        print(f"    max |S| = {abs(r3['max_S']):.6f}  "
-              f"95% CI: [{r3['ci_95'][0]:.4f}, {r3['ci_95'][1]:.4f}]  "
-              f"[{time()-t0:.1f}s]")
-        if r3["significant"]:
-            print(f"    *** SIGNIFICANT VIOLATION ***")
-        else:
-            print(f"    No significant violation")
+            if _shutdown_requested:
+                print("\n  [SHUTDOWN] Saving partial CHSH results...")
+                if checkpoint_dir:
+                    with open(partial_path, "w") as f:
+                        json.dump(results, f, indent=2)
+                    print(f"  Checkpoint saved: {partial_path}")
+                return None
 
-        results[stratum_name] = {
-            "variant1": r1,
-            "variant2": r2,
-            "variant3": r3,
-        }
+            print(f"\n  {vlabel}...")
+            t0 = time()
+            A, B = make_measurements()
+            r = compute_chsh_sweep(A, B, angles, n_bootstrap)
+            print(f"    max |S| = {abs(r['max_S']):.6f}  "
+                  f"95% CI: [{r['ci_95'][0]:.4f}, {r['ci_95'][1]:.4f}]  "
+                  f"[{time()-t0:.1f}s]")
+            if r["significant"]:
+                print(f"    *** SIGNIFICANT VIOLATION ***")
+            else:
+                suffix = " (as expected)" if vkey == "variant1" else ""
+                print(f"    No significant violation{suffix}")
+
+            results[stratum_name][vkey] = r
+
+            if checkpoint_dir:
+                with open(partial_path, "w") as f:
+                    json.dump(results, f, indent=2)
+                print(f"    [checkpoint saved: {vkey}@{stratum_name}]")
 
     return results
 
@@ -1020,7 +1066,16 @@ def main():
     ap.add_argument("--n-bootstrap", type=int, default=1000,
                     help="Bootstrap iterations (default: 1000)")
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--checkpoint-dir", type=str, default=None,
+                    help="Directory for intermediate checkpoints (enables "
+                         "resume on interruption)")
     args = ap.parse_args()
+
+    ckpt_dir = args.checkpoint_dir
+    if ckpt_dir:
+        os.makedirs(ckpt_dir, exist_ok=True)
+        signal.signal(signal.SIGTERM, _sigterm_handler)
+        print(f"  Checkpointing enabled: {ckpt_dir}")
 
     run_a = args.part in ("all", "A")
     run_b = args.part in ("all", "B")
@@ -1036,7 +1091,6 @@ def main():
     print(f"  Bootstrap iterations: {args.n_bootstrap}")
     print(f"  Output: {RESULTS_DIR}")
 
-    # Part A
     if run_a:
         run_part_a()
 
@@ -1044,44 +1098,128 @@ def main():
         print("\nDone.")
         return
 
-    # Load generators (shared by B and C)
+    # Load generators (always needed for B and C)
     print("\n" + "=" * 70)
     print("LOADING GENERATORS AND SAMPLING")
     print("=" * 70)
 
     exprs, names, levels, evaluate, ALL_VARS, usable = load_and_lambdify()
 
-    # Part B sampling
+    if ckpt_dir:
+        meta_path = os.path.join(ckpt_dir, "checkpoint_meta.pkl")
+        with open(meta_path, "wb") as f:
+            pickle.dump({"names": names, "levels": levels,
+                         "usable": usable}, f)
+
+    # ------------------------------------------------------------------
+    # Part B
+    # ------------------------------------------------------------------
     locality = None
     mi_results = None
     strata_b = None
     evals_b = None
 
     if run_b:
-        print(f"\n  Sampling for Part B ({args.n_samples}/stratum)...")
-        strata_b = sample_all_strata(args.n_samples, seed=args.seed)
-        evals_b = evaluate_on_strata(evaluate, strata_b)
-        locality, mi_results = run_part_b(
-            evaluate, strata_b, evals_b, exprs, names, levels, usable)
+        loaded_b = False
+        if ckpt_dir:
+            loc_path = os.path.join(ckpt_dir, "locality.npy")
+            mi_path = os.path.join(ckpt_dir, "mi_results.pkl")
+            if os.path.exists(loc_path) and os.path.exists(mi_path):
+                print("\n  [checkpoint] Loading Part B results...")
+                locality = np.load(loc_path)
+                with open(mi_path, "rb") as f:
+                    mi_results = pickle.load(f)
+                sb_path = os.path.join(ckpt_dir, "strata_b.npz")
+                eb_path = os.path.join(ckpt_dir, "evals_b.npz")
+                if os.path.exists(sb_path):
+                    strata_b = _load_strata_npz(sb_path)
+                if os.path.exists(eb_path):
+                    evals_b = _load_evals_npz(eb_path)
+                loaded_b = True
+                print(f"    locality shape: {locality.shape}, "
+                      f"MI strata: {list(mi_results.keys())}")
 
+        if not loaded_b:
+            print(f"\n  Sampling for Part B ({args.n_samples}/stratum)...")
+            strata_b = sample_all_strata(args.n_samples, seed=args.seed)
+            evals_b = evaluate_on_strata(evaluate, strata_b)
+
+            if ckpt_dir:
+                _save_strata_npz(
+                    os.path.join(ckpt_dir, "strata_b.npz"), strata_b)
+                _save_evals_npz(
+                    os.path.join(ckpt_dir, "evals_b.npz"), evals_b)
+
+            locality, mi_results = run_part_b(
+                evaluate, strata_b, evals_b, exprs, names, levels, usable)
+
+            if ckpt_dir:
+                np.save(os.path.join(ckpt_dir, "locality.npy"), locality)
+                with open(os.path.join(ckpt_dir, "mi_results.pkl"), "wb") as f:
+                    pickle.dump(mi_results, f)
+                print("  [checkpoint] Part B results saved")
+
+    if _shutdown_requested:
+        print("\n[SHUTDOWN] Exiting after Part B.")
+        return
+
+    # ------------------------------------------------------------------
     # Part C
+    # ------------------------------------------------------------------
     chsh_results = None
     if run_c:
-        n_c = args.n_chsh_samples
-        print(f"\n  Sampling for Part C ({n_c}/stratum)...")
-        strata_c = sample_all_strata(n_c, seed=args.seed + 10000)
-        evals_c = evaluate_on_strata(evaluate, strata_c)
+        strata_c = None
+        evals_c = None
+
+        if ckpt_dir:
+            sc_path = os.path.join(ckpt_dir, "strata_c.npz")
+            ec_path = os.path.join(ckpt_dir, "evals_c.npz")
+            if os.path.exists(sc_path) and os.path.exists(ec_path):
+                print("\n  [checkpoint] Loading Part C evaluation data...")
+                strata_c = _load_strata_npz(sc_path)
+                evals_c = _load_evals_npz(ec_path)
+                print(f"    Loaded strata: {list(strata_c.keys())}")
+
+        if strata_c is None:
+            n_c = args.n_chsh_samples
+            print(f"\n  Sampling for Part C ({n_c}/stratum)...")
+            strata_c = sample_all_strata(n_c, seed=args.seed + 10000)
+            evals_c = evaluate_on_strata(evaluate, strata_c)
+
+            if ckpt_dir:
+                _save_strata_npz(
+                    os.path.join(ckpt_dir, "strata_c.npz"), strata_c)
+                _save_evals_npz(
+                    os.path.join(ckpt_dir, "evals_c.npz"), evals_c)
+                print("  [checkpoint] Part C evaluation data saved")
 
         if locality is None:
-            print("  Computing locality scores for Variant 2...")
-            locality = gradient_locality_scores(
-                evaluate, strata_c, len(exprs), usable)
+            loc_path = (os.path.join(ckpt_dir, "locality.npy")
+                        if ckpt_dir else None)
+            if loc_path and os.path.exists(loc_path):
+                locality = np.load(loc_path)
+            else:
+                print("  Computing locality scores for Variant 2...")
+                locality = gradient_locality_scores(
+                    evaluate, strata_c, len(exprs), usable)
+                if ckpt_dir:
+                    np.save(loc_path, locality)
 
         chsh_results = run_part_c(
             strata_c, evals_c, names, locality, usable,
-            n_angles=args.n_angles, n_bootstrap=args.n_bootstrap)
+            n_angles=args.n_angles, n_bootstrap=args.n_bootstrap,
+            checkpoint_dir=ckpt_dir)
 
+    if chsh_results is None:
+        if _shutdown_requested:
+            print("\n[SHUTDOWN] Exiting with partial CHSH results saved.")
+        else:
+            print("\nNo CHSH results to report.")
+        return
+
+    # ------------------------------------------------------------------
     # Visualization
+    # ------------------------------------------------------------------
     print("\n" + "=" * 70)
     print("GENERATING PLOTS AND SUMMARY")
     print("=" * 70)

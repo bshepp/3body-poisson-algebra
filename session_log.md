@@ -2955,7 +2955,9 @@ observed, approaching but not exceeding the classical bound.
 - Part A: **Complete**. N=2 algebra confirmed dimension 1 through Level 5.
 - Smoke test: **Complete**. Full pipeline validated at 2,000 samples.
 - Full-scale run: **In progress** (50k/200k samples, 72 angles, 1000
-  bootstrap iterations).
+  bootstrap iterations). PID 23444, 15.7h CPU, 1.5 GB RAM as of ~21:00 UTC.
+- Two redundant Part B-only runs killed (PIDs 30084, 19268) — full-scale
+  run supersedes them.
 
 ### Files
 
@@ -2970,6 +2972,21 @@ observed, approaching but not exceeding the classical bound.
   - `chsh_summary.json` — full numerical results
 
 ## Calogero-Moser Integrability Diagnostic (March 25, 2026)
+
+> **Correction (March 25, 2026, evening):** The interpretation section
+> below originally described the dimension sequence as detecting
+> "singularity class" using the phrase "essential singularity" and
+> framing the mechanism as "polynomial in u." Both are incorrect.  The
+> singularities of 1/r^n potentials are poles, not essential
+> singularities; and log(r) and Yukawa are transcendental in u, not
+> polynomial, yet share the same sequence.  The correct characterization
+> is that the sequence distinguishes potentials *singular at the origin*
+> from regular ones, with the universal cubic chain rule du/dq ~ u^3
+> (shared by all potentials using the u=1/r substitution) as the
+> underlying mechanism.  The term "topological invariant" used
+> elsewhere in this log has been replaced with "algebraic invariant" in
+> the paper.  See the revised paper4 entry below and the corrected
+> `paper4_calogero_integrability.tex`.
 
 ### Motivation
 
@@ -3199,3 +3216,291 @@ and demonstrates competence through engagement with their specific work.
   algebra. It doesn't — here's the result."
 - Include the broader trilogy context as supplementary, not the lead
 - Let the quality of the engagement speak for itself
+
+## Spot Migration and Local Cleanup (March 25, 2026 ~21:00 UTC)
+
+### Local Process Cleanup
+
+Two stale Part B-only bell test processes (PIDs 30084 and 19268) had been
+running 16+ hours on small sample sizes (200/500 samples). Investigated:
+both were actively consuming CPU (~100% single-core each) but on a code
+path far slower than the full-scale run's pipeline. They were computing
+redundant results — the full-scale run (PID 23444, 50k/200k samples) had
+already completed Part B with superior statistics. Killed both.
+
+Full-scale bell test (PID 23444) remains running: 15.7h CPU, 1.5 GB RAM,
+50k samples Part B, 200k samples Part C, 72 angles, 1000 bootstrap.
+
+### Spot Migration
+
+Migrated 3 long-running instances from on-demand to spot:
+
+| Instance | Old (on-demand) | New (spot) | Type | Checkpoint |
+|----------|----------------|------------|------|------------|
+| atlas-sun-earth | `i-081b53206ce41b57c` | `i-0b802ff7eaa1d8356` | r6i.4xlarge | Resumed from row 48/100 |
+| atlas-sun-jup | `i-0b8b1f63c4d011674` | `i-0ad9c11f23a7b47ad` | r6i.4xlarge | Resumed from row 34/100 |
+| level4-mpmath | `i-0cebc8dbf5349ed32` | `i-06b6caf58aac99a21` | **r6a.8xlarge** | Resumed from row 436 |
+
+level4-mpmath moved to r6a.8xlarge (AMD) because r6i.8xlarge had no spot
+capacity. Same memory/vCPU, comparable performance.
+
+All three confirmed resumed from S3 checkpoints (heartbeats current,
+`"Found prior checkpoint, will resume"` in level4-mpmath log).
+
+### Code Changes
+
+Added `--spot` and `--jobs` flags to `launch_atlas_instances.py`:
+- `--spot`: Launches as spot instances with `SpotInstanceType: one-time`,
+  `InstanceInterruptionBehavior: terminate`
+- `--jobs`: Launch only specific jobs by name (e.g. `--jobs atlas-sun-earth`)
+- No changes to userdata or scan scripts — existing SIGTERM handlers and
+  checkpoint/resume logic already handle spot interruptions
+
+### Cost Impact
+
+3 migrated instances: ~$4.03/hr on-demand → ~$1.58/hr spot (~60% savings).
+Remaining 14 atlas instances still on-demand (nearing completion, not worth
+the interruption risk for the last 5-15 hours).
+
+### Fleet Status (March 25, 2026 ~21:10 UTC)
+
+19 total running instances (14 on-demand + 3 spot + 2 terminated Yukawa).
+
+**Tier 1 (on-demand, r6i.4xlarge)** — all nearing completion:
+
+| Instance | Row/100 | % |
+|----------|---------|---|
+| atlas-log | 95 | 95% |
+| atlas-1r2-q2m1m1 | 89 | 89% |
+| atlas-muonic-he | 89 | 89% |
+| atlas-positronium | 88 | 88% |
+| atlas-h-minus | 88 | 88% |
+| atlas-1r3-q2m1m1 | 88 | 88% |
+| atlas-h2plus | 87 | 87% |
+| atlas-lithium | 87 | 87% |
+| atlas-q1m1m1 | 86 | 86% |
+| atlas-q1p1p1 | 86 | 86% |
+| atlas-binary-star | 86 | 86% |
+| atlas-q3m1m1 | 86 | 86% |
+| atlas-q1p1m1 | 85 | 85% |
+| atlas-q2m1m1 | 85 | 85% |
+| atlas-1r3 | 85 | 85% |
+| atlas-triple-bh | 80 | 80% |
+
+**Tier 3 (spot, r6i.4xlarge)** — extreme mass ratios:
+
+| Instance | Row/100 | % |
+|----------|---------|---|
+| atlas-sun-earth | 48 | 48% |
+| atlas-sun-jup | 34 | 34% |
+
+**level4-mpmath (spot, r6a.8xlarge)**: Row 436/15000 (2.9%), rebuilding
+derivatives after relaunch, will resume rank computation from checkpoint.
+
+### ETA Estimates (revised)
+
+- 14 on-demand atlas (80-95%): ~3-8 more hours → completion tonight
+- atlas-log (95%): ~2 more hours
+- atlas-sun-earth (48%, spot): ~20 more hours
+- atlas-sun-jup (34%, spot): ~45 more hours
+- level4-mpmath (2.9%, spot): ~520 hours (~22 days)
+
+## Paper 4 Terminology Corrections (March 25, 2026, evening)
+
+### Problem
+
+A critical review of `paper4_calogero_integrability.tex` identified
+several incorrect or unsupported claims in the discussion of singularity
+class invariance:
+
+1. **"Essential singularity" is the wrong term.** The singularities of
+   1/r, 1/r^2, 1/r^3 at r=0 are **poles** (finite-order), not essential
+   singularities (which are a specific, different class, e.g. e^{1/z}).
+   Any mathematician reviewing the paper would flag this immediately.
+
+2. **"Polynomial in u" does not describe the full universal class.**
+   The paper claimed singular potentials are "polynomial in u = 1/r,"
+   but log(r) = -log(u) and Yukawa e^{-mu*r}/r = u*e^{-mu/u} are both
+   transcendental in u, yet produce the same [3, 6, 17, 116] sequence.
+   The parenthetical mechanism was wrong for two of the potentials the
+   paper itself cited.
+
+3. **"Topological invariant" is unsupported.** No topology was defined,
+   no invariance under continuous deformations was proved.  The correct
+   term is "algebraic invariant."
+
+4. **The mechanistic explanation was imprecise.** The paper said the
+   dimension count "depends on the local structure of the interaction
+   near r=0 (which determines the chain rule derivatives)."  But the
+   chain rule du/dq = -(q-q')*u^3 is identical for ALL potentials — it
+   depends only on u=1/r, not on V(u).  The chain rule cannot be the
+   differentiating factor between singular and regular potentials.
+   The actual mechanism is that singular potentials require the
+   u-substitution (introducing the cubic chain rule), while regular
+   potentials do not.
+
+5. **Yukawa/log results were from companion papers** but presented
+   without attribution in Table II, making it appear the present paper
+   had computed them.
+
+6. **Table III listed q=4 (equal masses)** as a separate data point
+   without noting it is the same computation as the base CM result.
+
+7. **Level-4 universality is unestablished.** The cross-potential
+   universality holds through level 3 only; sequences might diverge
+   at level 4.
+
+8. **The interaction-graph insight was buried.** The deepest finding —
+   that the pairwise algebra respects the interaction graph but cannot
+   see non-pairwise conserved quantities — was in Section IV.B rather
+   than being highlighted.
+
+### Changes Made to `paper4_calogero_integrability.tex`
+
+| # | Location | Change |
+|---|----------|--------|
+| 1 | Discussion IV.A (lines 306-312) | Replaced "essential singularity" and "polynomial in u" with correct description: "singular at r=0 vs analytic," acknowledging log and Yukawa are transcendental in u, identifying the shared cubic chain rule as the universal element |
+| 2 | Discussion IV.C (line 359) | "topological" → "algebraic" |
+| 3 | Conclusion (line 379) | "essential singularities" → "singular at the origin" |
+| 4 | Discussion IV.B (lines 339-344) | Rewrote mechanistic explanation: chain rule is shared by ALL potentials; dimension count reflects interaction graph combinatorics filtered through this shared chain rule |
+| 5 | Conclusion (after line 388) | Added caveat: cross-potential universality established only through level 3; level 4 is the critical open test |
+| 6 | Table III q=4 row | Added footnote: "Equal masses; coincides with the base computation in Table I" |
+| 7 | Introduction + Table II | Added citations \cite{paper1,paper3} for log/Yukawa/Coulomb; added footnote markers on Table II rows indicating companion computations; added bibliography entries |
+| 8 | Abstract + Discussion IV.A | Added interaction-graph framing: "reflecting the combinatorial structure of the pairwise interaction graph rather than global dynamical conservation laws" |
+
+### Changes Made to Documentation
+
+| File | Change |
+|------|--------|
+| `conjectures.md` | Fixed "essential singularity at r=0 (polynomial in u=1/r)" |
+| `outreach_emails.md` | Fixed "topological invariant of the potential type" |
+| `session_log.md` | Added correction note to original paper4 entry |
+
+### What Did NOT Need Fixing
+
+- `schwarzschild/schwarzschild_scope.md` — its "polynomial in u" references
+  are correct in context (describing specific composite potentials like
+  V = -u - u²/2c² that genuinely ARE polynomial in u)
+- Earlier session log entries (lines 343, 363, 2477) using "topological
+  invariant" — these are historical speculation/conclusions from before
+  paper4 and are preserved as-is for the historical record
+- The core computational results are unchanged: [3, 6, 17, 116] for all
+  singular potentials, [3, 6, 13, 15, 15] for harmonic.  Only the
+  characterization of *why* was corrected.
+
+## AWS Bell Test Launch (March 25, 2026 ~24:45 UTC)
+
+### Problem
+
+The full-scale local bell test (PID 23444) had no intermediate checkpointing.
+If the machine restarted, all progress would be lost — 20+ hours of CPU time
+computing 50k-sample Part B and 200k-sample Part C CHSH sweeps.
+
+### Solution: Checkpoint-Enabled AWS Run
+
+Added comprehensive checkpointing to `nbody/bell_test.py`:
+
+- **`--checkpoint-dir` argument**: enables save/resume of all intermediate
+  results when provided
+- **Python-level SIGTERM handler** (`_sigterm_handler`): sets a
+  `_shutdown_requested` flag so the current CHSH computation finishes
+  before exiting
+- **Phase-granular checkpoints**: `checkpoint_meta.pkl` (generator info),
+  `strata_b.npz` / `evals_b.npz` (Part B sampling), `locality.npy` /
+  `mi_results.pkl` (Part B analysis), `strata_c.npz` / `evals_c.npz`
+  (Part C sampling), `chsh_partial.json` (per-stratum-variant CHSH results)
+- **NumPy `.npz` serialization** for efficient storage of large arrays
+- **Partial Part C resume**: `run_part_c()` loads `chsh_partial.json` and
+  skips already-computed stratum×variant pairs
+
+Created `userdata_bell_test.sh` with the standard robust pattern:
+- SIGTERM trap waits up to 120s for Python to checkpoint
+- Background sync every 120s pushes checkpoints + plots to S3
+- Pulls any prior bell test checkpoints on startup for resume
+- Level 3 checkpoint pulled from `s3://3body-compute-290318/checkpoints/`
+
+Launched as `c6i.4xlarge` spot instance (`i-083f5244cb4516fd2`).
+
+### Early Results
+
+All 156 generators lambdified successfully on AWS (Python 3.8 / Linux) —
+no NaN fallbacks, no xreplace needed. This is better than the local run
+which had issues with some generators. Part A completed, Part B sampling
+and evaluation completed, checkpoint files synced to S3.
+
+## Spot Reclamation and Relaunch (March 26, 2026 ~01:00 UTC)
+
+### Atlas Fleet Completion
+
+All 15 "normal" atlas configurations completed successfully and
+self-terminated. Completion markers confirmed in S3 for all 15:
+atlas-1r2-q2m1m1, atlas-1r3-q2m1m1, atlas-1r3, atlas-binary-star,
+atlas-h-minus, atlas-h2plus, atlas-lithium, atlas-log, atlas-muonic-he,
+atlas-positronium, atlas-q1m1m1, atlas-q1p1m1, atlas-q1p1p1,
+atlas-q2m1m1, atlas-q3m1m1.
+
+atlas-triple-bh (on-demand, r6i.4xlarge) is the last remaining atlas
+instance from the original fleet, at row 97/100 with ~1h ETA.
+
+### Spot Reclamation
+
+All three spot instances from the first migration were reclaimed by AWS:
+
+| Instance | Original spot ID | Fate |
+|----------|-----------------|------|
+| atlas-sun-earth | `i-0b802ff7eaa1d8356` | Reclaimed |
+| atlas-sun-jup | `i-0ad9c11f23a7b47ad` | Reclaimed |
+| level4-mpmath | `i-06b6caf58aac99a21` | Reclaimed |
+
+Investigation of pre-reclaim logs:
+- **sun-jup** was actively computing but extremely slow due to the extreme
+  mass ratio (sun/jupiter ≈ 1047:1). Still at row 34/100 — each evaluation
+  cycle takes much longer than normal configs.
+- **level4-mpmath** spent its entire ~3h uptime in the symbolic derivatives
+  rebuild phase (Phase 1). Never reached the actual rank computation
+  because the `level4_derivs.pkl` cache was not being synced to/from S3.
+
+### Derivatives Cache Fix
+
+Root cause: `level4_mpmath_rank.py` already cached derivatives to
+`checkpoints/level4_derivs.pkl` locally (243 MB), but the userdata
+script only synced `results/level4_mpmath/` to S3 — the derivatives
+cache lived in `checkpoints/` and was never uploaded.
+
+Fix applied to `userdata_level4_mpmath.sh`:
+- **Step 4b**: Pulls `level4_derivs.pkl` from S3 on boot (avoids 3h rebuild)
+- **Background sync**: Uploads `level4_derivs.pkl` during periodic sync
+- **SIGTERM handler**: Uploads `level4_derivs.pkl` on graceful shutdown
+
+Uploaded the existing local 243 MB cache to
+`s3://3body-compute-290318/checkpoints/level4_derivs.pkl`.
+The currently running instance has the old userdata so will still
+recompute, but the next relaunch will skip derivatives entirely.
+
+### Relaunch
+
+Relaunched all three as spot instances (r6i capacity unavailable,
+used r6a AMD variants):
+
+| Instance | New spot ID | Type | Resuming from |
+|----------|------------|------|---------------|
+| atlas-sun-earth | `i-05030b42008bf1f11` | r6a.4xlarge | Row 48/100 |
+| atlas-sun-jup | `i-016fdbd9577aa1be5` | r6a.4xlarge | Row 34/100 |
+| level4-mpmath | `i-034baa905339ab6c4` | r6a.8xlarge | Row 436/15000 |
+
+### Fleet Status (March 26, 2026 ~02:15 UTC)
+
+5 active 3body instances:
+
+| Instance | Type | Lifecycle | Status |
+|----------|------|-----------|--------|
+| atlas-triple-bh | r6i.4xlarge | on-demand | Row 97/100, ETA ~1h |
+| atlas-sun-earth | r6a.4xlarge | spot | Just relaunched, lambdifying |
+| atlas-sun-jup | r6a.4xlarge | spot | Just relaunched, lambdifying |
+| level4-mpmath | r6a.8xlarge | spot | Rebuilding derivatives (old userdata) |
+| bell-test | c6i.4xlarge | spot | Part B complete, entering Part C |
+
+level4-mpmath rank checkpoint safe at row 436 (rank=436, plateau=0).
+
+Local bell test (PID 23444) still running: ~74,400s CPU (~20.7h),
+228 MB RAM. No checkpointing — AWS run is the insured copy.

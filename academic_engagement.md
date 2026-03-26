@@ -21,7 +21,7 @@ These are the established facts. Use only these in formal submissions.
 | Result | Status | Evidence |
 |--------|--------|----------|
 | d(0)=3, d(1)=6, d(2)=17, d(3)=116 | **Proved** | Exact symbolic computation, SVD gap > 10^6 |
-| d(4) >= 5,604 | **Lower bound** | Numerical pipeline, 200K samples at generic config; exact rank via mpmath in progress (row 283, ETA ~22 days) |
+| d(4) >= 5,604 | **Lower bound** | Numerical pipeline, 200K samples at generic config; exact rank via mpmath in progress (row 436/15000, spot r6a.8xlarge; derivatives cache fix applied to avoid 3h rebuild on relaunch) |
 | Mass invariance of d(0)-d(3) | **Proved** | Tested 20+ mass ratios including Tsygvintsev exceptional cases |
 | Infinite Gelfand-Kirillov dimension | **Proved** | Follows from super-exponential growth through Level 4 |
 | Harmonic (r^2) algebra closes at dim 15 | **Proved** | Zero new generators at Level 4, SVD gap > 10^14 |
@@ -48,9 +48,9 @@ These are the established facts. Use only these in formal submissions.
 | Shape sphere atlas: 11 configs surveyed | **Complete** | 99,000 grid points; rank 116 at 75–93% across all potentials/charges |
 | Cross-potential atlas consistency | **Confirmed** | Critical locus identical topology for 1/r, 1/r², 1/r³, log(r) |
 | Charge sensitivity atlas (7 configs) | **Confirmed** | Rank differences sparse (±1–4 at boundaries); gap score more continuous |
-| Full 100×100 atlas campaign (18 configs) | **In progress** | 14 of 16 instances at 61–72%; sun-earth 37%, sun-jup 26%; Yukawa terminated; ETA 10-55h remaining |
+| Full 100×100 atlas campaign (18 configs) | **15/18 complete** | 15 normal configs finished and self-terminated; atlas-triple-bh at row 97/100 (~1h); sun-earth (48%) and sun-jup (34%) relaunched on spot after reclamation |
 | N=2 Poisson algebra is trivial (dim=1) | **Proved** | bell_test.py Part A: dimension 1 through Level 5 |
-| Bell test (CHSH from algebra projections) | **No violation** | max |S| = 1.77 (tidal generators, equilateral); classical bound holds; full-scale run in progress |
+| Bell test (CHSH from algebra projections) | **No violation** | max |S| = 1.77 (tidal generators, equilateral); classical bound holds; AWS checkpoint-enabled run in progress (c6i.4xlarge spot, Part B complete); local run still active (PID 23444, 20.7h CPU, no checkpointing) |
 
 ### Paper 4 results
 | Result | Status | Evidence |

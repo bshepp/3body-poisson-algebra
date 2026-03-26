@@ -262,7 +262,8 @@ class Potential:
         return None
 
     @staticmethod
-    def get_symbolic_hamiltonians(potential_type: str, charges=None, **kwargs):
+    def get_symbolic_hamiltonians(potential_type: str, charges=None,
+                                  masses=None, **kwargs):
         """
         Return (H12, H13, H23) as SymPy expressions in the polynomial
         u_ij representation used by exact_growth.py.
@@ -271,64 +272,75 @@ class Potential:
         When charges=(q1,q2,q3) is provided with a 1/r^n potential,
         constructs H_ij = T_i + T_j + q_i*q_j*u_ij^n.
 
+        When masses=(m1,m2,m3) is provided and differs from (1,1,1),
+        kinetic terms become p^2/(2*m_i) instead of p^2/2.
+
         For yukawa potentials, pass yukawa_mu=<value> to set the
         screening parameter (default 7/10).
         """
-        from sympy import Integer as _Int
+        from sympy import Integer as _Int, Rational as _Rat
+
+        KE1, KE2, KE3 = T1, T2, T3
+        if masses is not None and tuple(masses) != (1, 1, 1) and tuple(masses) != (1.0, 1.0, 1.0):
+            from sympy import nsimplify as _nsimplify
+            def _to_sym(v):
+                if isinstance(v, int):
+                    return _Int(v)
+                return _nsimplify(v, rational=True)
+            m1, m2, m3 = _to_sym(masses[0]), _to_sym(masses[1]), _to_sym(masses[2])
+            KE1 = (px1**2 + py1**2) / (2 * m1)
+            KE2 = (px2**2 + py2**2) / (2 * m2)
+            KE3 = (px3**2 + py3**2) / (2 * m3)
 
         n = Potential._potential_exponent(potential_type)
 
+        q1 = q2 = q3 = None
         if charges is not None:
-            if n is None:
-                raise ValueError(
-                    f"Charges not supported with potential '{potential_type}'")
             q1, q2, q3 = [_Int(c) if isinstance(c, int) else c
                           for c in charges]
+
+        def _pair_potential(u_ij, qi, qj, sign=-1):
+            """Build V_ij term with optional charge coupling."""
+            if qi is not None:
+                return qi * qj * u_ij
+            return sign * u_ij
+
+        if n is not None:
             u12_n = u12 if n == 1 else u12**n
             u13_n = u13 if n == 1 else u13**n
             u23_n = u23 if n == 1 else u23**n
-            return (T1 + T2 + q1*q2*u12_n,
-                    T1 + T3 + q1*q3*u13_n,
-                    T2 + T3 + q2*q3*u23_n)
+            if n != 1 and potential_type.startswith('1/r^'):
+                from sympy import nsimplify
+                n_sym = nsimplify(n, rational=False)
+                u12_n, u13_n, u23_n = u12**n_sym, u13**n_sym, u23**n_sym
+            return (KE1 + KE2 + _pair_potential(u12_n, q1, q2),
+                    KE1 + KE3 + _pair_potential(u13_n, q1, q3),
+                    KE2 + KE3 + _pair_potential(u23_n, q2, q3))
 
         r12_sq = (x1 - x2)**2 + (y1 - y2)**2
         r13_sq = (x1 - x3)**2 + (y1 - y3)**2
         r23_sq = (x2 - x3)**2 + (y2 - y3)**2
 
-        if potential_type == '1/r':
-            return (T1 + T2 - u12,
-                    T1 + T3 - u13,
-                    T2 + T3 - u23)
-
-        if potential_type == '1/r2':
-            return (T1 + T2 - u12**2,
-                    T1 + T3 - u13**2,
-                    T2 + T3 - u23**2)
-
-        if potential_type.startswith('1/r^'):
-            from sympy import Rational, nsimplify
-            n_sym = nsimplify(n, rational=False)
-            return (T1 + T2 - u12**n_sym,
-                    T1 + T3 - u13**n_sym,
-                    T2 + T3 - u23**n_sym)
-
         if potential_type == 'harmonic':
-            return (T1 + T2 + r12_sq,
-                    T1 + T3 + r13_sq,
-                    T2 + T3 + r23_sq)
+            return (KE1 + KE2 + r12_sq,
+                    KE1 + KE3 + r13_sq,
+                    KE2 + KE3 + r23_sq)
 
         if potential_type == 'log':
             from sympy import log as _log
-            return (T1 + T2 - _log(u12),
-                    T1 + T3 - _log(u13),
-                    T2 + T3 - _log(u23))
+            return (KE1 + KE2 + _pair_potential(_log(u12), q1, q2),
+                    KE1 + KE3 + _pair_potential(_log(u13), q1, q3),
+                    KE2 + KE3 + _pair_potential(_log(u23), q2, q3))
 
         if potential_type == 'yukawa':
-            from sympy import exp as _exp, Rational as _Rat
+            from sympy import exp as _exp
             mu = kwargs.get('yukawa_mu', _Rat(7, 10))
-            return (T1 + T2 - u12 * _exp(-mu / u12),
-                    T1 + T3 - u13 * _exp(-mu / u13),
-                    T2 + T3 - u23 * _exp(-mu / u23))
+            yuk12 = u12 * _exp(-mu / u12)
+            yuk13 = u13 * _exp(-mu / u13)
+            yuk23 = u23 * _exp(-mu / u23)
+            return (KE1 + KE2 + _pair_potential(yuk12, q1, q2),
+                    KE1 + KE3 + _pair_potential(yuk13, q1, q3),
+                    KE2 + KE3 + _pair_potential(yuk23, q2, q3))
 
         raise ValueError(f"No symbolic Hamiltonians for '{potential_type}'")
 
@@ -366,7 +378,8 @@ class PoissonAlgebra:
             ham_kwargs['yukawa_mu'] = nsimplify(config.yukawa_mu, rational=True)
 
         H12, H13, H23 = Potential.get_symbolic_hamiltonians(
-            config.potential_type, charges=config.charges, **ham_kwargs)
+            config.potential_type, charges=config.charges,
+            masses=config.masses, **ham_kwargs)
 
         all_exprs = []
         all_names = []
@@ -460,6 +473,13 @@ class PoissonAlgebra:
         base_r_min = self._base_min_sep(base_q)
         effective_min_sep = min(min_sep, 0.3 * base_r_min)
 
+        masses = self.config.masses
+        mom_scale = np.array([
+            np.sqrt(masses[0]), np.sqrt(masses[0]),
+            np.sqrt(masses[1]), np.sqrt(masses[1]),
+            np.sqrt(masses[2]), np.sqrt(masses[2]),
+        ])
+
         Z_qp = np.zeros((n_samples, 12))
         Z_u = np.zeros((n_samples, 3))
         accepted = 0
@@ -470,7 +490,7 @@ class PoissonAlgebra:
                 break
 
             q = base_q + rng.randn(6) * epsilon
-            p = rng.randn(6) * mom_range
+            p = rng.randn(6) * mom_range * mom_scale
 
             dx12 = q[0] - q[2]; dy12 = q[1] - q[3]
             dx13 = q[0] - q[4]; dy13 = q[1] - q[5]
@@ -574,15 +594,38 @@ class PoissonAlgebra:
     # SVD gap helpers (quiet -- no printing)
     # -----------------------------------------------------------------
     def _rank_from_gap(self, singular_values: np.ndarray) -> int:
-        if len(singular_values) <= 1:
-            return len(singular_values)
-        for k in range(len(singular_values) - 1):
-            if singular_values[k + 1] < 1e-10:
-                return k + 1
-            ratio = singular_values[k] / singular_values[k + 1]
-            if ratio > self.config.svd_gap_threshold:
-                return k + 1
-        return len(singular_values)
+        s = singular_values
+        if len(s) <= 1:
+            return len(s)
+
+        noise_threshold = 1e-8 * s[0]
+        n_meaningful = int(np.sum(s > noise_threshold))
+
+        best_gap_ratio = 1.0
+        best_gap_idx = -1
+        for i in range(min(n_meaningful, len(s) - 1)):
+            if s[i + 1] > noise_threshold:
+                gap = s[i] / s[i + 1]
+            else:
+                gap = s[i] / max(s[i + 1], 1e-300)
+            if gap > best_gap_ratio:
+                best_gap_ratio = gap
+                best_gap_idx = i
+
+        below_noise = (best_gap_idx >= 0 and
+                       best_gap_idx + 1 < len(s) and
+                       s[best_gap_idx + 1] < noise_threshold)
+
+        if best_gap_ratio > 1e4 and below_noise:
+            return best_gap_idx + 1
+        elif best_gap_ratio > 1e4:
+            rel_below = s[best_gap_idx + 1] / s[0] if s[0] > 0 else 0
+            if rel_below < 1e-6:
+                return best_gap_idx + 1
+            else:
+                return n_meaningful
+        else:
+            return n_meaningful
 
     def _max_gap_ratio(self, singular_values: np.ndarray) -> float:
         if len(singular_values) <= 1:
