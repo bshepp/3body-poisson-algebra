@@ -3695,3 +3695,81 @@ Completed a full mirror of all S3 data locally (9.04 GB):
 atlas_full, results, checkpoints, diagnostic, nbody_checkpoints,
 atlas_targeted, atlas_output_hires, atlas_1000 — all verified complete
 with zero remaining differences.
+
+## Data Integrity Audit and 1/r² Triptych (March 27, 2026)
+
+### 1/r² Atlas Completion Confirmed
+
+The 1/r² atlas on AWS (`i-05548f68fbcbd54e5`, c6i.4xlarge) completed
+successfully: 100/100 rows, 8789/10000 rank 116 (87.9%), unique ranks
+{112, 113, 114, 115, 116}, elapsed 12919s (~3.6h), cost ~$2.44.
+Instance auto-terminated and is fully shut down.
+
+### Stale Data Sync Bug
+
+When syncing atlas data from S3 with `aws s3 sync`, numpy arrays that
+changed content but not size were NOT re-downloaded. A 100×100 float64
+gap_map.npy is always 80128 bytes whether filled with data or zeros.
+`s3 sync` compared sizes (identical) and timestamps and concluded files
+were current — but the local copies were from an earlier interrupted run
+with only 18/100 rows computed.
+
+**Symptom**: The 1/r² triptych rendered with a sharp cutoff at μ ≈ 0.71,
+black (zero) everywhere above. Only the bottom 19 rows had structure.
+
+**Fix**: Force re-downloaded individual files with `aws s3 cp` (bypasses
+sync's size/timestamp comparison). The complete data was on S3 the
+entire time — checkpoint row 99, zero gaps=0, zero rank=-1.
+
+### Atlas Data Audit (`audit_atlas_data.py`)
+
+Created `audit_atlas_data.py` to systematically check all 42 local atlas
+configs for:
+- Zero-filled rows in gap_map (incomplete computation)
+- Uncomputed (-1) rows in rank_map
+- Checkpoint vs summary inconsistency (checkpoint says incomplete but
+  summary claims full completion)
+- S3 comparison: downloads each npy from S3 and diffs against local copy
+
+Results of full audit:
+- **17 configs clean** — local matches S3
+- **3 configs had stale local data**, fixed by re-downloading from S3:
+  - `sun_earth_moon`: had 3/100 rows locally, S3 had 11 rows
+  - `sun_jupiter_asteroid`: had 0/100 rows locally, S3 had 7 rows
+  - `triple_bh_lisa`: re-downloaded for consistency (still incomplete on
+    S3 too — spot instance was reclaimed)
+- **20 `atlas-*` prefix directories**: log-only result folders from a
+  different naming convention (no npy data). These are duplicates of the
+  properly-named configs that already pass.
+- **2 configs missing npy data entirely**: `dusty_plasma_yukawa` and
+  `tritium_he3_yukawa` — both had failed/terminated prior runs.
+
+### 1/r² vs 1/r⁻² Triptych
+
+Rendered `triptych_1r2_vs_1r-2.png` comparing:
+- **Panel 1 (1/r², Calogero–Moser)**: Rich geometric structure across
+  the full shape sphere. Bright bands along Euler collinear configs and
+  the equilateral Lagrange point. Rank 116 at 87.9% of shape space.
+  Notable noise/grain from phase-space sampling — the 1/r² potential
+  produces tighter singular value spectra, making gap ratios more
+  sensitive to the 400-sample random draws.
+- **Panel 2 (1/r⁻² = r², Harmonic)**: Uniformly rank 15 everywhere.
+  The pairwise r² potential is exactly the harmonic oscillator, making
+  the 3-body problem integrable (separable into independent normal
+  modes after CM removal). Gap ratios are 10¹²–10¹⁴ (enormous gap
+  between SV 15 and 16).
+- **Panel 3 (Difference)**: The harmonic potential has higher gap
+  ratios everywhere (it's more "decisively" low-rank) but at a
+  fundamentally different rank. The two potentials sit at opposite
+  ends of the integrability spectrum.
+
+Independent color scales used per panel — a shared scale would crush
+the 1/r² panel to black because the harmonic gap ratios are 10³–10⁴
+times larger (measuring a different rank boundary).
+
+### Lesson Learned
+
+**Never trust `aws s3 sync` for numpy arrays.** When array dimensions
+are fixed, all .npy files have identical byte sizes regardless of
+content. Use `aws s3 cp --recursive` or add `--exact-timestamps` to
+`s3 sync` to force content-aware comparison.
