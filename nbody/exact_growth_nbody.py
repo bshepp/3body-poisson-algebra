@@ -310,7 +310,7 @@ class NBodyAlgebra:
     # Phase-space sampling
     # -----------------------------------------------------------------
 
-    def sample_phase_space(self, n, seed=42, pos_range=3.0, mom_range=1.0,
+    def sample_phase_space(self, n, seed=42, pos_range=None, mom_range=1.0,
                            min_sep=0.5):
         """Sample n phase-space points with all pairwise separations > min_sep.
 
@@ -320,6 +320,10 @@ class NBodyAlgebra:
         N, d = self.N, self.d
         n_phase = self.n_phase
         rng = np.random.RandomState(seed)
+
+        # Scale pos_range so N bodies fit comfortably with min_sep apart
+        if pos_range is None:
+            pos_range = max(3.0, N * min_sep * 1.5)
         pts = np.empty((0, n_phase))
 
         mom_scales = np.ones(N * d)
@@ -656,13 +660,16 @@ class NBodyAlgebra:
         print(f"outer [{time()-t0:.1f}s]...", end=" ", flush=True)
 
         total = j1 + j2 + j3
-        f = sp.lambdify(self.all_vars, total, modules="numpy")
-        Z_qp, Z_u = self.sample_phase_space(n_pts, seed)
-        n_u = self.n_pairs
-        args = ([Z_qp[:, i] for i in range(self.n_phase)] +
-                [Z_u[:, i] for i in range(n_u)])
-        vals = np.array(f(*args))
-        max_err = np.max(np.abs(vals))
+        if total == 0:
+            max_err = 0.0
+        else:
+            f = sp.lambdify(self.all_vars, total, modules="numpy")
+            Z_qp, Z_u = self.sample_phase_space(n_pts, seed)
+            n_u = self.n_pairs
+            args = ([Z_qp[:, i] for i in range(self.n_phase)] +
+                    [Z_u[:, i] for i in range(n_u)])
+            vals = np.atleast_1d(np.asarray(f(*args), dtype=float))
+            max_err = np.max(np.abs(vals)) if vals.size > 0 else 0.0
         elapsed = time() - t0
 
         ok = max_err < 1e-10
@@ -780,10 +787,16 @@ class NBodyAlgebra:
                 all_names = ckpt["names"]
                 all_levels = ckpt["levels"]
                 start_level = ckpt["level"] + 1
-                for i in range(len(all_exprs)):
-                    for j in range(i + 1, len(all_exprs)):
-                        if max(all_levels[i], all_levels[j]) < start_level - 1:
-                            computed_pairs.add(frozenset({i, j}))
+                # Only rebuild computed_pairs if we need more levels
+                if start_level <= max_level:
+                    n_ckpt = len(all_exprs)
+                    print(f"    Rebuilding computed_pairs for {n_ckpt} "
+                          f"expressions...", end=" ", flush=True)
+                    for i in range(n_ckpt):
+                        for j in range(i + 1, n_ckpt):
+                            if max(all_levels[i], all_levels[j]) < start_level - 1:
+                                computed_pairs.add(frozenset({i, j}))
+                    print(f"done ({len(computed_pairs)} pairs)")
 
         # -- Level 0: pairwise Hamiltonians --
         if start_level <= 0:

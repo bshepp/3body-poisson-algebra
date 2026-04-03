@@ -1037,8 +1037,8 @@ def compute_exact_growth(max_level=3, n_samples=500, seed=42,
                 ax.text(pos, 0.5, f" {label}", color="red", fontsize=9)
 
         plt.tight_layout()
-        plt.savefig("exact_svd_spectrum.png", dpi=150)
-        print(f"\n  SVD plot saved to exact_svd_spectrum.png")
+        plt.savefig("figures/exact_svd_spectrum.png", dpi=150)
+        print(f"\n  SVD plot saved to figures/exact_svd_spectrum.png")
         plt.close()
     except Exception as e:
         print(f"\n  (Plot skipped: {e})")

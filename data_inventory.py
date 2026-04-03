@@ -187,7 +187,7 @@ def main():
           f"{n_viz} visualization files")
     print(f"{'='*60}")
 
-    out = os.path.join(BASE, 'data_inventory.json')
+    out = os.path.join(BASE, 'data', 'data_inventory.json')
     with open(out, 'w') as f:
         json.dump(inventory, f, indent=2, default=str)
     print(f"\n  Saved to {out}")

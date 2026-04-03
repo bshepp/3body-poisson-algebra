@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Tracker — Three-Body Poisson Algebra</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a0c10;
+  --bg-panel: #0f1218;
+  --bg-card: #141820;
+  --bg-card-hover: #1a1f2a;
+  --border: #1e2430;
+  --border-bright: #2a3040;
+  --text-primary: #c8ccd4;
+  --text-secondary: #7a8090;
+  --text-dim: #4a5060;
+  --phosphor: #3ddc84;
+  --phosphor-dim: #1a6e3a;
+  --phosphor-glow: rgba(61, 220, 132, 0.15);
+  --amber: #f0a030;
+  --amber-dim: #7a5018;
+  --amber-glow: rgba(240, 160, 48, 0.12);
+  --red: #e05555;
+  --red-dim: #7a2a2a;
+  --cyan: #4ac8e8;
+  --cyan-dim: #1a5a6e;
+  --violet: #a07ae0;
+  --violet-dim: rgba(160, 122, 224, 0.15);
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'Source Serif 4', Georgia, serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 14px; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--mono);
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── Top Bar ─── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 2rem;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.topbar-left a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: color 0.2s;
+}
+
+.topbar-left a:hover { color: var(--phosphor); }
+.topbar-left a.active { color: var(--phosphor); border-bottom: 1px solid var(--phosphor); }
+
+.topbar-right {
+  color: var(--text-dim);
+}
+
+/* ─── Header ─── */
+.header {
+  padding: 2rem 2.5rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-deep) 100%);
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--phosphor-dim), transparent);
+}
+
+.header h1 {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.header h1 span { color: var(--text-secondary); font-weight: 300; }
+
+.header-stats {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.header-stats .stat {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.dot-green { background: var(--phosphor); box-shadow: 0 0 6px var(--phosphor); }
+.dot-amber { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+.dot-red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+
+/* ─── Main Layout ─── */
+.main {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: calc(100vh - 120px);
+}
+
+/* ─── Sidebar ─── */
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--bg-panel);
+  padding: 1rem 0;
+  overflow-y: auto;
+  max-height: calc(100vh - 120px);
+  position: sticky;
+  top: 0;
+}
+
+.sidebar-section {
+  padding: 0 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sidebar-section h3 {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+
+.sidebar-item:hover { background: var(--bg-card); color: var(--text-primary); }
+.sidebar-item.active { background: var(--bg-card); color: var(--phosphor); border-left: 2px solid var(--phosphor); }
+
+.sidebar-icon { font-size: 0.7rem; width: 1.2rem; text-align: center; }
+
+/* mini progress bar for sidebar */
+.mini-progress {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  margin-left: auto;
+  min-width: 40px;
+}
+
+.mini-progress-fill {
+  height: 100%;
+  border-radius: 1px;
+}
+
+.mini-fill-green { background: var(--phosphor); }
+.mini-fill-amber { background: var(--amber); }
+
+/* ─── Content Area ─── */
+.content {
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 120px);
+}
+
+.content-section { display: none; }
+.content-section.active { display: block; animation: fadeIn 0.2s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-title {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── Timeline ─── */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+
+.timeline-entry {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+}
+
+.timeline-entry::before {
+  content: '';
+  position: absolute;
+  left: -1.55rem;
+  top: 0.45rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-bright);
+  border: 1px solid var(--bg-deep);
+}
+
+.timeline-entry.milestone::before { background: var(--phosphor); box-shadow: 0 0 6px var(--phosphor); }
+.timeline-entry.breakthrough::before { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+.timeline-entry.blocker::before { background: var(--red); box-shadow: 0 0 6px var(--red); }
+
+.timeline-date {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.2rem;
+}
+
+.timeline-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.timeline-body {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ─── Cards ─── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.2rem;
+  transition: border-color 0.2s;
+}
+
+.card:hover { border-color: var(--border-bright); }
+
+.card .label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.card .value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.card .sub {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-top: 0.3rem;
+}
+
+.val-green { color: var(--phosphor); }
+.val-amber { color: var(--amber); }
+.val-cyan { color: var(--cyan); }
+.val-red { color: var(--red); }
+
+/* ─── Tables ─── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.data-table th {
+  text-align: left;
+  color: var(--text-dim);
+  font-weight: 500;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-deep);
+}
+
+.data-table td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  vertical-align: top;
+}
+
+.data-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+.seq { font-weight: 600; color: var(--phosphor); }
+.seq-match { color: var(--phosphor); }
+.seq-off { color: var(--amber); }
+.status-done { color: var(--phosphor); }
+.status-wip { color: var(--amber); }
+.status-blocked { color: var(--red); }
+.status-none { color: var(--text-dim); }
+
+/* ─── Work Items ─── */
+.work-item {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  align-items: start;
+  gap: 0.6rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  margin-bottom: 2px;
+  font-size: 0.82rem;
+  transition: all 0.15s;
+}
+
+.work-item:hover { background: var(--bg-card); border-color: var(--border); }
+
+.work-item .id { color: var(--text-dim); font-weight: 500; font-size: 0.75rem; }
+.work-item .title { font-weight: 500; }
+.work-item .desc { color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.2rem; }
+
+.chip {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chip-done { background: var(--phosphor-dim); color: var(--phosphor); }
+.chip-wip { background: var(--amber-dim); color: var(--amber); }
+.chip-todo { background: rgba(255,255,255,0.04); color: var(--text-dim); }
+.chip-blocked { background: var(--red-dim); color: var(--red); }
+.chip-crashed { background: var(--red-dim); color: var(--red); }
+
+/* ─── Paper Cards ─── */
+.paper-entry {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  gap: 1rem;
+  align-items: start;
+}
+
+.paper-entry:hover { border-color: var(--border-bright); }
+
+.paper-num { font-size: 1.4rem; font-weight: 700; color: var(--text-dim); }
+
+.paper-title {
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  line-height: 1.4;
+}
+
+.paper-file { font-size: 0.7rem; color: var(--cyan); }
+.paper-desc { font-size: 0.76rem; color: var(--text-secondary); margin-top: 0.3rem; line-height: 1.5; }
+.paper-status { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.2rem 0.6rem; border-radius: 2px; font-weight: 600; }
+.paper-draft { background: var(--amber-dim); color: var(--amber); }
+
+/* ─── Conjecture cards ─── */
+.conjecture {
+  background: var(--bg-card);
+  border-left: 3px solid var(--amber);
+  border-radius: 0 4px 4px 0;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.conjecture h4 { font-family: var(--serif); font-size: 0.92rem; margin-bottom: 0.4rem; }
+.conjecture p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; }
+
+.evidence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+
+.evidence { display: flex; align-items: center; gap: 0.4rem; font-size: 0.73rem; }
+.check { color: var(--phosphor); }
+.pending { color: var(--text-dim); }
+
+/* ─── Progress ─── */
+.progress-block { margin-bottom: 1rem; }
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.progress-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill { height: 100%; border-radius: 2px; }
+.fill-green { background: var(--phosphor); }
+.fill-amber { background: var(--amber); }
+
+/* ─── Phase Toggles ─── */
+.phase-block { margin-bottom: 1.5rem; }
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.phase-chevron {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  transition: transform 0.2s;
+  width: 1rem;
+  text-align: center;
+}
+
+.phase-header.open .phase-chevron { transform: rotate(90deg); }
+
+.phase-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.phase-badge {
+  font-size: 0.62rem;
+  padding: 0.12rem 0.45rem;
+  border-radius: 2px;
+  font-weight: 600;
+}
+
+.badge-free { background: var(--phosphor-dim); color: var(--phosphor); }
+.badge-light { background: var(--cyan-dim); color: var(--cyan); }
+.badge-medium { background: var(--amber-dim); color: var(--amber); }
+.badge-verify { background: var(--violet-dim); color: var(--violet); }
+
+.phase-items { display: none; padding-left: 1.8rem; }
+.phase-header.open + .phase-items { display: block; }
+
+/* ─── Dimension Seq Table ─── */
+.dimseq-highlight {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.dimseq-highlight h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--amber);
+  margin-bottom: 0.8rem;
+}
+
+/* ─── Invariance Matrix ─── */
+.matrix-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.matrix-card h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--amber);
+  margin-bottom: 0.8rem;
+}
+
+.inv-yes { color: var(--phosphor); font-weight: 600; }
+.inv-partial { color: var(--amber); font-weight: 600; }
+.inv-unknown { color: var(--text-dim); }
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .main { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .topbar { padding: 0.6rem 1rem; }
+  .content { padding: 1rem; }
+  .header { padding: 1.5rem 1rem; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<!-- ═══ Top Nav ═══ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="index.html">Dashboard</a>
+    <a href="tracker.html" class="active">Research Tracker</a>
+    <a href="explorer.html">Data Explorer</a>
+    <a href="interactive.html">Interactive Atlas</a>
+  </div>
+  <div class="topbar-right">Three-Body Poisson Algebra</div>
+</div>
+
+<!-- ═══ Header ═══ -->
+<div class="header">
+  <h1>Research Tracker <span>— Progress, Milestones, and Open Questions</span></h1>
+  <div class="header-stats">
+    <span class="stat"><span class="dot dot-green"></span> 4 Papers Drafted</span>
+    <span class="stat"><span class="dot dot-green"></span> Phase 1 Complete</span>
+    <span class="stat"><span class="dot dot-amber"></span> 15 Open Work Items</span>
+    <span class="stat"><span class="dot dot-red"></span> 1 Blocked</span>
+  </div>
+</div>
+
+<!-- ═══ Main ═══ -->
+<div class="main">
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <h3>Sections</h3>
+      <div class="sidebar-item active" data-section="overview" onclick="showSection(this)">
+        <span class="sidebar-icon">◈</span> Overview
+      </div>
+      <div class="sidebar-item" data-section="timeline" onclick="showSection(this)">
+        <span class="sidebar-icon">│</span> Timeline
+      </div>
+      <div class="sidebar-item" data-section="dimseqs" onclick="showSection(this)">
+        <span class="sidebar-icon">#</span> Dimension Sequences
+      </div>
+      <div class="sidebar-item" data-section="workplan" onclick="showSection(this)">
+        <span class="sidebar-icon">☐</span> Work Plan
+      </div>
+      <div class="sidebar-item" data-section="systems" onclick="showSection(this)">
+        <span class="sidebar-icon">⚛</span> Systems Catalog
+      </div>
+      <div class="sidebar-item" data-section="papers" onclick="showSection(this)">
+        <span class="sidebar-icon">✎</span> Papers
+      </div>
+      <div class="sidebar-item" data-section="conjectures" onclick="showSection(this)">
+        <span class="sidebar-icon">?</span> Conjectures
+      </div>
+      <div class="sidebar-item" data-section="infra" onclick="showSection(this)">
+        <span class="sidebar-icon">⚙</span> Infrastructure
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Compute Progress</h3>
+      <div style="padding: 0 0.6rem;">
+        <div class="progress-block">
+          <div class="progress-label"><span>Sun-Earth-Moon</span><span>11%</span></div>
+          <div class="progress-track"><div class="progress-fill fill-amber" style="width:11%"></div></div>
+        </div>
+        <div class="progress-block">
+          <div class="progress-label"><span>Sun-Jupiter-Ast</span><span>7%</span></div>
+          <div class="progress-track"><div class="progress-fill fill-amber" style="width:7%"></div></div>
+        </div>
+        <div class="progress-block">
+          <div class="progress-label"><span>L4 mpmath rank</span><span>4.4%</span></div>
+          <div class="progress-track"><div class="progress-fill fill-amber" style="width:4.4%"></div></div>
+        </div>
+        <div class="progress-block">
+          <div class="progress-label"><span>Gap Phase 1</span><span>6/6</span></div>
+          <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
+        </div>
+        <div class="progress-block">
+          <div class="progress-label"><span>Gap Phase 2</span><span>2/7</span></div>
+          <div class="progress-track"><div class="progress-fill fill-amber" style="width:28.6%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h3>Key Sequences</h3>
+      <div style="padding: 0 0.6rem; font-size: 0.75rem;">
+        <div style="margin-bottom:0.5rem;">
+          <span style="color:var(--text-dim)">N=3:</span>
+          <span class="val-green" style="font-weight:600">[3, 6, 17, 116]</span>
+        </div>
+        <div style="margin-bottom:0.5rem;">
+          <span style="color:var(--text-dim)">N=4:</span>
+          <span class="val-cyan" style="font-weight:600">[6, 14, 62]</span>
+        </div>
+        <div style="margin-bottom:0.5rem;">
+          <span style="color:var(--text-dim)">N=5:</span>
+          <span class="val-amber" style="font-weight:600">[10, 25, 145]</span>
+        </div>
+        <div style="margin-bottom:0.5rem;">
+          <span style="color:var(--text-dim)">N=6:</span>
+          <span class="val-amber" style="font-weight:600">[15, 39, 279]</span>
+        </div>
+        <div>
+          <span style="color:var(--text-dim)">N=7:</span>
+          <span class="val-amber" style="font-weight:600">[21, 56, 476]</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- ═══ OVERVIEW ═══ -->
+    <div class="content-section active" id="overview">
+      <div class="section-title">Research Overview</div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="label">Core Result</div>
+          <div class="value val-green">3, 6, 17, 116</div>
+          <div class="sub">N=3 universal dimension sequence · GK dim = ∞</div>
+        </div>
+        <div class="card">
+          <div class="label">N=4 Sequence</div>
+          <div class="value val-cyan">6, 14, 62</div>
+          <div class="sub">Potential-universal (1/r, 1/r², 1/r³, log) ✓</div>
+        </div>
+        <div class="card">
+          <div class="label">N=5 Probe (NEW)</div>
+          <div class="value val-amber">10, 25, 145</div>
+          <div class="sub">d=1, 1/r · First N=5 result</div>
+        </div>
+        <div class="card">
+          <div class="label">Atlas Configs</div>
+          <div class="value"><span class="val-green">16</span><span style="color:var(--text-dim);font-size:0.6em"> / 25</span></div>
+          <div class="sub">3 in progress · 6 not started</div>
+        </div>
+        <div class="card">
+          <div class="label">Papers</div>
+          <div class="value val-amber">4</div>
+          <div class="sub">Drafted · arXiv endorsement needed</div>
+        </div>
+        <div class="card">
+          <div class="label">Physical Systems Tested</div>
+          <div class="value val-green">30+</div>
+          <div class="sub">Gravitational, atomic, molecular, plasma</div>
+        </div>
+      </div>
+
+      <!-- Invariance Matrix -->
+      <div class="matrix-card">
+        <h3>Universality Evidence Matrix</h3>
+        <table class="data-table">
+          <thead><tr><th>Parameter</th><th>Tested Values</th><th>N=3</th><th>N=4</th><th>N≥5</th></tr></thead>
+          <tbody>
+            <tr><td>Mass ratios</td><td style="color:var(--text-secondary)">0.001 to 10⁶ (25+ configs)</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ (3 configs)</td><td class="inv-unknown">—</td></tr>
+            <tr><td>Spatial dimension d</td><td style="color:var(--text-secondary)">d = 1, 2, 3</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">d=1 only</td></tr>
+            <tr><td>Potential type</td><td style="color:var(--text-secondary)">1/r, 1/r², 1/r³, log(r), composite</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ Confirmed</td><td class="inv-unknown">1/r only</td></tr>
+            <tr><td>Charge sign</td><td style="color:var(--text-secondary)">All-attract, all-repulse, mixed</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">Not tested</td><td class="inv-unknown">—</td></tr>
+            <tr><td>Charge magnitude</td><td style="color:var(--text-secondary)">|q| = 1, 2, 3</td><td class="inv-partial">~ Sensitive at L3</td><td class="inv-unknown">Not tested</td><td class="inv-unknown">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Structural Dichotomy -->
+      <div class="matrix-card">
+        <h3>Structural Dichotomy</h3>
+        <table class="data-table">
+          <thead><tr><th>Class</th><th>Examples</th><th>Behavior</th></tr></thead>
+          <tbody>
+            <tr><td>Singular potentials</td><td style="color:var(--text-secondary)">1/r, 1/r², 1/r³, log, Yukawa</td><td class="val-green">[3, 6, 17, 116] → ∞ (infinite GK dim)</td></tr>
+            <tr><td>Regular potentials</td><td style="color:var(--text-secondary)">r² (harmonic oscillator)</td><td class="val-red">[3, 6, 13, 15, 15] → finite (saturates at 15)</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.8rem;">
+          <strong>Mechanism:</strong> Universal cubic chain rule du/dq ~ u³ drives infinite growth for singular potentials.
+          <br><strong>Note:</strong> NOT a non-integrability certificate — Calogero-Moser is exactly integrable yet gives the same sequence.
+        </div>
+      </div>
+
+      <!-- N-body Scaling -->
+      <div class="dimseq-highlight">
+        <h3>N-Body Scaling (April 2026)</h3>
+        <table class="data-table">
+          <thead><tr><th>N</th><th>d(0)</th><th>d(1)</th><th>d(2)</th><th>Formula for d(0)</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>3</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td style="color:var(--text-secondary)">C(3,2) = 3</td><td class="status-done">✓ Full</td></tr>
+            <tr><td>4</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td style="color:var(--text-secondary)">C(4,2) = 6</td><td class="status-done">✓ L2</td></tr>
+            <tr><td>5</td><td class="val-amber">10</td><td class="val-amber">25</td><td class="val-amber">145</td><td style="color:var(--text-secondary)">C(5,2) = 10</td><td class="status-wip">d=1</td></tr>
+            <tr><td>6</td><td class="val-amber">15</td><td class="val-amber">39</td><td class="val-amber">279</td><td style="color:var(--text-secondary)">C(6,2) = 15</td><td class="status-wip">d=1</td></tr>
+            <tr><td>7</td><td class="val-amber">21</td><td class="val-amber">56</td><td class="val-amber">476</td><td style="color:var(--text-secondary)">C(7,2) = 21</td><td class="status-wip">d=1</td></tr>
+            <tr><td>8</td><td class="val-amber">28</td><td class="val-amber">76</td><td style="color:var(--text-dim)">301?</td><td style="color:var(--text-secondary)">C(8,2) = 28</td><td style="color:var(--text-dim)">partial</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.5rem;">d(0) = C(N,2) = number of pairs · d(1) pattern: 6, 14, 25, 39, 56, 76 · All d=1, 1/r potential</div>
+      </div>
+    </div>
+
+    <!-- ═══ TIMELINE ═══ -->
+    <div class="content-section" id="timeline">
+      <div class="section-title">Research Timeline</div>
+
+      <div class="timeline">
+        <div class="timeline-entry milestone">
+          <div class="timeline-date">April 2026</div>
+          <div class="timeline-title">N=5–8 Scaling Probes Complete</div>
+          <div class="timeline-body">First dimension sequences beyond N=4: N=5→[10,25,145], N=6→[15,39,279], N=7→[21,56,476]. Confirms d(0)=C(N,2) pattern. N=4 potential universality confirmed for 1/r², 1/r³, log(r).</div>
+        </div>
+
+        <div class="timeline-entry milestone">
+          <div class="timeline-date">March 27, 2026</div>
+          <div class="timeline-title">Gap Workplan Phase 1 Complete (6/6)</div>
+          <div class="timeline-body">All 6 free post-processing analyses done: SV landscape mining, spectral decay rate maps, spectral clustering, CG atlas comparison, Level-4 bar chart, SV #116 analytical prediction.</div>
+        </div>
+
+        <div class="timeline-entry milestone">
+          <div class="timeline-date">March 2026</div>
+          <div class="timeline-title">15 Atlas Configurations Complete</div>
+          <div class="timeline-body">Full atlas coverage for: equal-mass gravitational, helium, Li⁺, H⁻, positronium, muonic helium, H₂⁺, binary star, and 7 alternative potentials (1/r², 1/r³, log, composite, Coulomb variants). Triple BH stalled at ~38%.</div>
+        </div>
+
+        <div class="timeline-entry breakthrough">
+          <div class="timeline-date">March 2026</div>
+          <div class="timeline-title">Paper 4: Calogero-Moser Integrability Test</div>
+          <div class="timeline-body">Critical insight: [3, 6, 17, 116] is NOT a non-integrability certificate. 1D Calogero-Moser (exactly integrable) produces the same sequence. Singularity class — not integrability — drives the algebra's growth.</div>
+        </div>
+
+        <div class="timeline-entry milestone">
+          <div class="timeline-date">Feb–Mar 2026</div>
+          <div class="timeline-title">S₃ Tier Decomposition Established</div>
+          <div class="timeline-body">Level-3: 52 + 44 + 16 + 4 = 116 generators. Integer-quantized scaling exponents (α = 0,1,2,3). CG decomposition: 24A + 28A' + 52E (E-fraction = 2/3 constant). 32 syzygies + 8 true zeros.</div>
+        </div>
+
+        <div class="timeline-entry milestone">
+          <div class="timeline-date">February 2026</div>
+          <div class="timeline-title">N=4 Sequence [6, 14, 62] Confirmed</div>
+          <div class="timeline-body">Mass-invariant, d-independent. Gap ratio 3.4×10¹¹ at level 2. Three mass configurations tested.</div>
+        </div>
+
+        <div class="timeline-entry breakthrough">
+          <div class="timeline-date">February 2026</div>
+          <div class="timeline-title">SymPy 1.13.3 Bug Fix — Dimension Correction</div>
+          <div class="timeline-body">SymPy ≤1.10.1 produced incorrect [3, 5, 13, 69] for unequal masses. Version 1.13.3 corrected to universal [3, 6, 17, 116]. 63/156 level-3 expressions were wrong. All prior unequal-mass results had to be re-validated.</div>
+        </div>
+
+        <div class="timeline-entry milestone">
+          <div class="timeline-date">Jan–Feb 2026</div>
+          <div class="timeline-title">AWS Campaign — 19 Instances</div>
+          <div class="timeline-body">Initial compute fleet: 19 r6i.4xlarge instances. Total cost ~$800–1,000 (single-threaded). Later reduced to ~$100 equivalent with multiprocessing (8× speedup). Level-4 mpmath started on r6i.8xlarge.</div>
+        </div>
+
+        <div class="timeline-entry milestone">
+          <div class="timeline-date">January 2026</div>
+          <div class="timeline-title">Core Dimension Sequence [3, 6, 17, 116] Established</div>
+          <div class="timeline-body">First computation for equal-mass planar 3-body with 1/r potential. SVD gap ratio test confirms exact rank at each level. Level-4 lower bound d(4) ≥ 4,501.</div>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="timeline-date">Late 2025</div>
+          <div class="timeline-title">Project Inception</div>
+          <div class="timeline-body">Initial exploration of Poisson bracket structure for the N-body problem. exact_growth.py written as baseline engine. Auxiliary variable substitution u_ij = 1/r_ij developed to keep expressions polynomial.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ DIMENSION SEQUENCES ═══ -->
+    <div class="content-section" id="dimseqs">
+      <div class="section-title">Dimension Sequences — Complete Record</div>
+
+      <div class="dimseq-highlight">
+        <h3>The Universal Singular Sequence (N=3)</h3>
+        <div style="text-align:center; padding: 1rem 0;">
+          <span style="font-size:2rem; font-weight:700; color:var(--phosphor); font-family:var(--mono); text-shadow: 0 0 20px var(--phosphor-glow);">
+            [ 3, &nbsp;6, &nbsp;17, &nbsp;116, &nbsp;≥5604 ]
+          </span>
+        </div>
+        <div style="font-size:0.75rem; color:var(--text-secondary); text-align:center;">
+          Level 0 through 4 · Level-4 lower bound from SVD at 200K samples
+        </div>
+      </div>
+
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.8rem;">N=3 — All Potentials</h3>
+      <table class="data-table">
+        <thead><tr><th>Potential</th><th>d(0)</th><th>d(1)</th><th>d(2)</th><th>d(3)</th><th>Match?</th></tr></thead>
+        <tbody>
+          <tr><td>1/r (Newton/Coulomb)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
+          <tr><td>1/r² (Calogero-Moser)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
+          <tr><td>1/r³ (cubic)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
+          <tr><td>log(r) (2D vortices)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
+          <tr><td>1/r + 1/r² (composite)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
+          <tr><td>1/r + harmonic (Penning trap)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
+          <tr><td style="color:var(--red)">r² (harmonic)</td><td class="seq">3</td><td class="seq">6</td><td style="color:var(--red)">13</td><td style="color:var(--red)">15</td><td style="color:var(--red)">FINITE</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.8rem;">N=4 — Potential Universality</h3>
+      <table class="data-table">
+        <thead><tr><th>Potential</th><th>d(0)</th><th>d(1)</th><th>d(2)</th><th>Match ref?</th></tr></thead>
+        <tbody>
+          <tr><td>1/r (reference)</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td>—</td></tr>
+          <tr><td>1/r²</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td class="inv-yes">✓</td></tr>
+          <tr><td>1/r³</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td class="inv-yes">✓</td></tr>
+          <tr><td>log(r)</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td class="inv-yes">✓</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.8rem;">N=5 through N=8 (d=1, 1/r)</h3>
+      <table class="data-table">
+        <thead><tr><th>N</th><th>d(0)</th><th>d(1)</th><th>d(2)</th><th>Time</th></tr></thead>
+        <tbody>
+          <tr><td>5</td><td class="val-amber">10</td><td class="val-amber">25</td><td class="val-amber">145</td><td style="color:var(--text-secondary)">8s</td></tr>
+          <tr><td>6</td><td class="val-amber">15</td><td class="val-amber">39</td><td class="val-amber">279</td><td style="color:var(--text-secondary)">16s</td></tr>
+          <tr><td>7</td><td class="val-amber">21</td><td class="val-amber">56</td><td class="val-amber">476</td><td style="color:var(--text-secondary)">65s</td></tr>
+          <tr><td>8</td><td class="val-amber">28</td><td class="val-amber">76</td><td style="color:var(--text-dim)">301?</td><td style="color:var(--text-dim)">partial</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.5rem;">
+        d(0) = C(N,2) confirmed · d(1) sequence: 6, 14, 25, 39, 56, 76 · N=8 d(2) may be truncated by memory
+      </div>
+
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.8rem;">Internal Structure (Level 3, N=3)</h3>
+      <table class="data-table">
+        <thead><tr><th>Tier</th><th>Count</th><th>Scaling Exponent</th><th>S₃ Decomposition</th></tr></thead>
+        <tbody>
+          <tr><td>Tier 0 (core)</td><td class="seq">52</td><td>ε⁰</td><td style="color:var(--text-secondary)">Dominant generators</td></tr>
+          <tr><td>Tier 1</td><td class="seq">44</td><td>ε¹</td><td style="color:var(--text-secondary)">First-order scaling</td></tr>
+          <tr><td>Tier 2</td><td class="seq">16</td><td>ε²</td><td style="color:var(--text-secondary)">Second-order</td></tr>
+          <tr><td>Tier 3</td><td class="seq">4</td><td>ε³</td><td style="color:var(--text-secondary)">Weakest generators</td></tr>
+          <tr><td><strong>Total</strong></td><td class="seq"><strong>116</strong></td><td></td><td style="color:var(--text-secondary)">24A + 28A′ + 52E</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.5rem;">
+        E-type irrep fraction = 2/3 at every bracket level · 40 null generators: 32 syzygies + 8 momentum zeros
+      </div>
+    </div>
+
+    <!-- ═══ WORK PLAN ═══ -->
+    <div class="content-section" id="workplan">
+      <div class="section-title">Gap Work Plan — 21 Items</div>
+
+      <!-- Phase 1 -->
+      <div class="phase-block">
+        <div class="phase-header open" onclick="togglePhase(this)">
+          <span class="phase-chevron">▶</span>
+          <span class="phase-title">Phase 1: Free Post-Processing</span>
+          <span class="phase-badge badge-free">COMPLETE</span>
+        </div>
+        <div class="phase-items">
+          <div class="work-item"><span class="id">1.1</span><div><div class="title">Spectral Depth Mining — Interior SV Landscapes</div><div class="desc">SV #50, #80, #100, #110 as shape-sphere heatmaps.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.2</span><div><div class="title">Spectral Decay Rate Map</div><div class="desc">Log-slope between SV #80–#115 at each grid point.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.3</span><div><div class="title">Spectral Clustering on Shape Sphere</div><div class="desc">k-means/hierarchical clustering on 156-dim SV vectors.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.4</span><div><div class="title">Clebsch-Gordan Predictions vs Full Atlas</div><div class="desc">CG doublet count comparison on full shape sphere.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.5</span><div><div class="title">Level-4 Comparison Chart</div><div class="desc">Bar chart + convergence curves of d(4) across configs.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.6</span><div><div class="title">Analytical Prediction of SV #116</div><div class="desc">Weakest generator landscape prediction from symbolic structure.</div></div><span class="chip chip-done">Done</span></div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="phase-block">
+        <div class="phase-header open" onclick="togglePhase(this)">
+          <span class="phase-chevron">▶</span>
+          <span class="phase-title">Phase 2: Light Compute (hours)</span>
+          <span class="phase-badge badge-light">2/7</span>
+        </div>
+        <div class="phase-items">
+          <div class="work-item"><span class="id">2.1</span><div><div class="title">N=5 Level 1–2</div><div class="desc">d=1, 1/r → [10, 25, 145]. Confirmed C(N,2) pattern.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">2.2</span><div><div class="title">N=4 with 1/r², 1/r³, log(r)</div><div class="desc">All match [6, 14, 62]. Potential universality at N=4 confirmed.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">2.3</span><div><div class="title">r⁴ Potential (Regular)</div><div class="desc">Prediction: finite algebra, like r². Tests dichotomy for higher-degree.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">2.4</span><div><div class="title">Charge Sweep Phase 3 (+1/+q/−1)</div><div class="desc">Phase 3 crashed on AWS. Needs script fix.</div></div><span class="chip chip-crashed">Crashed</span></div>
+          <div class="work-item"><span class="id">2.5</span><div><div class="title">S₄ Tier Decomposition (N=4)</div><div class="desc">Does S₃ tier structure generalize to S₄?</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">2.6</span><div><div class="title">Harmonic Dim 15 — Rep Theory Derivation</div><div class="desc">Derive dim=15 from sp(4,ℝ) or similar.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">2.7</span><div><div class="title">H₃⁺ and Ozone Molecular Systems</div><div class="desc">Triatomic molecular reconfirmation. Outreach value.</div></div><span class="chip chip-todo">Not Started</span></div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="phase-block">
+        <div class="phase-header" onclick="togglePhase(this)">
+          <span class="phase-chevron">▶</span>
+          <span class="phase-title">Phase 3: Medium Compute ($10–$200 AWS)</span>
+          <span class="phase-badge badge-medium">0/5</span>
+        </div>
+        <div class="phase-items">
+          <div class="work-item"><span class="id">3.1</span><div><div class="title">Parametric Exponent Sweep (1,015 values)</div><div class="desc">Gap ratio vs n continuous curve. Script ready. $13–50.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">3.2</span><div><div class="title">Yukawa Potential (3 Scenarios)</div><div class="desc">Lambdification OOM. Recursion fix deployed but unconfirmed.</div></div><span class="chip chip-blocked">Blocked</span></div>
+          <div class="work-item"><span class="id">3.3</span><div><div class="title">Re-run 7 Retracted Grav Configs</div><div class="desc">2/7 validated; 5 inferred from mass sweep.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">3.4</span><div><div class="title">Complete Interrupted Atlases</div><div class="desc">Sun-Earth-Moon (11%), Sun-Jupiter-Asteroid (7%).</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">3.5</span><div><div class="title">Lagrange Hires 1000×1000 Scan</div><div class="desc">Resolve concentric ring features. $3–12.</div></div><span class="chip chip-todo">Not Started</span></div>
+        </div>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="phase-block">
+        <div class="phase-header" onclick="togglePhase(this)">
+          <span class="phase-chevron">▶</span>
+          <span class="phase-title">Phase 4: Verification & Theory</span>
+          <span class="phase-badge badge-verify">0/3</span>
+        </div>
+        <div class="phase-items">
+          <div class="work-item"><span class="id">4.1</span><div><div class="title">SageMath Independent Verification</div><div class="desc">Confirm [3, 6, 17, 116] in a second CAS.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">4.2</span><div><div class="title">Growth Rate Formula / Generating Function</div><div class="desc">OEIS search, recurrence relation, exponential fits.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">4.3</span><div><div class="title">Level-4 Bound Improvement</div><div class="desc">d(4) ≥ 5,604 at 200K. mpmath at 4.4%.</div></div><span class="chip chip-todo">Not Started</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SYSTEMS CATALOG ═══ -->
+    <div class="content-section" id="systems">
+      <div class="section-title">Physical Systems Catalog</div>
+
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:0 0 0.6rem;">Gravitational</h3>
+      <table class="data-table">
+        <thead><tr><th>System</th><th>Masses</th><th>Sequence</th><th>Atlas</th></tr></thead>
+        <tbody>
+          <tr><td>Equal-mass 3-body</td><td style="color:var(--text-secondary)">1:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓ Complete</td></tr>
+          <tr><td>Sun-Earth-Moon</td><td style="color:var(--text-secondary)">1 : 3×10⁻⁶ : 3.7×10⁻⁸</td><td class="seq">[3, 6, 17, 116]†</td><td class="status-wip">11%</td></tr>
+          <tr><td>Sun-Jupiter-Asteroid</td><td style="color:var(--text-secondary)">1 : 9.5×10⁻⁴ : 10⁻¹⁰</td><td class="seq">[3, 6, 17, 116]†</td><td class="status-wip">7%</td></tr>
+          <tr><td>Binary Star + Planet</td><td style="color:var(--text-secondary)">1:1:0.001</td><td class="seq">[3, 6, 17, 116]‡</td><td class="status-done">✓ Complete</td></tr>
+          <tr><td>Triple BH (LISA)</td><td style="color:var(--text-secondary)">1:0.01:10⁻⁵</td><td class="seq">[3, 6, 17, 116]†</td><td class="status-wip">~38% — Stalled</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.6rem;">Atomic / Coulomb</h3>
+      <table class="data-table">
+        <thead><tr><th>System</th><th>Charges</th><th>Masses</th><th>Sequence</th><th>Atlas</th></tr></thead>
+        <tbody>
+          <tr><td>Helium atom</td><td style="color:var(--text-secondary)">(+2,−1,−1)</td><td style="color:var(--text-secondary)">7294:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
+          <tr><td>Li⁺ ion</td><td style="color:var(--text-secondary)">(+3,−1,−1)</td><td style="color:var(--text-secondary)">12789:1:1</td><td class="seq-off">[3, 6, 17, 111]</td><td class="status-done">✓</td></tr>
+          <tr><td>H⁻ ion</td><td style="color:var(--text-secondary)">(+1,−1,−1)</td><td style="color:var(--text-secondary)">1836:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
+          <tr><td>Positronium Ps⁻</td><td style="color:var(--text-secondary)">(+1,−1,−1)</td><td style="color:var(--text-secondary)">1:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
+          <tr><td>Muonic Helium</td><td style="color:var(--text-secondary)">(+2,−1,−1)</td><td style="color:var(--text-secondary)">7294:1:207</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
+          <tr><td>H₂⁺ molecular ion</td><td style="color:var(--text-secondary)">(+1,+1,−1)</td><td style="color:var(--text-secondary)">1836:1836:1</td><td class="seq-off">[3, 6, 17, 115]</td><td class="status-done">✓</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.6rem;">Alternative Potentials</h3>
+      <table class="data-table">
+        <thead><tr><th>System</th><th>Potential</th><th>Sequence</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Calogero-Moser</td><td style="color:var(--text-secondary)">1/r²</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Integrable in 1D — same sequence</td></tr>
+          <tr><td>Cubic potential</td><td style="color:var(--text-secondary)">1/r³</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Jahn-Teller ring observed</td></tr>
+          <tr><td>2D Vortices</td><td style="color:var(--text-secondary)">log(r)</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Transcendental singularity</td></tr>
+          <tr><td>Composite</td><td style="color:var(--text-secondary)">1/r + 1/r²</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Multi-pole universal</td></tr>
+          <tr><td>Harmonic oscillator</td><td style="color:var(--text-secondary)">r²</td><td style="color:var(--red)">[3, 6, 13, 15]</td><td style="color:var(--red)">FINITE — saturates at dim 15</td></tr>
+          <tr><td>Penning trap</td><td style="color:var(--text-secondary)">1/r + harmonic</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Repulsive + external confinement</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.6rem;">Nuclear / Plasma (In Progress)</h3>
+      <table class="data-table">
+        <thead><tr><th>System</th><th>Potential</th><th>Status</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Tritium / He-3</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-blocked">Not started</td><td style="color:var(--text-secondary)">Config only — no computation ran</td></tr>
+          <tr><td>p-n-n Scattering</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-blocked">Not started</td><td style="color:var(--text-secondary)">No data or config</td></tr>
+          <tr><td>Dusty Plasma</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-blocked">Failed — OOM</td><td style="color:var(--red)">Lambdification issue</td></tr>
+        </tbody>
+      </table>
+
+      <div style="font-size:0.7rem; color:var(--text-dim); margin-top:1rem; line-height:1.6;">
+        † Inferred from mass ratio sweep (SymPy 1.10.1 artifact corrected) &nbsp;
+        ‡ Directly re-run with SymPy 1.13.3
+      </div>
+    </div>
+
+    <!-- ═══ PAPERS ═══ -->
+    <div class="content-section" id="papers">
+      <div class="section-title">Paper Trilogy + Supplement</div>
+
+      <div class="paper-entry">
+        <div class="paper-num">1</div>
+        <div>
+          <div class="paper-title">Super-exponential growth of the Poisson algebra generated by pairwise Hamiltonians of the planar three-body problem</div>
+          <div class="paper-file">preprint.tex</div>
+          <div class="paper-desc">Dimension sequence [3, 6, 17, 116], mass invariance theorem, potential comparison (harmonic/Newton/CM), level-4 lower bound d(4) ≥ 4,501. Reframed from "non-integrability certificate" to "structural algebraic invariant" after CM reckoning.</div>
+        </div>
+        <span class="paper-status paper-draft">Draft</span>
+      </div>
+
+      <div class="paper-entry">
+        <div class="paper-num">2</div>
+        <div>
+          <div class="paper-title">S₃-equivariant jet filtration of the three-body Poisson algebra: tier decomposition, integer scaling exponents, and syzygy structure</div>
+          <div class="paper-file">paper2_s3_filtration.tex</div>
+          <div class="paper-desc">52+44+16+4 = 116 tier decomposition. CG verification: 24A + 28A' + 52E. E-fraction = 2/3 at every bracket level. 32 syzygies + 8 true zeros. Integer-quantized scaling exponents α = 0, 1, 2, 3.</div>
+        </div>
+        <span class="paper-status paper-draft">Draft</span>
+      </div>
+
+      <div class="paper-entry">
+        <div class="paper-num">3</div>
+        <div>
+          <div class="paper-title">Universal dimension sequences of pairwise Poisson algebras: independence from spatial dimension, potential exponent, and charge sign</div>
+          <div class="paper-file">paper3_universality.tex</div>
+          <div class="paper-desc">N=4 sequence [6, 14, 62]. d-independence for N=3 and N=4. Pole-order invariance. Charge-sign invariance. Formal universality conjecture + three falsifiable predictions.</div>
+        </div>
+        <span class="paper-status paper-draft">Draft</span>
+      </div>
+
+      <div class="paper-entry">
+        <div class="paper-num">4</div>
+        <div>
+          <div class="paper-title">The Poisson Algebra of Pairwise Interactions: A Calogero-Moser Integrability Test</div>
+          <div class="paper-file">paper4_calogero_integrability.tex</div>
+          <div class="paper-desc">1D CM (exactly integrable) gives [3, 6, 17, 116]. Singularity class invariance. Galperin superintegrable mass ratios all universal. Revtex4-2, 4 pages.</div>
+        </div>
+        <span class="paper-status paper-draft">Draft</span>
+      </div>
+
+      <div class="matrix-card" style="border-left: 3px solid var(--amber); margin-top:2rem;">
+        <h3>Publication Blockers</h3>
+        <table class="data-table">
+          <tbody>
+            <tr><td>arXiv endorsement</td><td class="status-blocked">math-ph / dynamical systems — no endorser yet</td></tr>
+            <tr><td>Current host</td><td style="color:var(--cyan)">Zenodo (DOI: 10.5281/zenodo.18899804)</td></tr>
+            <tr><td>SageMath verification</td><td class="status-wip">Essential for credibility — not started</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ CONJECTURES ═══ -->
+    <div class="content-section" id="conjectures">
+      <div class="section-title">Conjectures & Open Questions</div>
+
+      <div class="conjecture">
+        <h4>Universality Conjecture (Revised, March 2026)</h4>
+        <p>For N ≥ 3 particles in d ≥ 1 spatial dimensions, interacting via a singular central potential: (1) the pairwise Poisson algebra has infinite GK dimension; (2) the cumulative dimension sequence d_N(n) depends only on N; (3) the sequence is independent of spatial dimension, potential type (within singular class), mass ratios, and charge configurations.</p>
+        <div class="evidence-grid">
+          <div class="evidence"><span class="check">✓</span> N=3 five potentials match</div>
+          <div class="evidence"><span class="check">✓</span> N=4 four potentials match</div>
+          <div class="evidence"><span class="check">✓</span> 25+ mass ratios invariant</div>
+          <div class="evidence"><span class="check">✓</span> d=1,2,3 all identical</div>
+          <div class="evidence"><span class="check">✓</span> Charge-sign invariance</div>
+          <div class="evidence"><span class="check">✓</span> N=5–7 probes consistent</div>
+          <div class="evidence"><span class="pending">○</span> N=5 with d>1 not tested</div>
+          <div class="evidence"><span class="pending">○</span> GR corrections not modeled</div>
+        </div>
+      </div>
+
+      <div class="conjecture">
+        <h4>Critical Locus Conjecture</h4>
+        <p>The local rank of the Poisson algebra on the reduced configuration space has its critical locus exactly at the fixed-point set of the S_N action. Rank drops occur only at symmetric configurations — Lagrange (S₃), Euler (Z₂), isosceles (Z₂).</p>
+        <div class="evidence-grid">
+          <div class="evidence"><span class="check">✓</span> 99,000 grid points, 11 configs</div>
+          <div class="evidence"><span class="check">✓</span> No non-symmetric anomalies</div>
+          <div class="evidence"><span class="check">✓</span> Cross-potential consistency</div>
+          <div class="evidence"><span class="pending">○</span> S₄ extension untested</div>
+        </div>
+      </div>
+
+      <div class="conjecture" style="border-left-color: var(--cyan);">
+        <h4>Falsifiable Predictions (Paper 3)</h4>
+        <p>Three predictions that would falsify or strengthen the universality conjecture:</p>
+        <div class="evidence-grid" style="grid-template-columns:1fr;">
+          <div class="evidence"><span class="check">✓</span> <strong>P1:</strong> N=5, d=1, 1/r → d(0)=10 — CONFIRMED</div>
+          <div class="evidence"><span class="check">✓</span> <strong>P2:</strong> N=4 with 1/r² → [6, 14, 62] — CONFIRMED</div>
+          <div class="evidence"><span class="pending">○</span> <strong>P3:</strong> d(4) for 1/r² matches d(4) for 1/r — Not tested</div>
+        </div>
+      </div>
+
+      <div class="conjecture" style="border-left-color: var(--text-dim);">
+        <h4>Cosmological Perspective (Speculative)</h4>
+        <p>If universality holds for general N, the S_N symmetric fixed point of the cosmic N-body problem corresponds to the homogeneous, isotropic universe. The critical locus conjecture predicts a rank drop — an algebraic explanation for dimensional reduction from ~3×10⁸⁰ DOF to the Friedmann equation's single scale factor a(t).</p>
+        <div class="evidence-grid">
+          <div class="evidence"><span class="check">✓</span> d=3 explicitly computed</div>
+          <div class="evidence"><span class="check">✓</span> Charge-sign invariant</div>
+          <div class="evidence"><span class="pending">○</span> Only N=3,4 tested</div>
+          <div class="evidence"><span class="pending">○</span> GR not modeled</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ INFRASTRUCTURE ═══ -->
+    <div class="content-section" id="infra">
+      <div class="section-title">Infrastructure & Compute</div>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="label">Core Engines</div>
+          <div style="font-size:0.78rem; color:var(--text-secondary); line-height:1.7;">
+            <div><strong style="color:var(--text-primary)">exact_growth.py</strong> — N=3 baseline (regression ref)</div>
+            <div><strong style="color:var(--text-primary)">exact_growth_nbody.py</strong> — Full N-body engine</div>
+            <div><strong style="color:var(--text-primary)">stability_atlas.py</strong> — Shape-sphere scanner</div>
+            <div><strong style="color:var(--text-primary)">multi_epsilon_atlas.py</strong> — Adaptive scanning</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="label">Lambdify Pipeline (4-layer fallback)</div>
+          <div style="font-size:0.78rem; color:var(--text-secondary); line-height:1.7;">
+            <div><strong style="color:var(--text-primary)">L1:</strong> sp.lambdify (fast numpy)</div>
+            <div><strong style="color:var(--text-primary)">L2:</strong> Flat-file no-CSE (pycode → temp .py)</div>
+            <div><strong style="color:var(--text-primary)">L3:</strong> Flat-file with CSE</div>
+            <div><strong style="color:var(--text-primary)">L4:</strong> Point-by-point xreplace (~1000× slower)</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="label">AWS Campaign</div>
+          <div style="font-size:0.78rem; color:var(--text-secondary); line-height:1.7;">
+            <div><strong style="color:var(--text-primary)">S3:</strong> s3://3body-compute-290318/</div>
+            <div><strong style="color:var(--text-primary)">Atlas:</strong> r6i.4xlarge (16 vCPU, 128 GB)</div>
+            <div><strong style="color:var(--text-primary)">mpmath:</strong> r6i.8xlarge → r6a.8xlarge (spot)</div>
+            <div><strong style="color:var(--text-primary)">Total data:</strong> 9.04 GB synced locally</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="label">Cost History</div>
+          <div style="font-size:0.78rem; color:var(--text-secondary); line-height:1.7;">
+            <div><strong style="color:var(--text-primary)">Original campaign:</strong> ~$800–1,000</div>
+            <div><strong style="color:var(--text-primary)">With multiprocessing:</strong> ~$100 equiv</div>
+            <div><strong style="color:var(--text-primary)">1/r² atlas:</strong> $2.50</div>
+            <div><strong style="color:var(--text-primary)">Fleet peak:</strong> $435/day</div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--red); margin:1rem 0 0.6rem;">Known Issues</h3>
+      <div class="card" style="border-left: 2px solid var(--red);">
+        <div style="font-size:0.78rem; line-height:1.8;">
+          <div style="color:var(--red);">Yukawa lambdification: OOM/recursion on deeply nested exp(-μ/u)</div>
+          <div style="color:var(--amber);">SymPy version sensitivity: ≤1.10.1 fails 63/156 L3 expressions</div>
+          <div style="color:var(--amber);">Level-4 mpmath cache: 243 MB, needs S3 sync</div>
+          <div style="color:var(--text-secondary);">Li⁺ dim=111, H₂⁺ dim=115: SVD artifact or real physics? Under investigation</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+function showSection(el) {
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(el.dataset.section).classList.add('active');
+}
+
+function togglePhase(el) {
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>

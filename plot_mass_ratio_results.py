@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch
 
 # Load main sweep data
-with open("mass_ratio_sweep.json") as f:
+with open("data/mass_ratio_sweep.json") as f:
     sweep_main = json.load(f)
 
 # Load small-m3 data
-with open("sweep_small_m3.json") as f:
+with open("data/sweep_small_m3.json") as f:
     sweep_small = json.load(f)
 
 # Combine and sort all sweep data
@@ -156,9 +156,9 @@ ax4.text(0.05, 0.95, summary_text, transform=ax4.transAxes,
 ax4.set_title("D: Conclusions", fontsize=11)
 
 plt.tight_layout(rect=[0, 0, 1, 0.94])
-plt.savefig("mass_ratio_invariance.png", dpi=200, bbox_inches="tight",
+plt.savefig("figures/mass_ratio_invariance.png", dpi=200, bbox_inches="tight",
             facecolor="white")
-print("Saved: mass_ratio_invariance.png")
+print("Saved: figures/mass_ratio_invariance.png")
 
 # Also save a clean version of the complete data
 complete = {
@@ -172,6 +172,6 @@ complete = {
     "conclusion": "mass_invariant",
     "universal_sequence": [3, 6, 17, 116],
 }
-with open("mass_ratio_complete.json", "w") as f:
+with open("data/mass_ratio_complete.json", "w") as f:
     json.dump(complete, f, indent=2)
-print("Saved: mass_ratio_complete.json")
+print("Saved: data/mass_ratio_complete.json")

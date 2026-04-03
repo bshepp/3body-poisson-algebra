@@ -1,0 +1,531 @@
+
+######################################################################
+# TARGETED ADAPTIVE SCANS
+# Regions: lagrange, euler_strip, charge_hotspot, tier_cluster, isosceles_ridge, small_mu
+# Configs: 1
+# Total points per config: 9000
+# Workers: 31
+# Estimated time per config: ~0.4 hrs (31 workers)
+######################################################################
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/coulomb_+2_-1_-1/lagrange/ -> atlas_targeted/coulomb_+2_-1_-1/lagrange/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: lagrange
+  Lagrange equilateral neighborhood (5-tier point nearby)
+  Potential: 1/r (Newton) Coulomb (+2, -1, -1)
+  Charges: [2, -1, -1]
+  mu: [0.850, 1.150]  phi: [50, 95] deg
+  Grid: 50x50 = 2500 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: Equilateral triangle, 5-tier point at (0.99, 84deg), tier count transition zone
+======================================================================
+
+  Building symbolic algebra for 1/r (Newton) Coulomb (+2, -1, -1)...
+  Building symbolic generators for Coulomb 1/r charges=(+2,-1,-1)...
+    Level 2: 12 generators (0 zero)
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.7s]
+      40/156  [107.1s]
+      60/156  [226.0s]
+      80/156  [415.3s]
+      100/156  [562.8s]
+      120/156  [652.6s]
+      140/156  [731.9s]
+      156/156  [755.9s]
+    Total lambdify time: 756.4s
+  Algebra ready (1155.2s)
+  Algebra ready (1155.2s, 156 generators)
+  Starting worker pool (31 workers)...
+  Row   1/50  mu=0.850  [   50/2500]  row=30.5s  ETA=25m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=4.0
+  Row   2/50  mu=0.856  [  100/2500]  row=30.3s  ETA=24m  ranks=[116,116]  gap_score=[18.4,18.8]  avg_eps=3.9
+  Row   3/50  mu=0.862  [  150/2500]  row=32.1s  ETA=24m  ranks=[116,116]  gap_score=[18.4,18.8]  avg_eps=4.0
+  Row   4/50  mu=0.868  [  200/2500]  row=31.7s  ETA=24m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=4.0
+  Row   5/50  mu=0.874  [  250/2500]  row=28.8s  ETA=23m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=3.8
+  Row   6/50  mu=0.881  [  300/2500]  row=28.0s  ETA=22m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.6
+  Row   7/50  mu=0.887  [  350/2500]  row=27.9s  ETA=22m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.5
+  Row   8/50  mu=0.893  [  400/2500]  row=26.5s  ETA=21m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=3.4
+  Row   9/50  mu=0.899  [  450/2500]  row=28.1s  ETA=20m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=3.4
+  Row  10/50  mu=0.905  [  500/2500]  row=27.4s  ETA=20m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=3.4
+  Row  11/50  mu=0.911  [  550/2500]  row=26.4s  ETA=19m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.2
+  Row  12/50  mu=0.917  [  600/2500]  row=22.8s  ETA=18m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.0
+  Row  13/50  mu=0.923  [  650/2500]  row=26.9s  ETA=18m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.0
+  Row  14/50  mu=0.930  [  700/2500]  row=26.0s  ETA=17m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.0
+  Row  15/50  mu=0.936  [  750/2500]  row=24.3s  ETA=16m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.0
+  Row  16/50  mu=0.942  [  800/2500]  row=22.6s  ETA=16m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.0
+  Row  17/50  mu=0.948  [  850/2500]  row=22.6s  ETA=15m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.0
+  Row  18/50  mu=0.954  [  900/2500]  row=22.9s  ETA=15m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.0
+  Row  19/50  mu=0.960  [  950/2500]  row=22.7s  ETA=14m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.0
+  Row  20/50  mu=0.966  [ 1000/2500]  row=22.8s  ETA=13m  ranks=[116,116]  gap_score=[18.2,18.6]  avg_eps=3.0
+  Row  21/50  mu=0.972  [ 1050/2500]  row=24.2s  ETA=13m  ranks=[116,116]  gap_score=[18.2,18.6]  avg_eps=3.0
+  Row  22/50  mu=0.979  [ 1100/2500]  row=22.3s  ETA=12m  ranks=[116,116]  gap_score=[18.2,18.7]  avg_eps=3.0
+  Row  23/50  mu=0.985  [ 1150/2500]  row=22.8s  ETA=12m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=3.1
+  Row  24/50  mu=0.991  [ 1200/2500]  row=22.8s  ETA=11m  ranks=[116,116]  gap_score=[18.2,18.8]  avg_eps=3.1
+  Row  25/50  mu=0.997  [ 1250/2500]  row=22.9s  ETA=11m  ranks=[116,116]  gap_score=[18.2,18.8]  avg_eps=3.1
+  Row  26/50  mu=1.003  [ 1300/2500]  row=23.0s  ETA=10m  ranks=[116,116]  gap_score=[18.2,18.8]  avg_eps=3.1
+  Row  27/50  mu=1.009  [ 1350/2500]  row=23.1s  ETA=10m  ranks=[116,116]  gap_score=[18.2,18.8]  avg_eps=3.1
+  Row  28/50  mu=1.015  [ 1400/2500]  row=23.1s  ETA=9m  ranks=[116,116]  gap_score=[18.2,18.7]  avg_eps=3.1
+  Row  29/50  mu=1.021  [ 1450/2500]  row=23.3s  ETA=9m  ranks=[116,116]  gap_score=[18.2,18.7]  avg_eps=3.1
+  Row  30/50  mu=1.028  [ 1500/2500]  row=23.0s  ETA=9m  ranks=[116,116]  gap_score=[18.2,18.6]  avg_eps=3.0
+  Row  31/50  mu=1.034  [ 1550/2500]  row=23.0s  ETA=8m  ranks=[116,116]  gap_score=[18.2,18.6]  avg_eps=3.0
+  Row  32/50  mu=1.040  [ 1600/2500]  row=23.1s  ETA=8m  ranks=[116,116]  gap_score=[18.2,18.6]  avg_eps=3.0
+  Row  33/50  mu=1.046  [ 1650/2500]  row=24.6s  ETA=7m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.1
+  Row  34/50  mu=1.052  [ 1700/2500]  row=24.4s  ETA=7m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.0
+  Row  35/50  mu=1.058  [ 1750/2500]  row=23.0s  ETA=6m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.1
+  Row  36/50  mu=1.064  [ 1800/2500]  row=24.6s  ETA=6m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.1
+  Row  37/50  mu=1.070  [ 1850/2500]  row=24.2s  ETA=5m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.0
+  Row  38/50  mu=1.077  [ 1900/2500]  row=27.0s  ETA=5m  ranks=[116,116]  gap_score=[18.3,18.8]  avg_eps=3.3
+  Row  39/50  mu=1.083  [ 1950/2500]  row=34.2s  ETA=5m  ranks=[112,116]  gap_score=[18.3,18.8]  avg_eps=3.5
+  Row  40/50  mu=1.089  [ 2000/2500]  row=34.4s  ETA=4m  ranks=[113,116]  gap_score=[18.3,18.8]  avg_eps=3.8
+  Row  41/50  mu=1.095  [ 2050/2500]  row=32.9s  ETA=4m  ranks=[112,116]  gap_score=[18.3,18.8]  avg_eps=3.6
+  Row  42/50  mu=1.101  [ 2100/2500]  row=30.7s  ETA=3m  ranks=[114,116]  gap_score=[18.3,18.8]  avg_eps=3.6
+  Row  43/50  mu=1.107  [ 2150/2500]  row=35.5s  ETA=3m  ranks=[112,116]  gap_score=[18.3,18.8]  avg_eps=4.0
+  Row  44/50  mu=1.113  [ 2200/2500]  row=36.4s  ETA=3m  ranks=[112,116]  gap_score=[18.3,18.9]  avg_eps=4.1
+  Row  45/50  mu=1.119  [ 2250/2500]  row=36.5s  ETA=2m  ranks=[112,116]  gap_score=[18.3,18.9]  avg_eps=4.4
+  Row  46/50  mu=1.126  [ 2300/2500]  row=33.5s  ETA=2m  ranks=[115,116]  gap_score=[18.3,18.9]  avg_eps=4.4
+  Row  47/50  mu=1.132  [ 2350/2500]  row=37.9s  ETA=1m  ranks=[112,116]  gap_score=[18.3,18.9]  avg_eps=4.9
+  Row  48/50  mu=1.138  [ 2400/2500]  row=32.6s  ETA=1m  ranks=[116,116]  gap_score=[18.3,18.9]  avg_eps=4.2
+  Row  49/50  mu=1.144  [ 2450/2500]  row=39.2s  ETA=0m  ranks=[112,116]  gap_score=[18.3,18.8]  avg_eps=4.9
+  Row  50/50  mu=1.150  [ 2500/2500]  row=35.2s  ETA=0m  ranks=[114,116]  gap_score=[18.3,18.9]  avg_eps=4.7
+
+  lagrange complete: 1387s (23.1m)
+  Rank range: [112, 116]
+  Optimal eps: [7.60e-05, 5.00e-03]
+  Gap score: [18.21, 18.89]
+  Tier count: [2, 5], median=2.0
+  Rank distribution: 112:10, 113:1, 114:5, 115:1, 116:2483
+
+  Verification PASS: atlas_targeted/coulomb_+2_-1_-1/lagrange
+    Rank distribution: {112: 10, 113: 1, 114: 5, 115: 1, 116: 2483}
+    gap_map: min=5.335e+02 max=7.883e+08 mean=2.311e+08
+    optimal_eps_map: min=7.600e-05 max=5.000e-03 mean=4.437e-03
+    gap_score_map: min=1.821e+01 max=1.889e+01 mean=1.852e+01
+    Report saved: atlas_targeted/coulomb_+2_-1_-1/lagrange/verification_report.json
+
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/coulomb_+2_-1_-1/euler_strip/ -> atlas_targeted/coulomb_+2_-1_-1/euler_strip/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: euler_strip
+  Euler collinear / low-phi strip with anomalous ranks
+  Potential: 1/r (Newton) Coulomb (+2, -1, -1)
+  Charges: [2, -1, -1]
+  mu: [0.700, 1.300]  phi: [3, 20] deg
+  Grid: 40x40 = 1600 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: All unusual ranks (117-124) and lowest gap scores cluster here; near-collinear configurations
+======================================================================
+
+  Building symbolic algebra for 1/r (Newton) Coulomb (+2, -1, -1)...
+  Building symbolic generators for Coulomb 1/r charges=(+2,-1,-1)...
+    Level 2: 12 generators (0 zero)
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.6s]
+      40/156  [107.5s]
+      60/156  [227.4s]
+      80/156  [417.5s]
+      100/156  [557.1s]
+      120/156  [642.2s]
+      140/156  [716.9s]
+      156/156  [739.7s]
+    Total lambdify time: 740.2s
+  Algebra ready (856.9s)
+  Algebra ready (856.9s, 156 generators)
+  Starting worker pool (31 workers)...
+  Row   1/40  mu=0.700  [   40/1600]  row=18.1s  ETA=12m  ranks=[116,116]  gap_score=[17.4,17.9]  avg_eps=3.0
+  Row   2/40  mu=0.715  [   80/1600]  row=18.2s  ETA=11m  ranks=[116,116]  gap_score=[17.4,17.9]  avg_eps=3.0
+  Row   3/40  mu=0.731  [  120/1600]  row=18.2s  ETA=11m  ranks=[116,116]  gap_score=[17.4,17.9]  avg_eps=3.0
+  Row   4/40  mu=0.746  [  160/1600]  row=18.2s  ETA=11m  ranks=[116,116]  gap_score=[17.3,17.8]  avg_eps=3.0
+  Row   5/40  mu=0.762  [  200/1600]  row=18.2s  ETA=11m  ranks=[116,116]  gap_score=[17.3,17.8]  avg_eps=3.0
+  Row   6/40  mu=0.777  [  240/1600]  row=18.3s  ETA=10m  ranks=[116,117]  gap_score=[17.3,17.9]  avg_eps=3.1
+  Row   7/40  mu=0.792  [  280/1600]  row=18.3s  ETA=10m  ranks=[116,117]  gap_score=[17.3,17.8]  avg_eps=3.1
+  Row   8/40  mu=0.808  [  320/1600]  row=18.3s  ETA=10m  ranks=[116,117]  gap_score=[17.2,17.8]  avg_eps=3.1
+  Row   9/40  mu=0.823  [  360/1600]  row=18.3s  ETA=10m  ranks=[116,117]  gap_score=[17.2,17.7]  avg_eps=3.1
+  Row  10/40  mu=0.838  [  400/1600]  row=18.3s  ETA=9m  ranks=[116,117]  gap_score=[17.2,17.7]  avg_eps=3.2
+  Row  11/40  mu=0.854  [  440/1600]  row=18.2s  ETA=9m  ranks=[116,120]  gap_score=[17.1,17.7]  avg_eps=3.0
+  Row  12/40  mu=0.869  [  480/1600]  row=20.1s  ETA=9m  ranks=[116,122]  gap_score=[17.0,17.8]  avg_eps=3.1
+  Row  13/40  mu=0.885  [  520/1600]  row=18.2s  ETA=8m  ranks=[116,122]  gap_score=[16.9,17.7]  avg_eps=3.1
+  Row  14/40  mu=0.900  [  560/1600]  row=18.3s  ETA=8m  ranks=[116,123]  gap_score=[16.5,17.7]  avg_eps=3.1
+  Row  15/40  mu=0.915  [  600/1600]  row=18.3s  ETA=8m  ranks=[116,127]  gap_score=[16.4,17.9]  avg_eps=3.2
+  Row  16/40  mu=0.931  [  640/1600]  row=18.3s  ETA=7m  ranks=[116,128]  gap_score=[16.4,17.8]  avg_eps=3.2
+  Row  17/40  mu=0.946  [  680/1600]  row=20.0s  ETA=7m  ranks=[116,130]  gap_score=[16.0,17.8]  avg_eps=3.3
+  Row  18/40  mu=0.962  [  720/1600]  row=20.2s  ETA=7m  ranks=[116,131]  gap_score=[16.0,17.7]  avg_eps=3.4
+  Row  19/40  mu=0.977  [  760/1600]  row=18.7s  ETA=7m  ranks=[116,131]  gap_score=[16.0,17.7]  avg_eps=3.3
+  Row  20/40  mu=0.992  [  800/1600]  row=22.2s  ETA=6m  ranks=[116,131]  gap_score=[16.3,17.5]  avg_eps=3.4
+  Row  21/40  mu=1.008  [  840/1600]  row=18.7s  ETA=6m  ranks=[116,131]  gap_score=[16.3,17.6]  avg_eps=3.3
+  Row  22/40  mu=1.023  [  880/1600]  row=21.9s  ETA=6m  ranks=[116,131]  gap_score=[16.3,17.7]  avg_eps=3.3
+  Row  23/40  mu=1.038  [  920/1600]  row=19.3s  ETA=5m  ranks=[116,131]  gap_score=[16.0,17.8]  avg_eps=3.5
+  Row  24/40  mu=1.054  [  960/1600]  row=19.8s  ETA=5m  ranks=[116,129]  gap_score=[16.0,17.7]  avg_eps=3.3
+  Row  25/40  mu=1.069  [ 1000/1600]  row=21.9s  ETA=5m  ranks=[116,129]  gap_score=[16.0,17.8]  avg_eps=3.4
+  Row  26/40  mu=1.085  [ 1040/1600]  row=18.3s  ETA=4m  ranks=[116,128]  gap_score=[16.4,17.8]  avg_eps=3.1
+  Row  27/40  mu=1.100  [ 1080/1600]  row=21.9s  ETA=4m  ranks=[116,126]  gap_score=[16.4,17.7]  avg_eps=3.2
+  Row  28/40  mu=1.115  [ 1120/1600]  row=18.3s  ETA=4m  ranks=[116,122]  gap_score=[16.7,17.7]  avg_eps=3.1
+  Row  29/40  mu=1.131  [ 1160/1600]  row=18.2s  ETA=4m  ranks=[116,122]  gap_score=[16.8,17.7]  avg_eps=3.1
+  Row  30/40  mu=1.146  [ 1200/1600]  row=18.3s  ETA=3m  ranks=[116,122]  gap_score=[16.9,17.6]  avg_eps=3.1
+  Row  31/40  mu=1.162  [ 1240/1600]  row=18.2s  ETA=3m  ranks=[116,122]  gap_score=[17.0,17.7]  avg_eps=3.1
+  Row  32/40  mu=1.177  [ 1280/1600]  row=18.2s  ETA=3m  ranks=[116,119]  gap_score=[17.0,17.6]  avg_eps=3.1
+  Row  33/40  mu=1.192  [ 1320/1600]  row=19.7s  ETA=2m  ranks=[116,117]  gap_score=[17.1,17.7]  avg_eps=3.1
+  Row  34/40  mu=1.208  [ 1360/1600]  row=18.3s  ETA=2m  ranks=[116,117]  gap_score=[17.1,17.6]  avg_eps=3.1
+  Row  35/40  mu=1.223  [ 1400/1600]  row=18.2s  ETA=2m  ranks=[116,117]  gap_score=[17.2,17.7]  avg_eps=3.1
+  Row  36/40  mu=1.238  [ 1440/1600]  row=18.3s  ETA=1m  ranks=[116,117]  gap_score=[17.1,17.6]  avg_eps=3.1
+  Row  37/40  mu=1.254  [ 1480/1600]  row=18.3s  ETA=1m  ranks=[116,117]  gap_score=[17.0,17.6]  avg_eps=3.1
+  Row  38/40  mu=1.269  [ 1520/1600]  row=18.3s  ETA=1m  ranks=[116,117]  gap_score=[17.2,17.7]  avg_eps=3.1
+  Row  39/40  mu=1.285  [ 1560/1600]  row=18.3s  ETA=0m  ranks=[116,117]  gap_score=[17.2,17.7]  avg_eps=3.1
+  Row  40/40  mu=1.300  [ 1600/1600]  row=18.3s  ETA=0m  ranks=[116,117]  gap_score=[17.2,17.7]  avg_eps=3.1
+
+  euler_strip complete: 765s (12.8m)
+  Rank range: [116, 131]
+  Optimal eps: [6.16e-04, 5.00e-03]
+  Gap score: [16.00, 17.94]
+  Tier count: [1, 4], median=3.0
+  Rank distribution: 116:883, 117:442, 118:21, 119:10, 120:12, 121:11, 122:129, 123:6, 124:8, 125:7, 126:8, 127:11, 128:21, 129:11, 130:6, 131:14
+
+  Verification PASS: atlas_targeted/coulomb_+2_-1_-1/euler_strip
+    Rank distribution: {116: 883, 117: 442, 118: 21, 119: 10, 120: 12, 121: 11, 122: 129, 123: 6, 124: 8, 125: 7, 126: 8, 127: 11, 128: 21, 129: 11, 130: 6, 131: 14}
+    gap_map: min=8.390e+00 max=2.857e+06 mean=1.098e+05
+    optimal_eps_map: min=6.164e-04 max=5.000e-03 mean=4.744e-03
+    gap_score_map: min=1.600e+01 max=1.794e+01 mean=1.738e+01
+    Report saved: atlas_targeted/coulomb_+2_-1_-1/euler_strip/verification_report.json
+
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/coulomb_+2_-1_-1/charge_hotspot/ -> atlas_targeted/coulomb_+2_-1_-1/charge_hotspot/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: charge_hotspot
+  Maximum charge-sensitivity region
+  Potential: 1/r (Newton) Coulomb (+2, -1, -1)
+  Charges: [2, -1, -1]
+  mu: [0.500, 0.850]  phi: [85, 105] deg
+  Grid: 40x40 = 1600 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: Largest gap score difference between charged and uncharged (delta=-2.64 at mu=0.65, phi=94deg); helium needs finest scale (eps=9.35e-4) here
+======================================================================
+
+  Building symbolic algebra for 1/r (Newton) Coulomb (+2, -1, -1)...
+  Building symbolic generators for Coulomb 1/r charges=(+2,-1,-1)...
+    Level 2: 12 generators (0 zero)
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.6s]
+      40/156  [101.5s]
+      60/156  [214.1s]
+      80/156  [391.0s]
+      100/156  [529.2s]
+      120/156  [614.3s]
+      140/156  [689.1s]
+      156/156  [711.8s]
+    Total lambdify time: 712.3s
+  Algebra ready (825.9s)
+  Algebra ready (825.9s, 156 generators)
+  Starting worker pool (31 workers)...
+  Row   1/40  mu=0.500  [   40/1600]  row=18.4s  ETA=12m  ranks=[116,116]  gap_score=[18.5,18.6]  avg_eps=3.0
+  Row   2/40  mu=0.509  [   80/1600]  row=18.3s  ETA=12m  ranks=[116,116]  gap_score=[18.5,18.6]  avg_eps=3.0
+  Row   3/40  mu=0.518  [  120/1600]  row=18.3s  ETA=11m  ranks=[116,116]  gap_score=[18.5,18.6]  avg_eps=3.0
+  Row   4/40  mu=0.527  [  160/1600]  row=18.5s  ETA=11m  ranks=[116,116]  gap_score=[18.5,18.6]  avg_eps=3.1
+  Row   5/40  mu=0.536  [  200/1600]  row=18.5s  ETA=11m  ranks=[116,116]  gap_score=[18.5,18.6]  avg_eps=3.1
+  Row   6/40  mu=0.545  [  240/1600]  row=18.6s  ETA=11m  ranks=[116,116]  gap_score=[18.6,18.6]  avg_eps=3.2
+  Row   7/40  mu=0.554  [  280/1600]  row=18.5s  ETA=10m  ranks=[116,116]  gap_score=[18.6,18.6]  avg_eps=3.2
+  Row   8/40  mu=0.563  [  320/1600]  row=20.2s  ETA=10m  ranks=[116,116]  gap_score=[18.5,18.6]  avg_eps=3.5
+  Row   9/40  mu=0.572  [  360/1600]  row=20.2s  ETA=10m  ranks=[116,116]  gap_score=[18.6,18.7]  avg_eps=3.5
+  Row  10/40  mu=0.581  [  400/1600]  row=20.0s  ETA=10m  ranks=[116,116]  gap_score=[18.6,18.7]  avg_eps=3.5
+  Row  11/40  mu=0.590  [  440/1600]  row=19.4s  ETA=9m  ranks=[116,116]  gap_score=[18.6,18.7]  avg_eps=3.4
+  Row  12/40  mu=0.599  [  480/1600]  row=20.5s  ETA=9m  ranks=[116,116]  gap_score=[18.6,18.7]  avg_eps=3.6
+  Row  13/40  mu=0.608  [  520/1600]  row=20.7s  ETA=9m  ranks=[116,116]  gap_score=[18.6,18.7]  avg_eps=3.8
+  Row  14/40  mu=0.617  [  560/1600]  row=20.1s  ETA=8m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=3.5
+  Row  15/40  mu=0.626  [  600/1600]  row=21.8s  ETA=8m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.0
+  Row  16/40  mu=0.635  [  640/1600]  row=21.2s  ETA=8m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=3.8
+  Row  17/40  mu=0.644  [  680/1600]  row=24.2s  ETA=8m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=3.9
+  Row  18/40  mu=0.653  [  720/1600]  row=21.7s  ETA=7m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=3.9
+  Row  19/40  mu=0.662  [  760/1600]  row=22.5s  ETA=7m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.0
+  Row  20/40  mu=0.671  [  800/1600]  row=25.2s  ETA=7m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.0
+  Row  21/40  mu=0.679  [  840/1600]  row=24.9s  ETA=7m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=3.9
+  Row  22/40  mu=0.688  [  880/1600]  row=24.2s  ETA=6m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=3.9
+  Row  23/40  mu=0.697  [  920/1600]  row=25.4s  ETA=6m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.2
+  Row  24/40  mu=0.706  [  960/1600]  row=26.2s  ETA=6m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.2
+  Row  25/40  mu=0.715  [ 1000/1600]  row=25.2s  ETA=5m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.0
+  Row  26/40  mu=0.724  [ 1040/1600]  row=25.4s  ETA=5m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.2
+  Row  27/40  mu=0.733  [ 1080/1600]  row=25.6s  ETA=5m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.2
+  Row  28/40  mu=0.742  [ 1120/1600]  row=26.3s  ETA=4m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.2
+  Row  29/40  mu=0.751  [ 1160/1600]  row=27.7s  ETA=4m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.4
+  Row  30/40  mu=0.760  [ 1200/1600]  row=25.0s  ETA=4m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.0
+  Row  31/40  mu=0.769  [ 1240/1600]  row=25.2s  ETA=3m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.1
+  Row  32/40  mu=0.778  [ 1280/1600]  row=25.9s  ETA=3m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.2
+  Row  33/40  mu=0.787  [ 1320/1600]  row=25.3s  ETA=3m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.0
+  Row  34/40  mu=0.796  [ 1360/1600]  row=24.7s  ETA=2m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=3.9
+  Row  35/40  mu=0.805  [ 1400/1600]  row=24.1s  ETA=2m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=3.8
+  Row  36/40  mu=0.814  [ 1440/1600]  row=26.1s  ETA=2m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.2
+  Row  37/40  mu=0.823  [ 1480/1600]  row=24.4s  ETA=1m  ranks=[116,116]  gap_score=[18.5,18.8]  avg_eps=3.8
+  Row  38/40  mu=0.832  [ 1520/1600]  row=24.6s  ETA=1m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.0
+  Row  39/40  mu=0.841  [ 1560/1600]  row=21.8s  ETA=0m  ranks=[116,116]  gap_score=[18.6,18.8]  avg_eps=4.0
+  Row  40/40  mu=0.850  [ 1600/1600]  row=25.4s  ETA=0m  ranks=[116,116]  gap_score=[18.5,18.7]  avg_eps=4.1
+
+  charge_hotspot complete: 920s (15.3m)
+  Rank range: [116, 116]
+  Optimal eps: [2.16e-03, 5.00e-03]
+  Gap score: [18.52, 18.82]
+  Tier count: [2, 3], median=2.0
+  Rank distribution: 116:1600
+
+  Verification PASS: atlas_targeted/coulomb_+2_-1_-1/charge_hotspot
+    Rank distribution: {116: 1600}
+    gap_map: min=2.636e+07 max=9.726e+08 mean=3.055e+08
+    optimal_eps_map: min=2.164e-03 max=5.000e-03 mean=3.843e-03
+    gap_score_map: min=1.852e+01 max=1.882e+01 mean=1.864e+01
+    Report saved: atlas_targeted/coulomb_+2_-1_-1/charge_hotspot/verification_report.json
+
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/coulomb_+2_-1_-1/tier_cluster/ -> atlas_targeted/coulomb_+2_-1_-1/tier_cluster/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: tier_cluster
+  High-tier helium cluster (asymmetric from Lagrange)
+  Potential: 1/r (Newton) Coulomb (+2, -1, -1)
+  Charges: [2, -1, -1]
+  mu: [1.450, 1.900]  phi: [65, 85] deg
+  Grid: 40x40 = 1600 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: 18 points with 4 tiers in helium scan; this region has rich internal structure displaced from equilateral
+======================================================================
+
+  Building symbolic algebra for 1/r (Newton) Coulomb (+2, -1, -1)...
+  Building symbolic generators for Coulomb 1/r charges=(+2,-1,-1)...
+    Level 2: 12 generators (0 zero)
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.6s]
+      40/156  [102.4s]
+      60/156  [215.5s]
+      80/156  [393.4s]
+      100/156  [532.3s]
+      120/156  [617.7s]
+      140/156  [692.7s]
+      156/156  [715.6s]
+    Total lambdify time: 716.0s
+  Algebra ready (830.1s)
+  Algebra ready (830.1s, 156 generators)
+  Starting worker pool (31 workers)...
+  Row   1/40  mu=1.450  [   40/1600]  row=24.1s  ETA=16m  ranks=[116,116]  gap_score=[18.5,18.7]  avg_eps=3.9
+  Row   2/40  mu=1.462  [   80/1600]  row=23.9s  ETA=15m  ranks=[116,116]  gap_score=[18.5,18.7]  avg_eps=3.8
+  Row   3/40  mu=1.473  [  120/1600]  row=24.1s  ETA=15m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.9
+  Row   4/40  mu=1.485  [  160/1600]  row=24.2s  ETA=15m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.9
+  Row   5/40  mu=1.496  [  200/1600]  row=24.1s  ETA=14m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.9
+  Row   6/40  mu=1.508  [  240/1600]  row=24.0s  ETA=14m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.9
+  Row   7/40  mu=1.519  [  280/1600]  row=24.2s  ETA=13m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=4.0
+  Row   8/40  mu=1.531  [  320/1600]  row=24.1s  ETA=13m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.8
+  Row   9/40  mu=1.542  [  360/1600]  row=24.0s  ETA=13m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=3.9
+  Row  10/40  mu=1.554  [  400/1600]  row=26.2s  ETA=12m  ranks=[115,116]  gap_score=[18.3,18.7]  avg_eps=4.0
+  Row  11/40  mu=1.565  [  440/1600]  row=24.1s  ETA=12m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=4.0
+  Row  12/40  mu=1.577  [  480/1600]  row=27.7s  ETA=12m  ranks=[115,116]  gap_score=[18.3,18.7]  avg_eps=4.0
+  Row  13/40  mu=1.588  [  520/1600]  row=24.0s  ETA=11m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=3.9
+  Row  14/40  mu=1.600  [  560/1600]  row=24.0s  ETA=11m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=3.9
+  Row  15/40  mu=1.612  [  600/1600]  row=26.1s  ETA=10m  ranks=[115,116]  gap_score=[18.3,18.7]  avg_eps=4.0
+  Row  16/40  mu=1.623  [  640/1600]  row=31.6s  ETA=10m  ranks=[112,116]  gap_score=[18.4,18.9]  avg_eps=4.0
+  Row  17/40  mu=1.635  [  680/1600]  row=24.1s  ETA=10m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=4.0
+  Row  18/40  mu=1.646  [  720/1600]  row=31.5s  ETA=9m  ranks=[112,116]  gap_score=[18.3,18.9]  avg_eps=4.1
+  Row  19/40  mu=1.658  [  760/1600]  row=26.1s  ETA=9m  ranks=[115,116]  gap_score=[18.3,18.8]  avg_eps=4.0
+  Row  20/40  mu=1.669  [  800/1600]  row=31.9s  ETA=9m  ranks=[112,116]  gap_score=[18.4,18.7]  avg_eps=4.3
+  Row  21/40  mu=1.681  [  840/1600]  row=24.1s  ETA=8m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=4.0
+  Row  22/40  mu=1.692  [  880/1600]  row=31.8s  ETA=8m  ranks=[112,116]  gap_score=[18.2,18.9]  avg_eps=4.2
+  Row  23/40  mu=1.704  [  920/1600]  row=24.1s  ETA=7m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=3.9
+  Row  24/40  mu=1.715  [  960/1600]  row=24.0s  ETA=7m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=4.0
+  Row  25/40  mu=1.727  [ 1000/1600]  row=31.8s  ETA=7m  ranks=[112,116]  gap_score=[18.3,18.9]  avg_eps=4.4
+  Row  26/40  mu=1.738  [ 1040/1600]  row=29.9s  ETA=6m  ranks=[112,116]  gap_score=[18.3,18.7]  avg_eps=4.3
+  Row  27/40  mu=1.750  [ 1080/1600]  row=29.7s  ETA=6m  ranks=[112,116]  gap_score=[18.2,18.9]  avg_eps=4.1
+  Row  28/40  mu=1.762  [ 1120/1600]  row=24.1s  ETA=5m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=4.0
+  Row  29/40  mu=1.773  [ 1160/1600]  row=31.8s  ETA=5m  ranks=[112,116]  gap_score=[18.3,18.6]  avg_eps=4.3
+  Row  30/40  mu=1.785  [ 1200/1600]  row=26.0s  ETA=4m  ranks=[115,116]  gap_score=[18.3,18.8]  avg_eps=4.0
+  Row  31/40  mu=1.796  [ 1240/1600]  row=24.2s  ETA=4m  ranks=[116,116]  gap_score=[18.3,18.7]  avg_eps=4.0
+  Row  32/40  mu=1.808  [ 1280/1600]  row=24.0s  ETA=4m  ranks=[116,116]  gap_score=[18.3,18.6]  avg_eps=3.9
+  Row  33/40  mu=1.819  [ 1320/1600]  row=29.9s  ETA=3m  ranks=[112,116]  gap_score=[18.2,18.8]  avg_eps=4.4
+  Row  34/40  mu=1.831  [ 1360/1600]  row=24.3s  ETA=3m  ranks=[116,116]  gap_score=[18.2,18.6]  avg_eps=4.1
+  Row  35/40  mu=1.842  [ 1400/1600]  row=24.1s  ETA=2m  ranks=[116,116]  gap_score=[18.2,18.6]  avg_eps=4.0
+  Row  36/40  mu=1.854  [ 1440/1600]  row=26.1s  ETA=2m  ranks=[115,116]  gap_score=[18.2,18.8]  avg_eps=4.1
+  Row  37/40  mu=1.865  [ 1480/1600]  row=25.7s  ETA=1m  ranks=[116,116]  gap_score=[18.2,18.6]  avg_eps=3.9
+  Row  38/40  mu=1.877  [ 1520/1600]  row=31.7s  ETA=1m  ranks=[112,116]  gap_score=[18.2,18.8]  avg_eps=4.4
+  Row  39/40  mu=1.888  [ 1560/1600]  row=26.4s  ETA=0m  ranks=[115,116]  gap_score=[18.2,18.8]  avg_eps=4.3
+  Row  40/40  mu=1.900  [ 1600/1600]  row=32.0s  ETA=0m  ranks=[112,116]  gap_score=[18.2,18.7]  avg_eps=4.8
+
+  tier_cluster complete: 1070s (17.8m)
+  Rank range: [112, 116]
+  Optimal eps: [5.00e-05, 5.00e-03]
+  Gap score: [18.17, 18.89]
+  Tier count: [2, 6], median=3.0
+  Rank distribution: 112:12, 113:1, 114:1, 115:16, 116:1570
+
+  Verification PASS: atlas_targeted/coulomb_+2_-1_-1/tier_cluster
+    Rank distribution: {112: 12, 113: 1, 114: 1, 115: 16, 116: 1570}
+    gap_map: min=3.826e+02 max=1.098e+08 mean=1.512e+07
+    optimal_eps_map: min=5.000e-05 max=5.000e-03 mean=3.392e-03
+    gap_score_map: min=1.817e+01 max=1.889e+01 mean=1.848e+01
+    Report saved: atlas_targeted/coulomb_+2_-1_-1/tier_cluster/verification_report.json
+
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/coulomb_+2_-1_-1/isosceles_ridge/ -> atlas_targeted/coulomb_+2_-1_-1/isosceles_ridge/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: isosceles_ridge
+  mu=1 isosceles symmetry line
+  Potential: 1/r (Newton) Coulomb (+2, -1, -1)
+  Charges: [2, -1, -1]
+  mu: [0.900, 1.100]  phi: [10, 170] deg
+  Grid: 10x80 = 800 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: Narrow strip along mu=1 isosceles line; tracks how tier structure evolves along the symmetry curve
+======================================================================
+
+  Building symbolic algebra for 1/r (Newton) Coulomb (+2, -1, -1)...
+  Building symbolic generators for Coulomb 1/r charges=(+2,-1,-1)...
+    Level 2: 12 generators (0 zero)
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.6s]
+      40/156  [102.1s]
+      60/156  [214.8s]
+      80/156  [392.4s]
+      100/156  [530.1s]
+      120/156  [616.2s]
+      140/156  [691.3s]
+      156/156  [714.1s]
+    Total lambdify time: 714.6s
+  Algebra ready (828.8s)
+  Algebra ready (828.8s, 156 generators)
+  Starting worker pool (31 workers)...
+  Row   1/10  mu=0.900  [   80/800]  row=33.4s  ETA=5m  ranks=[116,117]  gap_score=[17.4,18.8]  avg_eps=3.1
+  Row   2/10  mu=0.922  [  160/800]  row=33.6s  ETA=4m  ranks=[116,117]  gap_score=[17.2,18.6]  avg_eps=3.1
+  Row   3/10  mu=0.944  [  240/800]  row=33.3s  ETA=4m  ranks=[116,117]  gap_score=[17.2,18.6]  avg_eps=3.1
+  Row   4/10  mu=0.967  [  320/800]  row=32.7s  ETA=3m  ranks=[116,117]  gap_score=[17.3,18.6]  avg_eps=3.1
+  Row   5/10  mu=0.989  [  400/800]  row=32.8s  ETA=3m  ranks=[116,119]  gap_score=[17.1,18.7]  avg_eps=3.1
+  Row   6/10  mu=1.011  [  480/800]  row=32.0s  ETA=2m  ranks=[116,118]  gap_score=[17.3,18.7]  avg_eps=3.0
+  Row   7/10  mu=1.033  [  560/800]  row=32.4s  ETA=2m  ranks=[116,117]  gap_score=[17.2,18.6]  avg_eps=3.0
+  Row   8/10  mu=1.056  [  640/800]  row=33.4s  ETA=1m  ranks=[116,118]  gap_score=[17.1,18.6]  avg_eps=3.1
+  Row   9/10  mu=1.078  [  720/800]  row=33.8s  ETA=1m  ranks=[116,117]  gap_score=[17.2,18.6]  avg_eps=3.2
+  Row  10/10  mu=1.100  [  800/800]  row=37.0s  ETA=0m  ranks=[116,117]  gap_score=[17.3,18.8]  avg_eps=3.5
+
+  isosceles_ridge complete: 337s (5.6m)
+  Rank range: [116, 119]
+  Optimal eps: [4.06e-04, 5.00e-03]
+  Gap score: [17.07, 18.83]
+  Tier count: [2, 5], median=2.0
+  Rank distribution: 116:777, 117:20, 118:2, 119:1
+
+  Verification PASS: atlas_targeted/coulomb_+2_-1_-1/isosceles_ridge
+    Rank distribution: {116: 777, 117: 20, 118: 2, 119: 1}
+    gap_map: min=1.171e+02 max=6.345e+08 mean=1.285e+08
+    optimal_eps_map: min=4.056e-04 max=5.000e-03 mean=4.809e-03
+    gap_score_map: min=1.707e+01 max=1.883e+01 mean=1.830e+01
+    Report saved: atlas_targeted/coulomb_+2_-1_-1/isosceles_ridge/verification_report.json
+
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/coulomb_+2_-1_-1/small_mu/ -> atlas_targeted/coulomb_+2_-1_-1/small_mu/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: small_mu
+  Small mu (extreme mass ratio / near-collision)
+  Potential: 1/r (Newton) Coulomb (+2, -1, -1)
+  Charges: [2, -1, -1]
+  mu: [0.200, 0.400]  phi: [70, 100] deg
+  Grid: 30x30 = 900 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: Reference scan needed finest epsilon (1.64e-3) near mu=0.2, phi=84deg; extreme mass ratios may hide structure
+======================================================================
+
+  Building symbolic algebra for 1/r (Newton) Coulomb (+2, -1, -1)...
+  Building symbolic generators for Coulomb 1/r charges=(+2,-1,-1)...
+    Level 2: 12 generators (0 zero)
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.6s]
+      40/156  [101.6s]
+      60/156  [214.6s]
+      80/156  [393.0s]
+      100/156  [532.2s]
+      120/156  [618.1s]
+      140/156  [694.3s]
+      156/156  [716.5s]
+    Total lambdify time: 717.8s
+  Algebra ready (832.0s)
+  Algebra ready (832.0s, 156 generators)
+  Starting worker pool (31 workers)...
+  Row   1/30  mu=0.200  [   30/900]  row=11.8s  ETA=6m  ranks=[116,116]  gap_score=[18.4,18.4]  avg_eps=3.0
+  Row   2/30  mu=0.207  [   60/900]  row=11.7s  ETA=5m  ranks=[116,116]  gap_score=[18.4,18.4]  avg_eps=3.0
+  Row   3/30  mu=0.214  [   90/900]  row=11.8s  ETA=5m  ranks=[116,116]  gap_score=[18.4,18.4]  avg_eps=3.0
+  Row   4/30  mu=0.221  [  120/900]  row=11.8s  ETA=5m  ranks=[116,116]  gap_score=[18.4,18.4]  avg_eps=3.0
+  Row   5/30  mu=0.228  [  150/900]  row=11.8s  ETA=5m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row   6/30  mu=0.234  [  180/900]  row=11.8s  ETA=5m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row   7/30  mu=0.241  [  210/900]  row=11.7s  ETA=5m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row   8/30  mu=0.248  [  240/900]  row=11.8s  ETA=4m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row   9/30  mu=0.255  [  270/900]  row=11.9s  ETA=4m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  10/30  mu=0.262  [  300/900]  row=11.7s  ETA=4m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  11/30  mu=0.269  [  330/900]  row=11.8s  ETA=4m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  12/30  mu=0.276  [  360/900]  row=11.8s  ETA=4m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  13/30  mu=0.283  [  390/900]  row=11.8s  ETA=3m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  14/30  mu=0.290  [  420/900]  row=11.8s  ETA=3m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  15/30  mu=0.297  [  450/900]  row=11.8s  ETA=3m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  16/30  mu=0.303  [  480/900]  row=11.8s  ETA=3m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  17/30  mu=0.310  [  510/900]  row=11.7s  ETA=3m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  18/30  mu=0.317  [  540/900]  row=13.3s  ETA=2m  ranks=[116,116]  gap_score=[18.4,18.6]  avg_eps=3.0
+  Row  19/30  mu=0.324  [  570/900]  row=11.8s  ETA=2m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  20/30  mu=0.331  [  600/900]  row=11.8s  ETA=2m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  21/30  mu=0.338  [  630/900]  row=11.7s  ETA=2m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  22/30  mu=0.345  [  660/900]  row=11.8s  ETA=2m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  23/30  mu=0.352  [  690/900]  row=13.5s  ETA=1m  ranks=[116,116]  gap_score=[18.4,18.6]  avg_eps=3.1
+  Row  24/30  mu=0.359  [  720/900]  row=12.9s  ETA=1m  ranks=[116,116]  gap_score=[18.4,18.5]  avg_eps=3.0
+  Row  25/30  mu=0.366  [  750/900]  row=13.5s  ETA=1m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.1
+  Row  26/30  mu=0.372  [  780/900]  row=13.5s  ETA=1m  ranks=[116,116]  gap_score=[18.4,18.8]  avg_eps=3.1
+  Row  27/30  mu=0.379  [  810/900]  row=11.8s  ETA=1m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.0
+  Row  28/30  mu=0.386  [  840/900]  row=13.5s  ETA=0m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.0
+  Row  29/30  mu=0.393  [  870/900]  row=13.0s  ETA=0m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.0
+  Row  30/30  mu=0.400  [  900/900]  row=11.7s  ETA=0m  ranks=[116,116]  gap_score=[18.4,18.7]  avg_eps=3.0
+
+  small_mu complete: 371s (6.2m)
+  Rank range: [116, 116]
+  Optimal eps: [3.29e-03, 5.00e-03]
+  Gap score: [18.37, 18.75]
+  Tier count: [2, 3], median=2.0
+  Rank distribution: 116:900
+
+  Verification PASS: atlas_targeted/coulomb_+2_-1_-1/small_mu
+    Rank distribution: {116: 900}
+    gap_map: min=2.400e+07 max=3.052e+08 mean=1.519e+08
+    optimal_eps_map: min=3.290e-03 max=5.000e-03 mean=4.981e-03
+    gap_score_map: min=1.837e+01 max=1.875e+01 mean=1.847e+01
+    Report saved: atlas_targeted/coulomb_+2_-1_-1/small_mu/verification_report.json
+
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/lagrange_overview.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/euler_strip_overview.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/charge_hotspot_overview.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/tier_cluster_overview.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/isosceles_ridge_overview.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/small_mu_overview.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/lagrange_charge_diff.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/euler_strip_charge_diff.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/charge_hotspot_charge_diff.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/tier_cluster_charge_diff.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/isosceles_ridge_charge_diff.png
+  Saved atlas_targeted/coulomb_+2_-1_-1/plots/small_mu_charge_diff.png
+
+  All plots saved to atlas_targeted/coulomb_+2_-1_-1/plots/
+
+######################################################################
+# ALL TARGETED SCANS COMPLETE
+######################################################################

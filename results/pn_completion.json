@@ -1,0 +1,22 @@
+{
+  "composite_control_1r": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "completed_at": "2026-03-22T04:48:20Z"
+  },
+  "composite_two_term": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "completed_at": "2026-03-22T18:02:30Z"
+  }
+}

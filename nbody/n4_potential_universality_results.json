@@ -1,0 +1,73 @@
+{
+  "experiment": "N=4 potential universality (gap item 2.2)",
+  "reference_potential": "1/r",
+  "reference_sequence": [
+    6,
+    14,
+    62
+  ],
+  "all_match": true,
+  "total_elapsed_s": 9.5,
+  "results": [
+    {
+      "potential": "1/r^2",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "n_samples": 500,
+      "sequence": [
+        6,
+        14,
+        62
+      ],
+      "reference": [
+        6,
+        14,
+        62
+      ],
+      "matches_reference": true,
+      "elapsed_s": 3.6,
+      "timestamp": "2026-04-01T22:00:14.219010"
+    },
+    {
+      "potential": "1/r^3",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "n_samples": 500,
+      "sequence": [
+        6,
+        14,
+        62
+      ],
+      "reference": [
+        6,
+        14,
+        62
+      ],
+      "matches_reference": true,
+      "elapsed_s": 3.0,
+      "timestamp": "2026-04-01T22:00:17.183617"
+    },
+    {
+      "potential": "log(r)",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "n_samples": 500,
+      "sequence": [
+        6,
+        14,
+        62
+      ],
+      "reference": [
+        6,
+        14,
+        62
+      ],
+      "matches_reference": true,
+      "elapsed_s": 3.0,
+      "timestamp": "2026-04-01T22:00:20.157592"
+    }
+  ]
+}

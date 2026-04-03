@@ -1,0 +1,152 @@
+{
+  "sun_earth_moon": {
+    "status": "complete",
+    "result": [
+      3,
+      5,
+      13,
+      69
+    ],
+    "completed_at": "2026-03-22T07:17:33Z"
+  },
+  "sun_jupiter_asteroid": {
+    "status": "complete",
+    "result": [
+      3,
+      5,
+      13,
+      69
+    ],
+    "completed_at": "2026-03-22T07:32:42Z"
+  },
+  "three_cluster_stars": {
+    "status": "complete",
+    "result": [
+      3,
+      5,
+      13,
+      69
+    ],
+    "completed_at": "2026-03-22T07:47:52Z"
+  },
+  "binary_star_planet": {
+    "status": "complete",
+    "result": [
+      3,
+      5,
+      13,
+      69
+    ],
+    "completed_at": "2026-03-22T08:03:00Z"
+  },
+  "three_galaxies": {
+    "status": "complete",
+    "result": [
+      3,
+      5,
+      13,
+      69
+    ],
+    "completed_at": "2026-03-22T08:18:11Z"
+  },
+  "triple_bh_lisa": {
+    "status": "complete",
+    "result": [
+      3,
+      5,
+      13,
+      69
+    ],
+    "completed_at": "2026-03-22T08:33:26Z"
+  },
+  "binary_bh_ns": {
+    "status": "complete",
+    "result": [
+      3,
+      5,
+      13,
+      69
+    ],
+    "completed_at": "2026-03-22T08:48:39Z"
+  },
+  "helium": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "completed_at": "2026-03-22T09:10:06Z"
+  },
+  "lithium_ion": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      111
+    ],
+    "completed_at": "2026-03-22T09:31:23Z"
+  },
+  "h_minus_ion": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "completed_at": "2026-03-22T09:52:43Z"
+  },
+  "positronium_neg": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "completed_at": "2026-03-22T10:07:35Z"
+  },
+  "muonic_helium": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "completed_at": "2026-03-22T10:22:25Z"
+  },
+  "h2_plus_ion": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      115
+    ],
+    "completed_at": "2026-03-22T10:43:54Z"
+  },
+  "penning_trap": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "completed_at": "2026-03-22T14:36:08Z"
+  },
+  "two_d_vortices": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "completed_at": "2026-03-22T19:05:19Z"
+  }
+}

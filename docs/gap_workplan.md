@@ -1,0 +1,200 @@
+# Gap Work Plan — Systematic Analysis Campaign
+
+*Created: April 1, 2026*
+*Tracks 21 identified gaps in the project, ordered by effort and impact.*
+
+---
+
+## Phase 1: Free Post-Processing (existing data, zero compute)
+
+### 1.1 Spectral Depth Mining — Interior SV Landscapes
+- **Status:** ✅ COMPLETED — `spectral_depth_mining.py` generates SV landscapes at indices [49,79,99,109,115] for 1/r and 1/r²
+- **Data:** `atlas_output_hires/*/sv_spectra.npy` (156 SVs × 10,000 grid points per atlas)
+- **Task:** Plot SV #50, #80, #100, #110 as individual shape-sphere heatmaps for 1/r and 1/r². Compare to the known SV #116 landscape.
+- **Question answered:** Does the interior of the spectrum vary smoothly, or are there hidden phase boundaries at intermediate SV indices?
+- **Script to create:** `spectral_depth_mining.py`
+- **Output:** `spectral_depth/sv_{50,80,100,110}_landscape_{1r,1r2}.png`
+
+### 1.2 Spectral Decay Rate Map
+- **Status:** ✅ COMPLETED — decay rate and knee-index maps in `spectral_depth_mining.py` item_1_2()
+- **Data:** Same `sv_spectra.npy`
+- **Task:** At each grid point, fit (or compute) the decay rate of the SV spectrum (e.g., log-slope between SV #80 and #115). Plot as a shape-sphere heatmap.
+- **Question answered:** Are there configurations where the spectrum drops steeply (implying near-degenerate generators) vs. gradually?
+- **Script to create:** Same `spectral_depth_mining.py` or separate `spectral_decay_map.py`
+- **Output:** `spectral_depth/decay_rate_landscape_{1r,1r2}.png`
+
+### 1.3 Spectral Clustering on Shape Sphere
+- **Status:** ✅ COMPLETED — k-means clustering (k=3,5,7) with cluster profiles in `spectral_depth_mining.py` item_1_3()
+- **Data:** Same `sv_spectra.npy`
+- **Task:** Normalize each 156-dim SV vector, run k-means or hierarchical clustering (k=3,4,5), plot cluster assignments on the shape sphere. Do natural "spectral regions" emerge?
+- **Question answered:** Does the shape sphere partition into algebraically distinct zones beyond the S₃ symmetry structure?
+- **Script to create:** `spectral_clustering.py`
+- **Output:** `spectral_depth/spectral_clusters_k{3,4,5}_{1r,1r2}.png`
+
+### 1.4 Clebsch-Gordan Predictions vs. Full Atlas
+- **Status:** ✅ COMPLETED — Lagrange=33 doublets (E-frac=0.57), Euler=14 (0.24), Isos-90=24 (0.41). See `cg_atlas_comparison.py`
+- **Data:** `clebsch_gordan_analysis.py` predictions + `atlas_targeted/*/sv_spectra.npy`
+- **Task:** The CG analysis predicts doublet counts and tier sizes from S₃ representation theory. Currently compared only at the Lagrange point. Extend to the full shape sphere: at each grid point, count near-degenerate SV doublets and compare to CG prediction. Plot predicted vs. observed as a scatter plot + residual heatmap.
+- **Question answered:** Does the CG decomposition predict spectral structure everywhere, or only at the S₃ fixed point?
+- **Script to create:** `cg_atlas_comparison.py`
+- **Output:** `spectral_depth/cg_predicted_vs_observed.png`, `spectral_depth/cg_residual_map.png`
+
+### 1.5 Level-4 Comparison Chart
+- **Status:** ✅ COMPLETED — 18 unique records. Global 200K→5604, Scalene 20K→3218, Lagrange 20K→3112, Euler 20K→2194. See `level4_comparison.py`
+- **Data:** `results/level4_{global,lagrange,euler,scalene}_*/results.json`
+- **Task:** Extract d(4) lower bounds and gap ratios for each configuration type at each sample count. Plot (a) bar chart of d(4) at max samples per config, and (b) convergence curves d(4) vs. sample count.
+- **Question answered:** How does the level-4 rank vary across configuration types? Is the Lagrange rank drop persistent?
+- **Script to create:** `level4_comparison.py`
+- **Output:** `level4_comparison_chart.png`, `level4_convergence_curves.png`
+
+### 1.6 Analytical Prediction of SV #116
+- **Status:** ✅ COMPLETED — R²=0.630 correlation between analytical prediction and observed SV #116. See `sv116_analytical.py`
+- **Data:** `checkpoints/level_3.pkl` (symbolic generators) + `atlas_output_hires/1_r/sv_spectra.npy`
+- **Task:** Load the 116th generator from the checkpoint. Compute its symbolic gradient norm (or evaluation magnitude) as a function of (μ, φ). Compare to the observed SV #116 landscape. If they correlate, we have analytical control over the rank boundary.
+- **Question answered:** Can the weakest algebraic constraint be predicted from the symbolic structure alone?
+- **Script to create:** `sv116_analytical.py`
+- **Output:** `spectral_depth/sv116_predicted_vs_observed.png`
+- **Note:** This is the most complex of the free items — may require careful symbolic → numerical pipeline.
+
+---
+
+## Phase 2: Light Compute (hours, local or small AWS)
+
+### 2.1 N=5 Level 1–2
+- **Status:** NOT STARTED
+- **Estimated time:** Hours (local, d=1 fastest)
+- **Command:** `python nbody/exact_growth_nbody.py -N 5 -d 1 --max-level 2`
+- **Question answered:** Third data point for d_N(k) vs. N. Predicted: d(0)=10, d(1)=?, d(2)=?
+- **Impact:** HIGH — headline result for universality across N.
+
+### 2.2 N=4 with 1/r², 1/r³, log(r)
+- **Status:** ✅ COMPLETED — All three potentials give [6, 14, 62] with definitive SVD gaps (7.3×10¹²–1.8×10¹³). See `nbody/run_n4_potential_universality.py`, results in `nbody/n4_potential_universality_results.json`
+- **Estimated time:** ~10s total (d=1, ~3s per potential)
+- **Task:** Run `NBodyAlgebra(4, 1, "1/r2")`, `NBodyAlgebra(4, 1, "1/r3")`, `NBodyAlgebra(4, 1, "log")` through level 2 and compare to [6, 14, 62].
+- **Question answered:** YES — the N=4 sequence is potential-universal. [6, 14, 62] holds for 1/r, 1/r², 1/r³, and log(r).
+- **Impact:** CRITICAL — directly falsifiable prediction CONFIRMED.
+
+### 2.3 r⁴ Potential (Regular)
+- **Status:** NOT STARTED
+- **Estimated time:** Minutes (d=1, N=3)
+- **Task:** Run N=3, d=1 with V ~ r⁴. Prediction: finite-dimensional algebra (like r² → dim 15).
+- **Question answered:** Does the regular/singular dichotomy hold for higher-degree regular potentials? What dimension does it close at?
+
+### 2.4 Charge Sweep Phase 3 (+1/+q/−1)
+- **Status:** CRASHED — phase 3 never completed
+- **Data so far:** Phase 2 (+q/−1/−1) complete for q=1–20, all give [3, 6, 17, 116].
+- **Task:** Fix the crash in the AWS sweep script and run phase 3 for the mixed-sign (+1/+q/−1) geometry.
+- **Question answered:** Does the universality hold for the "molecular" charge configuration across magnitudes?
+
+### 2.5 S₄ Tier Decomposition (N=4)
+- **Status:** NOT STARTED
+- **Estimated time:** Hours (algebraic computation)
+- **Task:** Implement S₄ representation theory analogous to `clebsch_gordan_analysis.py`. Decompose the 62-dim N=4 level-2 algebra into S₄ irreps (trivial, sign, standard, standard⊗sign, 2D). Count tiers.
+- **Question answered:** Does the S₃ tier structure generalize to S₄? Are the scaling exponents still integer-quantized?
+- **Script to create:** `s4_tier_analysis.py`
+
+### 2.6 Harmonic Dimension 15 — Representation-Theoretic Derivation
+- **Status:** NOT STARTED (question posed in conjectures.md)
+- **Task:** The 3-body harmonic oscillator has the Lie algebra of coupled oscillators (sp(4,ℝ) or similar). The 12D phase space should close at a predictable dimension from representation theory. Derive the number 15 from the isotropic oscillator algebra.
+- **Question answered:** Is dim=15 a known Lie-algebraic quantity, or anomalous?
+- **Approach:** Compute the centralizer of the harmonic Hamiltonian analytically; or simply identify the Lie algebra generators symbolically from the checkpoints.
+
+### 2.7 H₃⁺ and Ozone Molecular Systems
+- **Status:** NOT STARTED (mentioned in project_status.md as high-impact)
+- **Task:** Configure and run:
+  - H₃⁺: three protons with effective 1/r interaction, equal mass ≈ 1836
+  - O₃ (ozone): three oxygen nuclei, mass ≈ 29,164 (16 × 1836)
+- **Question answered:** Does the universality extend to molecular triatomic systems?
+- **Note:** These are really just reconfirmations of mass invariance at specific physical masses, but publishing the result for named molecules has outreach value.
+
+---
+
+## Phase 3: Medium Compute (AWS, $10–$200)
+
+### 3.1 Parametric Exponent Sweep (1/r^n for 1,015 values of n)
+- **Status:** Script ready (`parametric_atlas_scan.py`), only n={2,−2} attempted
+- **Estimated cost:** ~$13–50 (Tier 3 pragmatic hybrid)
+- **Task:** Run the full sweep: n from −5 to +5 in 0.01 steps, plus special values (π, e, φ, √2). 50×50 grid at 200 samples for the coarse pass, 100×100 for ~20 interesting values.
+- **Output:** Gap ratio at Lagrange vs. n (continuous curve), Jahn-Teller ring radius vs. n, phase boundary at n=0.
+- **Impact:** VERY HIGH — unique result, probably a paper figure.
+
+### 3.2 Yukawa Potential (3 Scenarios)
+- **Status:** BROKEN — lambdification/OOM issues, recursion fix deployed but not confirmed
+- **Scenarios:** Dusty plasma, tritium/He-3, p-n-n scattering
+- **Task:** Debug the Yukawa lambda compilation pipeline. The exponential damping e^{−μr}/r creates deeply nested expressions. May need CSE-based compilation or a numerical-only evaluation path.
+- **Impact:** HIGH — Yukawa is the key non-power-law singular potential.
+
+### 3.3 Re-run 7 Retracted Gravitational Configs
+- **Status:** 2 of 7 directly re-validated with SymPy ≥1.13.3; 5 inferred from mass sweep
+- **Task:** Directly re-run all 7 on AWS with SymPy 1.13.3: Sun-Earth-Moon, Sun-Jupiter-Asteroid, Three Cluster Stars, Binary Star + Planet, Three Merging Galaxies, Triple BH (LISA), Binary BH + Neutron Star.
+- **Question answered:** Closes the "inferred" gap in the survey — direct confirmation for all configs.
+- **Impact:** MEDIUM — mostly for completeness and paper credibility.
+
+### 3.4 Complete Interrupted Atlases
+- **Status:** Sun-Earth-Moon (11%), Sun-Jupiter-Asteroid (7%), checkpoints on S3
+- **Task:** Relaunch on spot instances from checkpoints.
+- **Impact:** LOW-MEDIUM — extreme mass ratios, confirms universality at edge cases.
+
+### 3.5 Lagrange Hires 1000×1000 Scan
+- **Status:** Plan complete, script designed, never deployed
+- **Estimated cost:** ~$3–12
+- **Task:** Deploy focused 1000×1000 scan of μ=[0.3,2.0], φ=[15°,105°] at ε=2e-4 for 1/r² (Calogero-Moser).
+- **Question answered:** Resolve the concentric ring features and discrete isosceles beads at high resolution.
+- **Impact:** MEDIUM — specific structural question.
+
+---
+
+## Phase 4: Verification & Theory
+
+### 4.1 SageMath Independent Verification
+- **Status:** NOT STARTED (listed as "ESSENTIAL" in adversarial_analysis.md)
+- **Task:** Install SageMath (WSL or standalone). Independently compute [3, 6, 17, 116] for N=3, 1/r using SageMath's Poisson bracket facilities. Compare symbol-by-symbol against SymPy output.
+- **Impact:** HIGH — addresses the "single CAS" criticism head-on.
+
+### 4.2 Growth Rate Formula / Generating Function
+- **Status:** NOT STARTED
+- **Task:** With data points d(k) = [3, 6, 17, 116, ≥5604] for N=3 and [6, 14, 62] for N=4:
+  - Search OEIS for subsequences and related sequences
+  - Test recurrence relations (e.g., d(k+1) = a·d(k)² + b·d(k) + c)
+  - Test exponential/super-exponential fits
+  - Compare growth to known Lie algebra dimension formulas
+- **Question answered:** Is there a pattern, or is the sequence "wild"?
+
+### 4.3 Level-4 Bound Improvement
+- **Status:** Current best: d(4) ≥ 5,604 at 200K samples, gap NOT definitive
+- **Task:** Continue pushing sample count (300K? 500K?) or switch to mpmath high-precision rank computation to resolve the true d(4).
+- **Note:** The mpmath computation was at 4.4% (667/15,000 rows) when spot-reclaimed. Could be relaunched.
+
+---
+
+## Tracking
+
+Mark items with status as work proceeds:
+- ⬜ Not started
+- 🔄 In progress
+- ✅ Complete
+- ❌ Blocked
+
+| ID | Item | Status |
+|----|------|--------|
+| 1.1 | Spectral depth mining — SV landscapes | ✅ |
+| 1.2 | Spectral decay rate map | ✅ |
+| 1.3 | Spectral clustering | ✅ |
+| 1.4 | CG predictions vs. full atlas | ✅ |
+| 1.5 | Level-4 comparison chart | ✅ |
+| 1.6 | Analytical SV #116 prediction | ✅ |
+| 2.1 | N=5 Level 1–2 | ⬜ |
+| 2.2 | N=4 with 1/r², 1/r³, log(r) | ⬜ |
+| 2.3 | r⁴ potential | ⬜ |
+| 2.4 | Charge sweep phase 3 | ⬜ |
+| 2.5 | S₄ tier decomposition | ⬜ |
+| 2.6 | Harmonic dim=15 derivation | ⬜ |
+| 2.7 | H₃⁺ and ozone | ⬜ |
+| 3.1 | Parametric exponent sweep | ⬜ |
+| 3.2 | Yukawa debugging + run | ❌ |
+| 3.3 | Re-run 7 retracted gravitational configs | ⬜ |
+| 3.4 | Complete interrupted atlases | ⬜ |
+| 3.5 | Lagrange hires 1000×1000 | ⬜ |
+| 4.1 | SageMath verification | ⬜ |
+| 4.2 | Growth rate formula | ⬜ |
+| 4.3 | Level-4 bound improvement | ⬜ |

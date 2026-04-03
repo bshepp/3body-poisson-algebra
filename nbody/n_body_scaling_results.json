@@ -1,0 +1,70 @@
+{
+  "experiment": "N-body scaling probe (d=1, 1/r, level 0-2)",
+  "results": [
+    {
+      "N": 5,
+      "d": 1,
+      "potential": "1/r",
+      "sequence": [
+        10,
+        25,
+        145
+      ],
+      "elapsed_s": 8.0,
+      "pairs": 10,
+      "timestamp": "2026-04-02T11:42:49.563429"
+    },
+    {
+      "N": 6,
+      "d": 1,
+      "potential": "1/r",
+      "sequence": [
+        15,
+        39,
+        279
+      ],
+      "elapsed_s": 15.9,
+      "pairs": 15,
+      "timestamp": "2026-04-02T11:43:05.486131"
+    },
+    {
+      "N": 7,
+      "d": 1,
+      "potential": "1/r",
+      "sequence": [
+        21,
+        56,
+        476
+      ],
+      "elapsed_s": 64.7,
+      "pairs": 21,
+      "timestamp": "2026-04-02T11:44:10.197163"
+    },
+    {
+      "N": 8,
+      "d": 1,
+      "potential": "1/r",
+      "sequence": [
+        28,
+        76,
+        301
+      ],
+      "elapsed_s": 303.6,
+      "pairs": 28,
+      "timestamp": "2026-04-02T11:49:13.841124"
+    },
+    {
+      "N": 9,
+      "d": 1,
+      "potential": "1/r",
+      "sequence": [
+        21,
+        21,
+        21
+      ],
+      "elapsed_s": 1925.4,
+      "pairs": 36,
+      "timestamp": "2026-04-02T12:21:19.289830"
+    }
+  ]
+}

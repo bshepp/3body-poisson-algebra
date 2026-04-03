@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Atlas — Three-Body Poisson Algebra</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
+<style>
+/* ═══════════ ROOT VARIABLES (matching site design system) ═══════════ */
+:root {
+  --bg-deep: #0a0c10;
+  --bg-panel: #0f1218;
+  --bg-card: #141820;
+  --bg-card-hover: #1a1f2a;
+  --border: #1e2430;
+  --border-bright: #2a3040;
+  --text-primary: #c8ccd4;
+  --text-secondary: #7a8090;
+  --text-dim: #4a5060;
+  --phosphor: #3ddc84;
+  --phosphor-dim: #1a6e3a;
+  --phosphor-glow: rgba(61, 220, 132, 0.15);
+  --amber: #f0a030;
+  --amber-dim: #7a5018;
+  --amber-glow: rgba(240, 160, 48, 0.12);
+  --red: #e05555;
+  --red-dim: #7a2a2a;
+  --cyan: #4ac8e8;
+  --cyan-dim: #1a5a6e;
+  --violet: #a07ae0;
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'Source Serif 4', Georgia, serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 14px; scroll-behavior: smooth; }
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--mono);
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ═══════════ TOPBAR ═══════════ */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 2rem; background: var(--bg-panel);
+  border-bottom: 1px solid var(--border); font-size: 0.72rem;
+}
+.topbar-left { display: flex; align-items: center; gap: 1.5rem; }
+.topbar-left a {
+  color: var(--text-secondary); text-decoration: none;
+  text-transform: uppercase; letter-spacing: 0.08em; transition: color 0.2s;
+}
+.topbar-left a:hover { color: var(--phosphor); }
+.topbar-left a.active { color: var(--phosphor); border-bottom: 1px solid var(--phosphor); }
+.topbar-right { color: var(--text-dim); }
+
+/* ═══════════ HEADER ═══════════ */
+.page-header {
+  padding: 1.8rem 2rem 1rem;
+  border-bottom: 1px solid var(--border);
+  max-width: 1600px; margin: 0 auto;
+}
+.page-header h1 {
+  font-family: var(--serif); font-size: 1.6rem; font-weight: 600;
+  color: var(--text-primary); margin-bottom: 0.25rem;
+}
+.page-header h1 .dim { color: var(--text-secondary); font-weight: 300; }
+.page-header .subtitle {
+  color: var(--text-secondary); font-size: 0.78rem;
+}
+
+/* ═══════════ MAIN LAYOUT ═══════════ */
+.page-content {
+  max-width: 1600px; margin: 0 auto; padding: 1.5rem 2rem;
+}
+.section { margin-bottom: 2rem; }
+.section-label {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--text-dim); margin-bottom: 0.6rem; padding-left: 0.2rem;
+}
+
+/* ═══════════ CONTROLS BAR ═══════════ */
+.controls-bar {
+  display: flex; flex-wrap: wrap; gap: 1.2rem; align-items: flex-end;
+  padding: 1rem 1.2rem; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 4px;
+}
+.control-group { display: flex; flex-direction: column; gap: 0.25rem; }
+.control-label {
+  font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+select {
+  background: var(--bg-panel); color: var(--text-primary);
+  border: 1px solid var(--border); padding: 0.35rem 0.7rem;
+  font-family: var(--mono); font-size: 0.75rem; border-radius: 3px;
+  cursor: pointer; min-width: 120px;
+}
+select:hover { border-color: var(--border-bright); }
+select:focus { outline: none; border-color: var(--phosphor-dim); }
+
+/* Observable toggle buttons */
+.obs-group { display: flex; gap: 0; }
+.obs-btn {
+  padding: 0.35rem 1rem; background: var(--bg-panel);
+  color: var(--text-secondary); border: 1px solid var(--border);
+  cursor: pointer; font-family: var(--mono); font-size: 0.72rem;
+  transition: all 0.15s;
+}
+.obs-btn:first-child { border-radius: 3px 0 0 3px; }
+.obs-btn:last-child { border-radius: 0 3px 3px 0; }
+.obs-btn:not(:first-child) { border-left: none; }
+.obs-btn:hover { color: var(--text-primary); }
+.obs-btn.active {
+  background: var(--phosphor-dim); color: var(--phosphor);
+  border-color: var(--phosphor);
+}
+.obs-btn.active + .obs-btn { border-left-color: var(--phosphor); }
+
+/* Compare toggle */
+.compare-toggle {
+  padding: 0.35rem 0.9rem; background: var(--bg-panel);
+  color: var(--text-secondary); border: 1px solid var(--border);
+  border-radius: 3px; cursor: pointer; font-family: var(--mono);
+  font-size: 0.72rem; transition: all 0.15s;
+}
+.compare-toggle:hover { color: var(--text-primary); }
+.compare-toggle.active {
+  background: var(--cyan-dim); color: var(--cyan); border-color: var(--cyan);
+}
+.compare-controls {
+  display: none; flex-wrap: wrap; gap: 1.2rem; align-items: flex-end;
+  padding: 0.8rem 1.2rem; background: var(--bg-card);
+  border: 1px solid var(--cyan-dim); border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+.compare-controls.visible { display: flex; }
+.compare-controls .control-label { color: var(--cyan-dim); }
+
+/* ═══════════ HEATMAP AREA ═══════════ */
+.display-grid {
+  display: grid; grid-template-columns: 1fr; gap: 1.5rem;
+  transition: grid-template-columns 0.3s;
+}
+.display-grid.side-by-side { grid-template-columns: 1fr 1fr; }
+.heatmap-panel {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 4px; padding: 0.8rem;
+  position: relative;
+}
+.heatmap-panel .panel-title {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-dim); margin-bottom: 0.5rem; padding-left: 0.2rem;
+}
+.heatmap-panel .panel-title .scan-label {
+  color: var(--text-secondary);
+}
+.heatmap-div { width: 100%; height: calc(100vh - 220px); min-height: 380px; max-height: 900px; }
+
+/* Loading overlay */
+.loading-overlay {
+  position: absolute; inset: 0; display: flex;
+  align-items: center; justify-content: center;
+  background: rgba(10, 12, 16, 0.85); border-radius: 4px;
+  font-size: 0.8rem; color: var(--phosphor); z-index: 10;
+  pointer-events: none; opacity: 0; transition: opacity 0.2s;
+}
+.loading-overlay.visible { opacity: 1; pointer-events: auto; }
+
+/* ═══════════ POINT INSPECTOR ═══════════ */
+.inspector {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1rem 1.2rem;
+  opacity: 0.4; transition: opacity 0.2s;
+}
+.inspector.active { opacity: 1; }
+.inspector-header {
+  display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.inspector-header .label {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+.info-item {
+  font-size: 0.78rem; color: var(--text-secondary);
+}
+.info-item b { color: var(--phosphor); font-weight: 500; }
+.info-item .amber { color: var(--amber); }
+.inspector-status {
+  font-size: 0.7rem; color: var(--amber); margin-top: 0.3rem;
+}
+.sv-plot { width: 100%; height: 280px; }
+
+/* ═══════════ SUPPLEMENTARY TABS ═══════════ */
+.supp-tabs {
+  display: flex; gap: 0; margin-bottom: 0;
+}
+.supp-tab {
+  padding: 0.5rem 1.2rem; background: var(--bg-panel);
+  color: var(--text-secondary); border: 1px solid var(--border);
+  cursor: pointer; font-family: var(--mono); font-size: 0.72rem;
+  transition: all 0.15s; border-bottom: none;
+}
+.supp-tab:first-child { border-radius: 4px 0 0 0; }
+.supp-tab:last-child { border-radius: 0 4px 0 0; }
+.supp-tab:not(:first-child) { border-left: none; }
+.supp-tab:hover { color: var(--text-primary); }
+.supp-tab.active {
+  background: var(--bg-card); color: var(--phosphor);
+  border-color: var(--border);
+}
+.supp-content {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 0 4px 4px 4px; padding: 1rem;
+}
+.supp-panel { display: none; }
+.supp-panel.active { display: block; }
+.supp-chart { width: 100%; height: 350px; }
+
+/* ═══════════ SCAN INFO BADGE ═══════════ */
+.scan-badge {
+  display: inline-flex; gap: 0.8rem; padding: 0.3rem 0.6rem;
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: 3px; font-size: 0.68rem; color: var(--text-secondary);
+  margin-top: 0.5rem;
+}
+.scan-badge .key { color: var(--text-dim); }
+.scan-badge .val { color: var(--text-primary); }
+
+/* ═══════════ SCROLLBAR ═══════════ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width: 900px) {
+  .display-grid.side-by-side { grid-template-columns: 1fr; }
+  .controls-bar { gap: 0.8rem; }
+  .page-content { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOPBAR ═══════════ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="index.html">Dashboard</a>
+    <a href="tracker.html">Research Tracker</a>
+    <a href="explorer.html">Data Explorer</a>
+    <a href="interactive.html" class="active">Interactive Atlas</a>
+  </div>
+  <div class="topbar-right">Three-Body Poisson Algebra</div>
+</div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<div class="page-header">
+  <h1>Interactive Atlas <span class="dim">— Configuration Space Explorer</span></h1>
+  <div class="subtitle">Explore rank structure and singular value landscapes across potentials, regularization, and charge configurations</div>
+</div>
+
+<!-- ═══════════ CONTENT ═══════════ -->
+<div class="page-content">
+
+  <!-- ── Controls ── -->
+  <div class="section">
+    <div class="controls-bar" id="controls-primary">
+      <div class="control-group">
+        <span class="control-label">Potential</span>
+        <select id="pot-select" onchange="onPotentialChange('primary')"></select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Epsilon (ε)</span>
+        <select id="eps-select" onchange="onEpsilonChange('primary')"></select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Observable</span>
+        <div class="obs-group">
+          <button class="obs-btn active" data-obs="rank" onclick="setObservable('primary','rank',this)">Rank</button>
+          <button class="obs-btn" data-obs="gap" onclick="setObservable('primary','gap',this)">Gap Ratio</button>
+        </div>
+      </div>
+      <div class="control-group" style="margin-left:auto">
+        <span class="control-label">Compare</span>
+        <button class="compare-toggle" id="compare-btn" onclick="toggleCompare()">+ Compare</button>
+      </div>
+    </div>
+
+    <!-- Comparison controls (hidden by default) -->
+    <div class="compare-controls" id="controls-compare">
+      <div class="control-group">
+        <span class="control-label">Potential (B)</span>
+        <select id="pot-select-2" onchange="onPotentialChange('compare')"></select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Epsilon (B)</span>
+        <select id="eps-select-2" onchange="onEpsilonChange('compare')"></select>
+      </div>
+      <div class="control-group">
+        <span class="control-label">Observable (B)</span>
+        <div class="obs-group">
+          <button class="obs-btn active" data-obs="rank" onclick="setObservable('compare','rank',this)">Rank</button>
+          <button class="obs-btn" data-obs="gap" onclick="setObservable('compare','gap',this)">Gap Ratio</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Heatmap Display ── -->
+  <div class="section">
+    <div class="display-grid" id="display-grid">
+      <div class="heatmap-panel" id="panel-primary">
+        <div class="panel-title">Primary — <span class="scan-label" id="label-primary">...</span></div>
+        <div id="heatmap-primary" class="heatmap-div"></div>
+        <div class="loading-overlay" id="loading-primary">Loading atlas data…</div>
+      </div>
+      <div class="heatmap-panel" id="panel-compare" style="display:none">
+        <div class="panel-title" style="color:var(--cyan-dim)">Comparison — <span class="scan-label" id="label-compare">...</span></div>
+        <div id="heatmap-compare" class="heatmap-div"></div>
+        <div class="loading-overlay" id="loading-compare">Loading atlas data…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Point Inspector ── -->
+  <div class="section">
+    <div class="section-label">Point Inspector <span style="font-size:0.6rem;color:var(--text-dim)">(click any point on the heatmap)</span></div>
+    <div class="inspector" id="inspector">
+      <div class="inspector-header">
+        <span class="label">Selected Point</span>
+        <span id="inspector-info" class="info-item" style="color:var(--text-dim)">Click a heatmap cell to inspect</span>
+      </div>
+      <div class="inspector-status" id="inspector-status"></div>
+      <div id="sv-plot" class="sv-plot"></div>
+    </div>
+  </div>
+
+  <!-- ── Supplementary Data ── -->
+  <div class="section">
+    <div class="section-label">Supplementary Datasets</div>
+    <div class="supp-tabs">
+      <button class="supp-tab active" onclick="showSuppTab('mass-ratio', this)">Mass Ratio Sweep</button>
+      <button class="supp-tab" onclick="showSuppTab('nbody', this)">N-Body Scaling</button>
+    </div>
+    <div class="supp-content">
+      <div class="supp-panel active" id="panel-mass-ratio">
+        <div id="chart-mass-ratio" class="supp-chart"></div>
+      </div>
+      <div class="supp-panel" id="panel-nbody">
+        <div id="chart-nbody" class="supp-chart"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-content -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════════════════════════ */
+const S = {
+  manifest: null,
+  scans: [],
+  configs: [],          // unique config groups
+  primary: { scanId: null, data: null, svBuf: null, scan: null, obs: 'rank' },
+  compare: { scanId: null, data: null, svBuf: null, scan: null, obs: 'rank' },
+  comparing: false,
+  suppLoaded: { massRatio: false, nbody: false },
+};
+
+// Plotly layout template
+const LAYOUT_BASE = {
+  paper_bgcolor: '#141820', plot_bgcolor: '#0f1218',
+  font: { family: 'JetBrains Mono, monospace', color: '#c8ccd4', size: 11 },
+  margin: { l: 65, r: 15, t: 30, b: 55 },
+};
+
+// Custom colorscales
+const CS_RANK = [
+  [0, '#2a1060'], [0.3, '#30509a'], [0.6, '#1a7044'],
+  [0.85, '#3ddc84'], [1.0, '#f0a030']
+];
+const CS_GAP = [
+  [0, '#7a2a2a'], [0.15, '#e05555'], [0.35, '#f0a030'],
+  [0.55, '#4ac8e8'], [0.8, '#1a6e3a'], [1.0, '#3ddc84']
+];
+
+/* ═══════════════════════════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════════════════════════ */
+function configKey(scan) {
+  let k = scan.potential;
+  if (scan.charges && Array.isArray(scan.charges)) k += '_c' + scan.charges.join('');
+  else if (scan.charges && typeof scan.charges === 'object') k += '_helium';
+  if (scan.mode === 'adaptive') k += '_adaptive';
+  return k;
+}
+
+function configLabel(key) {
+  const map = {
+    '1/r': 'V = 1/r',
+    '1/r_c2-1-1': 'V = 1/r  Coulomb [+2,−1,−1]',
+    '1/r_helium': 'Helium (1/r)',
+    '1/r2': 'V = 1/r²',
+    '1/r2_c2-1-1': 'V = 1/r²  Coulomb [+2,−1,−1]',
+    '1/r2_adaptive': 'V = 1/r²  (adaptive)',
+    '1/r2_c2-1-1_adaptive': 'V = 1/r²  Coulomb (adaptive)',
+    'harmonic': 'V = r²  (harmonic)',
+  };
+  return map[key] || key;
+}
+
+function epsLabel(eps) {
+  if (typeof eps === 'number') {
+    if (eps >= 0.001) return eps.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
+    return eps.toExponential(0);
+  }
+  if (Array.isArray(eps)) return eps.map(e => e.toExponential(0)).join(' – ');
+  return String(eps);
+}
+
+function nearestIdx(arr, val) {
+  let best = 0, bestD = Math.abs(arr[0] - val);
+  for (let i = 1; i < arr.length; i++) {
+    const d = Math.abs(arr[i] - val);
+    if (d < bestD) { best = i; bestD = d; }
+  }
+  return best;
+}
+
+function showLoading(view, show) {
+  document.getElementById('loading-' + view).classList.toggle('visible', show);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════════════════ */
+async function init() {
+  try {
+    const resp = await fetch('data/manifest.json');
+    S.manifest = await resp.json();
+  } catch (e) {
+    document.getElementById('label-primary').textContent = 'Error loading manifest.json — run preprocess_atlas_data.py first';
+    return;
+  }
+  S.scans = S.manifest.scans;
+
+  // Build unique config groups
+  const seen = new Set();
+  S.scans.forEach(s => {
+    const k = configKey(s);
+    if (!seen.has(k)) { seen.add(k); S.configs.push(k); }
+  });
+
+  populateDropdowns('primary');
+  populateDropdowns('compare');
+
+  // Load first scan
+  const firstId = document.getElementById('eps-select').value;
+  if (firstId) await loadScan('primary', firstId);
+
+  // Load supplementary data
+  loadMassRatio();
+  loadNBodyScaling();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DROPDOWNS
+   ═══════════════════════════════════════════════════════════════════════ */
+function populateDropdowns(view) {
+  const potSel = document.getElementById(view === 'primary' ? 'pot-select' : 'pot-select-2');
+  potSel.innerHTML = '';
+  S.configs.forEach(k => {
+    const opt = document.createElement('option');
+    opt.value = k; opt.textContent = configLabel(k);
+    potSel.appendChild(opt);
+  });
+  updateEpsDropdown(view);
+}
+
+function updateEpsDropdown(view) {
+  const potSel = document.getElementById(view === 'primary' ? 'pot-select' : 'pot-select-2');
+  const epsSel = document.getElementById(view === 'primary' ? 'eps-select' : 'eps-select-2');
+  const selectedConfig = potSel.value;
+
+  const matching = S.scans.filter(s => configKey(s) === selectedConfig);
+  matching.sort((a, b) => {
+    const ea = typeof a.epsilon === 'number' ? a.epsilon : 999;
+    const eb = typeof b.epsilon === 'number' ? b.epsilon : 999;
+    return ea - eb;
+  });
+
+  epsSel.innerHTML = '';
+  matching.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.id; opt.textContent = 'ε = ' + epsLabel(s.epsilon);
+    epsSel.appendChild(opt);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   EVENT HANDLERS
+   ═══════════════════════════════════════════════════════════════════════ */
+function onPotentialChange(view) {
+  updateEpsDropdown(view);
+  onEpsilonChange(view);
+}
+
+async function onEpsilonChange(view) {
+  const epsSel = document.getElementById(view === 'primary' ? 'eps-select' : 'eps-select-2');
+  const scanId = epsSel.value;
+  if (scanId) await loadScan(view, scanId);
+}
+
+function setObservable(view, obs, btn) {
+  S[view].obs = obs;
+  // Update button states
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.obs-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderHeatmap(view);
+}
+
+function toggleCompare() {
+  S.comparing = !S.comparing;
+  document.getElementById('compare-btn').classList.toggle('active', S.comparing);
+  document.getElementById('controls-compare').classList.toggle('visible', S.comparing);
+  document.getElementById('panel-compare').style.display = S.comparing ? '' : 'none';
+  document.getElementById('display-grid').classList.toggle('side-by-side', S.comparing);
+
+  if (S.comparing && !S.compare.scanId) {
+    const epsSel2 = document.getElementById('eps-select-2');
+    if (epsSel2.value) loadScan('compare', epsSel2.value);
+  }
+  // Re-render primary to adjust to new column width
+  if (S.primary.data) {
+    setTimeout(() => { Plotly.Plots.resize('heatmap-primary'); }, 50);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DATA LOADING
+   ═══════════════════════════════════════════════════════════════════════ */
+async function loadScan(view, scanId) {
+  const scan = S.scans.find(s => s.id === scanId);
+  if (!scan || !scan.json) return;
+
+  showLoading(view, true);
+  try {
+    const resp = await fetch(scan.json);
+    S[view].data = await resp.json();
+    S[view].scanId = scanId;
+    S[view].scan = scan;
+    S[view].svBuf = null; // clear cache
+
+    // Update label
+    const lbl = document.getElementById('label-' + view);
+    lbl.textContent = configLabel(configKey(scan)) + '  ε=' + epsLabel(scan.epsilon);
+
+    renderHeatmap(view);
+  } catch (e) {
+    console.error('Failed to load scan', scanId, e);
+  }
+  showLoading(view, false);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   HEATMAP RENDERING
+   ═══════════════════════════════════════════════════════════════════════ */
+function renderHeatmap(view) {
+  const { data, obs, scan } = S[view];
+  if (!data) return;
+
+  const isGap = obs === 'gap';
+  let z, colorscale, cbTitle, hoverTpl;
+
+  if (isGap) {
+    // Log-transform gap ratios for better visualization
+    z = data.gap.map(row => row.map(v => v > 0 ? Math.log10(Math.max(v, 1e-16)) : -16));
+    colorscale = CS_GAP;
+    cbTitle = 'log₁₀(gap)';
+    hoverTpl = 'μ=%{x:.3f}<br>φ=%{y:.3f}<br>log₁₀(gap)=%{z:.1f}<extra></extra>';
+  } else {
+    z = data.rank;
+    colorscale = CS_RANK;
+    cbTitle = 'Rank';
+    hoverTpl = 'μ=%{x:.3f}<br>φ=%{y:.3f}<br>Rank=%{z}<extra></extra>';
+  }
+
+  const divId = 'heatmap-' + view;
+  const layout = Object.assign({}, LAYOUT_BASE, {
+    xaxis: { title: 'μ  (mass ratio parameter)', gridcolor: '#1e2430', zeroline: false, constrain: 'domain' },
+    yaxis: { title: 'φ  (angle parameter)', gridcolor: '#1e2430', zeroline: false, scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
+    margin: { l: 65, r: 80, t: 30, b: 55 },
+  });
+
+  Plotly.react(divId, [{
+    z: z, x: data.mu, y: data.phi,
+    type: 'heatmap',
+    colorscale: colorscale,
+    colorbar: { title: { text: cbTitle, side: 'right' }, thickness: 15, len: 0.9 },
+    hovertemplate: hoverTpl,
+  }], layout, { responsive: true });
+
+  // Attach click handler
+  const el = document.getElementById(divId);
+  el.removeAllListeners && el.removeAllListeners('plotly_click');
+  el.on('plotly_click', d => onHeatmapClick(d, view));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CLICK → INSPECT POINT
+   ═══════════════════════════════════════════════════════════════════════ */
+async function onHeatmapClick(data, view) {
+  const pt = data.points[0];
+  const { data: atlas, scan } = S[view];
+  if (!atlas) return;
+
+  const j = nearestIdx(atlas.mu, pt.x);
+  const i = nearestIdx(atlas.phi, pt.y);
+
+  const rank = atlas.rank[i][j];
+  const gap = atlas.gap[i][j];
+
+  // Update info display
+  document.getElementById('inspector-info').innerHTML =
+    `<span class="info-item">μ = <b>${atlas.mu[j].toFixed(4)}</b></span> ` +
+    `<span class="info-item">φ = <b>${atlas.phi[i].toFixed(4)}</b></span> ` +
+    `<span class="info-item">Rank = <b>${rank}</b></span> ` +
+    `<span class="info-item">Gap ratio = <b class="amber">${gap.toExponential(2)}</b></span>`;
+
+  document.getElementById('inspector').classList.add('active');
+
+  // Load SV spectrum binary if needed
+  if (scan.sv_bin && !S[view].svBuf) {
+    document.getElementById('inspector-status').textContent = 'Loading singular value spectra (~5 MB)…';
+    try {
+      const resp = await fetch(scan.sv_bin);
+      S[view].svBuf = new Float32Array(await resp.arrayBuffer());
+    } catch (e) {
+      document.getElementById('inspector-status').textContent = 'Failed to load SV data';
+      return;
+    }
+    document.getElementById('inspector-status').textContent = '';
+  }
+
+  if (S[view].svBuf && scan.sv_shape) {
+    const nCols = scan.sv_shape[1];
+    const nGen = scan.sv_shape[2];
+    const offset = (i * nCols + j) * nGen;
+    const spectrum = Array.from(S[view].svBuf.slice(offset, offset + nGen));
+    plotSpectrum(spectrum, rank);
+  }
+}
+
+function plotSpectrum(spectrum, rank) {
+  const x = spectrum.map((_, i) => i + 1);
+  const y = spectrum.map(v => v > 0 ? Math.log10(v) : -16);
+  const colors = x.map(i => i <= rank ? '#3ddc84' : '#333844');
+
+  const layout = Object.assign({}, LAYOUT_BASE, {
+    xaxis: { title: 'Singular value index', gridcolor: '#1e2430', zeroline: false },
+    yaxis: { title: 'log₁₀(σ)', gridcolor: '#1e2430', zeroline: false },
+    margin: { l: 55, r: 10, t: 10, b: 45 },
+    shapes: [{
+      type: 'line',
+      x0: rank + 0.5, x1: rank + 0.5,
+      y0: 0, y1: 1, yref: 'paper',
+      line: { color: '#f0a030', width: 2, dash: 'dash' },
+    }],
+    annotations: [{
+      x: rank + 0.5, y: 1.02, yref: 'paper',
+      text: 'rank = ' + rank, showarrow: false,
+      font: { color: '#f0a030', size: 10 }, yanchor: 'bottom',
+    }],
+  });
+
+  Plotly.react('sv-plot', [{
+    x: x, y: y,
+    type: 'scatter', mode: 'lines+markers',
+    marker: { size: 3.5, color: colors },
+    line: { color: '#3ddc84', width: 1.2 },
+    hovertemplate: 'σ[%{x}] = %{customdata:.4e}<extra></extra>',
+    customdata: spectrum,
+  }], layout, { responsive: true });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SUPPLEMENTARY DATA
+   ═══════════════════════════════════════════════════════════════════════ */
+function showSuppTab(id, btn) {
+  document.querySelectorAll('.supp-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.supp-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+async function loadMassRatio() {
+  if (!S.manifest.datasets.mass_ratio) return;
+  try {
+    const resp = await fetch(S.manifest.datasets.mass_ratio.path);
+    const data = await resp.json();
+    renderMassRatio(data);
+    S.suppLoaded.massRatio = true;
+  } catch (e) { console.error('Mass ratio load failed', e); }
+}
+
+function renderMassRatio(data) {
+  const m3 = data.map(d => d.m3);
+  const traces = [];
+  const levels = [
+    { key: 'level_0', label: 'Level 0', color: '#4ac8e8' },
+    { key: 'level_1', label: 'Level 1', color: '#a07ae0' },
+    { key: 'level_2', label: 'Level 2', color: '#3ddc84' },
+  ];
+
+  levels.forEach(lv => {
+    const y = data.map(d => d[lv.key] ? d[lv.key].dim : null);
+    traces.push({
+      x: m3, y: y, name: lv.label, type: 'scatter',
+      mode: 'lines+markers', marker: { size: 5, color: lv.color },
+      line: { color: lv.color, width: 2 },
+    });
+  });
+
+  const layout = Object.assign({}, LAYOUT_BASE, {
+    xaxis: { title: 'm₃  (m₁ = m₂ = 1)', type: 'log', gridcolor: '#1e2430', zeroline: false },
+    yaxis: { title: 'Dimension', gridcolor: '#1e2430', zeroline: false },
+    legend: { font: { size: 10 }, bgcolor: 'rgba(0,0,0,0)' },
+    margin: { l: 55, r: 10, t: 20, b: 50 },
+  });
+
+  Plotly.react('chart-mass-ratio', traces, layout, { responsive: true });
+}
+
+async function loadNBodyScaling() {
+  if (!S.manifest.datasets.nbody_scaling) return;
+  try {
+    const resp = await fetch(S.manifest.datasets.nbody_scaling.path);
+    const raw = await resp.json();
+    // Data is { experiment: "...", results: [...] }
+    const data = raw.results || raw;
+    renderNBodyScaling(data);
+    S.suppLoaded.nbody = true;
+  } catch (e) { console.error('N-body load failed', e); }
+}
+
+function renderNBodyScaling(data) {
+  const ns = data.map(d => d.N || d.n_bodies || d.n);
+  const maxLevels = Math.max(...data.map(d => (d.sequence || d.dimension_sequence || []).length));
+
+  const colors = ['#4ac8e8', '#a07ae0', '#3ddc84', '#f0a030', '#e05555'];
+  const traces = [];
+
+  for (let lv = 0; lv < maxLevels; lv++) {
+    const y = data.map(d => {
+      const seq = d.sequence || d.dimension_sequence || [];
+      return seq[lv] != null ? seq[lv] : null;
+    });
+    traces.push({
+      x: ns, y: y, name: 'Level ' + lv, type: 'bar',
+      marker: { color: colors[lv % colors.length] },
+    });
+  }
+
+  const layout = Object.assign({}, LAYOUT_BASE, {
+    xaxis: { title: 'N (number of bodies)', gridcolor: '#1e2430', zeroline: false, dtick: 1 },
+    yaxis: { title: 'Dimension', gridcolor: '#1e2430', zeroline: false },
+    barmode: 'group',
+    legend: { font: { size: 10 }, bgcolor: 'rgba(0,0,0,0)' },
+    margin: { l: 55, r: 10, t: 20, b: 50 },
+  });
+
+  Plotly.react('chart-nbody', traces, layout, { responsive: true });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   BOOTSTRAP
+   ═══════════════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

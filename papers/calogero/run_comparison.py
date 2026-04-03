@@ -6,8 +6,8 @@ potentials, spatial dimensions, and mass ratios.
 Generates calogero_comparison_table.json with all results.
 """
 import sys, os, json, math
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'nbody'))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'nbody'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from time import time
 from sympy import Rational, Integer

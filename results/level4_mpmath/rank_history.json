@@ -1,0 +1,23 @@
+[
+  {
+    "row": 0,
+    "rank": 1,
+    "increased": true,
+    "eval_time": 613.5490899085999,
+    "rank_time": 0.018817901611328125
+  },
+  {
+    "row": 1,
+    "rank": 2,
+    "increased": true,
+    "eval_time": 603.0944187641144,
+    "rank_time": 0.038794517517089844
+  },
+  {
+    "row": 2,
+    "rank": 3,
+    "increased": true,
+    "eval_time": 597.6530478000641,
+    "rank_time": 0.06044816970825195
+  }
+]

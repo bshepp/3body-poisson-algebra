@@ -10,10 +10,10 @@ Three papers completed, plus comprehensive atlas survey:
 
 | # | Title | File | Key results |
 |---|-------|------|-------------|
-| 1 | Super-exponential growth of the Poisson algebra (N=3) | `preprint.tex` | Sequence [3,6,17,116], mass invariance, 1/r vs 1/r² vs r² |
-| 2 | S₃-equivariant jet filtration | `paper2_s3_filtration.tex` | 52+44+16+4=116, CG decomposition, integer scaling, syzygies |
-| 3 | Universal dimension sequences | `paper3_universality.tex` | N=4 [6,14,62], d-independence, 1/r³, charge-sign, universality conjecture |
-| 4 | Calogero-Moser integrability test | `paper4_calogero_integrability.tex` | 1D CM gives [3,6,17,116], singularity class invariance, Galperin mass ratios |
+| 1 | Super-exponential growth of the Poisson algebra (N=3) | `papers/preprint.tex` | Sequence [3,6,17,116], mass invariance, 1/r vs 1/r² vs r² |
+| 2 | S₃-equivariant jet filtration | `papers/paper2_s3_filtration.tex` | 52+44+16+4=116, CG decomposition, integer scaling, syzygies |
+| 3 | Universal dimension sequences | `papers/paper3_universality.tex` | N=4 [6,14,62], d-independence, 1/r³, charge-sign, universality conjecture |
+| 4 | Calogero-Moser integrability test | `papers/paper4_calogero_integrability.tex` | 1D CM gives [3,6,17,116], singularity class invariance, Galperin mass ratios |
 | — | Shape sphere atlas survey | `atlas_figures/` | 76 figures, 11 configs, 99K grid points, critical locus = S₃ fixed points |
 
 ---
@@ -3773,3 +3773,211 @@ times larger (measuring a different rank boundary).
 are fixed, all .npy files have identical byte sizes regardless of
 content. Use `aws s3 cp --recursive` or add `--exact-timestamps` to
 `s3 sync` to force content-aware comparison.
+
+## Gap Analysis — Phase 1: Spectral Post-Processing (April 1, 2026)
+
+### Motivation
+
+A systematic audit of the project identified 21 untested hypotheses and
+unproduced figures, organized into four phases by effort level. Phase 1
+covers six items that require zero additional computation — they mine
+existing atlas data (`sv_spectra.npy`, level-4 JSON results, symbolic
+checkpoints) to extract new insights.
+
+### Data Sources
+
+| Source | Shape / Format | Contents |
+|--------|---------------|----------|
+| `atlas_output_hires/1_r/sv_spectra.npy` | (100, 100, 156) | 156 SVs at each (μ, φ) grid point |
+| `atlas_output_hires/1_r/mu_vals.npy` | (100,) | μ ∈ [0.200, 3.000] |
+| `atlas_output_hires/1_r/phi_vals.npy` | (100,) | φ ∈ [0.100, 3.042] rad |
+| `atlas_output_hires/1_r/rank_map.npy` | (100, 100) | Integer rank at each grid point |
+| `results/level4_*/results.json` | JSON | Level-4 dim bounds, gap ratios, config metadata |
+| `aws_results/level4_*/results.json` | JSON | Same schema, from AWS runs |
+| `checkpoints/level_3.pkl` | pickle dict | 156 symbolic generators (levels 0–3), keys: level/exprs/names/levels |
+
+### Scripts Created
+
+**1. `spectral_depth_mining.py`** (items 1.1 + 1.2 + 1.3)
+
+Three analysis passes over the (100, 100, 156) SV tensor:
+
+- **Item 1.1 — Interior SV landscapes**: Heatmaps of SV magnitude at
+  indices [49, 79, 99, 109, 115] (spanning the bulk through the rank
+  boundary). Special points marked: Lagrange (μ=1, φ=60°), Euler
+  (μ=0.5, φ=180°), Isos-90 (μ=1, φ=90°).
+
+- **Item 1.2 — Decay rate and knee index**: At each grid point, computes
+  `decay_rate = log10(SV[50]) - log10(SV[115])` (total spectral drop)
+  and `knee_index` = first index where SV drops below 1% of SV[0].
+
+- **Item 1.3 — Spectral clustering**: Normalizes each 156-dim SV vector,
+  runs k-means clustering for k=3, 5, 7. Plots cluster assignments on
+  the shape sphere plus mean cluster profiles.
+
+Output: 8 PNGs covering 1/r and 1/r² potentials.
+
+**2. `cg_atlas_comparison.py`** (item 1.4)
+
+Extends the Clebsch-Gordan doublet analysis (previously done only at
+the Lagrange point) to the full shape sphere. At each grid point,
+counts "near-degenerate doublets" — consecutive SV pairs with ratio
+< 1.05. Analysis split into four S₃ representation tiers:
+tier 0 [0–52], tier 1 [52–96], tier 2 [96–112], tier 3 [112–116].
+
+Output: 2 PNGs (doublet landscape heatmap, predicted-vs-observed scatter).
+
+**3. `level4_comparison.py`** (item 1.5)
+
+Discovers all level-4 result JSONs under `results/` and `aws_results/`,
+deduplicates by (config_name, n_samples) keeping the first found, and
+filters out mpmath results (d4=0). Generates three figures:
+
+- Bar chart of d(4) lower bound at max samples per config
+- Convergence curves: d(4) vs. sample count for each config
+- Stacked level breakdown: dims at levels 0–3 plus Δd₄
+
+Output: 3 PNGs. 18 unique records after dedup.
+
+**4. `sv116_analytical.py`** (item 1.6)
+
+Loads the 156 symbolic generators from `checkpoints/level_3.pkl`.
+Selects 8 key generators (the 3 Hamiltonians + 5 highest-level
+generators at indices [111–115]). Lambdifies each individually (not
+via the batch `lambdify_generators()` wrapper, which has a
+`column_stack` bug when some expressions return scalars). Evaluates
+on a 20×20 coarse grid with 500 random phase-space samples per point,
+computing the RMS of each generator. Defines an "analytical prediction"
+as the RMS of the 8th generator, and compares to the observed SV #116
+via `RegularGridInterpolator` from the atlas data.
+
+Output: 1 PNG (predicted-vs-observed scatter with R² annotation).
+
+### Key Findings
+
+See `phase1_findings.md` for the full write-up. Highlights:
+
+1. **Spectral structure is spatially smooth** — SV landscapes at all
+   depths show continuous variation across the shape sphere, with no
+   hidden phase boundaries at intermediate indices.
+
+2. **Doublet hierarchy tracks S₃ symmetry distance** — Lagrange (full
+   S₃) has 33 doublets (E-fraction 0.57), Isos-90 (Z₂ subgroup) has
+   24 (0.41), Euler (no S₃ symmetry) has 14 (0.24). The CG doublet
+   structure is most pronounced at the maximally symmetric point and
+   degrades smoothly away from it.
+
+3. **Level-4 dimension varies dramatically by configuration** — Global
+   random sampling at 200K points finds d(4) ≥ 5604, while
+   configuration-targeted sampling (Lagrange, Euler, Scalene) at 20K
+   points finds significantly lower bounds (3112, 2194, 3218). Only
+   the global-30K run achieves a definitive gap ratio.
+
+4. **Analytical SV #116 prediction achieves R² = 0.630** — The symbolic
+   structure of the weakest generators correlates meaningfully with the
+   observed rank boundary, providing partial analytical control.
+
+### Bug Fixed
+
+**`lambdify_generators()` column_stack mismatch**: The batch wrapper
+in `exact_growth.py` uses `np.column_stack(vals)` which fails when
+some lambdified expressions return scalars (0-dim arrays) instead of
+1D arrays. Workaround: use individual `sp.lambdify` calls with
+`if np.isscalar(col): col = np.full(n_pts, float(col))` broadcasting.
+
+### Output Inventory
+
+All outputs in `spectral_depth/` (14 files, ~2.9 MB total):
+
+```
+cg_doublet_landscape.png          cg_predicted_vs_observed.png
+cluster_profiles_1_r.png          cluster_profiles_1_r2.png
+level4_comparison_chart.png       level4_convergence_curves.png
+level4_stacked_levels.png         spectral_clusters_1_r.png
+spectral_clusters_1_r2.png        spectral_decay_1_r.png
+spectral_decay_1_r2.png           sv116_predicted_vs_observed.png
+sv_landscapes_1_r.png             sv_landscapes_1_r2.png
+```
+
+---
+
+## Website Deployment & Dashboard Hardening (April 2026)
+
+### Website Built and Deployed
+
+Built a four-page research website and deployed it to
+**https://nbody.briansheppard.com** via S3 + CloudFront:
+
+| Page | File | Purpose |
+|------|------|---------|
+| Dashboard | `website/index.html` | Overview stats, work plan, conjectures, papers |
+| Research Tracker | `website/tracker.html` | Per-experiment status for all atlas configs |
+| Data Explorer | `website/explorer.html` | Static PNG/video browser (~197 images) |
+| Interactive Atlas | `website/interactive.html` | Plotly.js heatmap explorer with SV spectrum inspector |
+
+**Infrastructure:** S3 bucket `nbody-briansheppard-com` (us-east-1), CloudFront
+distribution `E3AHN5BEM2KUCH`, ACM TLS certificate, domain via Porkbun CNAME.
+
+**Preprocessing pipeline:** `website/preprocess_atlas_data.py` converts raw
+`.npy` atlas arrays into web-friendly JSON + binary Float32 format (28 scans →
+59 files, 172.5 MB).
+
+### Interactive Atlas UI Fixes
+
+- Square tiles: `scaleanchor: 'x', scaleratio: 1` on y-axis
+- Colorbar positioning: right margin 80px, `constrain: 'domain'`
+- Viewport sizing: `height: calc(100vh - 220px)` with min/max bounds
+
+### Tracker Accuracy Audit
+
+Comprehensive cross-reference of all 42 directories in `aws_results/atlas_full/`
+against tracker status claims. Found and corrected 4 mismatches:
+
+| Config | Was | Now | Evidence |
+|--------|-----|-----|----------|
+| Triple BH | ✓ Complete | ~38% — Stalled | rank_map all −1, gap_map all 0, AWS log shows only 60/156 evals |
+| Tritium | In progress | Not started | Only config.json stub present |
+| p-n-n | In progress | Not started | No data at all |
+| Dashboard total | 16 complete | 15 complete, 4 in progress | Corrected stat cards + timeline |
+
+### Knee Index Spectral Panel
+
+Created `website/render_knee_index.py` to compute and render the spectral
+decay "knee index" for the 1/r² (Calogero-Moser) potential:
+
+- Reads `atlas_output_hires/1_r2/sv_spectra.npy` (100×100×128 SV spectra)
+- Knee index = argmax of consecutive log-ratio drops per grid cell
+- Dark-themed heatmap with Lagrange/Isos-90/Euler markers
+- Output: `website/assets/knee_index_1r2.png` (68 KB)
+- Added to dashboard Overview section with descriptive caption
+
+### Repository Reorganization & Git Cleanup
+
+Reorganized 113+ files from a flat root directory into 6 subdirectories:
+
+| Directory | Contents |
+|-----------|----------|
+| `docs/` | Session log, conjectures, project status, strategy docs, etc. |
+| `papers/` | LaTeX sources, PDFs, calogero paper artifacts |
+| `figures/` | All generated figure PNGs (shape spheres, level4 analysis, etc.) |
+| `infra/` | AWS launch scripts, userdata, cost check, key files |
+| `data/` | JSON metadata (mass_ratio_sweep, atlas_check, inventories) |
+| `website/` | HTML pages, preprocessing scripts, rendering scripts |
+
+Updated `.gitignore` with new rules:
+
+- **Added:** `.playwright-mcp/`, `aws_results/`, `aws_code_mirror/`,
+  `heartbeats/`, `website/assets/`, LaTeX build artifacts (`papers/*.aux`,
+  `papers/*.log`, `papers/*.out`)
+- **Updated:** PNG exceptions now use `!figures/*.png` and `!papers/*.png`
+  (replacing old root-level exceptions)
+- **Preserved:** All existing ignore rules for checkpoints, atlas output,
+  infra secrets, numpy/pickle files, video assets
+
+Git correctly detects all file moves as renames. Staging summary:
+- 26 renames (old root → new subdirectory)
+- 10 new root scripts (diagnostics, comparisons, analytics)
+- 8 new nbody files (N-body scaling, N=4 universality)
+- 30+ new results files (computation logs, completion JSONs)
+- 6 new website files (HTML pages, build scripts)
+- 4 intentional deletions (personal docs + userdata scripts now ignored in new locations)

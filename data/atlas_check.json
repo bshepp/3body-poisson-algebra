@@ -1,0 +1,77 @@
+{
+  "sun_earth_moon_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T07:40:47Z"
+  },
+  "sun_jupiter_asteroid_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T07:41:02Z"
+  },
+  "binary_star_planet_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T07:41:17Z"
+  },
+  "triple_bh_lisa_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T07:41:32Z"
+  },
+  "lithium_ion_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T07:41:47Z"
+  },
+  "lithium_ion_chg": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T10:26:22Z"
+  },
+  "h_minus_ion_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T10:26:44Z"
+  },
+  "h_minus_ion_chg": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T13:37:06Z"
+  },
+  "positronium_neg_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T13:37:28Z"
+  },
+  "positronium_neg_chg": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T13:37:39Z"
+  },
+  "muonic_helium_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T13:38:00Z"
+  },
+  "muonic_helium_chg": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T13:38:11Z"
+  },
+  "h2_plus_ion_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T13:38:33Z"
+  },
+  "h2_plus_ion_chg": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T16:54:17Z"
+  },
+  "penning_trap_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-22T20:06:28Z"
+  }
+}
