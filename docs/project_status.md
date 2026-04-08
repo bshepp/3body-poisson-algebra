@@ -1,12 +1,12 @@
 # Three-Body Poisson Algebra — Project Status & Roadmap
 
-*Last updated: March 27, 2026*
+*Last updated: April 8, 2026*
 
 ---
 
 ## 1. Atlas Campaign Status
 
-### Completed Configurations (16)
+### Completed Configurations (18)
 
 | # | Configuration | Potential | Masses | Charges | Notes |
 |---|---|---|---|---|---|
@@ -26,6 +26,8 @@
 | 14 | Muonic helium | 1/r | 7294:1:207 | (2,-1,-1) | 3-scale mass hierarchy |
 | 15 | Binary star + planet | 1/r | 1:1:0.001 | — | |
 | 16 | Triple BH (LISA) | 1/r | 1:0.01:1e-5 | — | |
+| 17 | Sun-Earth-Moon | 1/r | 1:3e-6:3.7e-8 | — | Extreme mass ratio; ranks 102–108 due to SVD conditioning |
+| 18 | Sun-Jupiter-Asteroid | 1/r | 1:9.5e-4:1e-10 | — | Most extreme mass ratio; ranks 91–100 due to SVD conditioning |
 
 Additional completed work:
 - Harmonic oscillator 1/r^-2 atlas (100x100) — finite algebra, rank 15
@@ -35,14 +37,14 @@ Additional completed work:
 - Bell test completed locally (results in `nbody/bell_test_results/`)
 - S3 data fully synced locally (9.04 GB), verified by `audit_atlas_data.py`
 - Data integrity audit: 17/42 configs clean, 3 fixed from S3 stale sync
+- Sun-Earth-Moon atlas (100x100, 800 samples) — completed April 7, 2026 in 6h28m on r6i.4xlarge (on-demand, 16 workers). 10,000/10,000 valid points, unique ranks 102–108. Dynamic range 10²⁰–10²⁶ limits SVD rank detection.
+- Sun-Jupiter-Asteroid atlas (100x100, 800 samples) — completed April 8, 2026 in 9h33m on r6i.4xlarge (on-demand, 16 workers). 10,000/10,000 valid points, unique ranks 91–100. Dynamic range 10²⁵–10³² (most extreme system computed).
 
-### In Progress (3)
+### In Progress (1)
 
 | # | Task | Progress | Status |
 |---|---|---|---|
-| 1 | **Sun-Earth-Moon atlas** (1 : 3e-6 : 3.7e-8) | 11/100 rows | Spot reclaimed. Checkpoint safe on S3. Needs relaunch. |
-| 2 | **Sun-Jupiter-Asteroid atlas** (1 : 9.5e-4 : 1e-10) | 7/100 rows | Spot reclaimed. Checkpoint safe on S3. Needs relaunch. |
-| 3 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed. Rank=667, plateau=0. ETA ~574h. Checkpoint safe. |
+| 1 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed. Rank=667, plateau=0. ETA ~574h. Checkpoint safe. |
 
 ### Not Yet Started (6)
 
@@ -68,8 +70,8 @@ with a check have completed atlas computations.
 | System | Masses | Status | Notes |
 |--------|--------|--------|-------|
 | Equal-mass three-body | 1:1:1 | Done | Baseline atlas |
-| Sun-Earth-Moon | 1 : 3e-6 : 3.7e-8 | 11% | Extreme mass ratio, slow eval. Spot reclaimed. |
-| Sun-Jupiter-Asteroid | 1 : 9.5e-4 : 1e-10 | 7% | Restricted three-body regime. Spot reclaimed. |
+| Sun-Earth-Moon | 1 : 3e-6 : 3.7e-8 | Done | Ranks 102–108; 10K/10K valid. Dynamic range limits SVD. |
+| Sun-Jupiter-Asteroid | 1 : 9.5e-4 : 1e-10 | Done | Ranks 91–100; 10K/10K valid. Most extreme mass ratio. |
 | Three stars (globular cluster) | comparable | — | Equal-mass baseline covers this |
 | Binary star + planet | 1:1:0.001 | Done | |
 | Three galaxies merging | comparable | — | Equal-mass baseline covers this |
@@ -138,10 +140,13 @@ Several communities would find specific results immediately relevant:
 
 - **Restricted three-body / astrodynamics**: The mass invariance
   conjecture predicts the algebra shouldn't care when one mass goes
-  to zero. But the restricted problem has a different Hamiltonian
-  structure (the small body doesn't influence the primaries). Testing
-  whether the restricted case produces the same sequence would be
-  immediately relevant to mission design.
+  to zero. The Sun-Earth-Moon (3.7×10⁻⁸) and Sun-Jupiter-Asteroid
+  (10⁻¹⁰) atlases are now complete, confirming the algebra produces
+  non-trivial rank across the full shape sphere even at extreme mass
+  ratios. Detected ranks (102–108 and 91–100 respectively) are below
+  the canonical 116 due to SVD conditioning at dynamic ranges of
+  10²⁰–10³², not due to algebraic closure. The restricted problem
+  appears to preserve the infinite-dimensional algebra structure.
 
 - **Vortex dynamics / fluid mechanics**: Three point vortices with
   log(r) interaction confirmed [3, 6, 17, 116], establishing

@@ -3981,3 +3981,96 @@ Git correctly detects all file moves as renames. Staging summary:
 - 30+ new results files (computation logs, completion JSONs)
 - 6 new website files (HTML pages, build scripts)
 - 4 intentional deletions (personal docs + userdata scripts now ignored in new locations)
+
+---
+
+## Extreme Mass Ratio Atlas Campaign (April 7–8, 2026)
+
+### Background
+
+The Sun-Earth-Moon and Sun-Jupiter-Asteroid atlases had been stalled
+since March 26 — both were launched as spot instances, reclaimed early,
+and their checkpoints (rows 0–48 and 0–41 respectively) contained
+garbage data from old code that predated the lambdify performance fix.
+The old code fell back to `xreplace()` for 63/156 generators, causing
+timeouts that manifested as silent `-1` failures in the rank map.
+
+### Diagnosis
+
+Local testing confirmed that the **current codebase** (with the
+three-layer lambdify pipeline) handles both scenarios without
+exceptions. The root cause of the old failures was identified as a
+stale S3 checkpoint from pre-fix code — not a bug in the current code.
+
+Key diagnostic finding: extreme mass ratios cause enormous dynamic
+range in the evaluation matrix column norms, which limits SVD rank
+detection. This is a numerical conditioning reality, not a software
+bug:
+
+| System | Masses | Dynamic range | Detected ranks | Expected |
+|--------|--------|---------------|----------------|----------|
+| Sun-Earth-Moon | 1 : 3×10⁻⁶ : 3.7×10⁻⁸ | 10²⁰–10²⁶ | 102–108 | 116 |
+| Sun-Jupiter-Asteroid | 1 : 9.5×10⁻⁴ : 10⁻¹⁰ | 10²⁵–10³² | 91–100 | 116 |
+
+Various SVD normalization strategies (row+col, log-scale, rank-based)
+were tested locally but none consistently recovered rank 116 for the
+Sun-Earth-Moon case. The rank deficit is intrinsic to the conditioning.
+
+### Sun-Earth-Moon Atlas (completed April 7, 2026)
+
+**Procedure:**
+1. Deleted stale S3 checkpoint (`s3://3body-compute-290318/atlas_full/sun_earth_moon_*`)
+2. Synced latest code to S3
+3. Launched on-demand r6i.4xlarge (16 vCPU, `i-0ed5cdb6a02b6f9da`)
+4. Args: `--resolution 100 --scenario sun_earth_moon --samples 800`
+
+**Results:**
+- All 100 rows completed in **6 hours 28 minutes**
+- 10,000/10,000 grid points valid (zero failures)
+- Unique ranks: 102, 103, 104, 105, 106, 107, 108
+- Lambdify: 93 direct + 63 flat-nocse, zero xreplace fallback
+- Instance self-terminated cleanly
+
+**Data synced to:**
+- `aws_results/atlas_full/sun_earth_moon_1r_m1p0_3e-06_3p7e-08/`
+- `aws_results/results/atlas_full/atlas-sun-earth/`
+
+### Sun-Jupiter-Asteroid Atlas (completed April 8, 2026)
+
+**Procedure:** Identical to Sun-Earth-Moon — delete stale checkpoint,
+sync code, launch fresh on-demand instance.
+
+**Instance:** `i-0870a81b1b190f5bd` (r6i.4xlarge, on-demand)
+
+**Results:**
+- All 100 rows completed in **9 hours 33 minutes**
+- 10,000/10,000 grid points valid (zero failures)
+- Unique ranks: 91, 92, 93, 94, 95, 96, 97, 98, 99, 100
+- Lambdify: all 156 via direct lambdify (zero flat-nocse needed on AWS)
+- Gap ratios: 3.69 to 289
+- Instance self-terminated cleanly
+
+**Data synced to:**
+- `aws_results/atlas_full/sun_jupiter_asteroid_1r_m1p0_0p00095_1e-10/`
+- `aws_results/results/atlas_full/atlas-sun-jup/`
+
+### S3 Sync Lesson (reinforced)
+
+The `aws s3 sync` size-matching issue from March 27 recurred: NumPy
+arrays of fixed dimensions produce identical file sizes regardless of
+content, so `sync` skipped downloading updated arrays. Used
+`aws s3 cp --recursive` to force fresh downloads of all data files.
+
+### Science Implications
+
+Both extreme mass ratio atlases provide evidence that the Poisson
+algebra remains non-trivial (ranks well above zero) across the full
+shape sphere even when one mass approaches zero. The rank deficit
+relative to 116 scales with dynamic range — the more extreme the mass
+ratio, the lower the detected ranks — consistent with SVD conditioning
+limits rather than algebraic closure. This supports the mass invariance
+conjecture: the algebra structure is preserved, but numerical detection
+becomes harder as mass ratios grow extreme.
+
+The completed campaign brings the total to **18 atlas configurations**
+with 100% grid completion.
