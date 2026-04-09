@@ -23,7 +23,7 @@ atlas_1000/
 # Website rendered assets (regenerate via website/render_knee_index.py etc.)
 website/assets/
 
-# AWS keys, secrets, and launch configs (now in infra/)
+# AWS keys, secrets, and IAM configs (infra/)
 infra/*.pem
 *.pem
 infra/trust-policy.json
@@ -31,7 +31,6 @@ infra/s3-policy.json
 infra/block-devices.json
 infra/spot_options.json
 infra/tags*.json
-infra/userdata*.sh
 *_temp.txt
 
 # AWS computation results (multi-GB binary data — stored on S3)

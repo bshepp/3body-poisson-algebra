@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Three-Body Poisson Algebra</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a0c10;
+  --bg-panel: #0f1218;
+  --bg-card: #141820;
+  --bg-card-hover: #1a1f2a;
+  --border: #1e2430;
+  --border-bright: #2a3040;
+  --text-primary: #c8ccd4;
+  --text-secondary: #7a8090;
+  --text-dim: #4a5060;
+  --phosphor: #3ddc84;
+  --phosphor-dim: #1a6e3a;
+  --phosphor-glow: rgba(61, 220, 132, 0.15);
+  --amber: #f0a030;
+  --amber-dim: #7a5018;
+  --amber-glow: rgba(240, 160, 48, 0.12);
+  --red: #e05555;
+  --red-dim: #7a2a2a;
+  --cyan: #4ac8e8;
+  --cyan-dim: #1a5a6e;
+  --violet: #a07ae0;
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'Source Serif 4', Georgia, serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 14px; scroll-behavior: smooth; }
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--mono);
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ═══════════ TOPBAR ═══════════ */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 2rem; background: var(--bg-panel);
+  border-bottom: 1px solid var(--border); font-size: 0.72rem;
+}
+.topbar-left { display: flex; align-items: center; gap: 1.5rem; }
+.topbar-left a {
+  color: var(--text-secondary); text-decoration: none;
+  text-transform: uppercase; letter-spacing: 0.08em; transition: color 0.2s;
+}
+.topbar-left a:hover { color: var(--phosphor); }
+.topbar-left a.active { color: var(--phosphor); border-bottom: 1px solid var(--phosphor); }
+.topbar-right { color: var(--text-dim); display: flex; align-items: center; gap: 0.8rem; }
+.topbar-right a { color: var(--text-dim); transition: color 0.2s; }
+.topbar-right a:hover { color: var(--phosphor); }
+.topbar-right .gh-icon { width: 16px; height: 16px; fill: currentColor; vertical-align: middle; }
+
+/* ═══════════ HEADER ═══════════ */
+.page-header {
+  padding: 1.8rem 2rem 1rem;
+  border-bottom: 1px solid var(--border);
+  max-width: 1000px; margin: 0 auto;
+}
+.page-header h1 {
+  font-family: var(--serif); font-size: 1.6rem; font-weight: 600;
+  color: var(--text-primary); margin-bottom: 0.25rem;
+}
+.page-header h1 .dim { color: var(--text-secondary); font-weight: 300; }
+.page-header .subtitle {
+  color: var(--text-secondary); font-size: 0.78rem;
+}
+
+/* ═══════════ CONTENT ═══════════ */
+.page-content {
+  max-width: 1000px; margin: 0 auto; padding: 1.5rem 2rem 3rem;
+}
+
+/* ═══════════ TIER CARDS ═══════════ */
+.tier {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.tier:hover { border-color: var(--border-bright); }
+
+.tier-header {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.9rem 1.2rem;
+  background: var(--bg-card);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.tier-header:hover { background: var(--bg-card-hover); }
+
+.tier-icon {
+  width: 10px; height: 10px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.tier-title {
+  font-family: var(--serif);
+  font-size: 1.05rem; font-weight: 600;
+  flex: 1;
+}
+.tier-audience {
+  font-size: 0.68rem; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.tier-chevron {
+  font-size: 0.8rem; color: var(--text-dim);
+  transition: transform 0.2s;
+}
+.tier.open .tier-chevron { transform: rotate(90deg); }
+
+.tier-body {
+  display: none;
+  padding: 1.2rem 1.4rem;
+  background: var(--bg-panel);
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+.tier.open .tier-body { display: block; }
+
+.tier-body p { margin-bottom: 0.8rem; }
+.tier-body p:last-child { margin-bottom: 0; }
+.tier-body strong { color: var(--text-primary); font-weight: 600; }
+.tier-body em { font-style: italic; }
+.tier-body code {
+  font-family: var(--mono); font-size: 0.82rem;
+  background: var(--bg-card); padding: 0.1rem 0.35rem;
+  border-radius: 3px; color: var(--phosphor);
+}
+.tier-body .seq {
+  display: inline-block; padding: 0.15rem 0.5rem;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 3px; font-family: var(--mono);
+  font-size: 0.95rem; letter-spacing: 0.05em;
+  margin: 0.3rem 0;
+}
+.tier-body ul {
+  margin: 0.5rem 0 0.8rem 1.5rem;
+  color: var(--text-secondary);
+}
+.tier-body li { margin-bottom: 0.3rem; }
+
+/* Tier accent colors */
+.tier-1 .tier-icon { background: var(--phosphor); }
+.tier-1 .tier-title { color: var(--phosphor); }
+.tier-1.open { border-color: var(--phosphor-dim); }
+
+.tier-2 .tier-icon { background: var(--cyan); }
+.tier-2 .tier-title { color: var(--cyan); }
+.tier-2.open { border-color: var(--cyan-dim); }
+
+.tier-3 .tier-icon { background: var(--amber); }
+.tier-3 .tier-title { color: var(--amber); }
+.tier-3.open { border-color: var(--amber-dim); }
+
+.tier-4 .tier-icon { background: var(--violet); }
+.tier-4 .tier-title { color: var(--violet); }
+.tier-4.open { border-color: #503a80; }
+
+/* ═══════════ SCROLLBAR ═══════════ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+@media (max-width: 700px) {
+  .page-content { padding: 1rem; }
+  .tier-header { padding: 0.7rem 0.9rem; }
+  .tier-body { padding: 0.9rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOPBAR ═══════════ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="index.html">Dashboard</a>
+    <a href="tracker.html">Research Tracker</a>
+    <a href="explorer.html">Data Explorer</a>
+    <a href="interactive.html">Interactive Atlas</a>
+    <a href="about.html" class="active">About</a>
+  </div>
+  <div class="topbar-right">
+    Three-Body Poisson Algebra
+    <a href="https://github.com/bshepp/3body-poisson-algebra" target="_blank" rel="noopener" title="GitHub Repository"><svg class="gh-icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+  </div>
+</div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<div class="page-header">
+  <h1>About This Research</h1>
+  <div class="subtitle">A hidden algebraic structure in the three-body problem — explained at four levels</div>
+</div>
+
+<!-- ═══════════ CONTENT ═══════════ -->
+<div class="page-content">
+
+  <!-- ── Tier 1: For Everyone ── -->
+  <div class="tier tier-1 open" onclick="toggleTier(this)">
+    <div class="tier-header">
+      <div class="tier-icon"></div>
+      <div class="tier-title">For Everyone</div>
+      <div class="tier-audience">No prerequisites</div>
+      <div class="tier-chevron">▶</div>
+    </div>
+    <div class="tier-body">
+      <p>Imagine three stars pulling on each other through gravity. Predicting their paths is one of the oldest unsolved problems in physics — even Newton struggled with it. There is no simple formula; the motion is famously chaotic.</p>
+      <p>We discovered a <strong>hidden pattern</strong> in the mathematics of this system. When you write down all the ways the stars' positions and momenta can interact through their gravitational forces, those interactions generate a kind of "algebraic language." The words in this language combine to form new words, and the number of independent words at each level of complexity follows a specific sequence:</p>
+      <p class="seq"><strong>3 → 6 → 17 → 116</strong></p>
+      <p>What makes this remarkable is its <strong>universality</strong>. Whether you use Newton's gravity, an inverse-square force, or an entirely different force law — the same numbers appear. Whether the stars live in 1D, 2D, or 3D — the same numbers. Whether the masses are equal or wildly different — still the same numbers.</p>
+      <p>This suggests there is a deep structural fingerprint of the three-body problem that nobody knew about before.</p>
+    </div>
+  </div>
+
+  <!-- ── Tier 2: High School ── -->
+  <div class="tier tier-2" onclick="toggleTier(this)">
+    <div class="tier-header">
+      <div class="tier-icon"></div>
+      <div class="tier-title">High School Level</div>
+      <div class="tier-audience">Algebra &amp; basic physics</div>
+      <div class="tier-chevron">▶</div>
+    </div>
+    <div class="tier-body">
+      <p>In physics, a <strong>force</strong> between two objects depends on the distance between them. For gravity, the force goes as <code>1/r²</code>, where <code>r</code> is the distance. The <strong>potential energy</strong> tells you how much stored energy the pair has — for gravity it is proportional to <code>1/r</code>.</p>
+      <p>With three bodies, there are three pairs, so three pairwise potentials: <code>H₁₂</code>, <code>H₁₃</code>, and <code>H₂₃</code>. These are our starting "words" — <strong>3 of them</strong>.</p>
+      <p>There is an operation in physics called the <strong>Poisson bracket</strong>. It's like a rule for combining two quantities to get a new one. When you apply this rule to every pair of our 3 starting words, you get new expressions. After simplifying and removing duplicates, you end up with <strong>6 independent words</strong> at level 1.</p>
+      <p>Keep going — bracket the level-1 words with the originals — and you get <strong>17</strong> at level 2, then <strong>116</strong> at level 3. The number of truly independent expressions at each level is what we call the <strong>dimension sequence</strong>:</p>
+      <p class="seq">dim = [3, 6, 17, 116]</p>
+      <p>We checked this by representing each expression as a vector of numbers, then using a technique from linear algebra (the <strong>SVD</strong> — singular value decomposition) to count how many vectors are linearly independent. The gap between the "real" singular values and the numerical noise is enormous — ratios above 10¹⁰ — so the count is rock solid.</p>
+    </div>
+  </div>
+
+  <!-- ── Tier 3: Undergraduate ── -->
+  <div class="tier tier-3" onclick="toggleTier(this)">
+    <div class="tier-header">
+      <div class="tier-icon"></div>
+      <div class="tier-title">Undergraduate Level</div>
+      <div class="tier-audience">Mechanics &amp; linear algebra</div>
+      <div class="tier-chevron">▶</div>
+    </div>
+    <div class="tier-body">
+      <p>The three-body problem is formulated in <strong>Hamiltonian mechanics</strong>. Each body has position coordinates <code>qᵢ</code> and conjugate momenta <code>pᵢ</code>. The state lives in a <strong>phase space</strong> of dimension 2dN, where d is the spatial dimension and N = 3.</p>
+      <p>The <strong>Poisson bracket</strong> of two functions f, g on phase space is:</p>
+      <p><code>{f, g} = Σᵢ (∂f/∂qᵢ · ∂g/∂pᵢ − ∂f/∂pᵢ · ∂g/∂qᵢ)</code></p>
+      <p>This bracket is antisymmetric and satisfies the Jacobi identity, making the smooth functions on phase space into a <strong>Lie algebra</strong> under {·,·}.</p>
+      <p>We start with the three pairwise Hamiltonians H₁₂, H₁₃, H₂₃ and build the <strong>Lie algebra they generate</strong>:</p>
+      <ul>
+        <li>Level 0: {H₁₂, H₁₃, H₂₃} — dimension 3</li>
+        <li>Level 1: span of all {Hᵢⱼ, Hₖₗ} — dimension 6</li>
+        <li>Level 2: brackets of level-1 with level-0 — dimension 17</li>
+        <li>Level 3: next bracket layer — dimension 116</li>
+      </ul>
+      <p>The dimension is computed numerically. We <strong>substitute random phase-space points</strong> into the symbolic expressions, building a matrix where each row is a generator evaluated at a sample point. The <strong>SVD</strong> of this matrix reveals the numerical rank: singular values above 10⁻⁶ count as "real," and the gap ratio σₖ/σₖ₊₁ exceeds 10¹⁰ at the transition — an unambiguous rank determination.</p>
+      <p>A key technical trick: we introduce auxiliary variables <code>uᵢⱼ = 1/rᵢⱼ</code> so that Poisson brackets of potentials like 1/r produce <strong>polynomial</strong> expressions (via chain rule), avoiding messy radicals.</p>
+      <p>The universality result — same [3, 6, 17, 116] for 1/r, 1/r², 1/r³, log(r), all masses, all dimensions d = 1, 2, 3 — is checked by running the computation across thousands of parameter configurations in the <strong>Interactive Atlas</strong> on this site.</p>
+    </div>
+  </div>
+
+  <!-- ── Tier 4: Graduate / Researcher ── -->
+  <div class="tier tier-4" onclick="toggleTier(this)">
+    <div class="tier-header">
+      <div class="tier-icon"></div>
+      <div class="tier-title">Graduate / Researcher Level</div>
+      <div class="tier-audience">Symplectic geometry &amp; Lie theory</div>
+      <div class="tier-chevron">▶</div>
+    </div>
+    <div class="tier-body">
+      <p>The configuration space is <code>(ℝᵈ)ᴺ \ Δ</code> (collision set removed) with the canonical symplectic structure on <code>T*((ℝᵈ)ᴺ \ Δ)</code>. The pairwise Hamiltonians <code>Hᵢⱼ = mᵢmⱼ V(rᵢⱼ)</code> are elements of the <strong>Poisson algebra</strong> C∞(T*M).</p>
+      <p>We compute the Lie subalgebra <code>𝔤 = Lie({Hᵢⱼ})</code> generated under the Poisson bracket, with the natural filtration:</p>
+      <p><code>𝔤₀ ⊂ 𝔤₁ ⊂ 𝔤₂ ⊂ 𝔤₃ ⊂ ⋯</code></p>
+      <p>where <code>𝔤ₖ = 𝔤ₖ₋₁ + [𝔤ₖ₋₁, 𝔤₀]</code>. The dimension sequence <code>dim(𝔤ₖ)</code> = [3, 6, 17, 116] is the central result.</p>
+      <p>Key observations and open questions:</p>
+      <ul>
+        <li><strong>Universality:</strong> The sequence is independent of the potential V(r) (for non-degenerate potentials), the spatial dimension d, mass ratios, and charge configurations. This suggests a purely combinatorial or representation-theoretic origin tied to the S₃ symmetry of the pair graph.</li>
+        <li><strong>Degenerate case:</strong> The harmonic potential V(r) = r² causes the algebra to <strong>close</strong> at dimension 15. This is the only known closure and corresponds to the well-known superintegrability of the harmonic oscillator.</li>
+        <li><strong>N-body scaling:</strong> For N = 4 bodies, the sequence begins [6, 14, 62, …]. The growth rate appears super-exponential but the pattern is not yet identified.</li>
+        <li><strong>S₃ filtration:</strong> The generators at each level decompose into irreducible representations of S₃ (permutation of body labels). This decomposition is detailed in Paper 2.</li>
+        <li><strong>Dirac constraints:</strong> In regions of configuration space where the rank drops (visible as color changes in the atlas heatmaps), certain generators become functionally dependent — these may correspond to emergent <strong>Dirac constraints</strong> signaling hidden integrability or symmetry enhancement at special mass ratios.</li>
+        <li><strong>Calogero-Moser connection:</strong> The 1/r² (Calogero-Moser) potential produces the same sequence but has additional algebraic structure related to the known integrability of the CM system. Paper 4 explores whether the Poisson algebra "knows" about integrability.</li>
+      </ul>
+      <p>The computational pipeline uses SymPy for symbolic Poisson brackets, auxiliary variable substitution <code>uᵢⱼ = 1/rᵢⱼ</code> for polynomiality, NumPy/SciPy for high-precision SVD, and mpmath for extended-precision verification. All code is open source in the linked GitHub repository.</p>
+    </div>
+  </div>
+
+</div><!-- /page-content -->
+
+<script>
+function toggleTier(el) {
+  // Close others (accordion behavior)
+  document.querySelectorAll('.tier').forEach(t => {
+    if (t !== el) t.classList.remove('open');
+  });
+  el.classList.toggle('open');
+}
+</script>
+</body>
+</html>
