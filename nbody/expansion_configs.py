@@ -273,7 +273,7 @@ SCENARIOS = {
         "potential_params": None,
         "external_potential": None,
         "description": "Three dark matter halos with gravitational interaction",
-        "run_atlas": False,
+        "run_atlas": True,
     },
 }
 

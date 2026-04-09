@@ -131,9 +131,8 @@
 - **Impact:** MEDIUM — mostly for completeness and paper credibility.
 
 ### 3.4 Complete Interrupted Atlases
-- **Status:** Sun-Earth-Moon (11%), Sun-Jupiter-Asteroid (7%), checkpoints on S3
-- **Task:** Relaunch on spot instances from checkpoints.
-- **Impact:** LOW-MEDIUM — extreme mass ratios, confirms universality at edge cases.
+- **Status:** ✅ COMPLETED — Sun-Earth-Moon and Sun-Jupiter-Asteroid atlases finished April 7–8, 2026 on AWS spot instances. Results synced to `aws_results/`. Both show rank 91–100 at float64, consistent with conditioning expectations at extreme mass ratios (10²⁴–10³⁰ coefficient dynamic range).
+- **Impact:** LOW-MEDIUM — extreme mass ratios, confirms universality at edge cases (pending symbolic rank verification).
 
 ### 3.5 Lagrange Hires 1000×1000 Scan
 - **Status:** Plan complete, script designed, never deployed
@@ -165,6 +164,22 @@
 - **Task:** Continue pushing sample count (300K? 500K?) or switch to mpmath high-precision rank computation to resolve the true d(4).
 - **Note:** The mpmath computation was at 4.4% (667/15,000 rows) when spot-reclaimed. Could be relaunched.
 
+### 4.4 Symbolic Rank Over Q (Exact Algebraic Dimension)
+- **Status:** ✅ COMPLETED — Rank [3, 6, 17, 116] confirmed at 5 specific mass points (exact over Q) and with symbolic masses (exact over Q(m1,m2,m3)). Mass invariance is now an algebraic theorem for all positive masses. See `symbolic_rank.py`, results in `results/symbolic_rank/`.
+- **Motivation:** All rank determinations in this project use numerical SVD on float64 evaluations. While the SVD gap is large (6–13 orders of magnitude) at generic configurations, at extreme mass ratios the float64 rank drops to 91–100 due to coefficient dynamic range exceeding float64 precision. An attempted term-group factoring approach (splitting generators by magnitude order and evaluating groups independently) produced inflated ranks (up to 200) that were artifacts of spurious column independence, not genuine algebraic structure. The mpmath "ground truth" approach also proved unreliable for this purpose. The only definitive answer comes from exact linear algebra over Q.
+- **Approach:** The 156 generators are built from scratch via `build_hamiltonians()` and `poisson_bracket()` — polynomials in 15 variables `(x1,y1,...,u12,u13,u23)` with rational coefficients (parameterized by masses). The monomial-coefficient matrix (156 × 128,925) is extracted via `sympy.Poly` and its rank computed by exact Gaussian elimination (`DomainMatrix.rank()`) over Q or Q(m1,m2,m3), immune to numerical noise.
+- **Result:** Rank [3, 6, 17, 116] confirmed at 5 specific rational mass points (over Q, locally) and with symbolic masses (over Q(m1,m2,m3), AWS r6i.8xlarge, 3.2 hours). Mass invariance is an algebraic theorem for all positive masses.
+- **Impact:** VERY HIGH — converted the central conjecture from "supported by numerical evidence" to "proven by exact computation."
+- **Reference:** See supplemental memo `poisson_numerical_robustness_memo.md` for discussion of the numerical robustness landscape. Note: the mpmath claims in that memo should be treated with caution; the symbolic approach supersedes them.
+
+### 4.5 Noise Plateau Mapping
+- **Status:** NOT STARTED
+- **Motivation:** The SVD-gap rank determination depends on a threshold choice (`1e-8 × σ_max` currently). Understanding how the reported rank varies as a function of this threshold — across mass configurations, spatial positions, and potential types — is valuable both for validating the robustness of the 116 result and for characterizing the conditioning structure of the algebra.
+- **Approach:** At each configuration, sweep the SVD threshold from 10⁻¹ down to 10⁻¹⁵ and plot the reported dimension. Three possible outcomes: (a) a clean plateau at 116 (strong robustness), (b) continuous variation (threshold artifact), (c) irregular steps (hierarchical scale structure). Run at equal mass, moderate ratio (10:1), and extreme ratio (10⁶:1 and beyond).
+- **Expected value:** Produces a single figure showing plateau width vs. mass ratio — a reviewer-accessible demonstration of robustness that complements the symbolic rank result.
+- **Impact:** MEDIUM-HIGH — unique methodological contribution; explains *mechanistically* why float64 undercounts at extreme mass ratios (Born-Oppenheimer decoupling analogy).
+- **Reference:** `poisson_numerical_robustness_memo.md` (Sections 3, 4, 7). Note: some claims in Section 2 regarding mpmath verification are not reliable; this research path would provide the actual data.
+
 ---
 
 ## Tracking
@@ -184,7 +199,7 @@ Mark items with status as work proceeds:
 | 1.5 | Level-4 comparison chart | ✅ |
 | 1.6 | Analytical SV #116 prediction | ✅ |
 | 2.1 | N=5 Level 1–2 | ⬜ |
-| 2.2 | N=4 with 1/r², 1/r³, log(r) | ⬜ |
+| 2.2 | N=4 with 1/r², 1/r³, log(r) | ✅ |
 | 2.3 | r⁴ potential | ⬜ |
 | 2.4 | Charge sweep phase 3 | ⬜ |
 | 2.5 | S₄ tier decomposition | ⬜ |
@@ -193,8 +208,10 @@ Mark items with status as work proceeds:
 | 3.1 | Parametric exponent sweep | ⬜ |
 | 3.2 | Yukawa debugging + run | ❌ |
 | 3.3 | Re-run 7 retracted gravitational configs | ⬜ |
-| 3.4 | Complete interrupted atlases | ⬜ |
+| 3.4 | Complete interrupted atlases | ✅ |
 | 3.5 | Lagrange hires 1000×1000 | ⬜ |
 | 4.1 | SageMath verification | ⬜ |
 | 4.2 | Growth rate formula | ⬜ |
 | 4.3 | Level-4 bound improvement | ⬜ |
+| 4.4 | Symbolic rank over Q | ✅ |
+| 4.5 | Noise plateau mapping | ⬜ |

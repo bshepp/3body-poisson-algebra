@@ -56,6 +56,7 @@ TIER_3 = [
     {"job": "atlas-lithium",      "args": "--resolution 100 --scenario lithium_ion --samples 400"},
     {"job": "atlas-muonic-he",    "args": "--resolution 100 --scenario muonic_helium --samples 400"},
     {"job": "atlas-h2plus",       "args": "--resolution 100 --scenario h2_plus_ion --samples 400"},
+    {"job": "atlas-dark-matter",  "args": "--resolution 100 --scenario dark_matter --samples 400"},
 ]
 
 TIER_4 = [

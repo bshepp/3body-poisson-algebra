@@ -1,0 +1,22 @@
+{
+  "masses": "symbolic",
+  "potential": "1/r",
+  "n_generators": 156,
+  "n_monomials": 128925,
+  "cumulative_rank": [
+    3,
+    6,
+    17,
+    116
+  ],
+  "new_per_level": [
+    3,
+    3,
+    11,
+    99
+  ],
+  "matrix_density": 0.024722334094061844,
+  "computation_time_seconds": 11575.0,
+  "sympy_version": "1.13.3",
+  "match_expected": true
+}
