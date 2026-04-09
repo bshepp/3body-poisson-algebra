@@ -396,7 +396,7 @@ class ThreeBodyAlgebra:
                   f"(best ratio {best_gap_ratio:.1f}x)")
             print(f"  Using noise-floor threshold: rank = {rank}")
 
-        return rank, s
+        return rank, s, U, Vt
 
     # -----------------------------------------------------------------
     # Jacobi identity verification
@@ -653,12 +653,12 @@ class ThreeBodyAlgebra:
         for lv in range(max_level + 1):
             mask = [i for i, l in enumerate(all_levels) if l <= lv]
             sub = eval_matrix[:, mask]
-            rank, svals = self.svd_gap_analysis(
+            rank, svals, _, _ = self.svd_gap_analysis(
                 sub, label=f"(through level {lv})")
             level_dims[lv] = rank
             print(f"  ==> Dimension through level {lv}: {rank}")
 
-        rank_full, svals_full = self.svd_gap_analysis(
+        rank_full, svals_full, _, _ = self.svd_gap_analysis(
             eval_matrix, label="(ALL generators)")
 
         # -- Summary --

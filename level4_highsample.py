@@ -360,7 +360,7 @@ def main():
             if not mask:
                 continue
             sub = normed[:, mask]
-            rank, _ = svd_gap_analysis(sub, label=f"(L{lv})")
+            rank, _, _, _ = svd_gap_analysis(sub, label=f"(L{lv})")
             level_dims[lv] = rank
             del sub
 

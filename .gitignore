@@ -99,5 +99,8 @@ docs/academic_engagement.md
 docs/research_roadmap.md
 docs/email_draft.md
 
+# Computation logs (large, regeneratable)
+results/symbolic_rank/*.log
+
 # Temp/stale files
 tmp/

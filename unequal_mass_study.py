@@ -340,7 +340,7 @@ def compute_growth_unequal(config_name, config, max_level=3,
     for lv in range(max_level + 1):
         mask = [i for i, l in enumerate(all_levels) if l <= lv]
         sub = eval_matrix[:, mask]
-        rank, svals = svd_gap_analysis(
+        rank, svals, _, _ = svd_gap_analysis(
             sub, label=f"(through level {lv})")
         level_dims[lv] = rank
         print(f"  ==> Dimension through level {lv}: {rank}")

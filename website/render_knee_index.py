@@ -14,7 +14,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.patheffects as pe
+
 
 # Paths
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -22,12 +22,7 @@ ROOT = os.path.dirname(SCRIPT_DIR)
 HIRES_DIR = os.path.join(ROOT, 'atlas_output_hires', '1_r2')
 OUT_PATH = os.path.join(SCRIPT_DIR, 'assets', 'knee_index_1r2.png')
 
-SPECIALS = {
-    'Lagrange':  (1.0, np.pi / 3),
-    'Euler':     (0.5, np.pi),
-    'Isos-90':   (1.0, np.pi / 2),
-}
-STROKE = [pe.withStroke(linewidth=2.5, foreground='black')]
+
 
 # Load data
 mu   = np.load(os.path.join(HIRES_DIR, 'mu_vals.npy'))
@@ -55,14 +50,8 @@ ax.set_facecolor('#0a0c10')
 im = ax.pcolormesh(phi_deg, mu, knee_idx, cmap='plasma',
                    vmin=vmin, vmax=vmax, shading='auto')
 
-# Mark special configurations
-for name, (m, p) in SPECIALS.items():
-    px = np.degrees(p)
-    ax.plot(px, m, '*', color='cyan', markersize=14,
-            markeredgecolor='white', markeredgewidth=0.5, zorder=10)
-    ax.annotate(name, (px, m), textcoords='offset points',
-                xytext=(8, 5), color='white', fontsize=9,
-                fontweight='bold', path_effects=STROKE)
+ax.set_xlim(phi_deg[0], phi_deg[-1])
+ax.set_ylim(mu[0], mu[-1])
 
 ax.set_xlabel(r'$\phi$ (deg)', fontsize=12, color='#c8ccd4')
 ax.set_ylabel(r'$\mu$', fontsize=12, color='#c8ccd4')

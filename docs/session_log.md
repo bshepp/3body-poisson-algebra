@@ -4218,3 +4218,170 @@ masses, there are 496,857–497,223 non-zero entries (density ~2.47%).
 - AWS userdata: `infra/userdata_symbolic_rank.sh`
 - Results: `results/symbolic_rank/rank_*.json`
 - AWS log: `results/symbolic_rank/full.log`
+
+---
+
+## N-body Exact Rank Scaling and New Potentials (April 9, 2026)
+
+Extended the exact symbolic rank computation to N=4, 5, 6 and two new
+potential types (r⁴ quartic spring and 1/r⁴ inverse quartic). All
+results are proven algebraically over Q — no SVD, no thresholds, no
+numerical approximation.
+
+### New Script: `nbody/symbolic_rank_nbody.py`
+
+Generalized the `symbolic_rank.py` pipeline to work with the
+`NBodyAlgebra` engine for arbitrary N, d, and potential type.
+Handles both u-variable (singular potential) and pure polynomial
+(r⁴ quartic spring) Hamiltonians. The r⁴ potential is built
+directly from position coordinates without u_ij variables.
+
+### Results — N-body 1/r Scaling
+
+| N | d | Sequence | Generators | Monomials | Time | Method |
+|---|---|----------|-----------|-----------|------|--------|
+| 3 | 2 | [3, 6, 17, 116] | 156 | 128,925 | 490s | exact/Q (baseline) |
+| 4 | 2 | [6, 14, 62] | 216 | 2,210 | 7s | exact/Q |
+| 5 | 1 | [10, 25, 145] | 1,495 | 1,345 | 14s | exact/Q |
+| 5 | 2 | [10, 25, 145] | 1,495 | 5,000 | 45s | exact/Q |
+| 6 | 1 | [15, 39, 279] | 7,155 | 2,526 | 54s | exact/Q |
+| 6 | 2 | [15, 39, 279] | 7,155 | 9,477 | 170s | exact/Q |
+
+#### Key Observations
+
+1. **d-independence confirmed algebraically**: N=5 and N=6 produce
+   identical rank sequences for d=1 and d=2, extending the pattern
+   previously established for N=3 and N=4. This is now proven over Q.
+
+2. **Level 0**: d(0) = C(N,2) for all N (the pairwise Hamiltonians
+   are linearly independent).
+
+3. **Level 1 "new" ranks**: 3→3, 8→8, 15→15, 24→24. Pattern: new
+   generators at level 1 = C(N,2) - C(N-1,2) + ... needs analysis.
+   Actually: N=3→3, N=4→8, N=5→15, N=6→24. These are C(N,2)-1 for
+   N≥4... no, 14-6=8, 25-10=15, 39-15=24. So new_L1 = C(N,2) - N + 1?
+   Check: C(3,2)-3+1=1 ≠ 3. Not that simple.
+
+4. **Level 2 "new" ranks**: 11, 48, 120, 240. Ratios:
+   48/11≈4.4, 120/48=2.5, 240/120=2.0.
+
+5. **N=5 level 3 was too expensive locally** — a single bracket
+   computation hung for >30 minutes. Would require AWS for level 3+
+   at N≥5.
+
+### Results — New Potentials (N=3, d=2)
+
+| Potential | Type | Sequence | Time | Method |
+|-----------|------|----------|------|--------|
+| 1/r | singular | [3, 6, 17, 116] | 490s | exact/Q |
+| 1/r⁴ | singular | [3, 6, 17, 116] | 599s | exact/Q |
+| r⁴ | regular polynomial | [3, 6, 17, 116] | 285s | exact/Q |
+| r² (harmonic) | regular polynomial | [3, 6, 13, 15, 15] | (known) | — |
+
+#### Falsification of Singular/Regular Dichotomy
+
+The prediction that r⁴ would produce a finite-dimensional algebra
+(like the harmonic r² → dim 15) was **falsified**. The r⁴ quartic
+spring generates exactly the same rank sequence [3, 6, 17, 116] as
+all singular potentials tested. This means:
+
+- The harmonic potential r² is the unique exception, not a
+  representative of a "regular" class
+- The special property of r² is its enhanced symmetry (isotropic
+  oscillator / sp(4,R) algebra), not its regularity
+- The dimension sequence [3, 6, 17, 116] appears to be universal
+  for essentially ALL pairwise potentials except the harmonic oscillator
+- The 1/r⁴ result extends the power-law universality to include
+  even more singular potentials (previously only 1/r through 1/r³
+  and log(r) were tested)
+
+### Cumulative Universality Table (N=3, d=2, exact over Q)
+
+| Potential | Sequence | Status |
+|-----------|----------|--------|
+| 1/r (Newtonian) | [3, 6, 17, 116] | ✅ exact |
+| 1/r² (Calogero-Moser) | [3, 6, 17, 116] | ✅ exact |
+| 1/r³ | [3, 6, 17, 116] | ✅ exact |
+| 1/r⁴ | [3, 6, 17, 116] | ✅ exact |
+| log(r) | [3, 6, 17, 116] | SVD |
+| 1/r + 1/r² (composite) | [3, 6, 17, 116] | SVD |
+| r⁴ (quartic spring) | [3, 6, 17, 116] | ✅ exact |
+| r² (harmonic) | [3, 6, 13, 15, 15] | ✅ exact |
+
+### Files
+
+- Script: `nbody/symbolic_rank_nbody.py`
+- Results: `results/symbolic_rank/rank_N{n}_d{d}_*.json`
+
+---
+
+## Algebra Structure Extraction (April 9, 2026)
+
+Extended the exact symbolic pipeline to compute full algebraic structure:
+structure constants, Killing form, derived/lower central series, center,
+and monomial statistics. Also added `--save-svd` flag to both numerical
+growth engines for opt-in persistence of SVD components.
+
+### Infrastructure Changes
+
+1. **`nbody/symbolic_rank_nbody.py`**: Added `--structure` flag. When
+   enabled, after rank computation:
+   - Selects a basis of linearly independent generators via incremental
+     rank testing over Q
+   - Computes exact structure constants C[i,j,k] by bracketing all
+     basis pairs and solving the linear system over Q
+   - Derives Killing form, signature, derived/lower central series,
+     center, monomial statistics
+   - Saves structure constants (float .npy + exact rational .json),
+     Killing form, and eigenvalues to `results/algebra_structure/`
+
+2. **`exact_growth.py`** and **`nbody/exact_growth_nbody.py`**: Added
+   `--save-svd` flag. `svd_gap_analysis()` now returns `(rank, s, U, Vt)`.
+   When flag is set, saves full SVD decomposition, null space, column
+   space, and spectrum statistics to `results/svd_components/`.
+
+### Results — Algebraic Structure Comparison (N=3, d=2, level 2)
+
+| Property | 1/r | 1/r^4 | r^4 | r^2 (harmonic) |
+|----------|-----|-------|-----|----------------|
+| Rank | 17 | 17 | 17 | 15 |
+| Killing signature | (6+, 0-, 11 zero) | (6+, 0-, 11 zero) | (6+, 0-, 11 zero) | (14+, 0-, 1 zero) |
+| Killing trace | 32 | 32 | 32 | 290715 |
+| Semisimple | No | No | No | No |
+| Solvable | Yes (length 3) | Yes (length 3) | Yes (length 3) | No |
+| Nilpotent | Yes (class 3) | Yes (class 3) | Yes (class 3) | No |
+| Center dim | 11 | 11 | 11 | 1 |
+| Derived series | [17, 14, 3, 0] | [17, 14, 3, 0] | [17, 14, 3, 0] | [15, 15] |
+| Lower central | [17, 14, 11, 0] | [17, 14, 11, 0] | [17, 14, 11, 0] | [15, 15] |
+| Nonzero C_ijk | 32/4913 | 32/4913 | 32/4913 | — |
+
+### Key Findings
+
+1. **Structure universality**: The algebras for 1/r, 1/r^4, and r^4 are
+   not just the same dimension — they have **identical algebraic
+   structure** through level 2. Same Killing form, same derived series,
+   same center, same structure constant sparsity. This strongly suggests
+   the algebras are isomorphic, not merely isodimensional.
+
+2. **Harmonic r^2 is structurally opposite**: Where the singular/r^4
+   algebras are solvable and nilpotent with large centers, the harmonic
+   algebra is neither solvable nor nilpotent, with a near-semisimple
+   Killing form (14 of 15 eigenvalues nonzero) and a 1-dimensional
+   center. The derived series stabilizes immediately at [15, 15],
+   meaning [L, L] = L — the algebra is "perfect" (equals its own
+   commutator subalgebra).
+
+3. **The 11-dimensional center** of the rank-17 algebra (for non-harmonic
+   potentials) means that 11 out of 17 basis generators commute with
+   everything. The 6-dimensional quotient L/Z(L) carries all the
+   non-trivial bracket structure.
+
+4. **Solvability length 3**: The derived series [17, 14, 3, 0] shows
+   three "layers" of non-commutativity. The algebra is far from being
+   a simple Lie algebra.
+
+### Files
+
+- Script: `nbody/symbolic_rank_nbody.py` (with `--structure` flag)
+- Structure data: `results/algebra_structure/N3_d2_*/`
+- SVD save support: `exact_growth.py`, `nbody/exact_growth_nbody.py` (with `--save-svd` flag)

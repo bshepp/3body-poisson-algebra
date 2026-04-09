@@ -1,6 +1,6 @@
 # Three-Body Poisson Algebra — Project Status & Roadmap
 
-*Last updated: April 8, 2026*
+*Last updated: April 9, 2026*
 
 ---
 
@@ -46,7 +46,7 @@ Additional completed work:
 |---|---|---|---|
 | 1 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed. Rank=667, plateau=0. ETA ~574h. Checkpoint safe. |
 
-### Not Yet Started (6)
+### Not Yet Started (7)
 
 | # | Task | Notes |
 |---|---|---|
@@ -55,7 +55,20 @@ Additional completed work:
 | 3 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
 | 4 | **SageMath verification** | Independent verification of dimension sequence. SageMath not yet installed. |
 | 5 | **N=4 body Level-3** | Sequence [6, 14, 62] through L2; L3 not computed. |
-| 6 | **Paper 3 (universality) finalization** | Depends on atlas campaign + parametric sweep. |
+| 6 | **Paper 3 (universality) finalization** | Depends on atlas campaign + parametric sweep + structure results. |
+| 7 | **Structure extraction at level 3 (rank 116)** | Level-2 structure computed for 4 potentials. Level 3 requires AWS. |
+
+### Completed — Algebra Structure (April 9, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **N-body exact rank scaling** | N=5: [10, 25, 145], N=6: [15, 39, 279]. d-independence confirmed for N=3–6. |
+| 2 | **New potentials (r⁴, 1/r⁴)** | Both give [3, 6, 17, 116]. Singular/regular dichotomy falsified. |
+| 3 | **Structure constants (exact/Q)** | Computed for 1/r, 1/r⁴, r⁴, r² at level 2 (rank 17). |
+| 4 | **Killing form & signature** | Non-harmonic: (6+, 0-, 11 zero). Harmonic: (14+, 0-, 1 zero). |
+| 5 | **Derived/lower central series** | Non-harmonic: solvable (length 3), nilpotent (class 3). Harmonic: neither. |
+| 6 | **Center dimension** | Non-harmonic: 11/17. Harmonic: 1/15. |
+| 7 | **SVD component saving** | `--save-svd` flag added to `exact_growth.py` and `nbody/exact_growth_nbody.py`. |
 
 ---
 

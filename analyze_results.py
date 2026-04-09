@@ -100,7 +100,7 @@ def run_analysis(args):
     for lv in range(max_level + 1):
         mask = [i for i, l in enumerate(all_levels) if l <= lv]
         sub = eval_matrix[:, mask]
-        rank, svals = svd_gap_analysis(sub, label=f"(level ≤ {lv})")
+        rank, svals, _, _ = svd_gap_analysis(sub, label=f"(level ≤ {lv})")
         dims[lv] = rank
         if lv == 0:
             new_gens[lv] = rank

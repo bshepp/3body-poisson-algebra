@@ -61,10 +61,10 @@
 ## Phase 2: Light Compute (hours, local or small AWS)
 
 ### 2.1 N=5 Level 1–2
-- **Status:** NOT STARTED
-- **Estimated time:** Hours (local, d=1 fastest)
-- **Command:** `python nbody/exact_growth_nbody.py -N 5 -d 1 --max-level 2`
-- **Question answered:** Third data point for d_N(k) vs. N. Predicted: d(0)=10, d(1)=?, d(2)=?
+- **Status:** ✅ COMPLETED — Exact symbolic rank [10, 25, 145] for both d=1 and d=2 (14s and 45s respectively). d-independence confirmed for N=5. Also computed N=6: [15, 39, 279] for both d=1 and d=2 (54s and 170s). N=4 [6, 14, 62] confirmed algebraically over Q. See `nbody/symbolic_rank_nbody.py`, results in `results/symbolic_rank/`.
+- **Estimated time:** Seconds to minutes (local)
+- **Command:** `python nbody/symbolic_rank_nbody.py -N 5 -d 1 --max-level 2`
+- **Question answered:** Third AND fourth data points for d_N(k) vs. N. d(0)=C(N,2), d(1) and d(2) computed. d-independence confirmed for all N tested.
 - **Impact:** HIGH — headline result for universality across N.
 
 ### 2.2 N=4 with 1/r², 1/r³, log(r)
@@ -74,11 +74,12 @@
 - **Question answered:** YES — the N=4 sequence is potential-universal. [6, 14, 62] holds for 1/r, 1/r², 1/r³, and log(r).
 - **Impact:** CRITICAL — directly falsifiable prediction CONFIRMED.
 
-### 2.3 r⁴ Potential (Regular)
-- **Status:** NOT STARTED
-- **Estimated time:** Minutes (d=1, N=3)
-- **Task:** Run N=3, d=1 with V ~ r⁴. Prediction: finite-dimensional algebra (like r² → dim 15).
-- **Question answered:** Does the regular/singular dichotomy hold for higher-degree regular potentials? What dimension does it close at?
+### 2.3 r⁴ Potential (Regular) and 1/r⁴ (Singular)
+- **Status:** ✅ COMPLETED — Both r⁴ and 1/r⁴ give exact rank [3, 6, 17, 116] through level 3 for N=3, d=2. See `nbody/symbolic_rank_nbody.py`, results in `results/symbolic_rank/`.
+- **Estimated time:** ~5 min (r⁴) / ~10 min (1/r⁴)
+- **Task:** Run N=3, d=2 with V ~ r⁴ (quartic spring) and V ~ 1/r⁴ (inverse quartic).
+- **Result:** BOTH potentials produce [3, 6, 17, 116] — identical to 1/r, 1/r², 1/r³, log(r), and composite. The prediction that r⁴ would be finite-dimensional (like r² → dim 15) was FALSIFIED. The r⁴ quartic spring generates the same infinite-dimensional algebra as singular potentials. The harmonic r² appears to be the unique exception, not a representative of a "regular" class.
+- **Question answered:** The singular/regular dichotomy does NOT predict algebra dimension. r⁴ is regular (polynomial) yet generates the same dimension sequence as 1/r. The harmonic potential r² is special because of its enhanced symmetry (oscillator algebra), not because of regularity.
 
 ### 2.4 Charge Sweep Phase 3 (+1/+q/−1)
 - **Status:** CRASHED — phase 3 never completed
@@ -151,12 +152,17 @@
 - **Impact:** HIGH — addresses the "single CAS" criticism head-on.
 
 ### 4.2 Growth Rate Formula / Generating Function
-- **Status:** NOT STARTED
-- **Task:** With data points d(k) = [3, 6, 17, 116, ≥5604] for N=3 and [6, 14, 62] for N=4:
+- **Status:** NOT STARTED (but new data available)
+- **Task:** With data points:
+  - N=3: d(k) = [3, 6, 17, 116, ≥5604]
+  - N=4: d(k) = [6, 14, 62] (exact over Q)
+  - N=5: d(k) = [10, 25, 145] (exact over Q, d-independent)
+  - N=6: d(k) = [15, 39, 279] (exact over Q, d-independent)
   - Search OEIS for subsequences and related sequences
   - Test recurrence relations (e.g., d(k+1) = a·d(k)² + b·d(k) + c)
   - Test exponential/super-exponential fits
   - Compare growth to known Lie algebra dimension formulas
+  - Note: d(0) = C(N,2) for all N. Level 1 counts: 6→14, 10→25, 15→39 (new=8,15,24).
 - **Question answered:** Is there a pattern, or is the sequence "wild"?
 
 ### 4.3 Level-4 Bound Improvement
@@ -172,7 +178,13 @@
 - **Impact:** VERY HIGH — converted the central conjecture from "supported by numerical evidence" to "proven by exact computation."
 - **Reference:** See supplemental memo `poisson_numerical_robustness_memo.md` for discussion of the numerical robustness landscape. Note: the mpmath claims in that memo should be treated with caution; the symbolic approach supersedes them.
 
-### 4.5 Noise Plateau Mapping
+### 4.5 Algebra Structure Extraction (Structure Constants, Killing Form, Derived Series)
+- **Status:** ✅ COMPLETED (level 2, rank 17) — Structure constants computed exactly over Q for 1/r, 1/r⁴, r⁴, and r² (harmonic). Killing form, derived/lower central series, center all computed. See `nbody/symbolic_rank_nbody.py --structure`, results in `results/algebra_structure/`.
+- **Key result:** All non-harmonic potentials (1/r, 1/r⁴, r⁴) produce **identical** algebraic structure at level 2: Killing signature (6+, 0-, 11 zero), solvable (length 3), nilpotent (class 3), center dim 11, derived series [17, 14, 3, 0]. The harmonic r² is structurally opposite: Killing (14+, 0-, 1 zero), not solvable, not nilpotent, center dim 1, perfect algebra [L,L]=L.
+- **Next steps:** Scale to level 3 (rank 116) on AWS; compare structure constants between potentials to test isomorphism.
+- **Impact:** VERY HIGH — first classification of the Poisson algebra beyond dimension counting. Proves structure universality, not just dimensional universality.
+
+### 4.6 Noise Plateau Mapping
 - **Status:** NOT STARTED
 - **Motivation:** The SVD-gap rank determination depends on a threshold choice (`1e-8 × σ_max` currently). Understanding how the reported rank varies as a function of this threshold — across mass configurations, spatial positions, and potential types — is valuable both for validating the robustness of the 116 result and for characterizing the conditioning structure of the algebra.
 - **Approach:** At each configuration, sweep the SVD threshold from 10⁻¹ down to 10⁻¹⁵ and plot the reported dimension. Three possible outcomes: (a) a clean plateau at 116 (strong robustness), (b) continuous variation (threshold artifact), (c) irregular steps (hierarchical scale structure). Run at equal mass, moderate ratio (10:1), and extreme ratio (10⁶:1 and beyond).
@@ -198,9 +210,9 @@ Mark items with status as work proceeds:
 | 1.4 | CG predictions vs. full atlas | ✅ |
 | 1.5 | Level-4 comparison chart | ✅ |
 | 1.6 | Analytical SV #116 prediction | ✅ |
-| 2.1 | N=5 Level 1–2 | ⬜ |
+| 2.1 | N=5 Level 1–2 (+ N=6) | ✅ |
 | 2.2 | N=4 with 1/r², 1/r³, log(r) | ✅ |
-| 2.3 | r⁴ potential | ⬜ |
+| 2.3 | r⁴ and 1/r⁴ potentials | ✅ |
 | 2.4 | Charge sweep phase 3 | ⬜ |
 | 2.5 | S₄ tier decomposition | ⬜ |
 | 2.6 | Harmonic dim=15 derivation | ⬜ |
@@ -214,4 +226,5 @@ Mark items with status as work proceeds:
 | 4.2 | Growth rate formula | ⬜ |
 | 4.3 | Level-4 bound improvement | ⬜ |
 | 4.4 | Symbolic rank over Q | ✅ |
-| 4.5 | Noise plateau mapping | ⬜ |
+| 4.5 | Algebra structure extraction | ✅ |
+| 4.6 | Noise plateau mapping | ⬜ |

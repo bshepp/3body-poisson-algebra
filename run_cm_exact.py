@@ -132,7 +132,7 @@ def compute_cm_exact(max_level=3, n_samples=500, seed=42):
     for lv in range(max_level + 1):
         mask = [i for i, l in enumerate(all_levels) if l <= lv]
         sub = eval_matrix[:, mask]
-        rank, svals = svd_gap_analysis(sub, label=f"(CM through level {lv})")
+        rank, svals, _, _ = svd_gap_analysis(sub, label=f"(CM through level {lv})")
         level_dims[lv] = rank
         print(f"  ==> CM d({lv}) = {rank}")
 

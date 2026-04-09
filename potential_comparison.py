@@ -244,7 +244,7 @@ def compute_growth(potential, max_level=3, n_samples=500, seed=42):
             print(f"  ==> Dimension through level {lv}: 0 (no non-zero generators)")
             continue
         sub = eval_matrix[:, mask]
-        rank, svals = svd_gap_analysis(
+        rank, svals, _, _ = svd_gap_analysis(
             sub, label=f"(through level {lv})")
         level_dims[lv] = rank
         print(f"  ==> Dimension through level {lv}: {rank}")

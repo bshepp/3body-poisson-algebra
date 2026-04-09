@@ -737,7 +737,7 @@ def svd_gap_analysis(eval_matrix, label=""):
         print(f"\n  No clear gap found (best ratio {best_gap_ratio:.1f}x)")
         print(f"  Using noise-floor threshold: rank = {rank}")
 
-    return rank, s
+    return rank, s, U, Vt
 
 
 # =====================================================================
@@ -809,7 +809,7 @@ def verify_jacobi_numerical(a_expr, b_expr, c_expr,
 # =====================================================================
 def compute_exact_growth(max_level=3, n_samples=500, seed=42,
                          resume=False, potential_type='1/r',
-                         masses=None, coupling=1):
+                         masses=None, coupling=1, save_svd=False):
     pot_label = {'1/r': 'Newtonian (1/r)',
                  '1/r2': 'Calogero-Moser (1/r²)',
                  'harmonic': 'Harmonic (r²)'}.get(potential_type, potential_type)
@@ -990,16 +990,42 @@ def compute_exact_growth(max_level=3, n_samples=500, seed=42,
     for lv in range(max_level + 1):
         mask = [i for i, l in enumerate(all_levels) if l <= lv]
         sub = eval_matrix[:, mask]
-        rank, svals = svd_gap_analysis(
+        rank, svals, _, _ = svd_gap_analysis(
             sub, label=f"(through level {lv})"
         )
         level_dims[lv] = rank
         print(f"  ==> Dimension through level {lv}: {rank}")
 
     # Full SVD
-    rank_full, svals_full = svd_gap_analysis(
+    rank_full, svals_full, U_full, Vt_full = svd_gap_analysis(
         eval_matrix, label="(ALL generators)"
     )
+
+    if save_svd:
+        svd_dir = os.path.join("results", "svd_components",
+                               f"{potential_type.replace('/', '').replace('^', '')}")
+        os.makedirs(svd_dir, exist_ok=True)
+        np.save(os.path.join(svd_dir, "svd_spectrum.npy"), svals_full)
+        np.save(os.path.join(svd_dir, "U_matrix.npy"), U_full)
+        np.save(os.path.join(svd_dir, "Vt_matrix.npy"), Vt_full)
+        np.save(os.path.join(svd_dir, "eval_matrix.npy"), eval_matrix)
+        np.save(os.path.join(svd_dir, "null_space.npy"), Vt_full[rank_full:])
+        np.save(os.path.join(svd_dir, "column_space.npy"), Vt_full[:rank_full])
+        import json as _json
+        spectrum_stats = {
+            "rank": int(rank_full),
+            "condition_number": float(svals_full[0] / svals_full[rank_full - 1])
+                if rank_full > 0 else 0.0,
+            "spectral_entropy": float(-np.sum(
+                (svals_full[:rank_full] / svals_full[:rank_full].sum()) *
+                np.log(svals_full[:rank_full] / svals_full[:rank_full].sum())
+            )) if rank_full > 0 else 0.0,
+            "n_generators": int(eval_matrix.shape[1]),
+            "n_samples": int(eval_matrix.shape[0]),
+        }
+        with open(os.path.join(svd_dir, "spectrum_stats.json"), "w") as _f:
+            _json.dump(spectrum_stats, _f, indent=2)
+        print(f"\n  SVD components saved to {svd_dir}/")
 
     # Summary
     print("\n" + "=" * 70)
@@ -1064,6 +1090,8 @@ def main():
                     help="Particle masses (default: 1 1 1)")
     ap.add_argument("--coupling", type=float, default=1.0,
                     help="Coupling constant (default: 1.0)")
+    ap.add_argument("--save-svd", action="store_true",
+                    help="Save full SVD components (U, s, Vt, null/column space)")
     args = ap.parse_args()
 
     compute_exact_growth(
@@ -1074,6 +1102,7 @@ def main():
         potential_type=args.potential,
         masses=tuple(args.masses) if args.masses else None,
         coupling=args.coupling,
+        save_svd=args.save_svd,
     )
 
 

@@ -1,0 +1,23 @@
+{
+  "N": 6,
+  "d": 2,
+  "potential": "1/r",
+  "potential_label": "1/r",
+  "max_level": 2,
+  "n_generators": 7155,
+  "n_monomials": 9477,
+  "cumulative_rank": [
+    15,
+    39,
+    279
+  ],
+  "new_per_level": [
+    15,
+    24,
+    240
+  ],
+  "matrix_density": 0.0021955395043367714,
+  "computation_time_seconds": 170.2,
+  "sympy_version": "1.14.0",
+  "stabilized": false
+}

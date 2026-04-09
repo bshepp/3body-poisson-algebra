@@ -1,0 +1,93 @@
+{
+  "N": 3,
+  "d": 2,
+  "potential": "r^2",
+  "potential_label": "r^2",
+  "max_level": 4,
+  "n_generators": 12093,
+  "n_monomials": 42,
+  "cumulative_rank": [
+    3,
+    6,
+    13,
+    15,
+    15
+  ],
+  "new_per_level": [
+    3,
+    3,
+    7,
+    2,
+    0
+  ],
+  "matrix_density": 0.2590046189649266,
+  "computation_time_seconds": 103.9,
+  "sympy_version": "1.14.0",
+  "stabilized": true,
+  "structure": {
+    "basis_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      18,
+      21
+    ],
+    "killing_signature": [
+      14,
+      0,
+      1
+    ],
+    "killing_trace": 290715.0,
+    "is_semisimple": false,
+    "derived_series": [
+      15,
+      15
+    ],
+    "is_solvable": false,
+    "solvability_length": null,
+    "lower_central_series": [
+      15,
+      15
+    ],
+    "is_nilpotent": false,
+    "nilpotency_class": null,
+    "center_dimension": 1,
+    "monomial_summary": {
+      "0": {
+        "count": 3,
+        "avg_monomials": 10.0,
+        "max_degree": 2
+      },
+      "1": {
+        "count": 3,
+        "avg_monomials": 4.0,
+        "max_degree": 2
+      },
+      "2": {
+        "count": 12,
+        "avg_monomials": 8.0,
+        "max_degree": 2
+      },
+      "3": {
+        "count": 138,
+        "avg_monomials": 10.217391304347826,
+        "max_degree": 2
+      },
+      "4": {
+        "count": 11937,
+        "avg_monomials": 10.890676049258607,
+        "max_degree": 2
+      }
+    }
+  }
+}

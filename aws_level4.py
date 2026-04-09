@@ -312,7 +312,7 @@ def run_svd_for_sample_count(config_name, n_samples, base_vals_full,
         if not mask:
             continue
         sub = eval_matrix[:, mask]
-        rank, svals = svd_gap_analysis(sub, label=f"(L{lv})")
+        rank, svals, _, _ = svd_gap_analysis(sub, label=f"(L{lv})")
         level_dims[lv] = rank
 
         if rank >= n_samples - 10:

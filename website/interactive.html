@@ -56,7 +56,10 @@ body {
 }
 .topbar-left a:hover { color: var(--phosphor); }
 .topbar-left a.active { color: var(--phosphor); border-bottom: 1px solid var(--phosphor); }
-.topbar-right { color: var(--text-dim); }
+.topbar-right { color: var(--text-dim); display: flex; align-items: center; gap: 0.8rem; }
+.topbar-right a { color: var(--text-dim); transition: color 0.2s; }
+.topbar-right a:hover { color: var(--phosphor); }
+.topbar-right .gh-icon { width: 16px; height: 16px; fill: currentColor; vertical-align: middle; }
 
 /* ═══════════ HEADER ═══════════ */
 .page-header {
@@ -222,6 +225,19 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
 .supp-panel.active { display: block; }
 .supp-chart { width: 100%; height: 350px; }
 
+/* ═══════════ DOWNLOAD BUTTONS ═══════════ */
+.download-btn {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  padding: 0.15rem 0.55rem; margin-left: auto;
+  font-family: var(--mono); font-size: 0.6rem;
+  color: var(--text-dim); background: transparent;
+  border: 1px solid var(--border); border-radius: 3px;
+  cursor: pointer; transition: all 0.15s;
+}
+.download-btn:hover { color: var(--phosphor); border-color: var(--phosphor); }
+.download-btn svg { width: 12px; height: 12px; fill: currentColor; }
+.panel-title { display: flex; align-items: center; }
+
 /* ═══════════ SCAN INFO BADGE ═══════════ */
 .scan-badge {
   display: inline-flex; gap: 0.8rem; padding: 0.3rem 0.6rem;
@@ -232,6 +248,163 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
 .scan-badge .key { color: var(--text-dim); }
 .scan-badge .val { color: var(--text-primary); }
 
+/* ═══════════ ANIMATION CONTROLS ═══════════ */
+.anim-trigger {
+  padding: 0.35rem 0.9rem; background: var(--bg-panel);
+  color: var(--text-secondary); border: 1px solid var(--border);
+  border-radius: 3px; cursor: pointer; font-family: var(--mono);
+  font-size: 0.72rem; transition: all 0.15s; white-space: nowrap;
+}
+.anim-trigger:hover { color: var(--text-primary); }
+.anim-trigger.active {
+  background: var(--violet); color: #fff; border-color: var(--violet);
+}
+.anim-bar {
+  display: none; flex-wrap: wrap; gap: 0.8rem; align-items: center;
+  padding: 0.6rem 1.2rem; background: var(--bg-card);
+  border: 1px solid var(--violet); border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+.anim-bar.visible { display: flex; }
+.anim-btn {
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  background: var(--bg-panel); color: var(--violet); border: 1px solid var(--violet);
+  border-radius: 3px; cursor: pointer; font-size: 1rem; transition: all 0.15s;
+}
+.anim-btn:hover { background: var(--violet); color: #fff; }
+.anim-slider {
+  flex: 1; min-width: 120px; height: 4px;
+  -webkit-appearance: none; appearance: none;
+  background: var(--border); border-radius: 2px; outline: none;
+}
+.anim-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px;
+  background: var(--violet); border-radius: 50%; cursor: pointer;
+}
+.anim-slider::-moz-range-thumb {
+  width: 14px; height: 14px; background: var(--violet);
+  border: none; border-radius: 50%; cursor: pointer;
+}
+.anim-label {
+  font-size: 0.72rem; color: var(--violet); min-width: 80px;
+  font-variant-numeric: tabular-nums;
+}
+.anim-speed-group { display: flex; gap: 0; }
+.anim-speed {
+  padding: 0.2rem 0.6rem; background: var(--bg-panel);
+  color: var(--text-dim); border: 1px solid var(--border);
+  cursor: pointer; font-family: var(--mono); font-size: 0.62rem;
+  transition: all 0.15s;
+}
+.anim-speed:first-child { border-radius: 3px 0 0 3px; }
+.anim-speed:last-child { border-radius: 0 3px 3px 0; }
+.anim-speed:not(:first-child) { border-left: none; }
+.anim-speed.active { background: var(--violet); color: #fff; border-color: var(--violet); }
+.anim-speed.active + .anim-speed { border-left-color: var(--violet); }
+.anim-stop {
+  padding: 0.25rem 0.7rem; background: var(--bg-panel);
+  color: var(--text-dim); border: 1px solid var(--border);
+  border-radius: 3px; cursor: pointer; font-family: var(--mono);
+  font-size: 0.62rem; transition: all 0.15s;
+}
+.anim-stop:hover { color: var(--red); border-color: var(--red); }
+
+/* ═══════════ CONTOUR TOGGLE ═══════════ */
+.contour-btn {
+  padding: 0.35rem 0.9rem; background: var(--bg-panel);
+  color: var(--text-secondary); border: 1px solid var(--border);
+  border-radius: 3px; cursor: pointer; font-family: var(--mono);
+  font-size: 0.72rem; transition: all 0.15s; white-space: nowrap;
+}
+.contour-btn:hover { color: var(--text-primary); }
+.contour-btn.active {
+  background: var(--amber-dim); color: var(--amber); border-color: var(--amber);
+}
+
+/* ═══════════ OVERLAY MENU ═══════════ */
+.overlay-wrap { position: relative; }
+.overlay-trigger {
+  padding: 0.35rem 0.9rem; background: var(--bg-panel);
+  color: var(--text-secondary); border: 1px solid var(--border);
+  border-radius: 3px; cursor: pointer; font-family: var(--mono);
+  font-size: 0.72rem; transition: all 0.15s; white-space: nowrap;
+}
+.overlay-trigger:hover { color: var(--text-primary); }
+.overlay-trigger.has-active {
+  background: var(--cyan-dim); color: var(--cyan); border-color: var(--cyan);
+}
+.overlay-menu {
+  display: none; position: absolute; top: 100%; left: 0; z-index: 100;
+  min-width: 260px; margin-top: 4px;
+  background: var(--bg-card); border: 1px solid var(--border-bright);
+  border-radius: 4px; padding: 0.5rem 0;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.overlay-menu.open { display: block; }
+.overlay-menu-actions {
+  display: flex; gap: 0.8rem; padding: 0.3rem 0.8rem 0.5rem;
+  border-bottom: 1px solid var(--border); font-size: 0.62rem;
+}
+.overlay-menu-actions a {
+  color: var(--cyan); cursor: pointer; text-decoration: none;
+}
+.overlay-menu-actions a:hover { text-decoration: underline; }
+.overlay-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.35rem 0.8rem; cursor: pointer; font-size: 0.72rem;
+  color: var(--text-secondary); transition: background 0.1s;
+}
+.overlay-item:hover { background: var(--bg-card-hover); }
+.overlay-item input[type="checkbox"] {
+  accent-color: var(--cyan); width: 14px; height: 14px; cursor: pointer;
+}
+.overlay-swatch {
+  width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0;
+}
+.overlay-item .overlay-type {
+  font-size: 0.55rem; color: var(--text-dim); text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ═══════════ LINE-CUT TOOL ═══════════ */
+.linecut-btn {
+  padding: 0.35rem 0.9rem; background: var(--bg-panel);
+  color: var(--text-secondary); border: 1px solid var(--border);
+  border-radius: 3px; cursor: pointer; font-family: var(--mono);
+  font-size: 0.72rem; transition: all 0.15s; white-space: nowrap;
+}
+.linecut-btn:hover { color: var(--text-primary); }
+.linecut-btn.active {
+  background: var(--red-dim); color: var(--red); border-color: var(--red);
+}
+.linecut-panel {
+  display: none; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 4px; padding: 1rem 1.2rem;
+}
+.linecut-panel.visible { display: block; }
+.linecut-header {
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+.linecut-header .label {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+.linecut-info { font-size: 0.72rem; color: var(--text-secondary); }
+.linecut-info b { color: var(--red); font-weight: 500; }
+.linecut-actions { display: flex; gap: 0.5rem; margin-left: auto; }
+.linecut-actions button {
+  padding: 0.2rem 0.6rem; background: var(--bg-panel);
+  color: var(--text-dim); border: 1px solid var(--border);
+  border-radius: 3px; cursor: pointer; font-family: var(--mono);
+  font-size: 0.6rem; transition: all 0.15s;
+}
+.linecut-actions button:hover { color: var(--phosphor); border-color: var(--phosphor); }
+.linecut-plot { width: 100%; height: 280px; }
+
+/* ═══════════ DIFF PANEL ═══════════ */
+.display-grid.side-by-side.with-diff { grid-template-columns: 1fr 1fr 1fr; }
+
 /* ═══════════ SCROLLBAR ═══════════ */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-deep); }
@@ -239,8 +412,12 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
 
 /* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width: 1200px) {
+  .display-grid.side-by-side.with-diff { grid-template-columns: 1fr 1fr; }
+}
 @media (max-width: 900px) {
   .display-grid.side-by-side { grid-template-columns: 1fr; }
+  .display-grid.side-by-side.with-diff { grid-template-columns: 1fr; }
   .controls-bar { gap: 0.8rem; }
   .page-content { padding: 1rem; }
 }
@@ -255,8 +432,12 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
     <a href="tracker.html">Research Tracker</a>
     <a href="explorer.html">Data Explorer</a>
     <a href="interactive.html" class="active">Interactive Atlas</a>
+    <a href="about.html">About</a>
   </div>
-  <div class="topbar-right">Three-Body Poisson Algebra</div>
+  <div class="topbar-right">
+    Three-Body Poisson Algebra
+    <a href="https://github.com/bshepp/3body-poisson-algebra" target="_blank" rel="noopener" title="GitHub Repository"><svg class="gh-icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+  </div>
 </div>
 
 <!-- ═══════════ HEADER ═══════════ -->
@@ -282,14 +463,44 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
       <div class="control-group">
         <span class="control-label">Observable</span>
         <div class="obs-group">
-          <button class="obs-btn active" data-obs="rank" onclick="setObservable('primary','rank',this)">Rank</button>
-          <button class="obs-btn" data-obs="gap" onclick="setObservable('primary','gap',this)">Gap Ratio</button>
+          <button class="obs-btn" data-obs="rank" onclick="setObservable('primary','rank',this)">Rank</button>
+          <button class="obs-btn active" data-obs="gap" onclick="setObservable('primary','gap',this)">Gap Ratio</button>
         </div>
+      </div>
+      <div class="control-group">
+        <span class="control-label">&nbsp;</span>
+        <button class="anim-trigger" id="anim-trigger" onclick="toggleAnimation()">▶ Animate ε</button>
+      </div>
+      <div class="control-group">
+        <span class="control-label">&nbsp;</span>
+        <button class="contour-btn" id="contour-btn" onclick="toggleContours()">◇ Contours</button>
+      </div>
+      <div class="control-group overlay-wrap">
+        <span class="control-label">&nbsp;</span>
+        <button class="overlay-trigger" id="overlay-trigger" onclick="toggleOverlayMenu()">📍 Overlays ▾</button>
+        <div class="overlay-menu" id="overlay-menu"></div>
+      </div>
+      <div class="control-group">
+        <span class="control-label">&nbsp;</span>
+        <button class="linecut-btn" id="linecut-btn" onclick="toggleLineCut()">✂ Line Cut</button>
       </div>
       <div class="control-group" style="margin-left:auto">
         <span class="control-label">Compare</span>
         <button class="compare-toggle" id="compare-btn" onclick="toggleCompare()">+ Compare</button>
       </div>
+    </div>
+
+    <!-- Animation controls (hidden by default) -->
+    <div class="anim-bar" id="anim-bar">
+      <button class="anim-btn" id="anim-play" onclick="toggleAnimation()" title="Play / Pause">▶</button>
+      <input type="range" class="anim-slider" id="anim-slider" min="0" max="1" value="0" oninput="onAnimSliderChange(this.value)">
+      <span class="anim-label" id="anim-label">ε = —</span>
+      <div class="anim-speed-group">
+        <button class="anim-speed" onclick="setAnimSpeed(1500, this)">Slow</button>
+        <button class="anim-speed active" onclick="setAnimSpeed(800, this)">Normal</button>
+        <button class="anim-speed" onclick="setAnimSpeed(300, this)">Fast</button>
+      </div>
+      <button class="anim-stop" onclick="stopAnimation()" title="Stop">■ Stop</button>
     </div>
 
     <!-- Comparison controls (hidden by default) -->
@@ -305,8 +516,8 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
       <div class="control-group">
         <span class="control-label">Observable (B)</span>
         <div class="obs-group">
-          <button class="obs-btn active" data-obs="rank" onclick="setObservable('compare','rank',this)">Rank</button>
-          <button class="obs-btn" data-obs="gap" onclick="setObservable('compare','gap',this)">Gap Ratio</button>
+          <button class="obs-btn" data-obs="rank" onclick="setObservable('compare','rank',this)">Rank</button>
+          <button class="obs-btn active" data-obs="gap" onclick="setObservable('compare','gap',this)">Gap Ratio</button>
         </div>
       </div>
     </div>
@@ -316,15 +527,41 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
   <div class="section">
     <div class="display-grid" id="display-grid">
       <div class="heatmap-panel" id="panel-primary">
-        <div class="panel-title">Primary — <span class="scan-label" id="label-primary">...</span></div>
+        <div class="panel-title">Primary — <span class="scan-label" id="label-primary">...</span>
+          <button class="download-btn" onclick="downloadPlot('heatmap-primary')" title="Download as PNG"><svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-6 2h12v1.5H2V14z"/></svg>PNG</button>
+        </div>
         <div id="heatmap-primary" class="heatmap-div"></div>
         <div class="loading-overlay" id="loading-primary">Loading atlas data…</div>
       </div>
       <div class="heatmap-panel" id="panel-compare" style="display:none">
-        <div class="panel-title" style="color:var(--cyan-dim)">Comparison — <span class="scan-label" id="label-compare">...</span></div>
+        <div class="panel-title" style="color:var(--cyan-dim)">Comparison — <span class="scan-label" id="label-compare">...</span>
+          <button class="download-btn" onclick="downloadPlot('heatmap-compare')" title="Download as PNG"><svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-6 2h12v1.5H2V14z"/></svg>PNG</button>
+        </div>
         <div id="heatmap-compare" class="heatmap-div"></div>
         <div class="loading-overlay" id="loading-compare">Loading atlas data…</div>
       </div>
+      <div class="heatmap-panel" id="panel-diff" style="display:none">
+        <div class="panel-title" style="color:var(--violet)">Difference — <span class="scan-label" id="label-diff">A − B</span>
+          <button class="download-btn" onclick="downloadPlot('heatmap-diff')" title="Download as PNG"><svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-6 2h12v1.5H2V14z"/></svg>PNG</button>
+        </div>
+        <div id="heatmap-diff" class="heatmap-div"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Line-Cut Profile ── -->
+  <div class="section">
+    <div class="linecut-panel" id="linecut-panel">
+      <div class="linecut-header">
+        <span class="label">Line Cut Profile</span>
+        <span class="linecut-info" id="linecut-info">Click two points on the heatmap to define a cross-section</span>
+        <div class="linecut-actions">
+          <button onclick="clearLineCut()">Clear</button>
+          <button onclick="exportLineCutCSV()">⬇ CSV</button>
+          <button class="download-btn" onclick="downloadPlot('linecut-plot')" title="Download as PNG"><svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-6 2h12v1.5H2V14z"/></svg>PNG</button>
+        </div>
+      </div>
+      <div id="linecut-plot" class="linecut-plot"></div>
     </div>
   </div>
 
@@ -337,6 +574,10 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
         <span id="inspector-info" class="info-item" style="color:var(--text-dim)">Click a heatmap cell to inspect</span>
       </div>
       <div class="inspector-status" id="inspector-status"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.3rem">
+        <span></span>
+        <button class="download-btn" onclick="downloadPlot('sv-plot')" title="Download as PNG"><svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-6 2h12v1.5H2V14z"/></svg>PNG</button>
+      </div>
       <div id="sv-plot" class="sv-plot"></div>
     </div>
   </div>
@@ -347,6 +588,7 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
     <div class="supp-tabs">
       <button class="supp-tab active" onclick="showSuppTab('mass-ratio', this)">Mass Ratio Sweep</button>
       <button class="supp-tab" onclick="showSuppTab('nbody', this)">N-Body Scaling</button>
+      <button class="supp-tab" onclick="showSuppTab('distribution', this)">Distribution</button>
     </div>
     <div class="supp-content">
       <div class="supp-panel active" id="panel-mass-ratio">
@@ -354,6 +596,9 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
       </div>
       <div class="supp-panel" id="panel-nbody">
         <div id="chart-nbody" class="supp-chart"></div>
+      </div>
+      <div class="supp-panel" id="panel-distribution">
+        <div id="chart-distribution" class="supp-chart"></div>
       </div>
     </div>
   </div>
@@ -368,10 +613,14 @@ const S = {
   manifest: null,
   scans: [],
   configs: [],          // unique config groups
-  primary: { scanId: null, data: null, svBuf: null, scan: null, obs: 'rank' },
-  compare: { scanId: null, data: null, svBuf: null, scan: null, obs: 'rank' },
+  primary: { scanId: null, data: null, svBuf: null, scan: null, obs: 'gap' },
+  compare: { scanId: null, data: null, svBuf: null, scan: null, obs: 'gap' },
   comparing: false,
+  anim: { timer: null, frames: null, configKey: null, idx: 0, speed: 800 },
   suppLoaded: { massRatio: false, nbody: false },
+  contours: false,
+  overlays: new Set(),
+  lineCut: { active: false, p1: null, p2: null, profile: null },
 };
 
 // Plotly layout template
@@ -389,6 +638,30 @@ const CS_RANK = [
 const CS_GAP = [
   [0, '#7a2a2a'], [0.15, '#e05555'], [0.35, '#f0a030'],
   [0.55, '#4ac8e8'], [0.8, '#1a6e3a'], [1.0, '#3ddc84']
+];
+const CS_DIFF = [
+  [0, '#e05555'], [0.5, '#1a1f2a'], [1, '#4ac8e8']
+];
+
+// Known physical positions & symmetry curves
+const KNOWN_OVERLAYS = [
+  { id: 'lagrange', label: 'Lagrange (S\u2083)', type: 'point', mu: 1.0, phi: Math.PI/3, color: '#4ac8e8', symbol: 'star' },
+  { id: 'euler', label: 'Euler (Z\u2082)', type: 'point', mu: 0.5, phi: Math.PI, color: '#e05555', symbol: 'square' },
+  { id: 'isos90', label: 'Isosceles-90 (Z\u2082)', type: 'point', mu: 1.0, phi: Math.PI/2, color: '#3ddc84', symbol: 'triangle-up' },
+  { id: 'mu1', label: '\u03bc = 1 (isosceles)', type: 'curve', color: '#4ac8e8',
+    trace: (phi) => ({ x: phi.map(() => 1.0), y: [...phi] }) },
+  { id: 'mu2cos', label: '\u03bc = 2cos(\u03c6)', type: 'curve', color: '#a0ff40',
+    trace: (phi) => {
+      const x = [], y = [];
+      phi.forEach(p => { if (p < Math.PI/2) { x.push(2*Math.cos(p)); y.push(p); } });
+      return { x, y };
+    }},
+  { id: 'mu1over2cos', label: '\u03bc = 1/(2cos \u03c6)', type: 'curve', color: '#e070d0',
+    trace: (phi) => {
+      const x = [], y = [];
+      phi.forEach(p => { const v = 1/(2*Math.cos(p)); if (p < Math.PI/2 && v >= 0.2 && v <= 3.0) { x.push(v); y.push(p); } });
+      return { x, y };
+    }},
 ];
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -434,6 +707,28 @@ function nearestIdx(arr, val) {
   return best;
 }
 
+function fracIdx(arr, val) {
+  if (val <= arr[0]) return 0;
+  if (val >= arr[arr.length - 1]) return arr.length - 1;
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (val >= arr[i] && val <= arr[i + 1]) {
+      return i + (val - arr[i]) / (arr[i + 1] - arr[i]);
+    }
+  }
+  return arr.length - 1;
+}
+
+// Data is stored as z[mu_idx][phi_idx] but Plotly needs z[phi_idx][mu_idx]
+function transpose(m) {
+  const nR = m.length, nC = m[0].length;
+  const t = Array(nC);
+  for (let j = 0; j < nC; j++) {
+    t[j] = Array(nR);
+    for (let i = 0; i < nR; i++) t[j][i] = m[i][j];
+  }
+  return t;
+}
+
 function showLoading(view, show) {
   document.getElementById('loading-' + view).classList.toggle('visible', show);
 }
@@ -460,14 +755,110 @@ async function init() {
 
   populateDropdowns('primary');
   populateDropdowns('compare');
+  populateOverlayMenu();
 
-  // Load first scan
-  const firstId = document.getElementById('eps-select').value;
-  if (firstId) await loadScan('primary', firstId);
+  // Restore state from URL hash, or load default
+  if (window.location.hash && restoreFromHash()) {
+    // hash handled
+  } else {
+    const firstId = document.getElementById('eps-select').value;
+    if (firstId) await loadScan('primary', firstId);
+  }
+
+  window.addEventListener('hashchange', () => restoreFromHash());
 
   // Load supplementary data
   loadMassRatio();
   loadNBodyScaling();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   URL DEEP LINKING
+   ═══════════════════════════════════════════════════════════════════════ */
+let _suppressHash = false;
+
+function pushHash() {
+  if (_suppressHash) return;
+  const params = new URLSearchParams();
+  if (S.primary.scanId) params.set('scan', S.primary.scanId);
+  if (S.primary.obs !== 'gap') params.set('obs', S.primary.obs);
+  if (S.comparing) {
+    params.set('cmp', '1');
+    if (S.compare.scanId) params.set('scan2', S.compare.scanId);
+    if (S.compare.obs !== 'gap') params.set('obs2', S.compare.obs);
+  }
+  if (S.contours) params.set('contours', '1');
+  if (S.overlays.size > 0) params.set('overlays', [...S.overlays].join(','));
+  const hash = '#' + params.toString();
+  if (window.location.hash !== hash) {
+    history.replaceState(null, '', hash);
+  }
+}
+
+function restoreFromHash() {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return false;
+  const params = new URLSearchParams(hash);
+
+  _suppressHash = true;
+  let restored = false;
+
+  const scanId = params.get('scan');
+  if (scanId && S.scans.find(s => s.id === scanId)) {
+    const scan = S.scans.find(s => s.id === scanId);
+    const ck = configKey(scan);
+    // Set potential dropdown
+    const potSel = document.getElementById('pot-select');
+    if (potSel) { potSel.value = ck; updateEpsDropdown('primary'); }
+    // Set epsilon dropdown
+    const epsSel = document.getElementById('eps-select');
+    if (epsSel) epsSel.value = scanId;
+    // Set observable
+    const obs = params.get('obs') || 'gap';
+    S.primary.obs = obs;
+    document.querySelectorAll('#controls-primary .obs-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.obs === obs);
+    });
+    loadScan('primary', scanId);
+    restored = true;
+  }
+
+  // Comparison
+  if (params.get('cmp') === '1' && !S.comparing) {
+    toggleCompare();
+  }
+  const scanId2 = params.get('scan2');
+  if (scanId2 && S.scans.find(s => s.id === scanId2)) {
+    const scan2 = S.scans.find(s => s.id === scanId2);
+    const ck2 = configKey(scan2);
+    const potSel2 = document.getElementById('pot-select-2');
+    if (potSel2) { potSel2.value = ck2; updateEpsDropdown('compare'); }
+    const epsSel2 = document.getElementById('eps-select-2');
+    if (epsSel2) epsSel2.value = scanId2;
+    const obs2 = params.get('obs2') || 'gap';
+    S.compare.obs = obs2;
+    document.querySelectorAll('#controls-compare .obs-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.obs === obs2);
+    });
+    loadScan('compare', scanId2);
+  }
+
+  if (params.get('contours') === '1') {
+    S.contours = true;
+    document.getElementById('contour-btn').classList.add('active');
+  }
+  const ovStr = params.get('overlays');
+  if (ovStr) {
+    ovStr.split(',').forEach(id => {
+      S.overlays.add(id);
+      const el = document.getElementById('ov-' + id);
+      if (el) { el.querySelector('input').checked = true; }
+    });
+    document.getElementById('overlay-trigger').classList.toggle('has-active', S.overlays.size > 0);
+  }
+
+  _suppressHash = false;
+  return restored;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -508,6 +899,7 @@ function updateEpsDropdown(view) {
    EVENT HANDLERS
    ═══════════════════════════════════════════════════════════════════════ */
 function onPotentialChange(view) {
+  if (view === 'primary') stopAnimation();
   updateEpsDropdown(view);
   onEpsilonChange(view);
 }
@@ -525,6 +917,9 @@ function setObservable(view, obs, btn) {
   parent.querySelectorAll('.obs-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderHeatmap(view);
+  pushHash();
+  if (view === 'primary') renderDistribution();
+  renderDiff();
 }
 
 function toggleCompare() {
@@ -534,6 +929,11 @@ function toggleCompare() {
   document.getElementById('panel-compare').style.display = S.comparing ? '' : 'none';
   document.getElementById('display-grid').classList.toggle('side-by-side', S.comparing);
 
+  if (!S.comparing) {
+    document.getElementById('panel-diff').style.display = 'none';
+    document.getElementById('display-grid').classList.remove('with-diff');
+  }
+
   if (S.comparing && !S.compare.scanId) {
     const epsSel2 = document.getElementById('eps-select-2');
     if (epsSel2.value) loadScan('compare', epsSel2.value);
@@ -542,6 +942,8 @@ function toggleCompare() {
   if (S.primary.data) {
     setTimeout(() => { Plotly.Plots.resize('heatmap-primary'); }, 50);
   }
+  renderDiff();
+  pushHash();
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -564,15 +966,33 @@ async function loadScan(view, scanId) {
     lbl.textContent = configLabel(configKey(scan)) + '  ε=' + epsLabel(scan.epsilon);
 
     renderHeatmap(view);
+    pushHash();
+    if (view === 'primary') renderDistribution();
+    renderDiff();
   } catch (e) {
     console.error('Failed to load scan', scanId, e);
+  } finally {
+    showLoading(view, false);
   }
-  showLoading(view, false);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   HEATMAP RENDERING
+   RENDERING
    ═══════════════════════════════════════════════════════════════════════ */
+function downloadPlot(divId) {
+  const el = document.getElementById(divId);
+  if (!el || !el.data) return;
+  let filename = 'plot';
+  if (divId.startsWith('heatmap-')) {
+    const view = divId.replace('heatmap-', '');
+    const scan = S[view].scan;
+    if (scan) filename = configKey(scan) + '_eps' + scan.epsilon + '_' + S[view].obs;
+  } else if (divId === 'sv-plot') {
+    filename = 'sv_spectrum';
+  }
+  Plotly.downloadImage(divId, { format: 'png', width: 1400, height: 1000, filename: filename });
+}
+
 function renderHeatmap(view) {
   const { data, obs, scan } = S[view];
   if (!data) return;
@@ -582,12 +1002,12 @@ function renderHeatmap(view) {
 
   if (isGap) {
     // Log-transform gap ratios for better visualization
-    z = data.gap.map(row => row.map(v => v > 0 ? Math.log10(Math.max(v, 1e-16)) : -16));
+    z = transpose(data.gap.map(row => row.map(v => v > 0 ? Math.log10(Math.max(v, 1e-16)) : -16)));
     colorscale = CS_GAP;
     cbTitle = 'log₁₀(gap)';
     hoverTpl = 'μ=%{x:.3f}<br>φ=%{y:.3f}<br>log₁₀(gap)=%{z:.1f}<extra></extra>';
   } else {
-    z = data.rank;
+    z = transpose(data.rank);
     colorscale = CS_RANK;
     cbTitle = 'Rank';
     hoverTpl = 'μ=%{x:.3f}<br>φ=%{y:.3f}<br>Rank=%{z}<extra></extra>';
@@ -600,13 +1020,18 @@ function renderHeatmap(view) {
     margin: { l: 65, r: 80, t: 30, b: 55 },
   });
 
-  Plotly.react(divId, [{
+  const traces = [{
     z: z, x: data.mu, y: data.phi,
     type: 'heatmap',
     colorscale: colorscale,
     colorbar: { title: { text: cbTitle, side: 'right' }, thickness: 15, len: 0.9 },
     hovertemplate: hoverTpl,
-  }], layout, { responsive: true });
+  }];
+  if (S.contours) traces.push(...getContourTraces(z, data.mu, data.phi, obs === 'rank'));
+  if (S.overlays.size > 0) traces.push(...getOverlayTraces(data));
+  traces.push(...getLineCutTraces(data));
+
+  Plotly.react(divId, traces, layout, { responsive: true });
 
   // Attach click handler
   const el = document.getElementById(divId);
@@ -619,14 +1044,21 @@ function renderHeatmap(view) {
    ═══════════════════════════════════════════════════════════════════════ */
 async function onHeatmapClick(data, view) {
   const pt = data.points[0];
+
+  // Line-cut mode intercept
+  if (S.lineCut.active && view === 'primary') {
+    setLineCutPoint(pt.x, pt.y);
+    return;
+  }
+
   const { data: atlas, scan } = S[view];
   if (!atlas) return;
 
-  const j = nearestIdx(atlas.mu, pt.x);
-  const i = nearestIdx(atlas.phi, pt.y);
+  const j = nearestIdx(atlas.mu, pt.x);   // mu index
+  const i = nearestIdx(atlas.phi, pt.y);   // phi index
 
-  const rank = atlas.rank[i][j];
-  const gap = atlas.gap[i][j];
+  const rank = atlas.rank[j][i];  // data stored as [mu_idx][phi_idx]
+  const gap = atlas.gap[j][i];
 
   // Update info display
   document.getElementById('inspector-info').innerHTML =
@@ -651,9 +1083,9 @@ async function onHeatmapClick(data, view) {
   }
 
   if (S[view].svBuf && scan.sv_shape) {
-    const nCols = scan.sv_shape[1];
+    const nPhi = scan.sv_shape[1];  // sv_shape = [n_mu, n_phi, n_gen]
     const nGen = scan.sv_shape[2];
-    const offset = (i * nCols + j) * nGen;
+    const offset = (j * nPhi + i) * nGen;  // [mu_idx][phi_idx]
     const spectrum = Array.from(S[view].svBuf.slice(offset, offset + nGen));
     plotSpectrum(spectrum, rank);
   }
@@ -778,6 +1210,532 @@ function renderNBodyScaling(data) {
   });
 
   Plotly.react('chart-nbody', traces, layout, { responsive: true });
+}
+
+function renderDistribution() {
+  const data = S.primary.data;
+  if (!data) return;
+  const src = S.primary.obs === 'gap' ? data.gap : data.rank;
+  // Flatten 2D array
+  const vals = [];
+  for (const row of src) {
+    for (const v of row) {
+      if (v != null && isFinite(v)) vals.push(S.primary.obs === 'gap' && v > 0 ? Math.log10(Math.max(v, 1e-16)) : v);
+    }
+  }
+  if (!vals.length) return;
+
+  const isGap = S.primary.obs === 'gap';
+  const label = isGap ? 'log\u2081\u2080(gap ratio)' : 'Rank';
+  const color = isGap ? '#f0a030' : '#3ddc84';
+
+  const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+  const sorted = [...vals].sort((a, b) => a - b);
+  const median = sorted[Math.floor(sorted.length / 2)];
+  const min = sorted[0], max = sorted[sorted.length - 1];
+
+  const traces = [{
+    x: vals, type: 'histogram', marker: { color: color, line: { color: '#fff', width: 0.3 } },
+    opacity: 0.85, nbinsx: 60,
+  }];
+
+  const layout = Object.assign({}, LAYOUT_BASE, {
+    xaxis: { title: label, gridcolor: '#1e2430', zeroline: false },
+    yaxis: { title: 'Count', gridcolor: '#1e2430', zeroline: false },
+    margin: { l: 55, r: 10, t: 30, b: 50 },
+    annotations: [{
+      x: 0.98, y: 0.95, xref: 'paper', yref: 'paper', showarrow: false,
+      font: { size: 11, color: '#8899aa', family: 'JetBrains Mono' },
+      align: 'right',
+      text: 'n=' + vals.length + '  mean=' + mean.toFixed(2) + '  med=' + median.toFixed(2) + '<br>min=' + min.toFixed(2) + '  max=' + max.toFixed(2),
+    }],
+  });
+
+  Plotly.react('chart-distribution', traces, layout, { responsive: true });
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ε-SWEEP ANIMATION
+   ═══════════════════════════════════════════════════════════════════════ */
+async function toggleAnimation() {
+  if (S.anim.timer) {
+    clearInterval(S.anim.timer);
+    S.anim.timer = null;
+    document.getElementById('anim-play').textContent = '▶';
+    return;
+  }
+
+  const potSel = document.getElementById('pot-select');
+  const ck = potSel.value;
+
+  if (!S.anim.frames || S.anim.configKey !== ck) {
+    const matching = S.scans.filter(s => configKey(s) === ck);
+    matching.sort((a, b) => {
+      const ea = typeof a.epsilon === 'number' ? a.epsilon : 999;
+      const eb = typeof b.epsilon === 'number' ? b.epsilon : 999;
+      return ea - eb;
+    });
+    if (matching.length < 2) return;
+
+    document.getElementById('anim-bar').classList.add('visible');
+    document.getElementById('anim-play').textContent = '⏳';
+
+    const frames = [];
+    for (const scan of matching) {
+      if (!scan.json) continue;
+      try {
+        const resp = await fetch(scan.json);
+        const data = await resp.json();
+        frames.push({ scanId: scan.id, data, scan, epsilon: scan.epsilon });
+      } catch (e) { console.error('Failed to preload', scan.id, e); }
+    }
+
+    S.anim.frames = frames;
+    S.anim.configKey = ck;
+    S.anim.idx = 0;
+    const slider = document.getElementById('anim-slider');
+    slider.max = frames.length - 1;
+    slider.value = 0;
+  }
+
+  if (!S.anim.frames || S.anim.frames.length < 2) return;
+
+  document.getElementById('anim-bar').classList.add('visible');
+  document.getElementById('anim-play').textContent = '⏸';
+  document.getElementById('anim-trigger').classList.add('active');
+  document.getElementById('eps-select').disabled = true;
+
+  animStep();
+  S.anim.timer = setInterval(animStep, S.anim.speed);
+}
+
+function animStep() {
+  if (!S.anim.frames) return;
+  const frame = S.anim.frames[S.anim.idx];
+  if (!frame) return;
+
+  S.primary.data = frame.data;
+  S.primary.scanId = frame.scanId;
+  S.primary.scan = frame.scan;
+  S.primary.svBuf = null;
+
+  const lbl = document.getElementById('label-primary');
+  lbl.textContent = configLabel(S.anim.configKey) + '  ε=' + epsLabel(frame.epsilon);
+
+  document.getElementById('eps-select').value = frame.scanId;
+
+  renderHeatmap('primary');
+  renderDistribution();
+  renderDiff();
+
+  document.getElementById('anim-slider').value = S.anim.idx;
+  document.getElementById('anim-label').textContent = 'ε = ' + epsLabel(frame.epsilon);
+
+  S.anim.idx = (S.anim.idx + 1) % S.anim.frames.length;
+}
+
+function stopAnimation() {
+  if (S.anim.timer) {
+    clearInterval(S.anim.timer);
+    S.anim.timer = null;
+  }
+  document.getElementById('anim-play').textContent = '▶';
+  document.getElementById('anim-bar').classList.remove('visible');
+  document.getElementById('anim-trigger').classList.remove('active');
+  document.getElementById('eps-select').disabled = false;
+}
+
+function onAnimSliderChange(val) {
+  const idx = parseInt(val, 10);
+  if (!S.anim.frames || idx >= S.anim.frames.length) return;
+  S.anim.idx = idx;
+  if (!S.anim.timer) {
+    const frame = S.anim.frames[idx];
+    S.primary.data = frame.data;
+    S.primary.scanId = frame.scanId;
+    S.primary.scan = frame.scan;
+    S.primary.svBuf = null;
+    document.getElementById('label-primary').textContent = configLabel(S.anim.configKey) + '  ε=' + epsLabel(frame.epsilon);
+    document.getElementById('eps-select').value = frame.scanId;
+    renderHeatmap('primary');
+    renderDistribution();
+    renderDiff();
+    document.getElementById('anim-label').textContent = 'ε = ' + epsLabel(frame.epsilon);
+  }
+}
+
+function setAnimSpeed(ms, btn) {
+  S.anim.speed = ms;
+  if (btn) {
+    btn.parentElement.querySelectorAll('.anim-speed').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  if (S.anim.timer) {
+    clearInterval(S.anim.timer);
+    S.anim.timer = setInterval(animStep, ms);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DIFFERENTIAL VIEW
+   ═══════════════════════════════════════════════════════════════════════ */
+function renderDiff() {
+  const diffPanel = document.getElementById('panel-diff');
+  const grid = document.getElementById('display-grid');
+
+  if (!S.comparing || !S.primary.data || !S.compare.data) {
+    diffPanel.style.display = 'none';
+    grid.classList.remove('with-diff');
+    return;
+  }
+
+  diffPanel.style.display = '';
+  grid.classList.add('with-diff');
+
+  const a = S.primary.data;
+  const b = S.compare.data;
+
+  const useGap = S.primary.obs === 'gap' && S.compare.obs === 'gap';
+  let z, cbTitle, hoverTpl;
+
+  if (useGap) {
+    z = transpose(a.gap.map((row, i) => row.map((v, j) => {
+      const va = v > 0 ? Math.log10(Math.max(v, 1e-16)) : -16;
+      const vb = b.gap[i] && b.gap[i][j] > 0 ? Math.log10(Math.max(b.gap[i][j], 1e-16)) : -16;
+      return va - vb;
+    })));
+    cbTitle = 'Δ log₁₀(gap)';
+    hoverTpl = 'μ=%{x:.3f}<br>φ=%{y:.3f}<br>Δlog₁₀(gap)=%{z:.2f}<extra></extra>';
+  } else {
+    z = transpose(a.rank.map((row, i) => row.map((v, j) => {
+      return v - (b.rank[i] ? b.rank[i][j] : 0);
+    })));
+    cbTitle = 'Δ Rank';
+    hoverTpl = 'μ=%{x:.3f}<br>φ=%{y:.3f}<br>ΔRank=%{z}<extra></extra>';
+  }
+
+  const scanA = S.primary.scan, scanB = S.compare.scan;
+  document.getElementById('label-diff').textContent =
+    (scanA ? epsLabel(scanA.epsilon) : '?') + ' − ' +
+    (scanB ? epsLabel(scanB.epsilon) : '?');
+
+  const layout = Object.assign({}, LAYOUT_BASE, {
+    xaxis: { title: 'μ  (mass ratio parameter)', gridcolor: '#1e2430', zeroline: false, constrain: 'domain' },
+    yaxis: { title: 'φ  (angle parameter)', gridcolor: '#1e2430', zeroline: false, scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
+    margin: { l: 65, r: 80, t: 30, b: 55 },
+  });
+
+  const diffTraces = [{
+    z: z, x: a.mu, y: a.phi,
+    type: 'heatmap',
+    colorscale: CS_DIFF,
+    zmid: 0,
+    colorbar: { title: { text: cbTitle, side: 'right' }, thickness: 15, len: 0.9 },
+    hovertemplate: hoverTpl,
+  }];
+  if (S.contours) diffTraces.push(...getContourTraces(z, a.mu, a.phi, !useGap));
+  if (S.overlays.size > 0) diffTraces.push(...getOverlayTraces(a));
+
+  Plotly.react('heatmap-diff', diffTraces, layout, { responsive: true });
+
+  setTimeout(() => { Plotly.Plots.resize('heatmap-diff'); }, 100);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CONTOUR OVERLAY
+   ═══════════════════════════════════════════════════════════════════════ */
+function getContourTraces(z, mu, phi, discrete) {
+  if (!discrete) {
+    // Plotly contour for continuous data (gap / diff)
+    return [{
+      z: z, x: mu, y: phi,
+      type: 'contour',
+      contours: { coloring: 'none', showlabels: true,
+                  labelfont: { size: 9, color: 'rgba(255,255,255,0.7)' } },
+      line: { color: 'rgba(255,255,255,0.45)', width: 0.8 },
+      ncontours: 8,
+      showscale: false,
+      hoverinfo: 'skip',
+    }];
+  }
+  // Boundary detection for discrete rank data
+  const nR = z.length, nC = z[0].length;
+  const sx = [], sy = [];
+  for (let i = 0; i < nR; i++) {
+    for (let j = 0; j < nC; j++) {
+      if (j + 1 < nC && z[i][j] !== z[i][j+1]) {
+        const mx = (mu[j] + mu[j+1]) / 2;
+        const y0 = i > 0 ? (phi[i-1] + phi[i]) / 2 : phi[0] - (phi[1] - phi[0]) / 2;
+        const y1 = i + 1 < nR ? (phi[i] + phi[i+1]) / 2 : phi[nR-1] + (phi[nR-1] - phi[nR-2]) / 2;
+        sx.push(mx, mx, null); sy.push(y0, y1, null);
+      }
+      if (i + 1 < nR && z[i][j] !== z[i+1][j]) {
+        const my = (phi[i] + phi[i+1]) / 2;
+        const x0 = j > 0 ? (mu[j-1] + mu[j]) / 2 : mu[0] - (mu[1] - mu[0]) / 2;
+        const x1 = j + 1 < nC ? (mu[j] + mu[j+1]) / 2 : mu[nC-1] + (mu[nC-1] - mu[nC-2]) / 2;
+        sx.push(x0, x1, null); sy.push(my, my, null);
+      }
+    }
+  }
+  if (sx.length === 0) return [];
+  return [{
+    x: sx, y: sy, type: 'scatter', mode: 'lines',
+    line: { color: 'rgba(255,255,255,0.45)', width: 0.8 },
+    hoverinfo: 'skip', showlegend: false,
+  }];
+}
+
+function toggleContours() {
+  S.contours = !S.contours;
+  document.getElementById('contour-btn').classList.toggle('active', S.contours);
+  if (S.primary.data) renderHeatmap('primary');
+  if (S.comparing && S.compare.data) renderHeatmap('compare');
+  renderDiff();
+  pushHash();
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   KNOWN POSITION OVERLAYS
+   ═══════════════════════════════════════════════════════════════════════ */
+function populateOverlayMenu() {
+  const menu = document.getElementById('overlay-menu');
+  const actions = document.createElement('div');
+  actions.className = 'overlay-menu-actions';
+  actions.innerHTML = '<a onclick="selectAllOverlays()">Select All</a><a onclick="clearAllOverlays()">Clear All</a>';
+  menu.appendChild(actions);
+  KNOWN_OVERLAYS.forEach(ov => {
+    const item = document.createElement('div');
+    item.className = 'overlay-item';
+    item.id = 'ov-' + ov.id;
+    item.onclick = () => toggleOverlay(ov.id);
+    const tag = ov.type === 'point' ? 'pt' : 'curve';
+    item.innerHTML = '<input type="checkbox">' +
+      '<span class="overlay-swatch" style="background:' + ov.color + '"></span>' +
+      ov.label + ' <span class="overlay-type">' + tag + '</span>';
+    menu.appendChild(item);
+  });
+}
+
+function toggleOverlayMenu() {
+  const menu = document.getElementById('overlay-menu');
+  const isOpen = menu.classList.toggle('open');
+  if (isOpen) {
+    const close = (e) => {
+      if (!menu.contains(e.target) && e.target.id !== 'overlay-trigger') {
+        menu.classList.remove('open');
+        document.removeEventListener('click', close);
+      }
+    };
+    setTimeout(() => document.addEventListener('click', close), 0);
+  }
+}
+
+function toggleOverlay(id) {
+  if (S.overlays.has(id)) S.overlays.delete(id);
+  else S.overlays.add(id);
+  const el = document.getElementById('ov-' + id);
+  if (el) el.querySelector('input').checked = S.overlays.has(id);
+  document.getElementById('overlay-trigger').classList.toggle('has-active', S.overlays.size > 0);
+  if (S.primary.data) renderHeatmap('primary');
+  if (S.comparing && S.compare.data) renderHeatmap('compare');
+  renderDiff();
+  pushHash();
+}
+
+function selectAllOverlays() {
+  KNOWN_OVERLAYS.forEach(ov => S.overlays.add(ov.id));
+  document.querySelectorAll('.overlay-item input').forEach(cb => cb.checked = true);
+  document.getElementById('overlay-trigger').classList.add('has-active');
+  if (S.primary.data) renderHeatmap('primary');
+  if (S.comparing && S.compare.data) renderHeatmap('compare');
+  renderDiff();
+  pushHash();
+}
+
+function clearAllOverlays() {
+  S.overlays.clear();
+  document.querySelectorAll('.overlay-item input').forEach(cb => cb.checked = false);
+  document.getElementById('overlay-trigger').classList.remove('has-active');
+  if (S.primary.data) renderHeatmap('primary');
+  if (S.comparing && S.compare.data) renderHeatmap('compare');
+  renderDiff();
+  pushHash();
+}
+
+function getOverlayTraces(data) {
+  if (!data || S.overlays.size === 0) return [];
+  const traces = [];
+  KNOWN_OVERLAYS.forEach(ov => {
+    if (!S.overlays.has(ov.id)) return;
+    if (ov.type === 'point') {
+      traces.push({
+        x: [ov.mu], y: [ov.phi],
+        type: 'scatter', mode: 'markers+text',
+        marker: { size: 12, color: ov.color, symbol: ov.symbol,
+                  line: { color: '#fff', width: 1.5 } },
+        text: [ov.label], textposition: 'top center',
+        textfont: { color: ov.color, size: 10 },
+        hovertemplate: ov.label + '<br>\u03bc=%{x:.3f}<br>\u03c6=%{y:.3f}<extra></extra>',
+        showlegend: false,
+      });
+    } else {
+      const { x, y } = ov.trace(data.phi);
+      if (x.length > 0) {
+        traces.push({
+          x, y, type: 'scatter', mode: 'lines',
+          line: { color: ov.color, width: 2, dash: 'dash' },
+          hovertemplate: ov.label + '<br>\u03bc=%{x:.3f}<br>\u03c6=%{y:.3f}<extra></extra>',
+          showlegend: false,
+        });
+      }
+    }
+  });
+  return traces;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LINE-CUT TOOL
+   ═══════════════════════════════════════════════════════════════════════ */
+function toggleLineCut() {
+  S.lineCut.active = !S.lineCut.active;
+  document.getElementById('linecut-btn').classList.toggle('active', S.lineCut.active);
+  if (S.lineCut.active) {
+    S.lineCut.p1 = null;
+    S.lineCut.p2 = null;
+    S.lineCut.profile = null;
+    document.getElementById('linecut-info').textContent = 'Click the first point on the heatmap';
+    document.getElementById('linecut-panel').classList.add('visible');
+    Plotly.purge('linecut-plot');
+  } else {
+    document.getElementById('linecut-panel').classList.remove('visible');
+  }
+  if (S.primary.data) renderHeatmap('primary');
+}
+
+function setLineCutPoint(mu, phi) {
+  if (!S.lineCut.p1) {
+    S.lineCut.p1 = { mu, phi };
+    document.getElementById('linecut-info').innerHTML =
+      'P1: \u03bc=<b>' + mu.toFixed(3) + '</b>, \u03c6=<b>' + phi.toFixed(3) + '</b> \u2014 click second point';
+    renderHeatmap('primary');
+  } else if (!S.lineCut.p2) {
+    S.lineCut.p2 = { mu, phi };
+    document.getElementById('linecut-info').innerHTML =
+      'P1: \u03bc=<b>' + S.lineCut.p1.mu.toFixed(3) + '</b>, \u03c6=<b>' + S.lineCut.p1.phi.toFixed(3) + '</b>' +
+      ' \u2192 P2: \u03bc=<b>' + mu.toFixed(3) + '</b>, \u03c6=<b>' + phi.toFixed(3) + '</b>';
+    computeLineCutProfile();
+    renderHeatmap('primary');
+    renderLineCut();
+  }
+}
+
+function computeLineCutProfile() {
+  const data = S.primary.data;
+  if (!data || !S.lineCut.p1 || !S.lineCut.p2) return;
+  const p1 = S.lineCut.p1, p2 = S.lineCut.p2;
+  const nSamples = 200;
+  const profile = [];
+  for (let k = 0; k <= nSamples; k++) {
+    const t = k / nSamples;
+    const mu = p1.mu + t * (p2.mu - p1.mu);
+    const phi = p1.phi + t * (p2.phi - p1.phi);
+    const j = nearestIdx(data.mu, mu);    // mu index
+    const i = nearestIdx(data.phi, phi);   // phi index
+    const rank = data.rank[j][i];          // [mu_idx][phi_idx]
+    // Bilinear interpolation for gap
+    const jf = fracIdx(data.mu, mu);
+    const fi = fracIdx(data.phi, phi);
+    const j0 = Math.floor(jf), j1 = Math.min(j0 + 1, data.mu.length - 1);
+    const i0 = Math.floor(fi), i1 = Math.min(i0 + 1, data.phi.length - 1);
+    const fx = jf - j0, fy = fi - i0;
+    const gap = (1-fx)*(1-fy)*data.gap[j0][i0] + fx*(1-fy)*data.gap[j1][i0]
+              + (1-fx)*fy*data.gap[j0][i1] + fx*fy*data.gap[j1][i1];
+    const dist = Math.sqrt((mu - p1.mu)**2 + (phi - p1.phi)**2);
+    profile.push({ t, mu, phi, rank, gap, dist });
+  }
+  S.lineCut.profile = profile;
+}
+
+function renderLineCut() {
+  const profile = S.lineCut.profile;
+  if (!profile || profile.length === 0) return;
+  const obs = S.primary.obs;
+  const dist = profile.map(p => p.dist);
+  let y, yTitle, color;
+  if (obs === 'gap') {
+    y = profile.map(p => p.gap > 0 ? Math.log10(Math.max(p.gap, 1e-16)) : -16);
+    yTitle = 'log\u2081\u2080(gap ratio)';
+    color = '#f0a030';
+  } else {
+    y = profile.map(p => p.rank);
+    yTitle = 'Rank';
+    color = '#3ddc84';
+  }
+  const layout = Object.assign({}, LAYOUT_BASE, {
+    xaxis: { title: 'Distance along cut', gridcolor: '#1e2430', zeroline: false },
+    yaxis: { title: yTitle, gridcolor: '#1e2430', zeroline: false },
+    margin: { l: 55, r: 10, t: 10, b: 50 },
+  });
+  Plotly.react('linecut-plot', [{
+    x: dist, y: y,
+    type: 'scatter', mode: 'lines+markers',
+    marker: { size: 3, color: color },
+    line: { color: color, width: 2 },
+    hovertemplate: 'd=%{x:.3f}<br>' + yTitle + '=%{y:.2f}<br>\u03bc=%{customdata[0]:.3f}<br>\u03c6=%{customdata[1]:.3f}<extra></extra>',
+    customdata: profile.map(p => [p.mu, p.phi]),
+  }], layout, { responsive: true });
+}
+
+function getLineCutTraces(data) {
+  if (!S.lineCut.active || !data) return [];
+  const traces = [];
+  const pts = [S.lineCut.p1, S.lineCut.p2].filter(Boolean);
+  if (pts.length > 0) {
+    traces.push({
+      x: pts.map(p => p.mu), y: pts.map(p => p.phi),
+      type: 'scatter', mode: 'markers',
+      marker: { size: 10, color: '#e05555', symbol: 'x',
+                line: { color: '#fff', width: 2 } },
+      hoverinfo: 'skip', showlegend: false,
+    });
+  }
+  if (pts.length === 2) {
+    traces.push({
+      x: [pts[0].mu, pts[1].mu], y: [pts[0].phi, pts[1].phi],
+      type: 'scatter', mode: 'lines',
+      line: { color: '#e05555', width: 2, dash: 'dot' },
+      hoverinfo: 'skip', showlegend: false,
+    });
+  }
+  return traces;
+}
+
+function clearLineCut() {
+  S.lineCut.p1 = null;
+  S.lineCut.p2 = null;
+  S.lineCut.profile = null;
+  document.getElementById('linecut-info').textContent = 'Click two points on the heatmap to define a cross-section';
+  Plotly.purge('linecut-plot');
+  if (S.primary.data) renderHeatmap('primary');
+}
+
+function exportLineCutCSV() {
+  const profile = S.lineCut.profile;
+  if (!profile || profile.length === 0) return;
+  let csv = 'distance,mu,phi,rank,gap_ratio,log10_gap\n';
+  profile.forEach(p => {
+    const lg = p.gap > 0 ? Math.log10(Math.max(p.gap, 1e-16)) : -16;
+    csv += p.dist.toFixed(6) + ',' + p.mu.toFixed(6) + ',' + p.phi.toFixed(6) + ',' +
+           p.rank + ',' + p.gap.toExponential(6) + ',' + lg.toFixed(4) + '\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'linecut_profile.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
