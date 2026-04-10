@@ -562,6 +562,47 @@ been explored and could reveal intermediate behavior.
 
 ---
 
+## Energy Bound Investigation (Completed, April 10, 2026)
+
+*Can the negative semi-definite 117th generator constrain the quantum
+three-body spectrum?*
+
+### Result: No.
+
+The quantum commutant of H_total (dim 40) is strictly **smaller** than
+the classical commutant (dim 41). This is Case C — the unexpected outcome
+where quantization *removes* a classical conservation law.
+
+| Algebra | rank(ad_H) | Commutant dim |
+|---------|------------|---------------|
+| Classical (QQ) | 115 | 41 |
+| Quantum (QQ[hbar]) | 116 | 40 |
+
+The 117th generator does not participate in any conserved combination
+with H_total. The Moyal bracket corrections make H_total "more
+non-degenerate" — one classical commutant direction becomes linearly
+dependent on others when hbar terms are included.
+
+### Structural findings
+
+- All 40 quantum kernel vectors have **purely rational** coefficients
+  (no hbar dependence), indicating the quantum commutant is a
+  "rational shadow" of the classical one.
+- Level-2 Killing form is **identically zero** (rank 0). The level-2
+  algebra is nilpotent with trivial trace form. No non-trivial
+  quadratic Casimir exists.
+- Center dimension at level 2: 17/17 (the entire level-2 algebra is
+  central within itself).
+
+### Universality implication
+
+Since all singular potentials (1/r^n, n≥1) produce the same +1 quantum
+growth (117 vs 116), the Case C result likely extends to the entire
+singular universality class. **Open question**: does the quantum
+commutant dimension drop (classical − 1) hold for 1/r², 1/r³, etc.?
+
+---
+
 *This document is a scratch pad. If any of these ideas survive
 contact with further computation, they'll be promoted to the
 preprint or research roadmap.*
