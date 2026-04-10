@@ -58,19 +58,20 @@ trap shutdown_handler SIGTERM
 echo "=== Step 1: Installing dependencies ==="
 upload_log
 
-yum install -y python3 python3-pip python3-devel gcc gmp-devel mpfr-devel mpc-devel
-amazon-linux-extras install python3.8 -y 2>/dev/null || true
-PYTHON=$(command -v python3.8 || command -v python3)
+dnf install -y python3 python3-pip python3-devel gcc gmp-devel mpfr-devel libmpc-devel 2>/dev/null \
+    || yum install -y python3 python3-pip python3-devel gcc gmp-devel mpfr-devel mpc-devel 2>/dev/null
+PYTHON=$(command -v python3)
 echo "Using Python: $PYTHON ($($PYTHON --version 2>&1))"
 
 $PYTHON -m ensurepip --upgrade 2>/dev/null || true
 $PYTHON -m pip install --upgrade pip 2>/dev/null || true
-$PYTHON -m pip install sympy==1.14.0 numpy scipy gmpy2
+$PYTHON -m pip install "sympy>=1.13" numpy scipy gmpy2
 
 echo "=== Step 2: Checking versions ==="
 $PYTHON -c "import sympy; print('SymPy:', sympy.__version__)"
 $PYTHON -c "import gmpy2; print('gmpy2:', gmpy2.version())"
 $PYTHON -c "import numpy; print('NumPy:', numpy.__version__)"
+echo "CPUs detected: $(nproc)"
 upload_log
 
 echo "=== Step 3: Pulling code from S3 ==="
@@ -103,14 +104,20 @@ echo "=== Step 5: Background sync (every 5 min) ==="
 done) &
 SYNC_PID=$!
 
+NCPU=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || nproc 2>/dev/null || echo 16)
+WORKERS=$((NCPU - 1))
+if [ "$WORKERS" -lt 1 ]; then WORKERS=1; fi
+
 echo "=== Step 6: Running N=5 d=1 level 3 ==="
-echo "Command: $PYTHON -u symbolic_rank_nbody.py -N 5 -d 1 --max-level 3 --checkpoint-dir $CHECKPOINT_DIR"
+echo "CPUs: $NCPU, Workers: $WORKERS"
+echo "Command: $PYTHON -u symbolic_rank_nbody.py -N 5 -d 1 --max-level 3 --checkpoint-dir $CHECKPOINT_DIR --workers $WORKERS"
 echo "=== $(date -u) ==="
 upload_log
 
 cd "$WORKDIR/nbody"
 $PYTHON -u symbolic_rank_nbody.py -N 5 -d 1 --max-level 3 \
-    --checkpoint-dir "$CHECKPOINT_DIR" &
+    --checkpoint-dir "$CHECKPOINT_DIR" \
+    --workers "$WORKERS" &
 MAIN_PID=$!
 echo "Main PID: $MAIN_PID"
 upload_log

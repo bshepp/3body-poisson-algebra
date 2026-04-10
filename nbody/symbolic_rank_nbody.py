@@ -9,13 +9,16 @@ Gaussian elimination via DomainMatrix.
 
 No SVD, no thresholds, no numerical approximation.
 
+Supports multiprocessing (--workers) for bracket computation on Linux
+(uses fork to share SymPy expression trees without serialization).
+
 Usage
 -----
     # N=3 baseline (should give [3, 6, 17, 116])
     python symbolic_rank_nbody.py -N 3 -d 2 --max-level 3
 
-    # N=5, 1D, through level 3
-    python symbolic_rank_nbody.py -N 5 -d 1 --max-level 3
+    # N=5, 1D, through level 3, 15 workers
+    python symbolic_rank_nbody.py -N 5 -d 1 --max-level 3 --workers 15
 
     # N=6, 2D, through level 2
     python symbolic_rank_nbody.py -N 6 -d 2 --max-level 2
@@ -30,8 +33,10 @@ Usage
 import os
 import sys
 import json
+import signal
 import argparse
-from time import time
+from time import time, strftime
+from multiprocessing import Pool, cpu_count
 
 os.environ["PYTHONUNBUFFERED"] = "1"
 sys.setrecursionlimit(500000)
@@ -44,6 +49,41 @@ from sympy import Integer, Rational, Add, Poly, expand, cancel, diff, Symbol
 import pickle
 
 from exact_growth_nbody import NBodyAlgebra, COORD_LABELS
+
+
+# =====================================================================
+# Module-level globals for multiprocessing workers (fork-inherited)
+# =====================================================================
+_WORKER_ENGINE = None
+_WORKER_EXPRS = None
+_WORKER_NAMES = None
+_shutdown_requested = False
+
+
+def _sigterm_handler(signum, frame):
+    global _shutdown_requested
+    _shutdown_requested = True
+    print(f"\n  [SIGTERM] Received at {strftime('%Y-%m-%dT%H:%M:%SZ')} "
+          f"-- finishing current bracket batch...", flush=True)
+
+
+def _compute_one_bracket(args):
+    """Worker function: compute one Poisson bracket {f_i, f_j}.
+
+    Uses fork-inherited _WORKER_ENGINE and _WORKER_EXPRS to avoid
+    pickling large SymPy expression trees.
+    """
+    idx, i, j = args
+    t0 = time()
+    expr = _WORKER_ENGINE._poisson_bracket(_WORKER_EXPRS[i], _WORKER_EXPRS[j])
+    t_b = time() - t0
+    t0 = time()
+    expr = _WORKER_ENGINE._simplify(expr)
+    t_s = time() - t0
+    nterms = len(Add.make_args(expr))
+    ni, nj = _WORKER_NAMES[i], _WORKER_NAMES[j]
+    bname = f"{{{ni},{nj}}}"
+    return (idx, i, j, bname, expr, nterms, t_b, t_s)
 
 
 class NBodySymbolicRank:
@@ -262,13 +302,20 @@ class NBodySymbolicRank:
         print(f"  [checkpoint] Loaded {tag} ({os.path.getsize(path)/1024/1024:.1f} MB)")
         return data
 
-    def build_generators(self, max_level, checkpoint_dir=None):
-        """Build generators through max_level, with optional per-level checkpointing."""
+    def build_generators(self, max_level, checkpoint_dir=None, n_workers=1):
+        """Build generators through max_level, with optional per-level
+        checkpointing and multiprocessing.
+
+        On Linux, n_workers > 1 uses multiprocessing.Pool with fork()
+        to share expression trees without serialization overhead.
+        """
+        global _WORKER_ENGINE, _WORKER_EXPRS, _WORKER_NAMES
+
         print(f"Building generators: N={self.n_bodies}, d={self.d_spatial}, "
-              f"potential={self.potential}, max_level={max_level}")
+              f"potential={self.potential}, max_level={max_level}, "
+              f"workers={n_workers}")
         t_total = time()
 
-        # Check for a complete checkpoint from a prior run
         ckpt = self.load_checkpoint(checkpoint_dir, f"generators_level{max_level}")
         if ckpt is not None:
             all_exprs, all_names, all_levels, computed_pairs = ckpt
@@ -286,7 +333,6 @@ class NBodySymbolicRank:
         all_levels = [0] * n_l0
         computed_pairs = set()
 
-        # Try to resume from the highest available level checkpoint
         resume_level = -1
         for lv in range(max_level, -1, -1):
             ckpt = self.load_checkpoint(checkpoint_dir, f"generators_level{lv}")
@@ -307,7 +353,6 @@ class NBodySymbolicRank:
                 for j in range(i + 1, n_l0):
                     computed_pairs.add(frozenset({i, j}))
 
-            # Level 1
             if max_level >= 1:
                 print(f"\n--- Level 1: Brackets of {n_l0} Hamiltonians ---")
                 for i in range(n_l0):
@@ -333,10 +378,9 @@ class NBodySymbolicRank:
             t_level = time()
             frontier = [i for i, lv in enumerate(all_levels) if lv == level - 1]
             n_existing = len(all_exprs)
-            new_exprs = []
-            new_names = []
-            n_cand = 0
 
+            # Pre-enumerate all work items for this level
+            work_items = []
             for i in frontier:
                 for j in range(n_existing):
                     if i == j:
@@ -345,8 +389,88 @@ class NBodySymbolicRank:
                     if pair in computed_pairs:
                         continue
                     computed_pairs.add(pair)
-                    n_cand += 1
+                    work_items.append((len(work_items), i, j))
 
+            n_total = len(work_items)
+            print(f"  {n_total} candidate brackets "
+                  f"(frontier={len(frontier)}, existing={n_existing})")
+
+            # Try to resume intra-level checkpoint
+            intra_ckpt = self.load_checkpoint(
+                checkpoint_dir, f"generators_level{level}_partial")
+            completed_results = {}
+            if intra_ckpt is not None:
+                completed_results = intra_ckpt
+                print(f"  Resumed {len(completed_results)}/{n_total} "
+                      f"brackets from intra-level checkpoint")
+
+            remaining = [(idx, i, j) for idx, i, j in work_items
+                         if idx not in completed_results]
+            print(f"  {len(remaining)} brackets remaining, "
+                  f"{n_workers} worker(s)")
+
+            use_mp = (n_workers > 1 and len(remaining) > 1
+                      and os.name != 'nt')
+
+            if use_mp:
+                _WORKER_ENGINE = self
+                _WORKER_EXPRS = all_exprs
+                _WORKER_NAMES = all_names
+
+                n_done = len(completed_results)
+                t_batch = time()
+                ckpt_interval = max(50, n_total // 20)
+
+                chunksize = max(1, min(50, len(remaining) // (n_workers * 20)))
+                print(f"  Pool chunksize: {chunksize}", flush=True)
+
+                with Pool(processes=n_workers) as pool:
+                    for result in pool.imap_unordered(
+                            _compute_one_bracket, remaining,
+                            chunksize=chunksize):
+                        idx, i, j, bname, expr, nterms, t_b, t_s = result
+                        completed_results[idx] = (bname, expr)
+                        n_done += 1
+
+                        if n_done % 100 == 0 or n_done == n_total:
+                            elapsed = time() - t_batch
+                            rate = n_done / elapsed if elapsed > 0 else 0
+                            eta = (n_total - n_done) / rate if rate > 0 else 0
+                            print(f"  [{n_done:>6d}/{n_total}] {bname}  "
+                                  f"bracket {t_b:.1f}s  simplify {t_s:.1f}s  "
+                                  f"-> {nterms} terms  "
+                                  f"({rate:.1f}/s, ETA {eta/60:.0f}min)",
+                                  flush=True)
+                        elif n_done % 10 == 0:
+                            print(f"  [{n_done:>6d}/{n_total}] {bname}  "
+                                  f"-> {nterms} terms", flush=True)
+
+                        if (n_done % ckpt_interval == 0
+                                and checkpoint_dir is not None):
+                            self.save_checkpoint(
+                                checkpoint_dir,
+                                f"generators_level{level}_partial",
+                                completed_results)
+
+                        if _shutdown_requested:
+                            print(f"  [SHUTDOWN] Saving partial results "
+                                  f"({n_done}/{n_total})...", flush=True)
+                            pool.terminate()
+                            pool.join()
+                            self.save_checkpoint(
+                                checkpoint_dir,
+                                f"generators_level{level}_partial",
+                                completed_results)
+                            print(f"  [SHUTDOWN] Checkpoint saved. Exiting.")
+                            sys.exit(0)
+
+                _WORKER_ENGINE = None
+                _WORKER_EXPRS = None
+                _WORKER_NAMES = None
+            else:
+                # Sequential fallback (Windows or single worker)
+                n_done = len(completed_results)
+                for idx, i, j in remaining:
                     t0 = time()
                     expr = self._poisson_bracket(all_exprs[i], all_exprs[j])
                     t_b = time() - t0
@@ -357,22 +481,39 @@ class NBodySymbolicRank:
                     nterms = len(Add.make_args(expr))
                     ni, nj = all_names[i], all_names[j]
                     bname = f"{{{ni},{nj}}}"
-                    print(f"  [{n_cand:>4d}] {bname}  "
+                    completed_results[idx] = (bname, expr)
+                    n_done += 1
+
+                    print(f"  [{n_done:>6d}/{n_total}] {bname}  "
                           f"bracket {t_b:.1f}s  simplify {t_s:.1f}s  "
                           f"-> {nterms} terms")
 
-                    new_exprs.append(expr)
-                    new_names.append(bname)
+                    if (_shutdown_requested and checkpoint_dir is not None):
+                        self.save_checkpoint(
+                            checkpoint_dir,
+                            f"generators_level{level}_partial",
+                            completed_results)
+                        print(f"  [SHUTDOWN] Checkpoint saved. Exiting.")
+                        sys.exit(0)
 
-            for expr, name in zip(new_exprs, new_names):
+            # Reassemble results in original order
+            for idx in range(n_total):
+                bname, expr = completed_results[idx]
                 all_exprs.append(expr)
-                all_names.append(name)
+                all_names.append(bname)
                 all_levels.append(level)
 
-            print(f"  Level {level}: {len(new_exprs)} candidates "
+            print(f"  Level {level}: {n_total} candidates "
                   f"in {time()-t_level:.1f}s")
             self.save_checkpoint(checkpoint_dir, f"generators_level{level}",
                                  (all_exprs, all_names, all_levels, computed_pairs))
+
+            # Clean up intra-level partial checkpoint
+            partial_path = self._ckpt_path(
+                checkpoint_dir, f"generators_level{level}_partial")
+            if partial_path and os.path.exists(partial_path):
+                os.remove(partial_path)
+                print(f"  [checkpoint] Removed partial checkpoint for level {level}")
 
         print(f"\nTotal generators: {len(all_exprs)} "
               f"in {time()-t_total:.1f}s")
@@ -805,7 +946,20 @@ def main():
     ap.add_argument("--output", default=None, help="Output JSON file")
     ap.add_argument("--checkpoint-dir", default=None,
                     help="Directory for per-level checkpoints (enables resume)")
+    ap.add_argument("--workers", type=int,
+                    default=1,
+                    help="Number of multiprocessing workers for bracket "
+                         "computation (default: 1, sequential). "
+                         "Uses fork on Linux; ignored on Windows.")
     args = ap.parse_args()
+
+    n_workers = args.workers
+    if os.name == 'nt' and n_workers > 1:
+        print(f"WARNING: --workers={n_workers} ignored on Windows (no fork). "
+              f"Using sequential mode.", flush=True)
+        n_workers = 1
+
+    signal.signal(signal.SIGTERM, _sigterm_handler)
 
     mode = "QUANTUM COMMUTATOR" if args.quantum else "POISSON"
     print("=" * 70)
@@ -815,6 +969,7 @@ def main():
     print(f"N = {args.N}, d = {args.d}")
     print(f"Potential: {args.potential}")
     print(f"Max level: {args.max_level}")
+    print(f"Workers: {n_workers}")
     if args.quantum:
         print(f"Bracket: [f,g]/(i*hbar) (Moyal/Weyl quantization)")
         print(f"Domain: QQ[hbar]")
@@ -845,7 +1000,8 @@ def main():
 
     # Phase 1: Build generators
     exprs, names, levels = engine.build_generators(args.max_level,
-                                                   checkpoint_dir=ckpt_dir)
+                                                   checkpoint_dir=ckpt_dir,
+                                                   n_workers=n_workers)
 
     # Phase 2: Extract monomial-coefficient matrix
     poly_list, monom_list, monom_to_idx = engine.extract_monomial_matrix(exprs)
