@@ -98,6 +98,9 @@ The extra quantum dimension was fully characterized via `analyze_117th.py`:
 | **Collision divergence** | 1/r¹⁴ (vs classical max ~1/r⁸) |
 | **Equilateral triangle** | −7065/256 ≈ −27.6 (does NOT vanish) |
 | **Permutation symmetry** | Not S₃-symmetric (bracket-specific), but S₃-average is nonzero and also negative |
+| **Conserved?** | NO — [G, H_total] ≠ 0 (919 terms). Element of pair-Hamiltonian Lie algebra, not a constant of motion. |
+| **Physical meaning** | Operator inequality Ĝ ≤ Ĝ_classical; quantum deformation opens asymmetrically (bounded above). |
+| **Collision comparison** | 1/r¹⁴ divergence vs Bohm potential 1/r² and Darwin term 1/r³ — probes short-distance structure at higher order. |
 
 ---
 

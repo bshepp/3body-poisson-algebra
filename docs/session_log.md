@@ -4936,6 +4936,70 @@ The Legendre P₃ structure suggests the quantum correction has octupole charact
 — it probes three-fold angular correlations between particle pairs that are
 invisible to the classical Poisson bracket.
 
+### Physical Interpretation of Negative Semi-Definiteness (April 10, 2026)
+
+#### Is the 117th generator conserved?
+
+Computed commutators of both the quantum correction g_q and the full generator
+G_full = g_cl + hbar²·g_q with the total Hamiltonian H = H₁₂ + H₁₃ + H₂₃:
+
+| Commutator | Result |
+|---|---|
+| [g_q, H_total] | 280 terms (NOT zero) |
+| [g_q, H₁₂] | 206 terms |
+| [g_q, H₁₃] | 206 terms |
+| [g_q, H₂₃] | 148 terms |
+| [G_full, H_total] | 919 terms (hbar⁰: 639, hbar²: 280) |
+
+**The 117th generator is NOT a conserved quantity.** It does not commute with
+the full Hamiltonian. It is an element of the pair-Hamiltonian Lie algebra
+(built from iterated commutators of H₁₂, H₁₃, H₂₃), not a constant of motion.
+
+#### Operator inequality interpretation
+
+The negative semi-definiteness provides a constraint at the level of the
+*algebra of observables* rather than the dynamics:
+
+1. **Operator bound.** The Weyl-quantized operator Ĝ satisfies
+   Ĝ ≤ Ĝ_classical as an operator inequality, since g_q ≤ 0 everywhere
+   on phase space. For any quantum state |ψ⟩:
+   ⟨ψ|Ĝ|ψ⟩ ≤ ⟨ψ|Ĝ_classical|ψ⟩
+
+2. **Asymmetric quantum deformation.** The quantum deformation of the
+   Poisson algebra is asymmetric: it opens in exactly one new direction
+   (117 vs 116), and that direction is bounded above by zero. The space
+   of quantum expectation values is constrained relative to the classical
+   observable space.
+
+3. **Not an effective potential, but a meta-constraint.** Because g is not
+   conserved, it doesn't directly bound the energy. Instead it constrains
+   the observable algebra itself — a bound on what quantum mechanics can
+   express, not on what it predicts for any single trajectory.
+
+#### Collision singularity comparison
+
+The 1/r¹⁴ divergence is dramatically stronger than standard quantum corrections:
+
+| Quantum correction | Singularity | Origin |
+|---|---|---|
+| Bohm potential | 1/r² | Wavefunction curvature |
+| Darwin term (QED) | 1/r³ | Zitterbewegung |
+| **117th generator** | **1/r¹⁴** | **Commutator algebra level 3** |
+
+The extreme short-range behavior means the quantum algebra "knows" about
+the collision singularity in a more refined way than the standard quantum
+potential. The new algebraic direction opens up precisely where classical
+mechanics fails most dramatically — near binary collisions — and it opens
+in a bounded direction.
+
+#### Scale-invariant ratio
+
+Since g scales as 1/a⁸ and the classical potential V scales as 1/a, the
+ratio g/V⁸ is a dimensionless geometric invariant (scale-independent).
+The relative importance of the quantum correction, viewed as a fraction
+of V⁸, does not depend on the overall size of the configuration. This is
+consistent with g being an algebraic invariant of the three-body geometry.
+
 ### Open Questions
 
 1. **Structure of the 117th in 2D.** Is the same bracket structure replicated
@@ -4955,3 +5019,7 @@ invisible to the classical Poisson bracket.
    have a similar sum-of-squares proof involving all three pairs?
 8. **Higher Legendre polynomials at level 4?**: If level 4 produces further
    quantum corrections, do they involve P₅, P₇, ... (higher odd Legendre)?
+9. **Can g be combined with conserved quantities to yield an energy bound?**
+   The 117th generator is not itself conserved, but a clever linear
+   combination with actual constants of motion could potentially produce
+   an operator inequality constraining the spectrum.
