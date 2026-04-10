@@ -47,14 +47,14 @@ trap shutdown_handler SIGTERM
 echo "=== Step 1: Installing dependencies ==="
 upload_log
 
-yum install -y python3 python3-pip python3-devel gcc gmp-devel mpfr-devel mpc-devel
-amazon-linux-extras install python3.8 -y 2>/dev/null || true
-PYTHON=$(command -v python3.8 || command -v python3)
+dnf install -y python3 python3-pip python3-devel gcc gmp-devel mpfr-devel 2>/dev/null \
+    || yum install -y python3 python3-pip python3-devel gcc gmp-devel mpfr-devel
+PYTHON=$(command -v python3)
 echo "Using Python: $PYTHON ($($PYTHON --version 2>&1))"
 
 $PYTHON -m ensurepip --upgrade 2>/dev/null || true
 $PYTHON -m pip install --upgrade pip 2>/dev/null || true
-$PYTHON -m pip install sympy==1.14.0 numpy scipy gmpy2
+$PYTHON -m pip install "sympy>=1.13" numpy scipy gmpy2
 
 echo "=== Step 2: Checking versions ==="
 $PYTHON -c "import sympy; print('SymPy:', sympy.__version__)"

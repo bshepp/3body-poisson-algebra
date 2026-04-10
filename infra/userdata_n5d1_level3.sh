@@ -105,7 +105,7 @@ done) &
 SYNC_PID=$!
 
 NCPU=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || nproc 2>/dev/null || echo 16)
-WORKERS=$((NCPU - 1))
+WORKERS=8
 if [ "$WORKERS" -lt 1 ]; then WORKERS=1; fi
 
 echo "=== Step 6: Running N=5 d=1 level 3 ==="

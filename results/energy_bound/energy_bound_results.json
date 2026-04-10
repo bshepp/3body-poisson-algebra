@@ -1,0 +1,365 @@
+{
+  "classical_generators": 156,
+  "quantum_generators": 156,
+  "classical_rank_ad_H": 115,
+  "quantum_rank_ad_H": 116,
+  "classical_commutant_dim": 41,
+  "quantum_commutant_dim": 40,
+  "comparison": "SMALLER",
+  "total_time_s": 1872.9,
+  "completed_at": "2026-04-10T20:40:47Z",
+  "manifest": {
+    "step1": {
+      "status": "complete",
+      "result": {
+        "g_q_terms": 66,
+        "commutes_with_P": true,
+        "commutes_with_Xcm": true,
+        "time_s": 2.8
+      },
+      "completed_at": "2026-04-10T03:34:42Z"
+    },
+    "step2_quantum": {
+      "status": "complete",
+      "result": {
+        "n_generators": 156,
+        "rank": 116,
+        "commutant_dim": 40,
+        "n_zero_brackets": 0,
+        "n_monomials": 49413,
+        "time_s": 650.9
+      },
+      "completed_at": "2026-04-10T20:20:31Z"
+    },
+    "step2b_classical": {
+      "status": "complete",
+      "result": {
+        "n_generators": 156,
+        "rank": 115,
+        "commutant_dim": 41,
+        "n_zero_brackets": 0,
+        "n_monomials": 38496,
+        "time_s": 1154.1
+      },
+      "completed_at": "2026-04-10T20:39:47Z"
+    },
+    "step2_comparison": {
+      "status": "complete",
+      "result": {
+        "classical_commutant_dim": 41,
+        "quantum_commutant_dim": 40,
+        "result": "SMALLER"
+      },
+      "completed_at": "2026-04-10T20:39:49Z"
+    },
+    "step3_analyze": {
+      "status": "complete",
+      "result": {
+        "n_kernel_vectors": 40,
+        "vectors": [
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "0": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "2": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 2,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 2
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "2": 1,
+              "3": 2
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "2": 1,
+              "3": 2
+            }
+          },
+          {
+            "n_nonzero": 2,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 2
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 5,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 5
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "2": 1,
+              "3": 2
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 2,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 2
+            }
+          },
+          {
+            "n_nonzero": 2,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 2
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "2": 1,
+              "3": 2
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 4,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 4
+            }
+          },
+          {
+            "n_nonzero": 13,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 13
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 4,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "2": 1,
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 4,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "2": 1,
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 4,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 4
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 4,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "2": 1,
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 4,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "2": 1,
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 2,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 2
+            }
+          },
+          {
+            "n_nonzero": 16,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "2": 3,
+              "3": 13
+            }
+          },
+          {
+            "n_nonzero": 3,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 3
+            }
+          },
+          {
+            "n_nonzero": 14,
+            "has_hbar_coeffs": false,
+            "level_counts": {
+              "3": 14
+            }
+          }
+        ]
+      },
+      "completed_at": "2026-04-10T20:39:50Z"
+    },
+    "step4_casimir": {
+      "status": "complete",
+      "result": {
+        "rank": 17,
+        "killing_rank": 0,
+        "center_dim": 17,
+        "n_nonzero_killing": 0,
+        "time_s": 54.1
+      },
+      "completed_at": "2026-04-10T20:40:45Z"
+    }
+  }
+}

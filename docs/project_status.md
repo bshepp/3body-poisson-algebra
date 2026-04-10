@@ -40,11 +40,23 @@ Additional completed work:
 - Sun-Earth-Moon atlas (100x100, 800 samples) — completed April 7, 2026 in 6h28m on r6i.4xlarge (on-demand, 16 workers). 10,000/10,000 valid points, unique ranks 102–108. Dynamic range 10²⁰–10²⁶ limits SVD rank detection.
 - Sun-Jupiter-Asteroid atlas (100x100, 800 samples) — completed April 8, 2026 in 9h33m on r6i.4xlarge (on-demand, 16 workers). 10,000/10,000 valid points, unique ranks 91–100. Dynamic range 10²⁵–10³² (most extreme system computed).
 
+### Completed — Energy Bound Search (April 10, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **g_q symmetry verification** | Commutes with P_total and X_cm (confirmed). |
+| 2 | **Quantum commutant of H_total** | rank(ad_H) = 116 over QQ[hbar], commutant dim = **40** (156 − 116). |
+| 3 | **Classical commutant of H_total** | rank(ad_H) = 115 over QQ, commutant dim = **41** (156 − 115). |
+| 4 | **Comparison** | **SMALLER** — quantum commutant (40) < classical (41). Quantization *removes* one conservation law. |
+| 5 | **Kernel vector analysis** | All 40 quantum kernel vectors have rational (hbar-independent) coefficients. Mostly level-3 generators. |
+| 6 | **Casimir construction** | Level-2 Casimir: rank 17, Killing rank 0, center dim 17. |
+| 7 | **Interpretation** | The 117th generator does NOT participate in any conserved combination with H_total. Energy bound via this approach is not possible. The quantum deformation strictly reduces symmetry (Case C). |
+
 ### In Progress (2)
 
 | # | Task | Progress | Status |
 |---|---|---|---|
-| 1 | **3-term composite (2PN)** | 138/138 generators built, matrix extraction 20/156 | Running locally |
+| 1 | **N=5 d=1 Level 3 exact rank** | Brackets complete (1.1M), monomial extraction in progress | r6i.8xlarge (256 GB), 8 workers |
 | 2 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed. Rank=667, plateau=0. Checkpoint safe. |
 
 ### Not Yet Started (7)

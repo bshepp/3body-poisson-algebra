@@ -5305,15 +5305,38 @@ Still publishable: it fully characterizes g_q's dynamical role.
 Quantization breaks a classical conservation law. Would be surprising
 and needs careful verification.
 
-### Status
-Step 1 (symmetry verification) complete: g_q commutes with P_total
-and X_cm. Step 2 (bracket computation) at 40/156. Estimated completion
-12-24 hours from launch.
+### Result: Case C — Quantum Commutant is SMALLER (completed April 10, 2026)
 
-### Connection to Phase 1 universality result
-If Case A holds for 1/r, the universality result (all 1/r^n produce
-the 117th generator) means analogous spectral bounds may exist for
-Calogero-Moser (1/r^2) and other singular potentials.
+| Algebra | Generators | rank(ad_H) | Commutant dim |
+|---------|-----------|------------|---------------|
+| Classical (QQ) | 156 | 115 | **41** |
+| Quantum (QQ[hbar]) | 156 | 116 | **40** |
+
+The quantum commutant has **one fewer** conserved combination than
+the classical one. This is Case C — the surprising outcome.
+
+**Interpretation:** Quantization (the Moyal bracket) *breaks* a
+classical conservation law. The extra quantum rank (116 vs 115)
+means H_total is "more non-degenerate" in the quantum algebra —
+one classical commutant direction becomes linearly dependent on
+others when hbar corrections are included. The 117th generator
+does NOT participate in any conserved combination. An energy bound
+from this algebraic approach is not possible.
+
+**Kernel vector analysis:** All 40 quantum kernel vectors have
+purely rational coefficients (no hbar dependence). Most involve
+level-3 generators (2-5 nonzero terms each). Two outlier vectors
+have 13-16 nonzero components spanning levels 2-3.
+
+**Casimir at level 2:** rank 17, Killing form rank 0, center
+dimension 17. Killing form is identically zero — the level-2
+algebra is nilpotent with trivial trace form.
+
+### Connection to universality
+Since all singular potentials (1/r^n, n>=1) produce the same
++1 quantum growth, the Case C result likely extends to the
+entire singular universality class: quantization breaks one
+classical symmetry for all singular pair potentials.
 
 ---
 

@@ -289,13 +289,6 @@ def build_all_generators():
 
 def step2_quantum_commutant(alg_q, q_exprs, q_names, q_levels):
     """Compute the commutant of H_total in the quantum algebra exactly."""
-    if is_complete("step2_quantum"):
-        print("\n" + "=" * 70)
-        print("STEP 2: COMMUTANT OF H_total (QUANTUM) [cached]")
-        print("=" * 70)
-        ckpt = load_checkpoint("step2_quantum_result")
-        return ckpt["kernel"], ckpt["rank"], ckpt["brackets"], ckpt["domain"]
-
     print("\n" + "=" * 70)
     print("STEP 2: COMMUTANT OF H_total (QUANTUM, QQ[hbar])")
     print("=" * 70)
@@ -387,18 +380,14 @@ def step2_quantum_commutant(alg_q, q_exprs, q_names, q_levels):
     Mt = M.transpose()
     kernel = Mt.nullspace()
     print(f"  Nullspace computed in {time()-t_null:.1f}s")
-    print(f"  Kernel dimension: {len(kernel)}")
+    print(f"  Kernel dimension: {kernel.shape[0]}")
 
-    assert len(kernel) == n_gen - M_rank, \
-        f"Kernel dim {len(kernel)} != {n_gen} - {M_rank} = {n_gen - M_rank}"
+    assert kernel.shape[0] == n_gen - M_rank, \
+        f"Kernel dim {kernel.shape[0]} != {n_gen} - {M_rank} = {n_gen - M_rank}"
 
     elapsed = time() - t0
     print(f"\n  Step 2 completed in {elapsed:.1f}s")
 
-    save_checkpoint("step2_quantum_result", {
-        "kernel": kernel, "rank": M_rank,
-        "brackets": brackets, "domain": domain,
-    })
     mark_complete("step2_quantum", {
         "n_generators": n_gen,
         "rank": M_rank,
@@ -417,13 +406,6 @@ def step2_quantum_commutant(alg_q, q_exprs, q_names, q_levels):
 
 def step2b_classical_commutant(alg_c, c_exprs, c_names, c_levels):
     """Compute the commutant of H_total in the CLASSICAL algebra over QQ."""
-    if is_complete("step2b_classical"):
-        print("\n" + "=" * 70)
-        print("STEP 2b: COMMUTANT OF H_total (CLASSICAL) [cached]")
-        print("=" * 70)
-        ckpt = load_checkpoint("step2b_classical_result")
-        return ckpt["kernel"], ckpt["rank"]
-
     print("\n" + "=" * 70)
     print("STEP 2b: COMMUTANT OF H_total (CLASSICAL, QQ)")
     print("=" * 70)
@@ -510,14 +492,11 @@ def step2b_classical_commutant(alg_c, c_exprs, c_names, c_levels):
     Mt_cl = M_cl.transpose()
     kernel_cl = Mt_cl.nullspace()
     print(f"  Nullspace computed in {time()-t_null:.1f}s")
-    print(f"  Classical kernel dimension: {len(kernel_cl)}")
+    print(f"  Classical kernel dimension: {kernel_cl.shape[0]}")
 
     elapsed = time() - t0
     print(f"\n  Step 2b completed in {elapsed:.1f}s")
 
-    save_checkpoint("step2b_classical_result", {
-        "kernel": kernel_cl, "rank": M_cl_rank,
-    })
     mark_complete("step2b_classical", {
         "n_generators": n_gen,
         "rank": M_cl_rank,
@@ -541,8 +520,8 @@ def step2_comparison(kernel_q, rank_q, n_gen_q,
     print("STEP 2 COMPARISON: CLASSICAL vs QUANTUM COMMUTANT")
     print("=" * 70)
 
-    dim_cl = len(kernel_cl)
-    dim_q = len(kernel_q)
+    dim_cl = kernel_cl.shape[0]
+    dim_q = kernel_q.shape[0]
 
     print(f"\n  Classical algebra: {n_gen_cl} generators, rank {rank_cl}")
     print(f"    Commutant dimension: {dim_cl}")
@@ -587,19 +566,21 @@ def analyze_kernel_vectors(kernel_q, q_exprs, q_names, q_levels, alg_q, domain):
     print("=" * 70)
     heartbeat("step3_analyze")
 
-    if not kernel_q:
+    n_kvecs = kernel_q.shape[0]
+    if n_kvecs == 0:
         print("  No kernel vectors — no conserved combinations exist.")
         mark_complete("step3_analyze", {"n_kernel_vectors": 0})
         return
 
     analysis = []
+    n_cols = kernel_q.shape[1]
 
-    for ki, kvec in enumerate(kernel_q):
-        print(f"\n  --- Kernel vector {ki+1}/{len(kernel_q)} ---")
+    for ki in range(n_kvecs):
+        print(f"\n  --- Kernel vector {ki+1}/{n_kvecs} ---")
 
         coeffs = []
-        for i in range(kvec.shape[0]):
-            c = kvec[i, 0].element
+        for i in range(n_cols):
+            c = kernel_q[ki, i].element
             coeffs.append(c)
 
         nonzero = [(i, c) for i, c in enumerate(coeffs) if c != domain.zero]
@@ -636,7 +617,7 @@ def analyze_kernel_vectors(kernel_q, q_exprs, q_names, q_levels, alg_q, domain):
         })
 
     mark_complete("step3_analyze", {
-        "n_kernel_vectors": len(kernel_q),
+        "n_kernel_vectors": n_kvecs,
         "vectors": analysis,
     })
     sync_all()
@@ -880,7 +861,7 @@ def main():
                               kernel_cl, rank_cl, n_gen_cl)
 
     # Step 3: Analyze kernel vectors
-    if kernel_q:
+    if kernel_q.shape[0] > 0:
         analyze_kernel_vectors(kernel_q, q_exprs, q_names, q_levels,
                                alg_q, domain_q)
 
@@ -897,9 +878,9 @@ def main():
     print(f"\n\n{'='*70}")
     print(f"SUMMARY")
     print(f"{'='*70}")
-    print(f"  Classical commutant dimension: {len(kernel_cl)}")
+    print(f"  Classical commutant dimension: {kernel_cl.shape[0]}")
     print(f"    ({n_gen_cl} generators, rank {rank_cl} under ad_H)")
-    print(f"  Quantum commutant dimension: {len(kernel_q)}")
+    print(f"  Quantum commutant dimension: {kernel_q.shape[0]}")
     print(f"    ({n_gen_q} generators, rank {rank_q} under ad_H)")
     print(f"  Comparison result: {result}")
     print(f"\n  Total time: {total_time:.1f}s")
@@ -912,8 +893,8 @@ def main():
         "quantum_generators": n_gen_q,
         "classical_rank_ad_H": rank_cl,
         "quantum_rank_ad_H": rank_q,
-        "classical_commutant_dim": len(kernel_cl),
-        "quantum_commutant_dim": len(kernel_q),
+        "classical_commutant_dim": kernel_cl.shape[0],
+        "quantum_commutant_dim": kernel_q.shape[0],
         "comparison": result,
         "total_time_s": round(total_time, 1),
         "completed_at": strftime("%Y-%m-%dT%H:%M:%SZ"),
