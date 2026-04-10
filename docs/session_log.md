@@ -4858,9 +4858,88 @@ Ran `identify_117th.py` and `identify_117th_rank.py` on N=3 d=1 1/r
    quantum-mechanical correlations between particles 1-2 and 1-3 that
    emerge only from the non-commutativity of position and momentum.
 
+### Deep Analysis of the 117th Generator (April 10, 2026)
+
+Further analysis of the simplest representative (the hbar² correction from
+{{{H12,H13},H12},{H12,H13}}) reveals striking mathematical structure.
+
+#### Compact Form
+
+In relative coordinates (s = x₁−x₂, t = x₁−x₃) and dimensionless variables
+w₁ = s·u₁₂ = (x₁−x₂)/r₁₂ and w₂ = t·u₁₃ = (x₁−x₃)/r₁₃, the 66-term
+expression collapses to **10 terms** that factor completely:
+
+    f₁(w) = −(9/2) w² (5w²−3)²
+    f₂(w) = −(9/4) w² (5w²−3)²
+    f_mix(w₁,w₂) = (9/2) w₁w₂(5w₁²−3)(5w₂²−3)
+
+    g = u₁₂⁸·f₁(w₁) + (u₁₂u₁₃)⁴·f_mix(w₁,w₂) + u₁₃⁸·f₂(w₂)
+
+#### Sum-of-Squares Decomposition (Negative Semi-Definiteness)
+
+Defining Φᵢ = wᵢ(5wᵢ²−3) = 2P₃(wᵢ) (twice the third Legendre polynomial)
+and A = u₁₂⁴·Φ₁, B = u₁₃⁴·Φ₂:
+
+    **g = −(9/4) · [(A−B)² + A²]**
+
+This is a **sum of two squares** times −9/4, proving algebraically that
+**g ≤ 0 everywhere** (negative semi-definite). Verified numerically over
+100,000 random configurations with zero positive values.
+
+#### Permutation Symmetry
+
+The specific generator {{{H12,H13},H12},{H12,H13}} is **not S₃-symmetric**
+(it involves only pairs 12 and 13 by construction). However:
+- Its **S₃-symmetrized version** (average over all 6 permutations) is also
+  nonzero and negative semi-definite
+- The symmetrized version evaluates to −3171/256 at equilateral with r=1
+- The original decomposes into components in the trivial, sign, and standard
+  representations of S₃
+
+#### Collision Limits
+
+As any single pairwise distance r_ij → 0 (u_ij → ∞):
+- **g diverges as 1/r¹⁴** (the highest u-power is 14)
+- The leading coefficient in the u₁₂ → ∞ limit factors as
+  −(225/2)·u₁₂¹⁴·(x₁−x₂)⁶, i.e., the direction cosine w₁⁶ times r₁₂⁻¹⁴
+- u₂₃ does NOT appear (this particular bracket only involves pairs 12 and 13)
+- The 1/r¹⁴ singularity is significantly stronger than any classical generator
+  (max classical u-power ~8, giving 1/r⁸)
+
+#### Special Configurations
+
+| Configuration | Value | Sign |
+|---|---|---|
+| Equilateral (r=1) | −7065/256 ≈ −27.6 | NEG |
+| Equilateral (scale a) | −7065/(256a⁸) | NEG |
+| Collinear equally-spaced | −4329/256 ≈ −16.9 | NEG |
+| Symmetric collinear (x₁=−a,x₂=a,x₃=0) | −1017/(128a⁸) | NEG |
+| Particle 3 at infinity | 15 terms survive ∝ u₁₂ | NEG |
+
+The generator **does NOT vanish at the equilateral triangle** — it evaluates
+to a definite negative rational number that scales as 1/a⁸ with the triangle's
+size. It also does not vanish when one particle is sent to infinity (reducing
+to a 2-body subsystem contribution).
+
+#### Key Physical Properties
+
+1. **Translation invariant**: depends only on relative positions x_i − x_j
+2. **Homogeneous of degree −8**: g → λ⁻⁸ g under x→λx, u→u/λ
+3. **Negative semi-definite**: proven via sum-of-squares decomposition
+4. **Legendre polynomial structure**: the building blocks Φᵢ = 2P₃(wᵢ) connect
+   to the third Legendre polynomial of the direction cosine — a signature of
+   octupolar angular structure in the quantum correction
+5. **Zero set**: g = 0 only when Φ₁ = Φ₂ = 0, i.e., when both direction
+   cosines wᵢ satisfy w(5w²−3) = 0, giving w = 0 or w = ±√(3/5)
+
+The Legendre P₃ structure suggests the quantum correction has octupole character
+— it probes three-fold angular correlations between particle pairs that are
+invisible to the classical Poisson bracket.
+
 ### Open Questions
 
-1. **Structure of the 117th in 2D.** Is the same bracket
+1. **Structure of the 117th in 2D.** Is the same bracket structure replicated
+   in d=2 with vector direction cosines instead of scalar signs?
 2. **Does the quantum correction persist for other potentials?** Test
    r⁴, 1/r⁴, composite potentials with the Moyal bracket.
 3. **Level 4**: Classical rank and quantum rank at level 4? The mpmath
@@ -4872,3 +4951,7 @@ Ran `identify_117th.py` and `identify_117th_rank.py` on N=3 d=1 1/r
 6. **Structure constants at level 3**: The 116-dimensional algebra
    structure (Killing form, derived series, center) for the full
    rank-116 algebra — in progress on AWS.
+7. **Negative semi-definiteness of the S₃-symmetrized version**: Does this
+   have a similar sum-of-squares proof involving all three pairs?
+8. **Higher Legendre polynomials at level 4?**: If level 4 produces further
+   quantum corrections, do they involve P₅, P₇, ... (higher odd Legendre)?

@@ -47,12 +47,11 @@ Additional completed work:
 | 1 | **3-term composite (2PN)** | 138/138 generators built, matrix extraction 20/156 | Running locally |
 | 2 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed. Rank=667, plateau=0. Checkpoint safe. |
 
-### Not Yet Started (8)
+### Not Yet Started (7)
 
 | # | Task | Notes |
 |---|---|---|
-| 1 | **Identify the 117th generator** | Find the specific hbar²-dependent combination independent of classical generators. |
-| 2 | **Quantum rank for other potentials** | Test r⁴, 1/r⁴, composite with Moyal bracket. |
+| 1 | **Quantum rank for other potentials** | Test r⁴, 1/r⁴, composite with Moyal bracket. |
 | 3 | **Parametric exponent sweep** (1,015 values of n) | Script written (`parametric_atlas_scan.py`), not yet run at scale. See Section 3 below. |
 | 4 | **Dusty plasma Yukawa atlas** | Prior run failed (exit code 1). Yukawa lambdification issue. |
 | 5 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
@@ -82,6 +81,23 @@ Additional completed work:
 | 4 | **N=3 d=2 quantum rank (L3)** | [3, 6, 17, **117**] — confirmed +1 in 2D (AWS r6i.4xlarge, 3562s). |
 | 5 | **Post-Newtonian 1PN** | -1/r - 1/r² gives [3, 6, 17, 116] — GR correction does not change algebra. |
 | 6 | **Post-Newtonian 2PN** | -1/r - 1/r² - 1/r³ — level 3 in progress locally. |
+| 7 | **117th generator identified** | Sum-of-squares proof: g = −(9/4)[(A−B)² + A²], negative semi-definite. Legendre P₃ structure. |
+
+### Completed — 117th Generator Analysis (April 10, 2026)
+
+The extra quantum dimension was fully characterized via `analyze_117th.py`:
+
+| Property | Result |
+|---|---|
+| **Compact form** | 10 terms in relative coords (down from 66) |
+| **Sum-of-squares** | g = −(9/4)·[(A−B)² + A²] where A = u₁₂⁴·Φ₁, B = u₁₃⁴·Φ₂ |
+| **Sign** | **Negative semi-definite** (algebraic proof, verified 100K samples) |
+| **Angular structure** | Φᵢ = wᵢ(5wᵢ²−3) = 2P₃(wᵢ) — third Legendre polynomial (octupole) |
+| **Translation invariance** | Yes — depends only on relative positions |
+| **Scaling** | Homogeneous degree −8 (g → λ⁻⁸g) |
+| **Collision divergence** | 1/r¹⁴ (vs classical max ~1/r⁸) |
+| **Equilateral triangle** | −7065/256 ≈ −27.6 (does NOT vanish) |
+| **Permutation symmetry** | Not S₃-symmetric (bracket-specific), but S₃-average is nonzero and also negative |
 
 ---
 
