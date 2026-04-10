@@ -48,13 +48,23 @@ class NBodySymbolicRank:
     """Exact rank computation for N-body Poisson algebras."""
 
     def __init__(self, n_bodies, d_spatial, potential, potential_params=None,
-                 masses=None, charges=None):
+                 masses=None, charges=None, quantum=False):
         self.n_bodies = n_bodies
         self.d_spatial = d_spatial
         self.potential = potential
+        self.quantum = quantum
 
         if potential in ('r^4', 'r^2'):
             self._init_polynomial_spring(n_bodies, d_spatial, masses, potential)
+        elif quantum:
+            from quantum_algebra import QuantumNBodyAlgebra, hbar_sym
+            self.algebra = QuantumNBodyAlgebra(
+                n_bodies, d_spatial, potential,
+                potential_params=potential_params,
+                masses=masses, charges=charges)
+            self.phase_vars = list(self.algebra.all_vars)
+            self.uses_u = True
+            self.hbar_sym = hbar_sym
         else:
             self.algebra = NBodyAlgebra(
                 n_bodies, d_spatial, potential,
@@ -117,7 +127,9 @@ class NBodySymbolicRank:
         self.algebra = None
 
     def _poisson_bracket(self, f, g):
-        """Compute {f, g} with chain rule for u_ij if applicable."""
+        """Compute bracket: Poisson {f,g} or quantum [f,g]/(i*hbar)."""
+        if self.quantum and self.uses_u:
+            return self.algebra.commutator(f, g)
         if self.uses_u:
             return self.algebra.poisson_bracket(f, g)
         result = Integer(0)
@@ -255,9 +267,16 @@ class NBodySymbolicRank:
         return poly_list, monom_list, monom_to_idx
 
     def compute_exact_rank(self, poly_list, monom_list, monom_to_idx, levels):
-        """Compute exact rank using DomainMatrix over QQ."""
+        """Compute exact rank using DomainMatrix over QQ (or QQ[hbar] for quantum)."""
         from sympy.polys.matrices import DomainMatrix
         from sympy.polys.domains import QQ
+
+        if self.quantum:
+            domain = QQ[self.hbar_sym]
+            domain_label = f"QQ[hbar]"
+        else:
+            domain = QQ
+            domain_label = "QQ"
 
         n_mon = len(monom_list)
         results = {}
@@ -267,19 +286,20 @@ class NBodySymbolicRank:
             n_sel = len(mask)
 
             print(f"\n  Rank through level {max_lv} "
-                  f"({n_sel} generators x {n_mon} monomials)...",
+                  f"({n_sel} generators x {n_mon} monomials, "
+                  f"domain={domain_label})...",
                   end=" ", flush=True)
             t0 = time()
 
             rows = []
             for i in mask:
-                row = [QQ.zero] * n_mon
+                row = [domain.zero] * n_mon
                 for monom, coeff in poly_list[i].items():
                     col = monom_to_idx[monom]
-                    row[col] = QQ.convert(coeff)
+                    row[col] = domain.convert(coeff)
                 rows.append(row)
 
-            dm = DomainMatrix(rows, (n_sel, n_mon), QQ)
+            dm = DomainMatrix(rows, (n_sel, n_mon), domain)
             rank = dm.rank()
             elapsed = time() - t0
 
@@ -296,6 +316,11 @@ class NBodySymbolicRank:
         from sympy.polys.matrices import DomainMatrix
         from sympy.polys.domains import QQ
 
+        if self.quantum:
+            domain = QQ[self.hbar_sym]
+        else:
+            domain = QQ
+
         print(f"\n  Selecting basis of {rank} independent generators...",
               end=" ", flush=True)
         t0 = time()
@@ -305,17 +330,17 @@ class NBodySymbolicRank:
 
         rows = []
         for i in range(n_gen):
-            row = [QQ.zero] * n_mon
+            row = [domain.zero] * n_mon
             for monom, coeff in poly_list[i].items():
                 col = monom_to_idx[monom]
-                row[col] = QQ.convert(coeff)
+                row[col] = domain.convert(coeff)
             rows.append(row)
 
         selected = []
         current_rows = []
         for i in range(n_gen):
             trial = current_rows + [rows[i]]
-            dm = DomainMatrix(trial, (len(trial), n_mon), QQ)
+            dm = DomainMatrix(trial, (len(trial), n_mon), domain)
             if dm.rank() == len(trial):
                 selected.append(i)
                 current_rows.append(rows[i])
@@ -614,16 +639,23 @@ def main():
     ap.add_argument("--structure", action="store_true",
                     help="Compute full algebraic structure (structure constants, "
                          "Killing form, derived series, center)")
+    ap.add_argument("--quantum", action="store_true",
+                    help="Use quantum commutator [f,g]/(i*hbar) instead of "
+                         "Poisson bracket {f,g}")
     ap.add_argument("--output", default=None, help="Output JSON file")
     args = ap.parse_args()
 
+    mode = "QUANTUM COMMUTATOR" if args.quantum else "POISSON"
     print("=" * 70)
-    print("N-BODY SYMBOLIC RANK OVER Q")
+    print(f"N-BODY SYMBOLIC RANK OVER Q ({mode})")
     print("=" * 70)
     print(f"SymPy version: {sp.__version__}")
     print(f"N = {args.N}, d = {args.d}")
     print(f"Potential: {args.potential}")
     print(f"Max level: {args.max_level}")
+    if args.quantum:
+        print(f"Bracket: [f,g]/(i*hbar) (Moyal/Weyl quantization)")
+        print(f"Domain: QQ[hbar]")
 
     t_grand = time()
 
@@ -636,10 +668,13 @@ def main():
     if args.potential == 'composite' and potential_params:
         powers = [str(p) for _, p in potential_params]
         pot_label = f"composite_u{'_'.join(powers)}"
+    if args.quantum:
+        pot_label = f"quantum_{pot_label}"
 
     engine = NBodySymbolicRank(
         args.N, args.d, args.potential,
-        potential_params=potential_params)
+        potential_params=potential_params,
+        quantum=args.quantum)
 
     # Phase 1: Build generators
     exprs, names, levels = engine.build_generators(args.max_level)
@@ -683,6 +718,8 @@ def main():
         "potential": args.potential,
         "potential_label": pot_label,
         "max_level": args.max_level,
+        "quantum": args.quantum,
+        "bracket_type": "commutator/(i*hbar)" if args.quantum else "Poisson",
         "n_generators": len(exprs),
         "n_monomials": len(monom_list),
         "cumulative_rank": cumulative,

@@ -228,3 +228,6 @@ Mark items with status as work proceeds:
 | 4.4 | Symbolic rank over Q | ✅ |
 | 4.5 | Algebra structure extraction | ✅ |
 | 4.6 | Noise plateau mapping | ⬜ |
+| 4.7 | 1D structure cross-section (singularity detection) | ✅ |
+| 4.8 | Level-3 structure extraction (rank 116) | 🔄 |
+| 4.9 | Symbolic Gram determinant sweep (rationalized Bareiss) | ✅ |

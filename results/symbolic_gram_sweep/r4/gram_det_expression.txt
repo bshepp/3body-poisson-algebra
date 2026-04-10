@@ -1,0 +1,17 @@
+det(G(mu)) = 0
+
+LCM denominator D(mu) = 1
+D(mu) factored = 1
+D(mu,s) [s=sqrt(mu^2-mu+1)] = 1
+D(mu,s) factored = 1
+
+det(G_cleared) [numerator before division] = 0
+
+Numerator of det(G) factored = 0
+
+Final numerator = 0
+Final denominator = 1
+Final denominator factored = 1
+
+Poles (denominator roots) are at zeros of: 1
+Zeros (degeneration loci) are at zeros of: 0

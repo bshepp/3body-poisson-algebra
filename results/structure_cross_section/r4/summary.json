@@ -1,0 +1,44 @@
+{
+  "potential": "r^4",
+  "n_total": 200,
+  "n_ok": 200,
+  "n_rank_drop": 0,
+  "n_insufficient": 0,
+  "sc_norm_range": [
+    6684.70587923518,
+    1150098064.255869
+  ],
+  "sc_norm_mean": 140663487.9797393,
+  "sc_norm_std": 264450184.75586745,
+  "center_dim_values": [
+    0
+  ],
+  "center_dim_uniform": true,
+  "killing_signature_values": [
+    [
+      14,
+      0,
+      3
+    ],
+    [
+      15,
+      0,
+      2
+    ],
+    [
+      16,
+      0,
+      1
+    ],
+    [
+      17,
+      0,
+      0
+    ]
+  ],
+  "killing_signature_uniform": false,
+  "condition_number_range": [
+    21.37508323979654,
+    1128.6357751746823
+  ]
+}

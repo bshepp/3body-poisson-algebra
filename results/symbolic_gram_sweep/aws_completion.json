@@ -1,0 +1,8 @@
+{
+    "status": "complete",
+    "job": "symbolic_gram_sweep",
+    "instance": "i-02cea5ca7bad4ef57",
+    "instance_type": "r6i.4xlarge",
+    "exit_codes": {"1r": 0, "r4": 0, "1r4": 0},
+    "completed_at": "2026-04-09T08:35:49Z"
+}

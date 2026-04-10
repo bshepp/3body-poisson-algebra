@@ -1,0 +1,9 @@
+{
+  "lcm_denominator": "mu**44 - 11*mu**43 + 66*mu**42 - 275*mu**41 + 880*mu**40 - 2277*mu**39 + 4917*mu**38 - 9042*mu**37 + 14355*mu**36 - 19855*mu**35 + 24068*mu**34 - 25653*mu**33 + 24068*mu**32 - 19855*mu**31 + 14355*mu**30 - 9042*mu**29 + 4917*mu**28 - 2277*mu**27 + 880*mu**26 - 275*mu**25 + 66*mu**24 - 11*mu**23 + mu**22",
+  "lcm_denominator_factored": "mu**22*(mu**2 - mu + 1)**11",
+  "det_gram_simplified": "0",
+  "det_numerator_factored": null,
+  "final_numerator": "0",
+  "final_denominator": "1",
+  "total_denom_power": 17
+}

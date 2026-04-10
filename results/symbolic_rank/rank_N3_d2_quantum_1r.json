@@ -1,0 +1,25 @@
+{
+  "N": 3,
+  "d": 2,
+  "potential": "1/r",
+  "potential_label": "quantum_1/r",
+  "max_level": 2,
+  "quantum": true,
+  "bracket_type": "commutator/(i*hbar)",
+  "n_generators": 18,
+  "n_monomials": 531,
+  "cumulative_rank": [
+    3,
+    6,
+    17
+  ],
+  "new_per_level": [
+    3,
+    3,
+    11
+  ],
+  "matrix_density": 0.08317639673571876,
+  "computation_time_seconds": 3.5,
+  "sympy_version": "1.14.0",
+  "stabilized": false
+}

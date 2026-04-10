@@ -1,0 +1,890 @@
++ set -o pipefail
++ ulimit -s unlimited
++ S3_BUCKET=3body-compute-290318
++ WORKDIR=/opt/3body
++ RESULTS_DIR=results/quantum_rank/N3_d2_1r
++ export S3_BUCKET PYTHONUNBUFFERED=1
++ PYTHONUNBUFFERED=1
++ export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
++ OMP_NUM_THREADS=1
++ MKL_NUM_THREADS=1
++ OPENBLAS_NUM_THREADS=1
+++ curl -sf http://169.254.169.254/latest/meta-data/instance-id
++ INSTANCE_ID=i-0964d0161832d18e2
+++ curl -sf http://169.254.169.254/latest/meta-data/instance-type
++ INSTANCE_TYPE=r6i.4xlarge
++ echo '=== Quantum Commutator Algebra: Exact Rank ==='
+=== Quantum Commutator Algebra: Exact Rank ===
+++ date -u +%Y-%m-%dT%H:%M:%SZ
++ echo 'Started:  2026-04-10T00:03:58Z'
+Started:  2026-04-10T00:03:58Z
++ echo 'Instance: i-0964d0161832d18e2 (r6i.4xlarge)'
+Instance: i-0964d0161832d18e2 (r6i.4xlarge)
++ MAIN_PID=
++ trap shutdown_handler SIGTERM
++ echo '=== Step 1: Installing dependencies ==='
+=== Step 1: Installing dependencies ===
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 1.1 KiB/1.1 KiB (13.6 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:03:59Z", "uptime": " 00:03:59 up 0 min,  0 users,  load average: 0.14, 0.03, 0.01"}'
++ yum install -y python3 python3-pip python3-devel gcc gmp-devel mpfr-devel mpc-devel
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+Existing lock /var/run/yum.pid: another copy is running as pid 3113.
+Another app is currently holding the yum lock; waiting for it to exit...
+  The other application is: yum
+    Memory : 165 M RSS (385 MB VSZ)
+    Started: Fri Apr 10 00:03:57 2026 - 00:03 ago
+    State  : Running, pid: 3113
+Another app is currently holding the yum lock; waiting for it to exit...
+  The other application is: yum
+    Memory : 230 M RSS (451 MB VSZ)
+    Started: Fri Apr 10 00:03:57 2026 - 00:05 ago
+    State  : Running, pid: 3113
+Package python3-pip-20.2.2-1.amzn2.0.15.noarch already installed and latest version
+No package mpc-devel available.
+Resolving Dependencies
+--> Running transaction check
+---> Package gcc.x86_64 0:7.3.1-18.amzn2 will be installed
+--> Processing Dependency: cpp = 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: glibc-devel >= 2.2.90-12 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libatomic >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libcilkrts >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libitm >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libmpx >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libquadmath >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libsanitizer >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libmpc.so.3()(64bit) for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libmpfr.so.4()(64bit) for package: gcc-7.3.1-18.amzn2.x86_64
+---> Package gmp-devel.x86_64 1:6.0.0-15.amzn2.0.3 will be installed
+---> Package mpfr-devel.x86_64 0:3.1.1-4.amzn2.0.2 will be installed
+---> Package python3.x86_64 0:3.7.16-1.amzn2.0.23 will be updated
+--> Processing Dependency: python3(x86-64) = 3.7.16-1.amzn2.0.23 for package: python3-libs-3.7.16-1.amzn2.0.23.x86_64
+---> Package python3.x86_64 0:3.7.16-1.amzn2.0.24 will be an update
+---> Package python3-devel.x86_64 0:3.7.16-1.amzn2.0.24 will be installed
+--> Processing Dependency: python3-rpm-macros for package: python3-devel-3.7.16-1.amzn2.0.24.x86_64
+--> Processing Dependency: system-rpm-config for package: python3-devel-3.7.16-1.amzn2.0.24.x86_64
+--> Running transaction check
+---> Package cpp.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package glibc-devel.x86_64 0:2.26-64.amzn2.0.5 will be installed
+--> Processing Dependency: glibc-headers = 2.26-64.amzn2.0.5 for package: glibc-devel-2.26-64.amzn2.0.5.x86_64
+--> Processing Dependency: glibc-headers for package: glibc-devel-2.26-64.amzn2.0.5.x86_64
+---> Package libatomic.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package libcilkrts.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package libitm.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package libmpc.x86_64 0:1.0.1-3.amzn2.0.2 will be installed
+---> Package libmpx.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package libquadmath.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package libsanitizer.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package mpfr.x86_64 0:3.1.1-4.amzn2.0.2 will be installed
+---> Package python3-libs.x86_64 0:3.7.16-1.amzn2.0.23 will be updated
+---> Package python3-libs.x86_64 0:3.7.16-1.amzn2.0.24 will be an update
+---> Package python3-rpm-macros.noarch 0:3-60.amzn2.0.1 will be installed
+--> Processing Dependency: python-srpm-macros >= 3-38 for package: python3-rpm-macros-3-60.amzn2.0.1.noarch
+--> Processing Dependency: python-rpm-macros for package: python3-rpm-macros-3-60.amzn2.0.1.noarch
+---> Package system-rpm-config.noarch 0:9.1.0-76.amzn2.0.14 will be installed
+--> Processing Dependency: dwz >= 0.4 for package: system-rpm-config-9.1.0-76.amzn2.0.14.noarch
+--> Processing Dependency: go-srpm-macros for package: system-rpm-config-9.1.0-76.amzn2.0.14.noarch
+--> Processing Dependency: perl-srpm-macros for package: system-rpm-config-9.1.0-76.amzn2.0.14.noarch
+--> Running transaction check
+---> Package dwz.x86_64 0:0.11-3.amzn2.0.3 will be installed
+---> Package glibc-headers.x86_64 0:2.26-64.amzn2.0.5 will be installed
+--> Processing Dependency: kernel-headers >= 2.2.1 for package: glibc-headers-2.26-64.amzn2.0.5.x86_64
+--> Processing Dependency: kernel-headers for package: glibc-headers-2.26-64.amzn2.0.5.x86_64
+---> Package go-srpm-macros.noarch 0:3.0.15-23.amzn2.0.2 will be installed
+---> Package perl-srpm-macros.noarch 0:1-8.amzn2.0.1 will be installed
+---> Package python-rpm-macros.noarch 0:3-60.amzn2.0.1 will be installed
+---> Package python-srpm-macros.noarch 0:3-60.amzn2.0.1 will be installed
+--> Running transaction check
+---> Package kernel-headers.x86_64 0:4.14.355-281.714.amzn2 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package               Arch      Version                    Repository     Size
+================================================================================
+Installing:
+ gcc                   x86_64    7.3.1-18.amzn2             amzn2-core     22 M
+ gmp-devel             x86_64    1:6.0.0-15.amzn2.0.3       amzn2-core    181 k
+ mpfr-devel            x86_64    3.1.1-4.amzn2.0.2          amzn2-core     68 k
+ python3-devel         x86_64    3.7.16-1.amzn2.0.24        amzn2-core    246 k
+Updating:
+ python3               x86_64    3.7.16-1.amzn2.0.24        amzn2-core     74 k
+Installing for dependencies:
+ cpp                   x86_64    7.3.1-18.amzn2             amzn2-core    9.2 M
+ dwz                   x86_64    0.11-3.amzn2.0.3           amzn2-core     98 k
+ glibc-devel           x86_64    2.26-64.amzn2.0.5          amzn2-core    996 k
+ glibc-headers         x86_64    2.26-64.amzn2.0.5          amzn2-core    517 k
+ go-srpm-macros        noarch    3.0.15-23.amzn2.0.2        amzn2-core     23 k
+ kernel-headers        x86_64    4.14.355-281.714.amzn2     amzn2-core    1.2 M
+ libatomic             x86_64    7.3.1-18.amzn2             amzn2-core     46 k
+ libcilkrts            x86_64    7.3.1-18.amzn2             amzn2-core     85 k
+ libitm                x86_64    7.3.1-18.amzn2             amzn2-core     85 k
+ libmpc                x86_64    1.0.1-3.amzn2.0.2          amzn2-core     52 k
+ libmpx                x86_64    7.3.1-18.amzn2             amzn2-core     52 k
+ libquadmath           x86_64    7.3.1-18.amzn2             amzn2-core    189 k
+ libsanitizer          x86_64    7.3.1-18.amzn2             amzn2-core    642 k
+ mpfr                  x86_64    3.1.1-4.amzn2.0.2          amzn2-core    208 k
+ perl-srpm-macros      noarch    1-8.amzn2.0.1              amzn2-core    4.7 k
+ python-rpm-macros     noarch    3-60.amzn2.0.1             amzn2-core     14 k
+ python-srpm-macros    noarch    3-60.amzn2.0.1             amzn2-core     18 k
+ python3-rpm-macros    noarch    3-60.amzn2.0.1             amzn2-core     12 k
+ system-rpm-config     noarch    9.1.0-76.amzn2.0.14        amzn2-core     90 k
+Updating for dependencies:
+ python3-libs          x86_64    3.7.16-1.amzn2.0.24        amzn2-core    9.8 M
+
+Transaction Summary
+================================================================================
+Install  4 Packages (+19 Dependent packages)
+Upgrade  1 Package  (+ 1 Dependent package)
+
+Total download size: 46 M
+Downloading packages:
+Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
+--------------------------------------------------------------------------------
+Total                                               75 MB/s |  46 MB  00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : mpfr-3.1.1-4.amzn2.0.2.x86_64                               1/27 
+  Installing : libmpc-1.0.1-3.amzn2.0.2.x86_64                             2/27 
+  Updating   : python3-libs-3.7.16-1.amzn2.0.24.x86_64                     3/27 
+  Updating   : python3-3.7.16-1.amzn2.0.24.x86_64                          4/27 
+  Installing : cpp-7.3.1-18.amzn2.x86_64                                   5/27 
+  Installing : libcilkrts-7.3.1-18.amzn2.x86_64                            6/27 
+  Installing : dwz-0.11-3.amzn2.0.3.x86_64                                 7/27 
+  Installing : libquadmath-7.3.1-18.amzn2.x86_64                           8/27 
+  Installing : kernel-headers-4.14.355-281.714.amzn2.x86_64                9/27 
+  Installing : glibc-headers-2.26-64.amzn2.0.5.x86_64                     10/27 
+  Installing : glibc-devel-2.26-64.amzn2.0.5.x86_64                       11/27 
+  Installing : libsanitizer-7.3.1-18.amzn2.x86_64                         12/27 
+  Installing : perl-srpm-macros-1-8.amzn2.0.1.noarch                      13/27 
+  Installing : go-srpm-macros-3.0.15-23.amzn2.0.2.noarch                  14/27 
+  Installing : system-rpm-config-9.1.0-76.amzn2.0.14.noarch               15/27 
+  Installing : python-srpm-macros-3-60.amzn2.0.1.noarch                   16/27 
+  Installing : python-rpm-macros-3-60.amzn2.0.1.noarch                    17/27 
+  Installing : python3-rpm-macros-3-60.amzn2.0.1.noarch                   18/27 
+  Installing : libitm-7.3.1-18.amzn2.x86_64                               19/27 
+  Installing : libatomic-7.3.1-18.amzn2.x86_64                            20/27 
+  Installing : 1:gmp-devel-6.0.0-15.amzn2.0.3.x86_64                      21/27 
+  Installing : libmpx-7.3.1-18.amzn2.x86_64                               22/27 
+  Installing : gcc-7.3.1-18.amzn2.x86_64                                  23/27 
+  Installing : mpfr-devel-3.1.1-4.amzn2.0.2.x86_64                        24/27 
+  Installing : python3-devel-3.7.16-1.amzn2.0.24.x86_64                   25/27 
+  Cleanup    : python3-libs-3.7.16-1.amzn2.0.23.x86_64                    26/27 
+  Cleanup    : python3-3.7.16-1.amzn2.0.23.x86_64                         27/27 
+  Verifying  : libmpx-7.3.1-18.amzn2.x86_64                                1/27 
+  Verifying  : glibc-devel-2.26-64.amzn2.0.5.x86_64                        2/27 
+  Verifying  : 1:gmp-devel-6.0.0-15.amzn2.0.3.x86_64                       3/27 
+  Verifying  : gcc-7.3.1-18.amzn2.x86_64                                   4/27 
+  Verifying  : libmpc-1.0.1-3.amzn2.0.2.x86_64                             5/27 
+  Verifying  : python-rpm-macros-3-60.amzn2.0.1.noarch                     6/27 
+  Verifying  : libatomic-7.3.1-18.amzn2.x86_64                             7/27 
+  Verifying  : libitm-7.3.1-18.amzn2.x86_64                                8/27 
+  Verifying  : mpfr-3.1.1-4.amzn2.0.2.x86_64                               9/27 
+  Verifying  : perl-srpm-macros-1-8.amzn2.0.1.noarch                      10/27 
+  Verifying  : libsanitizer-7.3.1-18.amzn2.x86_64                         11/27 
+  Verifying  : kernel-headers-4.14.355-281.714.amzn2.x86_64               12/27 
+  Verifying  : python3-devel-3.7.16-1.amzn2.0.24.x86_64                   13/27 
+  Verifying  : python3-rpm-macros-3-60.amzn2.0.1.noarch                   14/27 
+  Verifying  : go-srpm-macros-3.0.15-23.amzn2.0.2.noarch                  15/27 
+  Verifying  : glibc-headers-2.26-64.amzn2.0.5.x86_64                     16/27 
+  Verifying  : cpp-7.3.1-18.amzn2.x86_64                                  17/27 
+  Verifying  : python3-3.7.16-1.amzn2.0.24.x86_64                         18/27 
+  Verifying  : libquadmath-7.3.1-18.amzn2.x86_64                          19/27 
+  Verifying  : python-srpm-macros-3-60.amzn2.0.1.noarch                   20/27 
+  Verifying  : dwz-0.11-3.amzn2.0.3.x86_64                                21/27 
+  Verifying  : mpfr-devel-3.1.1-4.amzn2.0.2.x86_64                        22/27 
+  Verifying  : python3-libs-3.7.16-1.amzn2.0.24.x86_64                    23/27 
+  Verifying  : system-rpm-config-9.1.0-76.amzn2.0.14.noarch               24/27 
+  Verifying  : libcilkrts-7.3.1-18.amzn2.x86_64                           25/27 
+  Verifying  : python3-3.7.16-1.amzn2.0.23.x86_64                         26/27 
+  Verifying  : python3-libs-3.7.16-1.amzn2.0.23.x86_64                    27/27 
+
+Installed:
+  gcc.x86_64 0:7.3.1-18.amzn2                                                   
+  gmp-devel.x86_64 1:6.0.0-15.amzn2.0.3                                         
+  mpfr-devel.x86_64 0:3.1.1-4.amzn2.0.2                                         
+  python3-devel.x86_64 0:3.7.16-1.amzn2.0.24                                    
+
+Dependency Installed:
+  cpp.x86_64 0:7.3.1-18.amzn2                                                   
+  dwz.x86_64 0:0.11-3.amzn2.0.3                                                 
+  glibc-devel.x86_64 0:2.26-64.amzn2.0.5                                        
+  glibc-headers.x86_64 0:2.26-64.amzn2.0.5                                      
+  go-srpm-macros.noarch 0:3.0.15-23.amzn2.0.2                                   
+  kernel-headers.x86_64 0:4.14.355-281.714.amzn2                                
+  libatomic.x86_64 0:7.3.1-18.amzn2                                             
+  libcilkrts.x86_64 0:7.3.1-18.amzn2                                            
+  libitm.x86_64 0:7.3.1-18.amzn2                                                
+  libmpc.x86_64 0:1.0.1-3.amzn2.0.2                                             
+  libmpx.x86_64 0:7.3.1-18.amzn2                                                
+  libquadmath.x86_64 0:7.3.1-18.amzn2                                           
+  libsanitizer.x86_64 0:7.3.1-18.amzn2                                          
+  mpfr.x86_64 0:3.1.1-4.amzn2.0.2                                               
+  perl-srpm-macros.noarch 0:1-8.amzn2.0.1                                       
+  python-rpm-macros.noarch 0:3-60.amzn2.0.1                                     
+  python-srpm-macros.noarch 0:3-60.amzn2.0.1                                    
+  python3-rpm-macros.noarch 0:3-60.amzn2.0.1                                    
+  system-rpm-config.noarch 0:9.1.0-76.amzn2.0.14                                
+
+Updated:
+  python3.x86_64 0:3.7.16-1.amzn2.0.24                                          
+
+Dependency Updated:
+  python3-libs.x86_64 0:3.7.16-1.amzn2.0.24                                     
+
+Complete!
++ amazon-linux-extras install python3.8 -y
+Installing python38
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+Cleaning repos: amzn2-core amzn2extra-docker amzn2extra-python3.8
+12 metadata files removed
+4 sqlite files removed
+0 metadata files removed
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+Resolving Dependencies
+--> Running transaction check
+---> Package python38.x86_64 0:3.8.20-1.amzn2.0.1 will be installed
+--> Processing Dependency: python38-libs(x86-64) = 3.8.20-1.amzn2.0.1 for package: python38-3.8.20-1.amzn2.0.1.x86_64
+--> Processing Dependency: python38-pip for package: python38-3.8.20-1.amzn2.0.1.x86_64
+--> Processing Dependency: python38-setuptools for package: python38-3.8.20-1.amzn2.0.1.x86_64
+--> Processing Dependency: libpython3.8.so.1.0()(64bit) for package: python38-3.8.20-1.amzn2.0.1.x86_64
+--> Running transaction check
+---> Package python38-libs.x86_64 0:3.8.20-1.amzn2.0.1 will be installed
+---> Package python38-pip.noarch 0:21.0.1-4.amzn2.0.5 will be installed
+---> Package python38-setuptools.noarch 0:38.4.0-4.amzn2.0.3 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package              Arch    Version               Repository             Size
+================================================================================
+Installing:
+ python38             x86_64  3.8.20-1.amzn2.0.1    amzn2extra-python3.8   71 k
+Installing for dependencies:
+ python38-libs        x86_64  3.8.20-1.amzn2.0.1    amzn2extra-python3.8   10 M
+ python38-pip         noarch  21.0.1-4.amzn2.0.5    amzn2extra-python3.8  2.1 M
+ python38-setuptools  noarch  38.4.0-4.amzn2.0.3    amzn2extra-python3.8  620 k
+
+Transaction Summary
+================================================================================
+Install  1 Package (+3 Dependent packages)
+
+Total download size: 13 M
+Installed size: 54 M
+Downloading packages:
+--------------------------------------------------------------------------------
+Total                                               76 MB/s |  13 MB  00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : python38-setuptools-38.4.0-4.amzn2.0.3.noarch                1/4 
+  Installing : python38-libs-3.8.20-1.amzn2.0.1.x86_64                      2/4 
+  Installing : python38-3.8.20-1.amzn2.0.1.x86_64                           3/4 
+  Installing : python38-pip-21.0.1-4.amzn2.0.5.noarch                       4/4 
+  Verifying  : python38-pip-21.0.1-4.amzn2.0.5.noarch                       1/4 
+  Verifying  : python38-setuptools-38.4.0-4.amzn2.0.3.noarch                2/4 
+  Verifying  : python38-libs-3.8.20-1.amzn2.0.1.x86_64                      3/4 
+  Verifying  : python38-3.8.20-1.amzn2.0.1.x86_64                           4/4 
+
+Installed:
+  python38.x86_64 0:3.8.20-1.amzn2.0.1                                          
+
+Dependency Installed:
+  python38-libs.x86_64 0:3.8.20-1.amzn2.0.1                                     
+  python38-pip.noarch 0:21.0.1-4.amzn2.0.5                                      
+  python38-setuptools.noarch 0:38.4.0-4.amzn2.0.3                               
+
+Complete!
+  2  httpd_modules            available    [ =1.0  =stable ]
+  3  memcached1.5             available    \
+        [ =1.5.1  =1.5.16  =1.5.17 ]
+  9  R3.4                     available    [ =3.4.3  =stable ]
+ 18  libreoffice              available    \
+        [ =5.0.6.2_15  =5.3.6.1  =stable ]
+ 19  gimp                     available    [ =2.8.22 ]
+ 20  docker=latest            enabled      \
+        [ =17.12.1  =18.03.1  =18.06.1  =18.09.9  =stable ]
+ 21  mate-desktop1.x          available    \
+        [ =1.19.0  =1.20.0  =stable ]
+ 22  GraphicsMagick1.3        available    \
+        [ =1.3.29  =1.3.32  =1.3.34  =stable ]
+ 25  testing                  available    [ =1.0  =stable ]
+ 26  ecs                      available    [ =stable ]
+ 27  corretto8                available    \
+        [ =1.8.0_192  =1.8.0_202  =1.8.0_212  =1.8.0_222  =1.8.0_232
+          =1.8.0_242  =stable ]
+ 32  lustre2.10               available    \
+        [ =2.10.5  =2.10.8  =stable ]
+ 34  lynis                    available    [ =stable ]
+ 36  BCC                      available    [ =0.x  =stable ]
+ 37  mono                     available    [ =5.x  =stable ]
+ 38  nginx1                   available    [ =stable ]
+ 40  mock                     available    [ =stable ]
+ 43  livepatch                available    [ =stable ]
+ 44 *python3.8=latest         enabled      [ =stable ]
+ 45  haproxy2                 available    [ =stable ]
+ 46  collectd                 available    [ =stable ]
+ 47  aws-nitro-enclaves-cli   available    [ =stable ]
+ 48  R4                       available    [ =stable ]
+ 49  kernel-5.4               available    [ =stable ]
+ 50  selinux-ng               available    [ =stable ]
+ 52  tomcat9                  available    [ =stable ]
+ 55  kernel-5.10              available    [ =stable ]
+ 60  mock2                    available    [ =stable ]
+ 62  kernel-5.15              available    [ =stable ]
+ 63  postgresql14             available    [ =stable ]
+ 64  firefox                  available    [ =stable ]
+ 65  lustre                   available    [ =stable ]
+ 67  awscli1                  available    [ =stable ]
+ 68  php8.2                   available    [ =stable ]
+ 69  dnsmasq                  available    [ =stable ]
+ 70  unbound1.17              available    [ =stable ]
+ 72  collectd-python3         available    [ =stable ]
+* Extra topic has reached end of support.
+++ command -v python3.8
++ PYTHON=/usr/bin/python3.8
+++ /usr/bin/python3.8 --version
++ echo 'Using Python: /usr/bin/python3.8 (Python 3.8.20)'
+Using Python: /usr/bin/python3.8 (Python 3.8.20)
++ /usr/bin/python3.8 -m ensurepip --upgrade
+Looking in links: /tmp/tmpcyhtzlvt
+Requirement already satisfied: setuptools in /usr/lib/python3.8/site-packages (38.4.0)
+Processing /tmp/tmpcyhtzlvt/setuptools-56.0.0-py3-none-any.whl
+Requirement already satisfied: pip in /usr/lib/python3.8/site-packages (21.0.1)
+Processing /tmp/tmpcyhtzlvt/pip-23.0.1-py3-none-any.whl
+Installing collected packages: setuptools, pip
+  Attempting uninstall: setuptools
+    Found existing installation: setuptools 38.4.0
+    Uninstalling setuptools-38.4.0:
+      Successfully uninstalled setuptools-38.4.0
+  Attempting uninstall: pip
+    Found existing installation: pip 21.0.1
+    Uninstalling pip-21.0.1:
+      Successfully uninstalled pip-21.0.1
+Successfully installed pip-23.0.1 setuptools-56.0.0
++ /usr/bin/python3.8 -m pip install --upgrade pip
+Requirement already satisfied: pip in /usr/local/lib/python3.8/site-packages (23.0.1)
+Collecting pip
+  Downloading pip-25.0.1-py3-none-any.whl (1.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 101.4 MB/s eta 0:00:00
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 23.0.1
+    Uninstalling pip-23.0.1:
+      Successfully uninstalled pip-23.0.1
+Successfully installed pip-25.0.1
++ /usr/bin/python3.8 -m pip install sympy==1.13.3 numpy scipy gmpy2
+Collecting sympy==1.13.3
+  Downloading sympy-1.13.3-py3-none-any.whl.metadata (12 kB)
+Collecting numpy
+  Downloading numpy-1.24.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.6 kB)
+Collecting scipy
+  Downloading scipy-1.10.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (58 kB)
+Collecting gmpy2
+  Downloading gmpy2-2.2.2-cp38-cp38-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (3.3 kB)
+Collecting mpmath<1.4,>=1.1.0 (from sympy==1.13.3)
+  Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Downloading sympy-1.13.3-py3-none-any.whl (6.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.2/6.2 MB 158.7 MB/s eta 0:00:00
+Downloading numpy-1.24.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (17.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.3/17.3 MB 76.9 MB/s eta 0:00:00
+Downloading scipy-1.10.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (34.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 34.5/34.5 MB 91.4 MB/s eta 0:00:00
+Downloading gmpy2-2.2.2-cp38-cp38-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 99.9 MB/s eta 0:00:00
+Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 54.0 MB/s eta 0:00:00
+Installing collected packages: mpmath, sympy, numpy, gmpy2, scipy
+Successfully installed gmpy2-2.2.2 mpmath-1.3.0 numpy-1.24.4 scipy-1.10.1 sympy-1.13.3
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
++ echo '=== Step 2: Checking versions ==='
+=== Step 2: Checking versions ===
++ /usr/bin/python3.8 -c 'import sympy; print('\''SymPy:'\'', sympy.__version__)'
+SymPy: 1.13.3
++ /usr/bin/python3.8 -c 'import gmpy2; print('\''gmpy2:'\'', gmpy2.version())'
+gmpy2: 2.2.2
++ /usr/bin/python3.8 -c 'import numpy; print('\''NumPy:'\'', numpy.__version__)'
+NumPy: 1.24.4
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 25.4 KiB/25.4 KiB (366.4 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:04:37Z", "uptime": " 00:04:37 up 1 min,  0 users,  load average: 0.67, 0.19, 0.06"}'
++ echo '=== Step 3: Pulling code from S3 ==='
+=== Step 3: Pulling code from S3 ===
++ mkdir -p /opt/3body/nbody
++ aws s3 sync s3://3body-compute-290318/code/nbody/ /opt/3body/nbody/ --exclude '*.npy' --exclude '*.npz' --exclude '*.pkl' --exclude 'checkpoints_*/*'
+Completed 34.5 KiB/~2.5 MiB (430.1 KiB/s) with ~29 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/__pycache__/helium_atlas.cpython-313.pyc to opt/3body/nbody/__pycache__/helium_atlas.cpython-313.pyc
+Completed 34.5 KiB/~2.8 MiB (430.1 KiB/s) with ~29 file(s) remaining (calculating...)Completed 79.1 KiB/~3.8 MiB (879.4 KiB/s) with ~34 file(s) remaining (calculating...)Completed 90.0 KiB/~3.8 MiB (980.5 KiB/s) with ~34 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/__pycache__/exact_growth_nbody.cpython-313.pyc to opt/3body/nbody/__pycache__/exact_growth_nbody.cpython-313.pyc
+Completed 90.0 KiB/~3.8 MiB (980.5 KiB/s) with ~33 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/README.md to opt/3body/nbody/README.md
+Completed 90.0 KiB/~3.8 MiB (980.5 KiB/s) with ~32 file(s) remaining (calculating...)Completed 90.2 KiB/~4.5 MiB (888.1 KiB/s) with ~35 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/atlas_helium_d2/checkpoint.json to opt/3body/nbody/atlas_helium_d2/checkpoint.json
+Completed 90.2 KiB/~4.7 MiB (888.1 KiB/s) with ~35 file(s) remaining (calculating...)Completed 186.2 KiB/~5.9 MiB (1.5 MiB/s) with ~48 file(s) remaining (calculating...) download: s3://3body-compute-290318/code/nbody/atlas_helium_d2/helium_gap_comparison.png to opt/3body/nbody/atlas_helium_d2/helium_gap_comparison.png
+Completed 186.2 KiB/~5.9 MiB (1.5 MiB/s) with ~48 file(s) remaining (calculating...)Completed 231.0 KiB/~5.9 MiB (1.9 MiB/s) with ~48 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/bell_test.py to opt/3body/nbody/bell_test.py
+Completed 231.0 KiB/~5.9 MiB (1.9 MiB/s) with ~47 file(s) remaining (calculating...)Completed 385.9 KiB/~6.0 MiB (2.8 MiB/s) with ~56 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/atlas_helium_d2/helium_orbits_atlas.png to opt/3body/nbody/atlas_helium_d2/helium_orbits_atlas.png
+Completed 385.9 KiB/~6.0 MiB (2.8 MiB/s) with ~56 file(s) remaining (calculating...)Completed 386.2 KiB/~6.0 MiB (2.7 MiB/s) with ~56 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/atlas_helium_d2/config.json to opt/3body/nbody/atlas_helium_d2/config.json
+Completed 386.2 KiB/~6.0 MiB (2.7 MiB/s) with ~56 file(s) remaining (calculating...)Completed 539.2 KiB/~6.3 MiB (3.5 MiB/s) with ~61 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/bell_test_results/body_locality_gradients.png to opt/3body/nbody/bell_test_results/body_locality_gradients.png
+Completed 539.2 KiB/~6.3 MiB (3.5 MiB/s) with ~60 file(s) remaining (calculating...)Completed 614.0 KiB/~6.4 MiB (3.8 MiB/s) with ~62 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/bell_test_results/chsh_sweep_variant2.png to opt/3body/nbody/bell_test_results/chsh_sweep_variant2.png
+Completed 614.0 KiB/~6.4 MiB (3.8 MiB/s) with ~62 file(s) remaining (calculating...)Completed 679.2 KiB/~6.4 MiB (4.2 MiB/s) with ~62 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/bell_test_results/chsh_sweep_variant1.png to opt/3body/nbody/bell_test_results/chsh_sweep_variant1.png
+Completed 679.2 KiB/~6.4 MiB (4.2 MiB/s) with ~61 file(s) remaining (calculating...)Completed 765.7 KiB/~6.5 MiB (4.5 MiB/s) with ~63 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/atlas_helium_d2/helium_vs_attractive.png to opt/3body/nbody/atlas_helium_d2/helium_vs_attractive.png
+Completed 765.7 KiB/~6.5 MiB (4.5 MiB/s) with ~62 file(s) remaining (calculating...)Completed 796.2 KiB/6.6 MiB (4.3 MiB/s) with 66 file(s) remaining                   download: s3://3body-compute-290318/code/nbody/composite_level3_output.txt to opt/3body/nbody/composite_level3_output.txt
+Completed 796.2 KiB/6.6 MiB (4.3 MiB/s) with 65 file(s) remainingCompleted 796.5 KiB/6.6 MiB (4.2 MiB/s) with 65 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/bell_test_results/n2_algebra_summary.txt to opt/3body/nbody/bell_test_results/n2_algebra_summary.txt
+Completed 796.5 KiB/6.6 MiB (4.2 MiB/s) with 64 file(s) remainingCompleted 800.2 KiB/6.6 MiB (4.1 MiB/s) with 64 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/bell_test_results/chsh_summary.json to opt/3body/nbody/bell_test_results/chsh_summary.json
+Completed 800.2 KiB/6.6 MiB (4.1 MiB/s) with 63 file(s) remainingCompleted 819.3 KiB/6.6 MiB (4.1 MiB/s) with 63 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/expansion_analysis.py to opt/3body/nbody/expansion_analysis.py
+Completed 819.3 KiB/6.6 MiB (4.1 MiB/s) with 62 file(s) remainingCompleted 861.8 KiB/6.6 MiB (4.2 MiB/s) with 62 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/exact_growth_nbody.py to opt/3body/nbody/exact_growth_nbody.py
+Completed 861.8 KiB/6.6 MiB (4.2 MiB/s) with 61 file(s) remainingCompleted 876.8 KiB/6.6 MiB (4.1 MiB/s) with 61 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/charge_sensitivity_sweep.py to opt/3body/nbody/charge_sensitivity_sweep.py
+Completed 876.8 KiB/6.6 MiB (4.1 MiB/s) with 60 file(s) remainingCompleted 962.8 KiB/6.6 MiB (4.3 MiB/s) with 60 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/bell_test_results/chsh_sweep_variant3.png to opt/3body/nbody/bell_test_results/chsh_sweep_variant3.png
+Completed 962.8 KiB/6.6 MiB (4.3 MiB/s) with 59 file(s) remainingCompleted 1.1 MiB/6.6 MiB (4.8 MiB/s) with 59 file(s) remaining  download: s3://3body-compute-290318/code/nbody/bell_test_results/projection_distributions.png to opt/3body/nbody/bell_test_results/projection_distributions.png
+Completed 1.1 MiB/6.6 MiB (4.8 MiB/s) with 58 file(s) remainingCompleted 1.1 MiB/6.6 MiB (4.4 MiB/s) with 58 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/comparison_summary.txt to opt/3body/nbody/helium_comparison/comparison_summary.txt
+Completed 1.1 MiB/6.6 MiB (4.4 MiB/s) with 57 file(s) remainingCompleted 1.1 MiB/6.6 MiB (4.4 MiB/s) with 57 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/expansion_configs.py to opt/3body/nbody/expansion_configs.py
+Completed 1.1 MiB/6.6 MiB (4.4 MiB/s) with 56 file(s) remainingCompleted 1.3 MiB/6.6 MiB (5.2 MiB/s) with 56 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_2e-03.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_2e-03.png
+Completed 1.3 MiB/6.6 MiB (5.2 MiB/s) with 55 file(s) remainingCompleted 1.4 MiB/6.6 MiB (5.1 MiB/s) with 55 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_atlas.py to opt/3body/nbody/helium_atlas.py
+Completed 1.4 MiB/6.6 MiB (5.1 MiB/s) with 54 file(s) remainingCompleted 1.6 MiB/6.6 MiB (5.8 MiB/s) with 54 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_2e-04.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_2e-04.png
+Completed 1.6 MiB/6.6 MiB (5.8 MiB/s) with 53 file(s) remainingCompleted 1.8 MiB/6.6 MiB (6.4 MiB/s) with 53 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_1e-04.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_1e-04.png
+Completed 1.8 MiB/6.6 MiB (6.4 MiB/s) with 52 file(s) remainingCompleted 2.1 MiB/6.6 MiB (7.1 MiB/s) with 52 file(s) remainingCompleted 2.3 MiB/6.6 MiB (7.9 MiB/s) with 52 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_1e-03.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_1e-03.png
+Completed 2.3 MiB/6.6 MiB (7.9 MiB/s) with 51 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_correlation_scatter.png to opt/3body/nbody/helium_comparison/gap_correlation_scatter.png
+Completed 2.3 MiB/6.6 MiB (7.9 MiB/s) with 50 file(s) remainingCompleted 2.5 MiB/6.6 MiB (8.1 MiB/s) with 50 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_5e-03.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_5e-03.png
+Completed 2.5 MiB/6.6 MiB (8.1 MiB/s) with 49 file(s) remainingCompleted 2.5 MiB/6.6 MiB (7.8 MiB/s) with 49 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/comparison_summary.txt to opt/3body/nbody/helium_comparison_1_r2/comparison_summary.txt
+Completed 2.5 MiB/6.6 MiB (7.8 MiB/s) with 48 file(s) remainingCompleted 2.7 MiB/6.6 MiB (7.9 MiB/s) with 48 file(s) remainingCompleted 3.0 MiB/6.6 MiB (8.6 MiB/s) with 48 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/helium_orbits_atlas.png to opt/3body/nbody/helium_comparison/helium_orbits_atlas.png
+Completed 3.0 MiB/6.6 MiB (8.6 MiB/s) with 47 file(s) remainingCompleted 3.2 MiB/6.6 MiB (9.2 MiB/s) with 47 file(s) remainingCompleted 3.4 MiB/6.6 MiB (9.6 MiB/s) with 47 file(s) remainingCompleted 3.6 MiB/6.6 MiB (10.3 MiB/s) with 47 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_5e-04.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_5e-04.png
+Completed 3.6 MiB/6.6 MiB (10.3 MiB/s) with 46 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_vs_epsilon_profiles.png to opt/3body/nbody/helium_comparison/gap_vs_epsilon_profiles.png
+Completed 3.6 MiB/6.6 MiB (10.3 MiB/s) with 45 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/sv_spectra_comparison.png to opt/3body/nbody/helium_comparison/sv_spectra_comparison.png
+Completed 3.6 MiB/6.6 MiB (10.3 MiB/s) with 44 file(s) remainingCompleted 3.8 MiB/6.6 MiB (10.4 MiB/s) with 44 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_1e-04.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_1e-04.png
+Completed 3.8 MiB/6.6 MiB (10.4 MiB/s) with 43 file(s) remainingCompleted 4.1 MiB/6.6 MiB (11.0 MiB/s) with 43 file(s) remainingCompleted 4.1 MiB/6.6 MiB (11.0 MiB/s) with 43 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_correlation_scatter.png to opt/3body/nbody/helium_comparison_1_r2/gap_correlation_scatter.png
+Completed 4.1 MiB/6.6 MiB (11.0 MiB/s) with 42 file(s) remainingCompleted 4.3 MiB/6.6 MiB (11.0 MiB/s) with 42 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_1e-03.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_1e-03.png
+Completed 4.3 MiB/6.6 MiB (11.0 MiB/s) with 41 file(s) remainingCompleted 4.3 MiB/6.6 MiB (10.9 MiB/s) with 41 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/n4_potential_universality_results.json to opt/3body/nbody/n4_potential_universality_results.json
+Completed 4.3 MiB/6.6 MiB (10.9 MiB/s) with 40 file(s) remainingCompleted 4.3 MiB/6.6 MiB (10.7 MiB/s) with 40 file(s) remainingCompleted 4.5 MiB/6.6 MiB (11.2 MiB/s) with 40 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/n_body_scaling_results.json to opt/3body/nbody/n_body_scaling_results.json
+Completed 4.5 MiB/6.6 MiB (11.2 MiB/s) with 39 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_5e-03.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_5e-03.png
+Completed 4.5 MiB/6.6 MiB (11.2 MiB/s) with 38 file(s) remainingCompleted 4.7 MiB/6.6 MiB (11.6 MiB/s) with 38 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_2e-04.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_2e-04.png
+Completed 4.7 MiB/6.6 MiB (11.6 MiB/s) with 37 file(s) remainingCompleted 5.0 MiB/6.6 MiB (11.8 MiB/s) with 37 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_2e-03.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_2e-03.png
+Completed 5.0 MiB/6.6 MiB (11.8 MiB/s) with 36 file(s) remainingCompleted 5.0 MiB/6.6 MiB (11.6 MiB/s) with 36 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/quantum_algebra.py to opt/3body/nbody/quantum_algebra.py
+Completed 5.0 MiB/6.6 MiB (11.6 MiB/s) with 35 file(s) remainingCompleted 5.2 MiB/6.6 MiB (12.1 MiB/s) with 35 file(s) remainingCompleted 5.4 MiB/6.6 MiB (12.5 MiB/s) with 35 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_vs_epsilon_profiles.png to opt/3body/nbody/helium_comparison_1_r2/gap_vs_epsilon_profiles.png
+Completed 5.4 MiB/6.6 MiB (12.5 MiB/s) with 34 file(s) remainingCompleted 5.4 MiB/6.6 MiB (12.2 MiB/s) with 34 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_expansion_dimseq.py to opt/3body/nbody/run_expansion_dimseq.py
+Completed 5.4 MiB/6.6 MiB (12.2 MiB/s) with 33 file(s) remainingCompleted 5.6 MiB/6.6 MiB (12.6 MiB/s) with 33 file(s) remainingCompleted 5.6 MiB/6.6 MiB (12.6 MiB/s) with 33 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_5e-04.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_5e-04.png
+Completed 5.6 MiB/6.6 MiB (12.6 MiB/s) with 32 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_helium.py to opt/3body/nbody/run_helium.py
+Completed 5.6 MiB/6.6 MiB (12.6 MiB/s) with 31 file(s) remainingCompleted 5.7 MiB/6.6 MiB (12.5 MiB/s) with 31 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/pn_mass_level3_output.txt to opt/3body/nbody/pn_mass_level3_output.txt
+Completed 5.7 MiB/6.6 MiB (12.5 MiB/s) with 30 file(s) remainingCompleted 5.9 MiB/6.6 MiB (12.8 MiB/s) with 30 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/sv_spectra_comparison.png to opt/3body/nbody/helium_comparison_1_r2/sv_spectra_comparison.png
+Completed 5.9 MiB/6.6 MiB (12.8 MiB/s) with 29 file(s) remainingCompleted 5.9 MiB/6.6 MiB (12.4 MiB/s) with 29 file(s) remainingCompleted 5.9 MiB/6.6 MiB (12.3 MiB/s) with 29 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_composite_test.py to opt/3body/nbody/run_composite_test.py
+Completed 5.9 MiB/6.6 MiB (12.3 MiB/s) with 28 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n4_mass.py to opt/3body/nbody/run_n4_mass.py
+Completed 5.9 MiB/6.6 MiB (12.3 MiB/s) with 27 file(s) remainingCompleted 5.9 MiB/6.6 MiB (12.1 MiB/s) with 27 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n4_d2.py to opt/3body/nbody/run_n4_d2.py
+Completed 5.9 MiB/6.6 MiB (12.1 MiB/s) with 26 file(s) remainingCompleted 5.9 MiB/6.6 MiB (12.0 MiB/s) with 26 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n_scaling_probe.py to opt/3body/nbody/run_n_scaling_probe.py
+Completed 5.9 MiB/6.6 MiB (12.0 MiB/s) with 25 file(s) remainingCompleted 5.9 MiB/6.6 MiB (11.9 MiB/s) with 25 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n4_potential_universality.py to opt/3body/nbody/run_n4_potential_universality.py
+Completed 5.9 MiB/6.6 MiB (11.9 MiB/s) with 24 file(s) remainingCompleted 5.9 MiB/6.6 MiB (11.4 MiB/s) with 24 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_pn_aws.py to opt/3body/nbody/run_pn_aws.py
+Completed 5.9 MiB/6.6 MiB (11.4 MiB/s) with 23 file(s) remainingCompleted 5.9 MiB/6.6 MiB (11.4 MiB/s) with 23 file(s) remainingCompleted 5.9 MiB/6.6 MiB (11.3 MiB/s) with 23 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n_scaling_aws.py to opt/3body/nbody/run_n_scaling_aws.py
+Completed 5.9 MiB/6.6 MiB (11.3 MiB/s) with 22 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_post_newtonian.py to opt/3body/nbody/run_post_newtonian.py
+Completed 5.9 MiB/6.6 MiB (11.3 MiB/s) with 21 file(s) remainingCompleted 5.9 MiB/6.6 MiB (11.2 MiB/s) with 21 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_pn_mass_test.py to opt/3body/nbody/run_pn_mass_test.py
+Completed 5.9 MiB/6.6 MiB (11.2 MiB/s) with 20 file(s) remainingCompleted 5.9 MiB/6.6 MiB (11.1 MiB/s) with 20 file(s) remainingCompleted 6.0 MiB/6.6 MiB (11.2 MiB/s) with 20 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n4_d3.py to opt/3body/nbody/run_n4_d3.py
+Completed 6.0 MiB/6.6 MiB (11.2 MiB/s) with 19 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/pn_level3_output.txt to opt/3body/nbody/pn_level3_output.txt
+Completed 6.0 MiB/6.6 MiB (11.2 MiB/s) with 18 file(s) remainingCompleted 6.0 MiB/6.6 MiB (11.2 MiB/s) with 18 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N2_d2.png to opt/3body/nbody/svd_spectrum_N2_d2.png
+Completed 6.0 MiB/6.6 MiB (11.2 MiB/s) with 17 file(s) remainingCompleted 6.0 MiB/6.6 MiB (11.0 MiB/s) with 17 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n4_d1.py to opt/3body/nbody/run_n4_d1.py
+Completed 6.0 MiB/6.6 MiB (11.0 MiB/s) with 16 file(s) remainingCompleted 6.0 MiB/6.6 MiB (10.9 MiB/s) with 16 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_potential_1r3.py to opt/3body/nbody/run_potential_1r3.py
+Completed 6.0 MiB/6.6 MiB (10.9 MiB/s) with 15 file(s) remainingCompleted 6.1 MiB/6.6 MiB (10.4 MiB/s) with 15 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N3_d1.png to opt/3body/nbody/svd_spectrum_N3_d1.png
+Completed 6.1 MiB/6.6 MiB (10.4 MiB/s) with 14 file(s) remainingCompleted 6.1 MiB/6.6 MiB (10.4 MiB/s) with 14 file(s) remainingCompleted 6.2 MiB/6.6 MiB (10.5 MiB/s) with 14 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N4_d1.png to opt/3body/nbody/svd_spectrum_N4_d1.png
+Completed 6.2 MiB/6.6 MiB (10.5 MiB/s) with 13 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N4_d2.png to opt/3body/nbody/svd_spectrum_N4_d2.png
+Completed 6.2 MiB/6.6 MiB (10.5 MiB/s) with 12 file(s) remainingCompleted 6.2 MiB/6.6 MiB (10.3 MiB/s) with 12 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N4_d3.png to opt/3body/nbody/svd_spectrum_N4_d3.png
+Completed 6.2 MiB/6.6 MiB (10.3 MiB/s) with 11 file(s) remainingCompleted 6.2 MiB/6.6 MiB (10.3 MiB/s) with 11 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N7_d1.png to opt/3body/nbody/svd_spectrum_N7_d1.png
+Completed 6.2 MiB/6.6 MiB (10.3 MiB/s) with 10 file(s) remainingCompleted 6.3 MiB/6.6 MiB (10.3 MiB/s) with 10 file(s) remainingCompleted 6.3 MiB/6.6 MiB (10.3 MiB/s) with 10 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/structure_cross_section.py to opt/3body/nbody/structure_cross_section.py
+Completed 6.3 MiB/6.6 MiB (10.3 MiB/s) with 9 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N3_d3.png to opt/3body/nbody/svd_spectrum_N3_d3.png
+Completed 6.3 MiB/6.6 MiB (10.3 MiB/s) with 8 file(s) remainingCompleted 6.4 MiB/6.6 MiB (10.1 MiB/s) with 8 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N3_d2.png to opt/3body/nbody/svd_spectrum_N3_d2.png
+Completed 6.4 MiB/6.6 MiB (10.1 MiB/s) with 7 file(s) remainingCompleted 6.4 MiB/6.6 MiB (10.1 MiB/s) with 7 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N9_d1.png to opt/3body/nbody/svd_spectrum_N9_d1.png
+Completed 6.4 MiB/6.6 MiB (10.1 MiB/s) with 6 file(s) remainingCompleted 6.4 MiB/6.6 MiB (9.9 MiB/s) with 6 file(s) remaining download: s3://3body-compute-290318/code/nbody/symbolic_gram_sweep.py to opt/3body/nbody/symbolic_gram_sweep.py
+Completed 6.4 MiB/6.6 MiB (9.9 MiB/s) with 5 file(s) remainingCompleted 6.5 MiB/6.6 MiB (9.9 MiB/s) with 5 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N6_d1.png to opt/3body/nbody/svd_spectrum_N6_d1.png
+Completed 6.5 MiB/6.6 MiB (9.9 MiB/s) with 4 file(s) remainingCompleted 6.5 MiB/6.6 MiB (9.9 MiB/s) with 4 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N8_d1.png to opt/3body/nbody/svd_spectrum_N8_d1.png
+Completed 6.5 MiB/6.6 MiB (9.9 MiB/s) with 3 file(s) remainingCompleted 6.6 MiB/6.6 MiB (10.0 MiB/s) with 3 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N5_d1.png to opt/3body/nbody/svd_spectrum_N5_d1.png
+Completed 6.6 MiB/6.6 MiB (10.0 MiB/s) with 2 file(s) remainingCompleted 6.6 MiB/6.6 MiB (9.5 MiB/s) with 2 file(s) remaining download: s3://3body-compute-290318/code/nbody/validate_n3.py to opt/3body/nbody/validate_n3.py
+Completed 6.6 MiB/6.6 MiB (9.5 MiB/s) with 1 file(s) remainingCompleted 6.6 MiB/6.6 MiB (8.7 MiB/s) with 1 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/symbolic_rank_nbody.py to opt/3body/nbody/symbolic_rank_nbody.py
++ echo 'Key files:'
+Key files:
++ ls -la /opt/3body/nbody/symbolic_rank_nbody.py
+-rw-r--r-- 1 root root 31817 Apr 10 00:02 /opt/3body/nbody/symbolic_rank_nbody.py
++ ls -la /opt/3body/nbody/exact_growth_nbody.py
+-rw-r--r-- 1 root root 43450 Apr  9 05:52 /opt/3body/nbody/exact_growth_nbody.py
++ ls -la /opt/3body/nbody/quantum_algebra.py
+-rw-r--r-- 1 root root 12068 Apr 10 00:02 /opt/3body/nbody/quantum_algebra.py
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 47.0 KiB/47.0 KiB (845.6 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:04:39Z", "uptime": " 00:04:39 up 1 min,  0 users,  load average: 0.67, 0.19, 0.06"}'
++ echo '=== Step 4: Create results directory ==='
+=== Step 4: Create results directory ===
++ mkdir -p /opt/3body/nbody/results/symbolic_rank
++ echo '=== Step 5: Background log sync (every 5 min) ==='
+=== Step 5: Background log sync (every 5 min) ===
++ SYNC_PID=3363
++ echo '=== Step 6: Running quantum rank computation ==='
+=== Step 6: Running quantum rank computation ===
++ echo 'Command: /usr/bin/python3.8 -u symbolic_rank_nbody.py -N 3 -d 2 --quantum --max-level 3'
+Command: /usr/bin/python3.8 -u symbolic_rank_nbody.py -N 3 -d 2 --quantum --max-level 3
++ true
++ sleep 300
+++ date -u
++ echo '=== Fri Apr 10 00:04:39 UTC 2026 ==='
+=== Fri Apr 10 00:04:39 UTC 2026 ===
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 48.3 KiB/48.3 KiB (722.0 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:04:40Z", "uptime": " 00:04:40 up 1 min,  0 users,  load average: 0.70, 0.20, 0.07"}'
++ cd /opt/3body/nbody
++ MAIN_PID=3383
++ echo 'Main PID: 3383'
+Main PID: 3383
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ /usr/bin/python3.8 -u symbolic_rank_nbody.py -N 3 -d 2 --quantum --max-level 3
+======================================================================
+N-BODY SYMBOLIC RANK OVER Q (QUANTUM COMMUTATOR)
+======================================================================
+SymPy version: 1.13.3
+N = 3, d = 2
+Potential: 1/r
+Max level: 3
+Bracket: [f,g]/(i*hbar) (Moyal/Weyl quantization)
+Domain: QQ[hbar]
+Building generators: N=3, d=2, potential=1/r, max_level=3
+
+--- Level 0: 3 Pairwise Hamiltonians ---
+  H12: 5 terms
+  H13: 5 terms
+  H23: 5 terms
+
+--- Level 1: Brackets of 3 Hamiltonians ---
+Completed 49.4 KiB/49.4 KiB (812.7 KiB/s) with 1 file(s) remainingupload: ../../../var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:04:41Z", "uptime": " 00:04:41 up 1 min,  0 users,  load average: 0.70, 0.20, 0.07"}'
+  {H12,H13} -> 8 terms [0.2s]
+  {H12,H23} -> 8 terms [0.1s]
++ wait 3383
+  {H13,H23} -> 8 terms [0.1s]
+
+--- Level 2 ---
+  [   1] {{H12,H13},H12}  bracket 0.9s  simplify 0.1s  -> 54 terms
+  [   2] {{H12,H13},H13}  bracket 0.3s  simplify 0.1s  -> 54 terms
+  [   3] {{H12,H13},H23}  bracket 0.0s  simplify 0.0s  -> 32 terms
+  [   4] {{H12,H13},{H12,H23}}  bracket 0.1s  simplify 0.2s  -> 112 terms
+  [   5] {{H12,H13},{H13,H23}}  bracket 0.1s  simplify 0.2s  -> 112 terms
+  [   6] {{H12,H23},H12}  bracket 0.8s  simplify 0.1s  -> 54 terms
+  [   7] {{H12,H23},H13}  bracket 0.0s  simplify 0.0s  -> 32 terms
+  [   8] {{H12,H23},H23}  bracket 0.2s  simplify 0.1s  -> 54 terms
+  [   9] {{H12,H23},{H13,H23}}  bracket 0.1s  simplify 0.2s  -> 112 terms
+  [  10] {{H13,H23},H12}  bracket 0.1s  simplify 0.0s  -> 32 terms
+  [  11] {{H13,H23},H13}  bracket 0.7s  simplify 0.1s  -> 54 terms
+  [  12] {{H13,H23},H23}  bracket 0.3s  simplify 0.1s  -> 54 terms
+  Level 2: 12 candidates in 4.7s
+
+--- Level 3 ---
+  [   1] {{{H12,H13},H12},H12}  bracket 5.3s  simplify 0.3s  -> 286 terms
+  [   2] {{{H12,H13},H12},H13}  bracket 1.9s  simplify 0.4s  -> 316 terms
+  [   3] {{{H12,H13},H12},H23}  bracket 1.4s  simplify 0.3s  -> 252 terms
+  [   4] {{{H12,H13},H12},{H12,H13}}  bracket 3.4s  simplify 2.1s  -> 1209 terms
+  [   5] {{{H12,H13},H12},{H12,H23}}  bracket 1.0s  simplify 1.3s  -> 805 terms
+  [   6] {{{H12,H13},H12},{H13,H23}}  bracket 0.9s  simplify 1.1s  -> 698 terms
+  [   7] {{{H12,H13},H12},{{H12,H13},H13}}  bracket 16.0s  simplify 15.4s  -> 6712 terms
+  [   8] {{{H12,H13},H12},{{H12,H13},H23}}  bracket 14.1s  simplify 11.9s  -> 6168 terms
+  [   9] {{{H12,H13},H12},{{H12,H13},{H12,H23}}}  bracket 29.8s  simplify 22.0s  -> 10156 terms
+  [  10] {{{H12,H13},H12},{{H12,H13},{H13,H23}}}  bracket 30.6s  simplify 31.0s  -> 13921 terms
+  [  11] {{{H12,H13},H12},{{H12,H23},H12}}  bracket 15.4s  simplify 14.9s  -> 6120 terms
+  [  12] {{{H12,H13},H12},{{H12,H23},H13}}  bracket 10.6s  simplify 9.5s  -> 4756 terms
+  [  13] {{{H12,H13},H12},{{H12,H23},H23}}  bracket 11.8s  simplify 12.8s  -> 6388 terms
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 52.2 KiB/52.2 KiB (775.1 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:09:40Z", "uptime": " 00:09:40 up 6 min,  0 users,  load average: 1.08, 0.74, 0.35"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
+  [  14] {{{H12,H13},H12},{{H12,H23},{H13,H23}}}  bracket 15.7s  simplify 22.8s  -> 10465 terms
+  [  15] {{{H12,H13},H12},{{H13,H23},H12}}  bracket 10.6s  simplify 11.4s  -> 5636 terms
+  [  16] {{{H12,H13},H12},{{H13,H23},H13}}  bracket 12.1s  simplify 12.9s  -> 6388 terms
+  [  17] {{{H12,H13},H12},{{H13,H23},H23}}  bracket 6.7s  simplify 10.9s  -> 5000 terms
+  [  18] {{{H12,H13},H13},H12}  bracket 4.8s  simplify 0.4s  -> 316 terms
+  [  19] {{{H12,H13},H13},H13}  bracket 2.0s  simplify 0.3s  -> 286 terms
+  [  20] {{{H12,H13},H13},H23}  bracket 1.3s  simplify 0.3s  -> 252 terms
+  [  21] {{{H12,H13},H13},{H12,H13}}  bracket 3.7s  simplify 2.0s  -> 1209 terms
+  [  22] {{{H12,H13},H13},{H12,H23}}  bracket 0.9s  simplify 1.1s  -> 698 terms
+  [  23] {{{H12,H13},H13},{H13,H23}}  bracket 1.1s  simplify 1.3s  -> 805 terms
+  [  24] {{{H12,H13},H13},{{H12,H13},H23}}  bracket 14.2s  simplify 11.9s  -> 6168 terms
+  [  25] {{{H12,H13},H13},{{H12,H13},{H12,H23}}}  bracket 30.3s  simplify 31.1s  -> 13921 terms
+  [  26] {{{H12,H13},H13},{{H12,H13},{H13,H23}}}  bracket 29.1s  simplify 22.3s  -> 10156 terms
+  [  27] {{{H12,H13},H13},{{H12,H23},H12}}  bracket 12.0s  simplify 12.6s  -> 6388 terms
+  [  28] {{{H12,H13},H13},{{H12,H23},H13}}  bracket 10.4s  simplify 11.3s  -> 5636 terms
+  [  29] {{{H12,H13},H13},{{H12,H23},H23}}  bracket 6.4s  simplify 11.4s  -> 5000 terms
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 54.3 KiB/54.3 KiB (697.7 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:14:41Z", "uptime": " 00:14:41 up 11 min,  0 users,  load average: 1.00, 0.91, 0.54"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
+  [  30] {{{H12,H13},H13},{{H12,H23},{H13,H23}}}  bracket 15.6s  simplify 23.0s  -> 10465 terms
+  [  31] {{{H12,H13},H13},{{H13,H23},H12}}  bracket 10.6s  simplify 9.7s  -> 4756 terms
+  [  32] {{{H12,H13},H13},{{H13,H23},H13}}  bracket 14.3s  simplify 15.6s  -> 6120 terms
+  [  33] {{{H12,H13},H13},{{H13,H23},H23}}  bracket 11.2s  simplify 12.7s  -> 6388 terms
+  [  34] {{{H12,H13},H23},H12}  bracket 3.1s  simplify 0.3s  -> 212 terms
+  [  35] {{{H12,H13},H23},H13}  bracket 1.1s  simplify 0.3s  -> 212 terms
+  [  36] {{{H12,H13},H23},H23}  bracket 0.8s  simplify 0.2s  -> 152 terms
+  [  37] {{{H12,H13},H23},{H12,H13}}  bracket 1.0s  simplify 1.1s  -> 724 terms
+  [  38] {{{H12,H13},H23},{H12,H23}}  bracket 0.8s  simplify 1.0s  -> 618 terms
+  [  39] {{{H12,H13},H23},{H13,H23}}  bracket 0.8s  simplify 1.0s  -> 618 terms
+  [  40] {{{H12,H13},H23},{{H12,H13},{H12,H23}}}  bracket 12.4s  simplify 14.9s  -> 7085 terms
+  [  41] {{{H12,H13},H23},{{H12,H13},{H13,H23}}}  bracket 11.8s  simplify 14.8s  -> 7085 terms
+  [  42] {{{H12,H13},H23},{{H12,H23},H12}}  bracket 10.9s  simplify 9.9s  -> 4756 terms
+  [  43] {{{H12,H13},H23},{{H12,H23},H13}}  bracket 3.9s  simplify 6.5s  -> 2592 terms
+  [  44] {{{H12,H13},H23},{{H12,H23},H23}}  bracket 9.7s  simplify 11.8s  -> 5636 terms
+  [  45] {{{H12,H13},H23},{{H12,H23},{H13,H23}}}  bracket 15.2s  simplify 22.6s  -> 10430 terms
+  [  46] {{{H12,H13},H23},{{H13,H23},H12}}  bracket 2.5s  simplify 5.6s  -> 2592 terms
+  [  47] {{{H12,H13},H23},{{H13,H23},H13}}  bracket 10.6s  simplify 9.7s  -> 4756 terms
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 56.5 KiB/56.5 KiB (1.0 MiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:19:43Z", "uptime": " 00:19:43 up 16 min,  0 users,  load average: 1.00, 0.98, 0.68"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
+  [  48] {{{H12,H13},H23},{{H13,H23},H23}}  bracket 9.5s  simplify 11.6s  -> 5636 terms
+  [  49] {{{H12,H13},{H12,H23}},H12}  bracket 16.5s  simplify 1.6s  -> 858 terms
+  [  50] {{{H12,H13},{H12,H23}},H13}  bracket 5.0s  simplify 1.4s  -> 814 terms
+  [  51] {{{H12,H13},{H12,H23}},H23}  bracket 4.2s  simplify 1.4s  -> 814 terms
+  [  52] {{{H12,H13},{H12,H23}},{H12,H13}}  bracket 2.5s  simplify 2.7s  -> 1518 terms
+  [  53] {{{H12,H13},{H12,H23}},{H12,H23}}  bracket 2.5s  simplify 3.5s  -> 1518 terms
+  [  54] {{{H12,H13},{H12,H23}},{H13,H23}}  bracket 2.3s  simplify 2.8s  -> 1428 terms
+  [  55] {{{H12,H13},{H12,H23}},{{H12,H13},{H13,H23}}}  bracket 25.7s  simplify 39.9s  -> 15484 terms
+  [  56] {{{H12,H13},{H12,H23}},{{H12,H23},H12}}  bracket 29.5s  simplify 21.8s  -> 10156 terms
+  [  57] {{{H12,H13},{H12,H23}},{{H12,H23},H13}}  bracket 11.3s  simplify 15.1s  -> 7085 terms
+  [  58] {{{H12,H13},{H12,H23}},{{H12,H23},H23}}  bracket 27.6s  simplify 31.3s  -> 13921 terms
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 58.2 KiB/58.2 KiB (986.4 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:24:44Z", "uptime": " 00:24:44 up 21 min,  0 users,  load average: 1.00, 1.00, 0.78"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
+  [  59] {{{H12,H13},{H12,H23}},{{H12,H23},{H13,H23}}}  bracket 25.8s  simplify 38.3s  -> 15484 terms
+  [  60] {{{H12,H13},{H12,H23}},{{H13,H23},H12}}  bracket 15.7s  simplify 22.4s  -> 10430 terms
+  [  61] {{{H12,H13},{H12,H23}},{{H13,H23},H13}}  bracket 14.7s  simplify 22.4s  -> 10465 terms
+  [  62] {{{H12,H13},{H12,H23}},{{H13,H23},H23}}  bracket 14.6s  simplify 22.4s  -> 10465 terms
+  [  63] {{{H12,H13},{H13,H23}},H12}  bracket 15.5s  simplify 1.4s  -> 814 terms
+  [  64] {{{H12,H13},{H13,H23}},H13}  bracket 5.6s  simplify 1.5s  -> 858 terms
+  [  65] {{{H12,H13},{H13,H23}},H23}  bracket 3.9s  simplify 1.4s  -> 814 terms
+  [  66] {{{H12,H13},{H13,H23}},{H12,H13}}  bracket 2.5s  simplify 2.8s  -> 1518 terms
+  [  67] {{{H12,H13},{H13,H23}},{H12,H23}}  bracket 2.3s  simplify 2.7s  -> 1428 terms
+  [  68] {{{H12,H13},{H13,H23}},{H13,H23}}  bracket 3.6s  simplify 2.7s  -> 1518 terms
+  [  69] {{{H12,H13},{H13,H23}},{{H12,H23},H12}}  bracket 14.6s  simplify 23.1s  -> 10465 terms
+  [  70] {{{H12,H13},{H13,H23}},{{H12,H23},H13}}  bracket 14.6s  simplify 23.1s  -> 10430 terms
+  [  71] {{{H12,H13},{H13,H23}},{{H12,H23},H23}}  bracket 14.5s  simplify 23.0s  -> 10465 terms
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 60.1 KiB/60.1 KiB (1.0 MiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:29:45Z", "uptime": " 00:29:45 up 26 min,  0 users,  load average: 1.00, 1.00, 0.85"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
+  [  72] {{{H12,H13},{H13,H23}},{{H12,H23},{H13,H23}}}  bracket 24.5s  simplify 39.6s  -> 15484 terms
+  [  73] {{{H12,H13},{H13,H23}},{{H13,H23},H12}}  bracket 11.2s  simplify 14.6s  -> 7085 terms
+  [  74] {{{H12,H13},{H13,H23}},{{H13,H23},H13}}  bracket 28.0s  simplify 21.4s  -> 10156 terms
+  [  75] {{{H12,H13},{H13,H23}},{{H13,H23},H23}}  bracket 28.2s  simplify 31.5s  -> 13921 terms
+  [  76] {{{H12,H23},H12},H12}  bracket 4.9s  simplify 0.3s  -> 286 terms
+  [  77] {{{H12,H23},H12},H13}  bracket 1.6s  simplify 0.3s  -> 252 terms
+  [  78] {{{H12,H23},H12},H23}  bracket 1.5s  simplify 0.4s  -> 316 terms
+  [  79] {{{H12,H23},H12},{H12,H13}}  bracket 1.1s  simplify 1.3s  -> 805 terms
+  [  80] {{{H12,H23},H12},{H12,H23}}  bracket 3.1s  simplify 2.1s  -> 1209 terms
+  [  81] {{{H12,H23},H12},{H13,H23}}  bracket 0.9s  simplify 1.1s  -> 698 terms
+  [  82] {{{H12,H23},H12},{{H12,H23},H13}}  bracket 13.7s  simplify 12.9s  -> 6168 terms
+  [  83] {{{H12,H23},H12},{{H12,H23},H23}}  bracket 15.4s  simplify 14.5s  -> 6712 terms
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 61.8 KiB/61.8 KiB (764.1 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:34:47Z", "uptime": " 00:34:47 up 31 min,  0 users,  load average: 1.00, 1.00, 0.91"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
+  [  84] {{{H12,H23},H12},{{H12,H23},{H13,H23}}}  bracket 30.7s  simplify 31.6s  -> 13921 terms
+  [  85] {{{H12,H23},H12},{{H13,H23},H12}}  bracket 10.1s  simplify 10.9s  -> 5636 terms
+  [  86] {{{H12,H23},H12},{{H13,H23},H13}}  bracket 6.4s  simplify 12.3s  -> 5000 terms
+  [  87] {{{H12,H23},H12},{{H13,H23},H23}}  bracket 11.5s  simplify 12.1s  -> 6388 terms
+  [  88] {{{H12,H23},H13},H12}  bracket 2.3s  simplify 0.3s  -> 212 terms
+  [  89] {{{H12,H23},H13},H13}  bracket 1.0s  simplify 0.2s  -> 152 terms
+  [  90] {{{H12,H23},H13},H23}  bracket 0.9s  simplify 0.3s  -> 212 terms
+  [  91] {{{H12,H23},H13},{H12,H13}}  bracket 0.8s  simplify 1.0s  -> 618 terms
+  [  92] {{{H12,H23},H13},{H12,H23}}  bracket 1.0s  simplify 1.1s  -> 724 terms
+  [  93] {{{H12,H23},H13},{H13,H23}}  bracket 0.8s  simplify 1.0s  -> 618 terms
+  [  94] {{{H12,H23},H13},{{H12,H23},H23}}  bracket 13.2s  simplify 13.2s  -> 6168 terms
+  [  95] {{{H12,H23},H13},{{H12,H23},{H13,H23}}}  bracket 11.5s  simplify 14.6s  -> 7085 terms
+  [  96] {{{H12,H23},H13},{{H13,H23},H12}}  bracket 2.3s  simplify 6.4s  -> 2592 terms
+  [  97] {{{H12,H23},H13},{{H13,H23},H13}}  bracket 9.7s  simplify 11.1s  -> 5636 terms
+  [  98] {{{H12,H23},H13},{{H13,H23},H23}}  bracket 9.6s  simplify 9.2s  -> 4756 terms
+  [  99] {{{H12,H23},H23},H12}  bracket 3.7s  simplify 0.4s  -> 316 terms
+  [ 100] {{{H12,H23},H23},H13}  bracket 1.4s  simplify 0.3s  -> 252 terms
+  [ 101] {{{H12,H23},H23},H23}  bracket 1.5s  simplify 0.3s  -> 286 terms
+  [ 102] {{{H12,H23},H23},{H12,H13}}  bracket 0.9s  simplify 1.1s  -> 698 terms
+  [ 103] {{{H12,H23},H23},{H12,H23}}  bracket 2.9s  simplify 2.0s  -> 1209 terms
+  [ 104] {{{H12,H23},H23},{H13,H23}}  bracket 1.1s  simplify 2.8s  -> 805 terms
+  [ 105] {{{H12,H23},H23},{{H12,H23},{H13,H23}}}  bracket 27.2s  simplify 21.3s  -> 10156 terms
+  [ 106] {{{H12,H23},H23},{{H13,H23},H12}}  bracket 11.8s  simplify 9.1s  -> 4756 terms
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 64.4 KiB/64.4 KiB (865.8 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:39:48Z", "uptime": " 00:39:48 up 36 min,  0 users,  load average: 1.00, 1.00, 0.94"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
+  [ 107] {{{H12,H23},H23},{{H13,H23},H13}}  bracket 11.3s  simplify 12.4s  -> 6388 terms
+  [ 108] {{{H12,H23},H23},{{H13,H23},H23}}  bracket 13.5s  simplify 16.2s  -> 6120 terms
+  [ 109] {{{H12,H23},{H13,H23}},H12}  bracket 12.8s  simplify 1.4s  -> 814 terms
+  [ 110] {{{H12,H23},{H13,H23}},H13}  bracket 4.5s  simplify 1.4s  -> 814 terms
+  [ 111] {{{H12,H23},{H13,H23}},H23}  bracket 4.4s  simplify 1.5s  -> 858 terms
+  [ 112] {{{H12,H23},{H13,H23}},{H12,H13}}  bracket 2.3s  simplify 2.8s  -> 1428 terms
+  [ 113] {{{H12,H23},{H13,H23}},{H12,H23}}  bracket 2.5s  simplify 2.8s  -> 1518 terms
+  [ 114] {{{H12,H23},{H13,H23}},{H13,H23}}  bracket 2.5s  simplify 2.7s  -> 1518 terms
+  [ 115] {{{H12,H23},{H13,H23}},{{H13,H23},H12}}  bracket 13.0s  simplify 14.6s  -> 7085 terms
+  [ 116] {{{H12,H23},{H13,H23}},{{H13,H23},H13}}  bracket 27.1s  simplify 31.9s  -> 13921 terms
+  [ 117] {{{H12,H23},{H13,H23}},{{H13,H23},H23}}  bracket 25.4s  simplify 23.2s  -> 10156 terms
+  [ 118] {{{H13,H23},H12},H12}  bracket 2.7s  simplify 0.2s  -> 152 terms
+  [ 119] {{{H13,H23},H12},H13}  bracket 1.1s  simplify 0.3s  -> 212 terms
+  [ 120] {{{H13,H23},H12},H23}  bracket 0.9s  simplify 0.3s  -> 212 terms
+  [ 121] {{{H13,H23},H12},{H12,H13}}  bracket 0.8s  simplify 1.0s  -> 618 terms
+  [ 122] {{{H13,H23},H12},{H12,H23}}  bracket 0.8s  simplify 1.0s  -> 618 terms
+  [ 123] {{{H13,H23},H12},{H13,H23}}  bracket 0.9s  simplify 1.1s  -> 724 terms
+  [ 124] {{{H13,H23},H12},{{H13,H23},H13}}  bracket 12.7s  simplify 11.8s  -> 6168 terms
+  [ 125] {{{H13,H23},H12},{{H13,H23},H23}}  bracket 12.5s  simplify 13.6s  -> 6168 terms
+  [ 126] {{{H13,H23},H13},H12}  bracket 3.7s  simplify 0.3s  -> 252 terms
+  [ 127] {{{H13,H23},H13},H13}  bracket 1.8s  simplify 0.3s  -> 286 terms
+  [ 128] {{{H13,H23},H13},H23}  bracket 1.4s  simplify 0.4s  -> 316 terms
+  [ 129] {{{H13,H23},H13},{H12,H13}}  bracket 1.1s  simplify 1.3s  -> 805 terms
+  [ 130] {{{H13,H23},H13},{H12,H23}}  bracket 0.9s  simplify 1.1s  -> 698 terms
+  [ 131] {{{H13,H23},H13},{H13,H23}}  bracket 2.8s  simplify 2.1s  -> 1209 terms
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 67.1 KiB/67.1 KiB (994.5 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:44:49Z", "uptime": " 00:44:49 up 41 min,  0 users,  load average: 1.00, 1.00, 0.97"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
+  [ 132] {{{H13,H23},H13},{{H13,H23},H23}}  bracket 13.9s  simplify 14.5s  -> 6712 terms
+  [ 133] {{{H13,H23},H23},H12}  bracket 3.5s  simplify 0.3s  -> 252 terms
+  [ 134] {{{H13,H23},H23},H13}  bracket 1.4s  simplify 0.4s  -> 316 terms
+  [ 135] {{{H13,H23},H23},H23}  bracket 1.4s  simplify 0.3s  -> 286 terms
+  [ 136] {{{H13,H23},H23},{H12,H13}}  bracket 2.7s  simplify 1.1s  -> 698 terms
+  [ 137] {{{H13,H23},H23},{H12,H23}}  bracket 1.1s  simplify 1.3s  -> 805 terms
+  [ 138] {{{H13,H23},H23},{H13,H23}}  bracket 2.6s  simplify 2.0s  -> 1209 terms
+  Level 3: 138 candidates in 2447.0s
+
+Total generators: 156 in 2452.2s
+
+Extracting monomial-coefficient matrix...
+  Processed 20/156 generators, 781 distinct monomials so far
+  Processed 40/156 generators, 49787 distinct monomials so far
+  Processed 60/156 generators, 63087 distinct monomials so far
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 68.7 KiB/68.7 KiB (933.0 KiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:49:51Z", "uptime": " 00:49:51 up 46 min,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
+  Processed 80/156 generators, 104218 distinct monomials so far
+  Processed 100/156 generators, 131323 distinct monomials so far
+  Processed 120/156 generators, 142239 distinct monomials so far
+  Processed 140/156 generators, 147665 distinct monomials so far
+  Processed 156/156 generators, 148359 distinct monomials so far
+  Matrix dimensions: 156 x 148359
+  Non-zero entries: 577113
+  Density: 0.0249
+  Extraction time: 498.7s
+
+======================================================================
+EXACT RANK COMPUTATION
+======================================================================
+
+  Rank through level 0 (3 generators x 148359 monomials, domain=QQ[hbar])... rank = 3  [0.0s]
+
+  Rank through level 1 (6 generators x 148359 monomials, domain=QQ[hbar])... rank = 6  [0.1s]
+
+  Rank through level 2 (18 generators x 148359 monomials, domain=QQ[hbar])... rank = 17  [0.3s]
+
+  Rank through level 3 (156 generators x 148359 monomials, domain=QQ[hbar])... + upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 70.4 KiB/70.4 KiB (1.1 MiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:54:52Z", "uptime": " 00:54:52 up 51 min,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
++ upload_log
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
+Completed 71.1 KiB/71.1 KiB (1.2 MiB/s) with 1 file(s) remainingupload: var/log/3body-quantum-rank.log to s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/live.log
++ aws s3 cp - s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-0964d0161832d18e2", "type": "r6i.4xlarge", "job": "quantum_rank_N3_d2", "time": "2026-04-10T00:59:53Z", "uptime": " 00:59:53 up 56 min,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ true
++ sleep 300
+rank = 117  [610.6s]
+
+======================================================================
+RESULTS
+======================================================================
+  Cumulative rank: [3, 6, 17, 117]
+  New per level:   [3, 3, 11, 100]
+  Total generators: 156
+  Total monomials:  148359
+  Total time: 3562.1s
+
+  GROWING (not stabilized through level 3)
+
+  Results saved to: /opt/3body/results/symbolic_rank/rank_N3_d2_quantum_1r.json
++ EXIT_CODE=0
++ MAIN_PID=
++ echo '=== Exit code: 0 ==='
+=== Exit code: 0 ===
++ echo '=== Final sync ==='
+=== Final sync ===
++ aws s3 sync /opt/3body/nbody/results/ s3://3body-compute-290318/results/ --include '*.json'
++ aws s3 cp /var/log/3body-quantum-rank.log s3://3body-compute-290318/results/quantum_rank/N3_d2_1r/full.log

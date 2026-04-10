@@ -1,0 +1,1331 @@
++ set -o pipefail
++ ulimit -s unlimited
++ S3_BUCKET=3body-compute-290318
++ WORKDIR=/opt/3body
++ RESULTS_DIR=results/symbolic_gram_sweep
++ export S3_BUCKET PYTHONUNBUFFERED=1
++ PYTHONUNBUFFERED=1
++ export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
++ OMP_NUM_THREADS=1
++ MKL_NUM_THREADS=1
++ OPENBLAS_NUM_THREADS=1
+++ curl -sf http://169.254.169.254/latest/meta-data/instance-id
++ INSTANCE_ID=i-02cea5ca7bad4ef57
+++ curl -sf http://169.254.169.254/latest/meta-data/instance-type
++ INSTANCE_TYPE=r6i.4xlarge
++ echo '=== Symbolic Gram Sweep ==='
+=== Symbolic Gram Sweep ===
+++ date -u +%Y-%m-%dT%H:%M:%SZ
++ echo 'Started:  2026-04-09T07:45:43Z'
+Started:  2026-04-09T07:45:43Z
++ echo 'Instance: i-02cea5ca7bad4ef57 (r6i.4xlarge)'
+Instance: i-02cea5ca7bad4ef57 (r6i.4xlarge)
++ MAIN_PID=
++ trap shutdown_handler SIGTERM
++ echo '=== Step 1: Installing dependencies ==='
+=== Step 1: Installing dependencies ===
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 1.0 KiB/1.0 KiB (18.2 KiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T07:45:44Z", "uptime": " 07:45:44 up 0 min,  0 users,  load average: 0.20, 0.05, 0.02"}'
++ yum install -y python3 python3-pip python3-devel gcc gmp-devel mpfr-devel mpc-devel
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+Existing lock /var/run/yum.pid: another copy is running as pid 3102.
+Another app is currently holding the yum lock; waiting for it to exit...
+  The other application is: yum
+    Memory : 149 M RSS (369 MB VSZ)
+    Started: Thu Apr  9 07:45:42 2026 - 00:03 ago
+    State  : Running, pid: 3102
+Another app is currently holding the yum lock; waiting for it to exit...
+  The other application is: yum
+    Memory : 230 M RSS (451 MB VSZ)
+    Started: Thu Apr  9 07:45:42 2026 - 00:05 ago
+    State  : Running, pid: 3102
+Package python3-pip-20.2.2-1.amzn2.0.15.noarch already installed and latest version
+No package mpc-devel available.
+Resolving Dependencies
+--> Running transaction check
+---> Package gcc.x86_64 0:7.3.1-18.amzn2 will be installed
+--> Processing Dependency: cpp = 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: glibc-devel >= 2.2.90-12 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libatomic >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libcilkrts >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libitm >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libmpx >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libquadmath >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libsanitizer >= 7.3.1-18.amzn2 for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libmpc.so.3()(64bit) for package: gcc-7.3.1-18.amzn2.x86_64
+--> Processing Dependency: libmpfr.so.4()(64bit) for package: gcc-7.3.1-18.amzn2.x86_64
+---> Package gmp-devel.x86_64 1:6.0.0-15.amzn2.0.3 will be installed
+---> Package mpfr-devel.x86_64 0:3.1.1-4.amzn2.0.2 will be installed
+---> Package python3.x86_64 0:3.7.16-1.amzn2.0.23 will be updated
+--> Processing Dependency: python3(x86-64) = 3.7.16-1.amzn2.0.23 for package: python3-libs-3.7.16-1.amzn2.0.23.x86_64
+---> Package python3.x86_64 0:3.7.16-1.amzn2.0.24 will be an update
+---> Package python3-devel.x86_64 0:3.7.16-1.amzn2.0.24 will be installed
+--> Processing Dependency: python3-rpm-macros for package: python3-devel-3.7.16-1.amzn2.0.24.x86_64
+--> Processing Dependency: system-rpm-config for package: python3-devel-3.7.16-1.amzn2.0.24.x86_64
+--> Running transaction check
+---> Package cpp.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package glibc-devel.x86_64 0:2.26-64.amzn2.0.5 will be installed
+--> Processing Dependency: glibc-headers = 2.26-64.amzn2.0.5 for package: glibc-devel-2.26-64.amzn2.0.5.x86_64
+--> Processing Dependency: glibc-headers for package: glibc-devel-2.26-64.amzn2.0.5.x86_64
+---> Package libatomic.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package libcilkrts.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package libitm.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package libmpc.x86_64 0:1.0.1-3.amzn2.0.2 will be installed
+---> Package libmpx.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package libquadmath.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package libsanitizer.x86_64 0:7.3.1-18.amzn2 will be installed
+---> Package mpfr.x86_64 0:3.1.1-4.amzn2.0.2 will be installed
+---> Package python3-libs.x86_64 0:3.7.16-1.amzn2.0.23 will be updated
+---> Package python3-libs.x86_64 0:3.7.16-1.amzn2.0.24 will be an update
+---> Package python3-rpm-macros.noarch 0:3-60.amzn2.0.1 will be installed
+--> Processing Dependency: python-srpm-macros >= 3-38 for package: python3-rpm-macros-3-60.amzn2.0.1.noarch
+--> Processing Dependency: python-rpm-macros for package: python3-rpm-macros-3-60.amzn2.0.1.noarch
+---> Package system-rpm-config.noarch 0:9.1.0-76.amzn2.0.14 will be installed
+--> Processing Dependency: dwz >= 0.4 for package: system-rpm-config-9.1.0-76.amzn2.0.14.noarch
+--> Processing Dependency: go-srpm-macros for package: system-rpm-config-9.1.0-76.amzn2.0.14.noarch
+--> Processing Dependency: perl-srpm-macros for package: system-rpm-config-9.1.0-76.amzn2.0.14.noarch
+--> Running transaction check
+---> Package dwz.x86_64 0:0.11-3.amzn2.0.3 will be installed
+---> Package glibc-headers.x86_64 0:2.26-64.amzn2.0.5 will be installed
+--> Processing Dependency: kernel-headers >= 2.2.1 for package: glibc-headers-2.26-64.amzn2.0.5.x86_64
+--> Processing Dependency: kernel-headers for package: glibc-headers-2.26-64.amzn2.0.5.x86_64
+---> Package go-srpm-macros.noarch 0:3.0.15-23.amzn2.0.2 will be installed
+---> Package perl-srpm-macros.noarch 0:1-8.amzn2.0.1 will be installed
+---> Package python-rpm-macros.noarch 0:3-60.amzn2.0.1 will be installed
+---> Package python-srpm-macros.noarch 0:3-60.amzn2.0.1 will be installed
+--> Running transaction check
+---> Package kernel-headers.x86_64 0:4.14.355-281.714.amzn2 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package               Arch      Version                    Repository     Size
+================================================================================
+Installing:
+ gcc                   x86_64    7.3.1-18.amzn2             amzn2-core     22 M
+ gmp-devel             x86_64    1:6.0.0-15.amzn2.0.3       amzn2-core    181 k
+ mpfr-devel            x86_64    3.1.1-4.amzn2.0.2          amzn2-core     68 k
+ python3-devel         x86_64    3.7.16-1.amzn2.0.24        amzn2-core    246 k
+Updating:
+ python3               x86_64    3.7.16-1.amzn2.0.24        amzn2-core     74 k
+Installing for dependencies:
+ cpp                   x86_64    7.3.1-18.amzn2             amzn2-core    9.2 M
+ dwz                   x86_64    0.11-3.amzn2.0.3           amzn2-core     98 k
+ glibc-devel           x86_64    2.26-64.amzn2.0.5          amzn2-core    996 k
+ glibc-headers         x86_64    2.26-64.amzn2.0.5          amzn2-core    517 k
+ go-srpm-macros        noarch    3.0.15-23.amzn2.0.2        amzn2-core     23 k
+ kernel-headers        x86_64    4.14.355-281.714.amzn2     amzn2-core    1.2 M
+ libatomic             x86_64    7.3.1-18.amzn2             amzn2-core     46 k
+ libcilkrts            x86_64    7.3.1-18.amzn2             amzn2-core     85 k
+ libitm                x86_64    7.3.1-18.amzn2             amzn2-core     85 k
+ libmpc                x86_64    1.0.1-3.amzn2.0.2          amzn2-core     52 k
+ libmpx                x86_64    7.3.1-18.amzn2             amzn2-core     52 k
+ libquadmath           x86_64    7.3.1-18.amzn2             amzn2-core    189 k
+ libsanitizer          x86_64    7.3.1-18.amzn2             amzn2-core    642 k
+ mpfr                  x86_64    3.1.1-4.amzn2.0.2          amzn2-core    208 k
+ perl-srpm-macros      noarch    1-8.amzn2.0.1              amzn2-core    4.7 k
+ python-rpm-macros     noarch    3-60.amzn2.0.1             amzn2-core     14 k
+ python-srpm-macros    noarch    3-60.amzn2.0.1             amzn2-core     18 k
+ python3-rpm-macros    noarch    3-60.amzn2.0.1             amzn2-core     12 k
+ system-rpm-config     noarch    9.1.0-76.amzn2.0.14        amzn2-core     90 k
+Updating for dependencies:
+ python3-libs          x86_64    3.7.16-1.amzn2.0.24        amzn2-core    9.8 M
+
+Transaction Summary
+================================================================================
+Install  4 Packages (+19 Dependent packages)
+Upgrade  1 Package  (+ 1 Dependent package)
+
+Total download size: 46 M
+Downloading packages:
+Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
+--------------------------------------------------------------------------------
+Total                                               75 MB/s |  46 MB  00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : mpfr-3.1.1-4.amzn2.0.2.x86_64                               1/27 
+  Installing : libmpc-1.0.1-3.amzn2.0.2.x86_64                             2/27 
+  Updating   : python3-libs-3.7.16-1.amzn2.0.24.x86_64                     3/27 
+  Updating   : python3-3.7.16-1.amzn2.0.24.x86_64                          4/27 
+  Installing : cpp-7.3.1-18.amzn2.x86_64                                   5/27 
+  Installing : libcilkrts-7.3.1-18.amzn2.x86_64                            6/27 
+  Installing : dwz-0.11-3.amzn2.0.3.x86_64                                 7/27 
+  Installing : libquadmath-7.3.1-18.amzn2.x86_64                           8/27 
+  Installing : kernel-headers-4.14.355-281.714.amzn2.x86_64                9/27 
+  Installing : glibc-headers-2.26-64.amzn2.0.5.x86_64                     10/27 
+  Installing : glibc-devel-2.26-64.amzn2.0.5.x86_64                       11/27 
+  Installing : libsanitizer-7.3.1-18.amzn2.x86_64                         12/27 
+  Installing : perl-srpm-macros-1-8.amzn2.0.1.noarch                      13/27 
+  Installing : go-srpm-macros-3.0.15-23.amzn2.0.2.noarch                  14/27 
+  Installing : system-rpm-config-9.1.0-76.amzn2.0.14.noarch               15/27 
+  Installing : python-srpm-macros-3-60.amzn2.0.1.noarch                   16/27 
+  Installing : python-rpm-macros-3-60.amzn2.0.1.noarch                    17/27 
+  Installing : python3-rpm-macros-3-60.amzn2.0.1.noarch                   18/27 
+  Installing : libitm-7.3.1-18.amzn2.x86_64                               19/27 
+  Installing : libatomic-7.3.1-18.amzn2.x86_64                            20/27 
+  Installing : 1:gmp-devel-6.0.0-15.amzn2.0.3.x86_64                      21/27 
+  Installing : libmpx-7.3.1-18.amzn2.x86_64                               22/27 
+  Installing : gcc-7.3.1-18.amzn2.x86_64                                  23/27 
+  Installing : mpfr-devel-3.1.1-4.amzn2.0.2.x86_64                        24/27 
+  Installing : python3-devel-3.7.16-1.amzn2.0.24.x86_64                   25/27 
+  Cleanup    : python3-libs-3.7.16-1.amzn2.0.23.x86_64                    26/27 
+  Cleanup    : python3-3.7.16-1.amzn2.0.23.x86_64                         27/27 
+  Verifying  : libmpx-7.3.1-18.amzn2.x86_64                                1/27 
+  Verifying  : glibc-devel-2.26-64.amzn2.0.5.x86_64                        2/27 
+  Verifying  : 1:gmp-devel-6.0.0-15.amzn2.0.3.x86_64                       3/27 
+  Verifying  : gcc-7.3.1-18.amzn2.x86_64                                   4/27 
+  Verifying  : libmpc-1.0.1-3.amzn2.0.2.x86_64                             5/27 
+  Verifying  : python-rpm-macros-3-60.amzn2.0.1.noarch                     6/27 
+  Verifying  : libatomic-7.3.1-18.amzn2.x86_64                             7/27 
+  Verifying  : libitm-7.3.1-18.amzn2.x86_64                                8/27 
+  Verifying  : mpfr-3.1.1-4.amzn2.0.2.x86_64                               9/27 
+  Verifying  : perl-srpm-macros-1-8.amzn2.0.1.noarch                      10/27 
+  Verifying  : libsanitizer-7.3.1-18.amzn2.x86_64                         11/27 
+  Verifying  : kernel-headers-4.14.355-281.714.amzn2.x86_64               12/27 
+  Verifying  : python3-devel-3.7.16-1.amzn2.0.24.x86_64                   13/27 
+  Verifying  : python3-rpm-macros-3-60.amzn2.0.1.noarch                   14/27 
+  Verifying  : go-srpm-macros-3.0.15-23.amzn2.0.2.noarch                  15/27 
+  Verifying  : glibc-headers-2.26-64.amzn2.0.5.x86_64                     16/27 
+  Verifying  : cpp-7.3.1-18.amzn2.x86_64                                  17/27 
+  Verifying  : python3-3.7.16-1.amzn2.0.24.x86_64                         18/27 
+  Verifying  : libquadmath-7.3.1-18.amzn2.x86_64                          19/27 
+  Verifying  : python-srpm-macros-3-60.amzn2.0.1.noarch                   20/27 
+  Verifying  : dwz-0.11-3.amzn2.0.3.x86_64                                21/27 
+  Verifying  : mpfr-devel-3.1.1-4.amzn2.0.2.x86_64                        22/27 
+  Verifying  : python3-libs-3.7.16-1.amzn2.0.24.x86_64                    23/27 
+  Verifying  : system-rpm-config-9.1.0-76.amzn2.0.14.noarch               24/27 
+  Verifying  : libcilkrts-7.3.1-18.amzn2.x86_64                           25/27 
+  Verifying  : python3-3.7.16-1.amzn2.0.23.x86_64                         26/27 
+  Verifying  : python3-libs-3.7.16-1.amzn2.0.23.x86_64                    27/27 
+
+Installed:
+  gcc.x86_64 0:7.3.1-18.amzn2                                                   
+  gmp-devel.x86_64 1:6.0.0-15.amzn2.0.3                                         
+  mpfr-devel.x86_64 0:3.1.1-4.amzn2.0.2                                         
+  python3-devel.x86_64 0:3.7.16-1.amzn2.0.24                                    
+
+Dependency Installed:
+  cpp.x86_64 0:7.3.1-18.amzn2                                                   
+  dwz.x86_64 0:0.11-3.amzn2.0.3                                                 
+  glibc-devel.x86_64 0:2.26-64.amzn2.0.5                                        
+  glibc-headers.x86_64 0:2.26-64.amzn2.0.5                                      
+  go-srpm-macros.noarch 0:3.0.15-23.amzn2.0.2                                   
+  kernel-headers.x86_64 0:4.14.355-281.714.amzn2                                
+  libatomic.x86_64 0:7.3.1-18.amzn2                                             
+  libcilkrts.x86_64 0:7.3.1-18.amzn2                                            
+  libitm.x86_64 0:7.3.1-18.amzn2                                                
+  libmpc.x86_64 0:1.0.1-3.amzn2.0.2                                             
+  libmpx.x86_64 0:7.3.1-18.amzn2                                                
+  libquadmath.x86_64 0:7.3.1-18.amzn2                                           
+  libsanitizer.x86_64 0:7.3.1-18.amzn2                                          
+  mpfr.x86_64 0:3.1.1-4.amzn2.0.2                                               
+  perl-srpm-macros.noarch 0:1-8.amzn2.0.1                                       
+  python-rpm-macros.noarch 0:3-60.amzn2.0.1                                     
+  python-srpm-macros.noarch 0:3-60.amzn2.0.1                                    
+  python3-rpm-macros.noarch 0:3-60.amzn2.0.1                                    
+  system-rpm-config.noarch 0:9.1.0-76.amzn2.0.14                                
+
+Updated:
+  python3.x86_64 0:3.7.16-1.amzn2.0.24                                          
+
+Dependency Updated:
+  python3-libs.x86_64 0:3.7.16-1.amzn2.0.24                                     
+
+Complete!
++ amazon-linux-extras install python3.8 -y
+Installing python38
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+Cleaning repos: amzn2-core amzn2extra-docker amzn2extra-python3.8
+12 metadata files removed
+4 sqlite files removed
+0 metadata files removed
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+Resolving Dependencies
+--> Running transaction check
+---> Package python38.x86_64 0:3.8.20-1.amzn2.0.1 will be installed
+--> Processing Dependency: python38-libs(x86-64) = 3.8.20-1.amzn2.0.1 for package: python38-3.8.20-1.amzn2.0.1.x86_64
+--> Processing Dependency: python38-pip for package: python38-3.8.20-1.amzn2.0.1.x86_64
+--> Processing Dependency: python38-setuptools for package: python38-3.8.20-1.amzn2.0.1.x86_64
+--> Processing Dependency: libpython3.8.so.1.0()(64bit) for package: python38-3.8.20-1.amzn2.0.1.x86_64
+--> Running transaction check
+---> Package python38-libs.x86_64 0:3.8.20-1.amzn2.0.1 will be installed
+---> Package python38-pip.noarch 0:21.0.1-4.amzn2.0.5 will be installed
+---> Package python38-setuptools.noarch 0:38.4.0-4.amzn2.0.3 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package              Arch    Version               Repository             Size
+================================================================================
+Installing:
+ python38             x86_64  3.8.20-1.amzn2.0.1    amzn2extra-python3.8   71 k
+Installing for dependencies:
+ python38-libs        x86_64  3.8.20-1.amzn2.0.1    amzn2extra-python3.8   10 M
+ python38-pip         noarch  21.0.1-4.amzn2.0.5    amzn2extra-python3.8  2.1 M
+ python38-setuptools  noarch  38.4.0-4.amzn2.0.3    amzn2extra-python3.8  620 k
+
+Transaction Summary
+================================================================================
+Install  1 Package (+3 Dependent packages)
+
+Total download size: 13 M
+Installed size: 54 M
+Downloading packages:
+--------------------------------------------------------------------------------
+Total                                               56 MB/s |  13 MB  00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : python38-setuptools-38.4.0-4.amzn2.0.3.noarch                1/4 
+  Installing : python38-libs-3.8.20-1.amzn2.0.1.x86_64                      2/4 
+  Installing : python38-3.8.20-1.amzn2.0.1.x86_64                           3/4 
+  Installing : python38-pip-21.0.1-4.amzn2.0.5.noarch                       4/4 
+  Verifying  : python38-pip-21.0.1-4.amzn2.0.5.noarch                       1/4 
+  Verifying  : python38-setuptools-38.4.0-4.amzn2.0.3.noarch                2/4 
+  Verifying  : python38-libs-3.8.20-1.amzn2.0.1.x86_64                      3/4 
+  Verifying  : python38-3.8.20-1.amzn2.0.1.x86_64                           4/4 
+
+Installed:
+  python38.x86_64 0:3.8.20-1.amzn2.0.1                                          
+
+Dependency Installed:
+  python38-libs.x86_64 0:3.8.20-1.amzn2.0.1                                     
+  python38-pip.noarch 0:21.0.1-4.amzn2.0.5                                      
+  python38-setuptools.noarch 0:38.4.0-4.amzn2.0.3                               
+
+Complete!
+  2  httpd_modules            available    [ =1.0  =stable ]
+  3  memcached1.5             available    \
+        [ =1.5.1  =1.5.16  =1.5.17 ]
+  9  R3.4                     available    [ =3.4.3  =stable ]
+ 18  libreoffice              available    \
+        [ =5.0.6.2_15  =5.3.6.1  =stable ]
+ 19  gimp                     available    [ =2.8.22 ]
+ 20  docker=latest            enabled      \
+        [ =17.12.1  =18.03.1  =18.06.1  =18.09.9  =stable ]
+ 21  mate-desktop1.x          available    \
+        [ =1.19.0  =1.20.0  =stable ]
+ 22  GraphicsMagick1.3        available    \
+        [ =1.3.29  =1.3.32  =1.3.34  =stable ]
+ 25  testing                  available    [ =1.0  =stable ]
+ 26  ecs                      available    [ =stable ]
+ 27  corretto8                available    \
+        [ =1.8.0_192  =1.8.0_202  =1.8.0_212  =1.8.0_222  =1.8.0_232
+          =1.8.0_242  =stable ]
+ 32  lustre2.10               available    \
+        [ =2.10.5  =2.10.8  =stable ]
+ 34  lynis                    available    [ =stable ]
+ 36  BCC                      available    [ =0.x  =stable ]
+ 37  mono                     available    [ =5.x  =stable ]
+ 38  nginx1                   available    [ =stable ]
+ 40  mock                     available    [ =stable ]
+ 43  livepatch                available    [ =stable ]
+ 44 *python3.8=latest         enabled      [ =stable ]
+ 45  haproxy2                 available    [ =stable ]
+ 46  collectd                 available    [ =stable ]
+ 47  aws-nitro-enclaves-cli   available    [ =stable ]
+ 48  R4                       available    [ =stable ]
+ 49  kernel-5.4               available    [ =stable ]
+ 50  selinux-ng               available    [ =stable ]
+ 52  tomcat9                  available    [ =stable ]
+ 55  kernel-5.10              available    [ =stable ]
+ 60  mock2                    available    [ =stable ]
+ 62  kernel-5.15              available    [ =stable ]
+ 63  postgresql14             available    [ =stable ]
+ 64  firefox                  available    [ =stable ]
+ 65  lustre                   available    [ =stable ]
+ 67  awscli1                  available    [ =stable ]
+ 68  php8.2                   available    [ =stable ]
+ 69  dnsmasq                  available    [ =stable ]
+ 70  unbound1.17              available    [ =stable ]
+ 72  collectd-python3         available    [ =stable ]
+* Extra topic has reached end of support.
+++ command -v python3.8
++ PYTHON=/usr/bin/python3.8
+++ /usr/bin/python3.8 --version
++ echo 'Using Python: /usr/bin/python3.8 (Python 3.8.20)'
+Using Python: /usr/bin/python3.8 (Python 3.8.20)
++ /usr/bin/python3.8 -m ensurepip --upgrade
+Looking in links: /tmp/tmpft_3y4sx
+Requirement already satisfied: setuptools in /usr/lib/python3.8/site-packages (38.4.0)
+Processing /tmp/tmpft_3y4sx/setuptools-56.0.0-py3-none-any.whl
+Requirement already satisfied: pip in /usr/lib/python3.8/site-packages (21.0.1)
+Processing /tmp/tmpft_3y4sx/pip-23.0.1-py3-none-any.whl
+Installing collected packages: setuptools, pip
+  Attempting uninstall: setuptools
+    Found existing installation: setuptools 38.4.0
+    Uninstalling setuptools-38.4.0:
+      Successfully uninstalled setuptools-38.4.0
+  Attempting uninstall: pip
+    Found existing installation: pip 21.0.1
+    Uninstalling pip-21.0.1:
+      Successfully uninstalled pip-21.0.1
+Successfully installed pip-23.0.1 setuptools-56.0.0
++ /usr/bin/python3.8 -m pip install --upgrade pip
+Requirement already satisfied: pip in /usr/local/lib/python3.8/site-packages (23.0.1)
+Collecting pip
+  Downloading pip-25.0.1-py3-none-any.whl (1.8 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 139.1 MB/s eta 0:00:00
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 23.0.1
+    Uninstalling pip-23.0.1:
+      Successfully uninstalled pip-23.0.1
+Successfully installed pip-25.0.1
++ /usr/bin/python3.8 -m pip install sympy==1.13.3 numpy scipy gmpy2 mpmath
+Collecting sympy==1.13.3
+  Downloading sympy-1.13.3-py3-none-any.whl.metadata (12 kB)
+Collecting numpy
+  Downloading numpy-1.24.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.6 kB)
+Collecting scipy
+  Downloading scipy-1.10.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (58 kB)
+Collecting gmpy2
+  Downloading gmpy2-2.2.2-cp38-cp38-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (3.3 kB)
+Collecting mpmath
+  Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Downloading sympy-1.13.3-py3-none-any.whl (6.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.2/6.2 MB 96.4 MB/s eta 0:00:00
+Downloading numpy-1.24.4-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (17.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 17.3/17.3 MB 86.9 MB/s eta 0:00:00
+Downloading scipy-1.10.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (34.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 34.5/34.5 MB 149.4 MB/s eta 0:00:00
+Downloading gmpy2-2.2.2-cp38-cp38-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 106.4 MB/s eta 0:00:00
+Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 69.1 MB/s eta 0:00:00
+Installing collected packages: mpmath, sympy, numpy, gmpy2, scipy
+Successfully installed gmpy2-2.2.2 mpmath-1.3.0 numpy-1.24.4 scipy-1.10.1 sympy-1.13.3
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
++ echo '=== Step 2: Checking versions ==='
+=== Step 2: Checking versions ===
++ /usr/bin/python3.8 -c 'import sympy; print('\''SymPy:'\'', sympy.__version__)'
+SymPy: 1.13.3
++ /usr/bin/python3.8 -c 'import gmpy2; print('\''gmpy2:'\'', gmpy2.version())'
+gmpy2: 2.2.2
++ /usr/bin/python3.8 -c 'import numpy; print('\''NumPy:'\'', numpy.__version__)'
+NumPy: 1.24.4
++ /usr/bin/python3.8 -c 'import mpmath; print('\''mpmath:'\'', mpmath.__version__)'
+mpmath: 1.3.0
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 25.4 KiB/25.4 KiB (291.8 KiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T07:46:20Z", "uptime": " 07:46:20 up 1 min,  0 users,  load average: 0.71, 0.20, 0.07"}'
++ echo '=== Step 3: Pulling code from S3 ==='
+=== Step 3: Pulling code from S3 ===
++ mkdir -p /opt/3body/nbody
++ aws s3 sync s3://3body-compute-290318/code/nbody/ /opt/3body/nbody/ --exclude '*.npy' --exclude '*.npz' --exclude '*.pkl' --exclude 'checkpoints_*/*'
+Completed 34.5 KiB/~1.1 MiB (489.5 KiB/s) with ~21 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/__pycache__/helium_atlas.cpython-313.pyc to opt/3body/nbody/__pycache__/helium_atlas.cpython-313.pyc
+Completed 34.5 KiB/~1.1 MiB (489.5 KiB/s) with ~20 file(s) remaining (calculating...)Completed 79.1 KiB/~1.1 MiB (1.0 MiB/s) with ~21 file(s) remaining (calculating...)  download: s3://3body-compute-290318/code/nbody/__pycache__/exact_growth_nbody.cpython-313.pyc to opt/3body/nbody/__pycache__/exact_growth_nbody.cpython-313.pyc
+Completed 79.1 KiB/~1.1 MiB (1.0 MiB/s) with ~20 file(s) remaining (calculating...)Completed 90.0 KiB/~2.5 MiB (1.0 MiB/s) with ~27 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/README.md to opt/3body/nbody/README.md
+Completed 90.0 KiB/~2.5 MiB (1.0 MiB/s) with ~26 file(s) remaining (calculating...)Completed 90.2 KiB/~2.5 MiB (1011.8 KiB/s) with ~26 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/atlas_helium_d2/checkpoint.json to opt/3body/nbody/atlas_helium_d2/checkpoint.json
+Completed 90.2 KiB/~2.8 MiB (1011.8 KiB/s) with ~26 file(s) remaining (calculating...)Completed 135.0 KiB/~5.2 MiB (1.3 MiB/s) with ~37 file(s) remaining (calculating...)  download: s3://3body-compute-290318/code/nbody/bell_test.py to opt/3body/nbody/bell_test.py
+Completed 135.0 KiB/~5.6 MiB (1.3 MiB/s) with ~37 file(s) remaining (calculating...)Completed 231.0 KiB/~5.9 MiB (1.9 MiB/s) with ~51 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/atlas_helium_d2/helium_gap_comparison.png to opt/3body/nbody/atlas_helium_d2/helium_gap_comparison.png
+Completed 231.0 KiB/~5.9 MiB (1.9 MiB/s) with ~50 file(s) remaining (calculating...)Completed 384.0 KiB/~6.0 MiB (2.9 MiB/s) with ~53 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/bell_test_results/body_locality_gradients.png to opt/3body/nbody/bell_test_results/body_locality_gradients.png
+Completed 384.0 KiB/~6.0 MiB (2.9 MiB/s) with ~52 file(s) remaining (calculating...)Completed 538.9 KiB/~6.0 MiB (4.1 MiB/s) with ~52 file(s) remaining (calculating...)Completed 539.2 KiB/~6.0 MiB (4.0 MiB/s) with ~52 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/atlas_helium_d2/helium_orbits_atlas.png to opt/3body/nbody/atlas_helium_d2/helium_orbits_atlas.png
+Completed 539.2 KiB/~6.0 MiB (4.0 MiB/s) with ~51 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/atlas_helium_d2/config.json to opt/3body/nbody/atlas_helium_d2/config.json
+Completed 539.2 KiB/~6.0 MiB (4.0 MiB/s) with ~51 file(s) remaining (calculating...)Completed 542.9 KiB/~6.2 MiB (3.7 MiB/s) with ~57 file(s) remaining (calculating...)download: s3://3body-compute-290318/code/nbody/bell_test_results/chsh_summary.json to opt/3body/nbody/bell_test_results/chsh_summary.json
+Completed 542.9 KiB/~6.2 MiB (3.7 MiB/s) with ~57 file(s) remaining (calculating...)Completed 628.8 KiB/6.6 MiB (3.9 MiB/s) with 67 file(s) remaining                   download: s3://3body-compute-290318/code/nbody/bell_test_results/chsh_sweep_variant3.png to opt/3body/nbody/bell_test_results/chsh_sweep_variant3.png
+Completed 628.8 KiB/6.6 MiB (3.9 MiB/s) with 66 file(s) remainingCompleted 715.4 KiB/6.6 MiB (4.4 MiB/s) with 66 file(s) remainingCompleted 780.6 KiB/6.6 MiB (4.8 MiB/s) with 66 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/atlas_helium_d2/helium_vs_attractive.png to opt/3body/nbody/atlas_helium_d2/helium_vs_attractive.png
+Completed 780.6 KiB/6.6 MiB (4.8 MiB/s) with 65 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/bell_test_results/chsh_sweep_variant1.png to opt/3body/nbody/bell_test_results/chsh_sweep_variant1.png
+Completed 780.6 KiB/6.6 MiB (4.8 MiB/s) with 64 file(s) remainingCompleted 780.9 KiB/6.6 MiB (4.6 MiB/s) with 64 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/bell_test_results/n2_algebra_summary.txt to opt/3body/nbody/bell_test_results/n2_algebra_summary.txt
+Completed 780.9 KiB/6.6 MiB (4.6 MiB/s) with 63 file(s) remainingCompleted 924.6 KiB/6.6 MiB (4.9 MiB/s) with 63 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/bell_test_results/projection_distributions.png to opt/3body/nbody/bell_test_results/projection_distributions.png
+Completed 924.6 KiB/6.6 MiB (4.9 MiB/s) with 62 file(s) remainingCompleted 955.0 KiB/6.6 MiB (5.0 MiB/s) with 62 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/composite_level3_output.txt to opt/3body/nbody/composite_level3_output.txt
+Completed 955.0 KiB/6.6 MiB (5.0 MiB/s) with 61 file(s) remainingCompleted 997.5 KiB/6.6 MiB (5.1 MiB/s) with 61 file(s) remainingCompleted 1010.8 KiB/6.6 MiB (5.1 MiB/s) with 61 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/exact_growth_nbody.py to opt/3body/nbody/exact_growth_nbody.py
+Completed 1010.8 KiB/6.6 MiB (5.1 MiB/s) with 60 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/expansion_configs.py to opt/3body/nbody/expansion_configs.py
+Completed 1010.8 KiB/6.6 MiB (5.1 MiB/s) with 59 file(s) remainingCompleted 1.0 MiB/6.6 MiB (5.1 MiB/s) with 59 file(s) remaining   download: s3://3body-compute-290318/code/nbody/expansion_analysis.py to opt/3body/nbody/expansion_analysis.py
+Completed 1.0 MiB/6.6 MiB (5.1 MiB/s) with 58 file(s) remainingCompleted 1.1 MiB/6.6 MiB (5.0 MiB/s) with 58 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/bell_test_results/chsh_sweep_variant2.png to opt/3body/nbody/bell_test_results/chsh_sweep_variant2.png
+Completed 1.1 MiB/6.6 MiB (5.0 MiB/s) with 57 file(s) remainingCompleted 1.3 MiB/6.6 MiB (5.8 MiB/s) with 57 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_correlation_scatter.png to opt/3body/nbody/helium_comparison/gap_correlation_scatter.png
+Completed 1.3 MiB/6.6 MiB (5.8 MiB/s) with 56 file(s) remainingCompleted 1.5 MiB/6.6 MiB (6.1 MiB/s) with 56 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_2e-03.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_2e-03.png
+Completed 1.5 MiB/6.6 MiB (6.1 MiB/s) with 55 file(s) remainingCompleted 1.5 MiB/6.6 MiB (5.9 MiB/s) with 55 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/comparison_summary.txt to opt/3body/nbody/helium_comparison/comparison_summary.txt
+Completed 1.5 MiB/6.6 MiB (5.9 MiB/s) with 54 file(s) remainingCompleted 1.6 MiB/6.6 MiB (5.8 MiB/s) with 54 file(s) remainingCompleted 1.8 MiB/6.6 MiB (6.6 MiB/s) with 54 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_1e-03.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_1e-03.png
+Completed 1.8 MiB/6.6 MiB (6.6 MiB/s) with 53 file(s) remainingCompleted 2.0 MiB/6.6 MiB (7.5 MiB/s) with 53 file(s) remainingCompleted 2.3 MiB/6.6 MiB (8.3 MiB/s) with 53 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/charge_sensitivity_sweep.py to opt/3body/nbody/charge_sensitivity_sweep.py
+Completed 2.3 MiB/6.6 MiB (8.3 MiB/s) with 52 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_1e-04.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_1e-04.png
+Completed 2.3 MiB/6.6 MiB (8.3 MiB/s) with 51 file(s) remainingCompleted 2.3 MiB/6.6 MiB (8.4 MiB/s) with 51 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_2e-04.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_2e-04.png
+Completed 2.3 MiB/6.6 MiB (8.4 MiB/s) with 50 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_atlas.py to opt/3body/nbody/helium_atlas.py
+Completed 2.3 MiB/6.6 MiB (8.4 MiB/s) with 49 file(s) remainingCompleted 2.5 MiB/6.6 MiB (8.5 MiB/s) with 49 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_5e-04.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_5e-04.png
+Completed 2.5 MiB/6.6 MiB (8.5 MiB/s) with 48 file(s) remainingCompleted 2.8 MiB/6.6 MiB (9.0 MiB/s) with 48 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_landscape_eps_5e-03.png to opt/3body/nbody/helium_comparison/gap_landscape_eps_5e-03.png
+Completed 2.8 MiB/6.6 MiB (9.0 MiB/s) with 47 file(s) remainingCompleted 2.9 MiB/6.6 MiB (9.4 MiB/s) with 47 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/helium_orbits_atlas.png to opt/3body/nbody/helium_comparison/helium_orbits_atlas.png
+Completed 2.9 MiB/6.6 MiB (9.4 MiB/s) with 46 file(s) remainingCompleted 3.2 MiB/6.6 MiB (9.6 MiB/s) with 46 file(s) remainingCompleted 3.2 MiB/6.6 MiB (9.6 MiB/s) with 46 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_correlation_scatter.png to opt/3body/nbody/helium_comparison_1_r2/gap_correlation_scatter.png
+Completed 3.2 MiB/6.6 MiB (9.6 MiB/s) with 45 file(s) remainingCompleted 3.5 MiB/6.6 MiB (10.2 MiB/s) with 45 file(s) remainingCompleted 3.6 MiB/6.6 MiB (10.6 MiB/s) with 45 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/gap_vs_epsilon_profiles.png to opt/3body/nbody/helium_comparison/gap_vs_epsilon_profiles.png
+Completed 3.6 MiB/6.6 MiB (10.6 MiB/s) with 44 file(s) remainingCompleted 3.9 MiB/6.6 MiB (11.1 MiB/s) with 44 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_1e-04.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_1e-04.png
+Completed 3.9 MiB/6.6 MiB (11.1 MiB/s) with 43 file(s) remainingCompleted 4.1 MiB/6.6 MiB (11.5 MiB/s) with 43 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison/sv_spectra_comparison.png to opt/3body/nbody/helium_comparison/sv_spectra_comparison.png
+Completed 4.1 MiB/6.6 MiB (11.5 MiB/s) with 42 file(s) remainingCompleted 4.3 MiB/6.6 MiB (11.9 MiB/s) with 42 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_5e-03.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_5e-03.png
+Completed 4.3 MiB/6.6 MiB (11.9 MiB/s) with 41 file(s) remainingCompleted 4.5 MiB/6.6 MiB (12.3 MiB/s) with 41 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_2e-04.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_2e-04.png
+Completed 4.5 MiB/6.6 MiB (12.3 MiB/s) with 40 file(s) remainingCompleted 4.7 MiB/6.6 MiB (12.8 MiB/s) with 40 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_1e-03.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_1e-03.png
+Completed 4.7 MiB/6.6 MiB (12.8 MiB/s) with 39 file(s) remainingCompleted 4.7 MiB/6.6 MiB (12.7 MiB/s) with 39 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/n4_potential_universality_results.json to opt/3body/nbody/n4_potential_universality_results.json
+Completed 4.7 MiB/6.6 MiB (12.7 MiB/s) with 38 file(s) remainingCompleted 4.7 MiB/6.6 MiB (12.5 MiB/s) with 38 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/n_body_scaling_results.json to opt/3body/nbody/n_body_scaling_results.json
+Completed 4.7 MiB/6.6 MiB (12.5 MiB/s) with 37 file(s) remainingCompleted 5.0 MiB/6.6 MiB (12.8 MiB/s) with 37 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_2e-03.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_2e-03.png
+Completed 5.0 MiB/6.6 MiB (12.8 MiB/s) with 36 file(s) remainingCompleted 5.0 MiB/6.6 MiB (12.2 MiB/s) with 36 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n4_d1.py to opt/3body/nbody/run_n4_d1.py
+Completed 5.0 MiB/6.6 MiB (12.2 MiB/s) with 35 file(s) remainingCompleted 5.0 MiB/6.6 MiB (12.1 MiB/s) with 35 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/comparison_summary.txt to opt/3body/nbody/helium_comparison_1_r2/comparison_summary.txt
+Completed 5.0 MiB/6.6 MiB (12.1 MiB/s) with 34 file(s) remainingCompleted 5.0 MiB/6.6 MiB (12.0 MiB/s) with 34 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_helium.py to opt/3body/nbody/run_helium.py
+Completed 5.0 MiB/6.6 MiB (12.0 MiB/s) with 33 file(s) remainingCompleted 5.2 MiB/6.6 MiB (12.3 MiB/s) with 33 file(s) remainingCompleted 5.2 MiB/6.6 MiB (12.3 MiB/s) with 33 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/pn_mass_level3_output.txt to opt/3body/nbody/pn_mass_level3_output.txt
+Completed 5.2 MiB/6.6 MiB (12.3 MiB/s) with 32 file(s) remainingCompleted 5.4 MiB/6.6 MiB (12.6 MiB/s) with 32 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_vs_epsilon_profiles.png to opt/3body/nbody/helium_comparison_1_r2/gap_vs_epsilon_profiles.png
+Completed 5.4 MiB/6.6 MiB (12.6 MiB/s) with 31 file(s) remainingCompleted 5.4 MiB/6.6 MiB (12.5 MiB/s) with 31 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_composite_test.py to opt/3body/nbody/run_composite_test.py
+Completed 5.4 MiB/6.6 MiB (12.5 MiB/s) with 30 file(s) remainingCompleted 5.6 MiB/6.6 MiB (12.9 MiB/s) with 30 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/gap_landscape_eps_5e-04.png to opt/3body/nbody/helium_comparison_1_r2/gap_landscape_eps_5e-04.png
+Completed 5.6 MiB/6.6 MiB (12.9 MiB/s) with 29 file(s) remainingCompleted 5.6 MiB/6.6 MiB (12.8 MiB/s) with 29 file(s) remainingCompleted 5.7 MiB/6.6 MiB (12.8 MiB/s) with 29 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n4_d2.py to opt/3body/nbody/run_n4_d2.py
+Completed 5.7 MiB/6.6 MiB (12.8 MiB/s) with 28 file(s) remainingCompleted 5.9 MiB/6.6 MiB (13.3 MiB/s) with 28 file(s) remainingCompleted 5.9 MiB/6.6 MiB (13.3 MiB/s) with 28 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_expansion_dimseq.py to opt/3body/nbody/run_expansion_dimseq.py
+Completed 5.9 MiB/6.6 MiB (13.3 MiB/s) with 27 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/helium_comparison_1_r2/sv_spectra_comparison.png to opt/3body/nbody/helium_comparison_1_r2/sv_spectra_comparison.png
+Completed 5.9 MiB/6.6 MiB (13.3 MiB/s) with 26 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/pn_level3_output.txt to opt/3body/nbody/pn_level3_output.txt
+Completed 5.9 MiB/6.6 MiB (13.3 MiB/s) with 25 file(s) remainingCompleted 5.9 MiB/6.6 MiB (13.0 MiB/s) with 25 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n4_d3.py to opt/3body/nbody/run_n4_d3.py
+Completed 5.9 MiB/6.6 MiB (13.0 MiB/s) with 24 file(s) remainingCompleted 5.9 MiB/6.6 MiB (12.8 MiB/s) with 24 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n_scaling_aws.py to opt/3body/nbody/run_n_scaling_aws.py
+Completed 5.9 MiB/6.6 MiB (12.8 MiB/s) with 23 file(s) remainingCompleted 5.9 MiB/6.6 MiB (12.7 MiB/s) with 23 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n4_mass.py to opt/3body/nbody/run_n4_mass.py
+Completed 5.9 MiB/6.6 MiB (12.7 MiB/s) with 22 file(s) remainingCompleted 5.9 MiB/6.6 MiB (12.7 MiB/s) with 22 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_pn_aws.py to opt/3body/nbody/run_pn_aws.py
+Completed 5.9 MiB/6.6 MiB (12.7 MiB/s) with 21 file(s) remainingCompleted 6.0 MiB/6.6 MiB (12.3 MiB/s) with 21 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_pn_mass_test.py to opt/3body/nbody/run_pn_mass_test.py
+Completed 6.0 MiB/6.6 MiB (12.3 MiB/s) with 20 file(s) remainingCompleted 6.0 MiB/6.6 MiB (12.2 MiB/s) with 20 file(s) remainingCompleted 6.0 MiB/6.6 MiB (12.3 MiB/s) with 20 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_potential_1r3.py to opt/3body/nbody/run_potential_1r3.py
+Completed 6.0 MiB/6.6 MiB (12.3 MiB/s) with 19 file(s) remainingCompleted 6.0 MiB/6.6 MiB (12.2 MiB/s) with 19 file(s) remainingCompleted 6.0 MiB/6.6 MiB (12.2 MiB/s) with 19 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N2_d2.png to opt/3body/nbody/svd_spectrum_N2_d2.png
+Completed 6.0 MiB/6.6 MiB (12.2 MiB/s) with 18 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n_scaling_probe.py to opt/3body/nbody/run_n_scaling_probe.py
+Completed 6.0 MiB/6.6 MiB (12.2 MiB/s) with 17 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_n4_potential_universality.py to opt/3body/nbody/run_n4_potential_universality.py
+Completed 6.0 MiB/6.6 MiB (12.2 MiB/s) with 16 file(s) remainingCompleted 6.0 MiB/6.6 MiB (12.0 MiB/s) with 16 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/structure_cross_section.py to opt/3body/nbody/structure_cross_section.py
+Completed 6.0 MiB/6.6 MiB (12.0 MiB/s) with 15 file(s) remainingCompleted 6.1 MiB/6.6 MiB (11.8 MiB/s) with 15 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N3_d1.png to opt/3body/nbody/svd_spectrum_N3_d1.png
+Completed 6.1 MiB/6.6 MiB (11.8 MiB/s) with 14 file(s) remainingCompleted 6.1 MiB/6.6 MiB (11.2 MiB/s) with 14 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N6_d1.png to opt/3body/nbody/svd_spectrum_N6_d1.png
+Completed 6.1 MiB/6.6 MiB (11.2 MiB/s) with 13 file(s) remainingCompleted 6.2 MiB/6.6 MiB (11.2 MiB/s) with 13 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N4_d3.png to opt/3body/nbody/svd_spectrum_N4_d3.png
+Completed 6.2 MiB/6.6 MiB (11.2 MiB/s) with 12 file(s) remainingCompleted 6.2 MiB/6.6 MiB (11.2 MiB/s) with 12 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N8_d1.png to opt/3body/nbody/svd_spectrum_N8_d1.png
+Completed 6.2 MiB/6.6 MiB (11.2 MiB/s) with 11 file(s) remainingCompleted 6.2 MiB/6.6 MiB (11.1 MiB/s) with 11 file(s) remainingCompleted 6.2 MiB/6.6 MiB (11.2 MiB/s) with 11 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/run_post_newtonian.py to opt/3body/nbody/run_post_newtonian.py
+Completed 6.2 MiB/6.6 MiB (11.2 MiB/s) with 10 file(s) remainingCompleted 6.3 MiB/6.6 MiB (11.2 MiB/s) with 10 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N5_d1.png to opt/3body/nbody/svd_spectrum_N5_d1.png
+Completed 6.3 MiB/6.6 MiB (11.2 MiB/s) with 9 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N4_d1.png to opt/3body/nbody/svd_spectrum_N4_d1.png
+Completed 6.3 MiB/6.6 MiB (11.2 MiB/s) with 8 file(s) remainingCompleted 6.3 MiB/6.6 MiB (11.2 MiB/s) with 8 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N7_d1.png to opt/3body/nbody/svd_spectrum_N7_d1.png
+Completed 6.3 MiB/6.6 MiB (11.2 MiB/s) with 7 file(s) remainingCompleted 6.4 MiB/6.6 MiB (11.2 MiB/s) with 7 file(s) remainingCompleted 6.4 MiB/6.6 MiB (11.3 MiB/s) with 7 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N3_d3.png to opt/3body/nbody/svd_spectrum_N3_d3.png
+Completed 6.4 MiB/6.6 MiB (11.3 MiB/s) with 6 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N3_d2.png to opt/3body/nbody/svd_spectrum_N3_d2.png
+Completed 6.4 MiB/6.6 MiB (11.3 MiB/s) with 5 file(s) remainingCompleted 6.5 MiB/6.6 MiB (11.4 MiB/s) with 5 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N4_d2.png to opt/3body/nbody/svd_spectrum_N4_d2.png
+Completed 6.5 MiB/6.6 MiB (11.4 MiB/s) with 4 file(s) remainingCompleted 6.5 MiB/6.6 MiB (11.4 MiB/s) with 4 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/svd_spectrum_N9_d1.png to opt/3body/nbody/svd_spectrum_N9_d1.png
+Completed 6.5 MiB/6.6 MiB (11.4 MiB/s) with 3 file(s) remainingCompleted 6.6 MiB/6.6 MiB (11.1 MiB/s) with 3 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/symbolic_gram_sweep.py to opt/3body/nbody/symbolic_gram_sweep.py
+Completed 6.6 MiB/6.6 MiB (11.1 MiB/s) with 2 file(s) remainingCompleted 6.6 MiB/6.6 MiB (10.8 MiB/s) with 2 file(s) remainingCompleted 6.6 MiB/6.6 MiB (10.8 MiB/s) with 2 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/validate_n3.py to opt/3body/nbody/validate_n3.py
+Completed 6.6 MiB/6.6 MiB (10.8 MiB/s) with 1 file(s) remainingdownload: s3://3body-compute-290318/code/nbody/symbolic_rank_nbody.py to opt/3body/nbody/symbolic_rank_nbody.py
++ echo 'Key files:'
+Key files:
++ ls -la /opt/3body/nbody/symbolic_gram_sweep.py
+-rw-r--r-- 1 root root 29343 Apr  9 07:45 /opt/3body/nbody/symbolic_gram_sweep.py
++ ls -la /opt/3body/nbody/symbolic_rank_nbody.py
+-rw-r--r-- 1 root root 30273 Apr  9 05:52 /opt/3body/nbody/symbolic_rank_nbody.py
++ ls -la /opt/3body/nbody/exact_growth_nbody.py
+-rw-r--r-- 1 root root 43450 Apr  9 05:52 /opt/3body/nbody/exact_growth_nbody.py
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 46.7 KiB/46.7 KiB (528.9 KiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T07:46:22Z", "uptime": " 07:46:22 up 1 min,  0 users,  load average: 0.71, 0.20, 0.07"}'
++ echo '=== Step 4: Create results directory ==='
+=== Step 4: Create results directory ===
++ mkdir -p /opt/3body/nbody/results/symbolic_gram_sweep
++ echo '=== Step 5: Background sync (every 5 min) ==='
+=== Step 5: Background sync (every 5 min) ===
++ SYNC_PID=3353
++ cd /opt/3body/nbody
++ echo '=== Step 6a: Running 1/r Gram sweep ==='
+=== Step 6a: Running 1/r Gram sweep ===
++ echo 'Command: /usr/bin/python3.8 -u symbolic_gram_sweep.py --potential 1/r --n-mu 200 --max-level 2'
+Command: /usr/bin/python3.8 -u symbolic_gram_sweep.py --potential 1/r --n-mu 200 --max-level 2
++ true
++ sleep 300
+++ date -u
++ echo '=== Thu Apr  9 07:46:23 UTC 2026 ==='
+=== Thu Apr  9 07:46:23 UTC 2026 ===
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 48.0 KiB/48.0 KiB (859.7 KiB/s) with 1 file(s) remainingupload: ../../../var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T07:46:23Z", "uptime": " 07:46:23 up 1 min,  0 users,  load average: 0.71, 0.20, 0.07"}'
++ MAIN_PID=3373
++ wait 3373
++ /usr/bin/python3.8 -u symbolic_gram_sweep.py --potential 1/r --n-mu 200 --max-level 2
+======================================================================
+SYMBOLIC GRAM DETERMINANT SWEEP
+======================================================================
+Potential: 1/r
+mu range: [0.05, 5.0], 200 points
+phi: pi/3 (pi/3)
+Max level: 2
+
+--- Step 1: Building symbolic generators ---
+Building generators: N=3, d=2, potential=1/r, max_level=2
+
+--- Level 0: 3 Pairwise Hamiltonians ---
+  H12: 5 terms
+  H13: 5 terms
+  H23: 5 terms
+
+--- Level 1: Brackets of 3 Hamiltonians ---
+  {H12,H13} -> 8 terms [0.0s]
+  {H12,H23} -> 8 terms [0.0s]
+  {H13,H23} -> 8 terms [0.0s]
+
+--- Level 2 ---
+  [   1] {{H12,H13},H12}  bracket 0.0s  simplify 0.1s  -> 54 terms
+  [   2] {{H12,H13},H13}  bracket 0.0s  simplify 0.0s  -> 54 terms
+  [   3] {{H12,H13},H23}  bracket 0.0s  simplify 0.0s  -> 32 terms
+  [   4] {{H12,H13},{H12,H23}}  bracket 0.0s  simplify 0.1s  -> 112 terms
+  [   5] {{H12,H13},{H13,H23}}  bracket 0.0s  simplify 0.1s  -> 112 terms
+  [   6] {{H12,H23},H12}  bracket 0.0s  simplify 0.1s  -> 54 terms
+  [   7] {{H12,H23},H13}  bracket 0.0s  simplify 0.0s  -> 32 terms
+  [   8] {{H12,H23},H23}  bracket 0.0s  simplify 0.0s  -> 54 terms
+  [   9] {{H12,H23},{H13,H23}}  bracket 0.0s  simplify 0.1s  -> 112 terms
+  [  10] {{H13,H23},H12}  bracket 0.0s  simplify 0.0s  -> 32 terms
+  [  11] {{H13,H23},H13}  bracket 0.0s  simplify 0.1s  -> 54 terms
+  [  12] {{H13,H23},H23}  bracket 0.0s  simplify 0.0s  -> 54 terms
+  Level 2: 12 candidates in 0.9s
+
+Total generators: 18 in 0.9s
+  18 generators through level 2 [0.9s]
+
+--- Step 2: Determining rank and selecting basis ---
+
+Extracting monomial-coefficient matrix...
+  Processed 18/18 generators, 531 distinct monomials so far
+  Matrix dimensions: 18 x 531
+  Non-zero entries: 795
+  Density: 0.0832
+  Extraction time: 0.3s
+
+  Rank through level 0 (3 generators x 531 monomials)... rank = 3  [0.0s]
+
+  Rank through level 1 (6 generators x 531 monomials)... rank = 6  [0.0s]
+
+  Rank through level 2 (18 generators x 531 monomials)... rank = 17  [0.0s]
+  Rank: 17
+
+  Selecting basis of 17 independent generators... done [0.1s]
+    Selected generators: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]...
+  Selected 17 basis generators
+
+--- Step 3: Building configuration substitution ---
+  Substitution has 9 replacements
+    x1 -> 0
+    y1 -> 0
+    x2 -> 1
+    y2 -> 0
+    x3 -> mu/2
+    y3 -> sqrt(3)*mu/2
+    u12 -> 1
+    u13 -> 1/mu
+    u23 -> 1/sqrt(mu**2 - mu + 1)
+
+--- Step 4: Substituting into basis generators ---
+  [1/17] H12: 5 p-monomials [0.0s]
+  [2/17] H13: 5 p-monomials [0.0s]
+  [3/17] H23: 5 p-monomials [0.0s]
+  [4/17] {H12,H13}: 2 p-monomials [0.0s]
+  [5/17] {H12,H23}: 2 p-monomials [0.1s]
+  [6/17] {H13,H23}: 2 p-monomials [0.1s]
+  [7/17] {{H12,H13},H12}: 6 p-monomials [0.1s]
+  [8/17] {{H12,H13},H13}: 8 p-monomials [0.1s]
+  [9/17] {{H12,H13},H23}: 6 p-monomials [0.1s]
+  [10/17] {{H12,H13},{H12,H23}}: 4 p-monomials [0.1s]
+  [11/17] {{H12,H13},{H13,H23}}: 4 p-monomials [0.1s]
+  [12/17] {{H12,H23},H12}: 6 p-monomials [0.2s]
+  [13/17] {{H12,H23},H13}: 6 p-monomials [0.2s]
+  [14/17] {{H12,H23},H23}: 8 p-monomials [0.3s]
+  [15/17] {{H12,H23},{H13,H23}}: 4 p-monomials [0.8s]
+  [16/17] {{H13,H23},H13}: 8 p-monomials [0.8s]
+  [17/17] {{H13,H23},H23}: 8 p-monomials [0.9s]
+
+--- Step 5: Computing symbolic norms ---
+  [1/17] ||H12||^2 : 1 terms [0.0s]
+  [2/17] ||H13||^2 : 1 terms [0.0s]
+  [3/17] ||H23||^2 : 1 terms [0.0s]
+  [4/17] ||{H12,H13}||^2 : 1 terms [0.0s]
+  [5/17] ||{H12,H23}||^2 : 1 terms [0.0s]
+  [6/17] ||{H13,H23}||^2 : 1 terms [0.1s]
+  [7/17] ||{{H12,H13},H12}||^2 : 1 terms [0.1s]
+  [8/17] ||{{H12,H13},H13}||^2 : 1 terms [0.1s]
+  [9/17] ||{{H12,H13},H23}||^2 : 1 terms [0.1s]
+  [10/17] ||{{H12,H13},{H12,H23}}||^2 : 1 terms [0.1s]
+  [11/17] ||{{H12,H13},{H13,H23}}||^2 : 1 terms [0.3s]
+  [12/17] ||{{H12,H23},H12}||^2 : 1 terms [0.6s]
+  [13/17] ||{{H12,H23},H13}||^2 : 1 terms [0.7s]
+  [14/17] ||{{H12,H23},H23}||^2 : 1 terms [1.7s]
+  [15/17] ||{{H12,H23},{H13,H23}}||^2 : 1 terms [145.9s]
+  [16/17] ||{{H13,H23},H13}||^2 : 1 terms [147.6s]
+  [17/17] ||{{H13,H23},H23}||^2 : 1 terms [156.3s]
+
+--- Step 6: Computing symbolic Gram matrix ---
+  row 5/17 [3.9s]
+  row 10/17 [10.1s]
+  row 15/17 [23.8s]
+  row 17/17 [29.1s]
+
+  Checking Gram entries for irrational terms...
+    49 entries contain sqrt(mu^2 - mu + 1)
+
+--- Step 7: Computing symbolic Gram determinant (rationalized Bareiss) ---
+  Substituting sqrt(mu^2-mu+1) -> s and extracting rational numer/denom in QQ[mu,s]...
+    row 5/17 [0.5s]
+    row 10/17 [1.1s]
+    row 15/17 [2.4s]
+    row 17/17 [3.3s]
+    114 entries had non-trivial denominators
+  Computing LCM of all denominators...
+    47 distinct denominators
+      [0] 1
+      [1] 2*mu
+      [2] 2*s
+      [3] 2*mu**3
+      [4] 2*mu**4
+      [5] 2*mu**4 - 4*mu**3 + 6*mu**2 - 4*mu + 2
+      [6] 2*mu**8 - 4*mu**7 + 6*mu**6 - 4*mu**5 + 2*mu**4
+      [7] 2*mu**6 - 4*mu**5 + 6*mu**4 - 4*mu**3 + 2*mu**2
+      [8] mu**2
+      [9] 2*mu*s
+  LCM denominator D(mu,s) = mu**20*s**2 - 5*mu**19*s**2 + 15*mu**18*s**2 - 30*mu**17*s**2 + 45*mu**16*s**2 - 51*mu**15*s**2 + 45*mu**14*s**2 - 30*mu**13*s**2 + 15*mu**12*s**2 - 5*mu**11*s**2 + mu**10*s**2
+    D has 11 terms
+    D factored = mu**10*s**2*(mu**2 - mu + 1)**5
+  D(mu) [substituting s->sqrt(w)] = mu**10*(mu**2 - mu + 1)**6
+  Clearing denominators...
+  Reducing G_cleared entries modulo s^2 = mu^2 - mu + 1...
+  Building DomainMatrix over QQ[mu,s]...
+    DomainMatrix constructed [5.5s]
+  Computing det(G_cleared) via Bareiss...
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 54.0 KiB/54.0 KiB (942.1 KiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T07:51:23Z", "uptime": " 07:51:23 up 6 min,  0 users,  load average: 1.00, 0.73, 0.35"}'
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
++ true
++ sleep 300
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 54.8 KiB/54.8 KiB (982.4 KiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T07:56:24Z", "uptime": " 07:56:24 up 11 min,  0 users,  load average: 1.00, 0.91, 0.54"}'
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
++ true
++ sleep 300
+    det computed in 550.7s
+    raw det has 2687 terms
+  Reducing det modulo s^2 = mu^2 - mu + 1...
+    Rational part: 1 terms
+    Irrational coeff (of sqrt(w)): 1 terms
+    sqrt cancels in det -- det is rational!
+  det(G(mu)) = det(G_cleared) / D(mu)^17
+    simplified det has 1 terms
+
+  Factoring numerator and denominator...
+    Numerator factored [0.0s]
+    numer factors = 0
+    Denominator factored = 1
+
+  === SINGULARITY POLYNOMIAL ===
+  Poles (blow-up) at zeros of: 1
+  Zeros (degeneration) at zeros of: 0
+  ================================
+
+  Total Step 7 time: 568.7s
+
+--- Step 8: Evaluating along mu sweep ---
+  Lambdified [0.5s]
+  [1/200] mu=0.0500 ||e||^2_sum=8.1971e+13 cond=inf det=4.9315e+55 [0.0s, ETA 1s]
+  [10/200] mu=0.2739 ||e||^2_sum=3.5125e+06 cond=1.5849e+18 det=5.7825e+16 [0.0s, ETA 1s]
+  [20/200] mu=0.5226 ||e||^2_sum=7.9719e+03 cond=inf det=-1.1412e+05 [0.1s, ETA 1s]
+  [30/200] mu=0.7714 ||e||^2_sum=5.6882e+02 cond=inf det=-7.6647e-06 [0.1s, ETA 1s]
+  [40/200] mu=1.0201 ||e||^2_sum=1.7983e+02 cond=inf det=-4.3958e-20 [0.2s, ETA 1s]
+  [50/200] mu=1.2688 ||e||^2_sum=9.8261e+01 cond=inf det=-1.0054e-16 [0.2s, ETA 1s]
+  [60/200] mu=1.5176 ||e||^2_sum=7.3814e+01 cond=inf det=-6.2571e-19 [0.2s, ETA 1s]
+  [70/200] mu=1.7663 ||e||^2_sum=6.4998e+01 cond=6.7538e+15 det=5.8211e-21 [0.3s, ETA 1s]
+  [80/200] mu=2.0151 ||e||^2_sum=6.1196e+01 cond=1.0733e+16 det=1.3507e-23 [0.3s, ETA 0s]
+  [90/200] mu=2.2638 ||e||^2_sum=5.9294e+01 cond=inf det=-7.3428e-26 [0.4s, ETA 0s]
+  [100/200] mu=2.5126 ||e||^2_sum=5.8232e+01 cond=2.5753e+16 det=2.1549e-28 [0.4s, ETA 0s]
+  [110/200] mu=2.7613 ||e||^2_sum=5.7590e+01 cond=1.7629e+16 det=3.3749e-30 [0.4s, ETA 0s]
+  [120/200] mu=3.0101 ||e||^2_sum=5.7177e+01 cond=inf det=-1.1866e-32 [0.5s, ETA 0s]
+  [130/200] mu=3.2588 ||e||^2_sum=5.6899e+01 cond=inf det=-1.8295e-33 [0.5s, ETA 0s]
+  [140/200] mu=3.5075 ||e||^2_sum=5.6705e+01 cond=1.6816e+16 det=2.7526e-35 [0.6s, ETA 0s]
+  [150/200] mu=3.7563 ||e||^2_sum=5.6564e+01 cond=4.2028e+16 det=3.6186e-37 [0.6s, ETA 0s]
+  [160/200] mu=4.0050 ||e||^2_sum=5.6460e+01 cond=3.2108e+16 det=1.9142e-38 [0.6s, ETA 0s]
+  [170/200] mu=4.2538 ||e||^2_sum=5.6381e+01 cond=inf det=-6.3286e-40 [0.7s, ETA 0s]
+  [180/200] mu=4.5025 ||e||^2_sum=5.6320e+01 cond=3.8566e+16 det=4.4465e-41 [0.7s, ETA 0s]
+  [190/200] mu=4.7513 ||e||^2_sum=5.6272e+01 cond=inf det=-2.6207e-42 [0.8s, ETA 0s]
+  [200/200] mu=5.0000 ||e||^2_sum=5.6233e+01 cond=inf det=-1.9671e-43 [0.8s, ETA 0s]
+
+--- Step 9: Saving results ---
+
+======================================================================
+SYMBOLIC GRAM SWEEP COMPLETE
+  Potential: 1/r
+  200/200 points OK
+  Total time: 758.5s (12.6 min)
+  ||e||^2 sum range: [5.623346e+01, 8.197127e+13]
+  Gram condition range: [2.132446e+15, 6.210482e+18]
+  Gram det range: [-1.005207e+46, 4.931474e+55]
+  Gram rank: [7, 8, 9, 12, 15, 16]
+  Results saved to: results/symbolic_gram_sweep/1r/
+  Gram determinant expression saved (exact in mu)
+  LCM denominator D(mu) = mu**10*(mu**2 - mu + 1)**6
+  det(G) numerator factored = 0
+  Poles at zeros of: 1
+======================================================================
++ EXIT_1R=0
++ MAIN_PID=
++ echo '=== 1/r exit code: 0 ==='
+=== 1/r exit code: 0 ===
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
+Completed 718 Bytes/308.7 KiB (12.8 KiB/s) with 8 file(s) remainingupload: results/symbolic_gram_sweep/1r/config.json to s3://3body-compute-290318/results/symbolic_gram_sweep/1r/config.json
+Completed 718 Bytes/308.7 KiB (12.8 KiB/s) with 7 file(s) remainingCompleted 256.7 KiB/308.7 KiB (3.7 MiB/s) with 7 file(s) remaining Completed 262.2 KiB/308.7 KiB (2.9 MiB/s) with 7 file(s) remaining upload: results/symbolic_gram_sweep/1r/norm_expressions.json to s3://3body-compute-290318/results/symbolic_gram_sweep/1r/norm_expressions.json
+Completed 262.2 KiB/308.7 KiB (2.9 MiB/s) with 6 file(s) remainingCompleted 262.5 KiB/308.7 KiB (2.8 MiB/s) with 6 file(s) remainingupload: results/symbolic_gram_sweep/1r/singularity_polynomial.json to s3://3body-compute-290318/results/symbolic_gram_sweep/1r/singularity_polynomial.json
+Completed 262.5 KiB/308.7 KiB (2.8 MiB/s) with 5 file(s) remainingCompleted 278.6 KiB/308.7 KiB (3.0 MiB/s) with 5 file(s) remainingCompleted 279.3 KiB/308.7 KiB (2.9 MiB/s) with 5 file(s) remainingCompleted 297.4 KiB/308.7 KiB (3.1 MiB/s) with 5 file(s) remainingCompleted 297.9 KiB/308.7 KiB (3.1 MiB/s) with 5 file(s) remainingupload: results/symbolic_gram_sweep/1r/full_results.json to s3://3body-compute-290318/results/symbolic_gram_sweep/1r/full_results.json
+Completed 297.9 KiB/308.7 KiB (3.1 MiB/s) with 4 file(s) remainingupload: results/symbolic_gram_sweep/1r/gram_det_expression.txt to s3://3body-compute-290318/results/symbolic_gram_sweep/1r/gram_det_expression.txt
+Completed 297.9 KiB/308.7 KiB (3.1 MiB/s) with 3 file(s) remainingupload: results/symbolic_gram_sweep/1r/summary.json to s3://3body-compute-290318/results/symbolic_gram_sweep/1r/summary.json
+Completed 297.9 KiB/308.7 KiB (3.1 MiB/s) with 2 file(s) remainingupload: results/symbolic_gram_sweep/1r/gram_matrix_expressions.json to s3://3body-compute-290318/results/symbolic_gram_sweep/1r/gram_matrix_expressions.json
+Completed 297.9 KiB/308.7 KiB (3.1 MiB/s) with 1 file(s) remainingCompleted 308.7 KiB/308.7 KiB (2.6 MiB/s) with 1 file(s) remainingupload: results/symbolic_gram_sweep/1r/gram_sweep_data.npz to s3://3body-compute-290318/results/symbolic_gram_sweep/1r/gram_sweep_data.npz
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 60.9 KiB/60.9 KiB (1.0 MiB/s) with 1 file(s) remainingupload: ../../../var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T07:59:03Z", "uptime": " 07:59:03 up 13 min,  0 users,  load average: 1.00, 0.95, 0.62"}'
++ echo '=== Step 6b: Running r^4 Gram sweep ==='
+=== Step 6b: Running r^4 Gram sweep ===
++ echo 'Command: /usr/bin/python3.8 -u symbolic_gram_sweep.py --potential r^4 --n-mu 200 --max-level 2'
+Command: /usr/bin/python3.8 -u symbolic_gram_sweep.py --potential r^4 --n-mu 200 --max-level 2
+++ date -u
++ echo '=== Thu Apr  9 07:59:04 UTC 2026 ==='
+=== Thu Apr  9 07:59:04 UTC 2026 ===
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 61.9 KiB/61.9 KiB (676.9 KiB/s) with 1 file(s) remainingupload: ../../../var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T07:59:04Z", "uptime": " 07:59:04 up 13 min,  0 users,  load average: 1.00, 0.95, 0.62"}'
++ MAIN_PID=3487
++ wait 3487
++ /usr/bin/python3.8 -u symbolic_gram_sweep.py --potential 'r^4' --n-mu 200 --max-level 2
+======================================================================
+SYMBOLIC GRAM DETERMINANT SWEEP
+======================================================================
+Potential: r^4
+mu range: [0.05, 5.0], 200 points
+phi: pi/3 (pi/3)
+Max level: 2
+
+--- Step 1: Building symbolic generators ---
+Building generators: N=3, d=2, potential=r^4, max_level=2
+
+--- Level 0: 3 Pairwise Hamiltonians ---
+  H12: 5 terms
+  H13: 5 terms
+  H23: 5 terms
+
+--- Level 1: Brackets of 3 Hamiltonians ---
+  {H12,H13} -> 32 terms [0.1s]
+  {H12,H23} -> 32 terms [0.0s]
+  {H13,H23} -> 32 terms [0.0s]
+
+--- Level 2 ---
+  [   1] {{H12,H13},H12}  bracket 0.1s  simplify 0.1s  -> 208 terms
+  [   2] {{H12,H13},H13}  bracket 0.0s  simplify 0.1s  -> 208 terms
+  [   3] {{H12,H13},H23}  bracket 0.0s  simplify 0.0s  -> 40 terms
+  [   4] {{H12,H13},{H12,H23}}  bracket 0.1s  simplify 0.1s  -> 364 terms
+  [   5] {{H12,H13},{H13,H23}}  bracket 0.1s  simplify 0.1s  -> 364 terms
+  [   6] {{H12,H23},H12}  bracket 0.0s  simplify 0.1s  -> 208 terms
+  [   7] {{H12,H23},H13}  bracket 0.0s  simplify 0.0s  -> 40 terms
+  [   8] {{H12,H23},H23}  bracket 0.0s  simplify 0.1s  -> 208 terms
+  [   9] {{H12,H23},{H13,H23}}  bracket 0.0s  simplify 0.1s  -> 364 terms
+  [  10] {{H13,H23},H12}  bracket 0.0s  simplify 0.0s  -> 40 terms
+  [  11] {{H13,H23},H13}  bracket 0.0s  simplify 0.1s  -> 208 terms
+  [  12] {{H13,H23},H23}  bracket 0.0s  simplify 0.1s  -> 208 terms
+  Level 2: 12 candidates in 1.4s
+
+Total generators: 18 in 1.5s
+  18 generators through level 2 [1.5s]
+
+--- Step 2: Determining rank and selecting basis ---
+
+Extracting monomial-coefficient matrix...
+  Processed 18/18 generators, 1184 distinct monomials so far
+  Matrix dimensions: 18 x 1184
+  Non-zero entries: 2625
+  Density: 0.1232
+  Extraction time: 0.8s
+
+  Rank through level 0 (3 generators x 1184 monomials)... rank = 3  [0.0s]
+
+  Rank through level 1 (6 generators x 1184 monomials)... rank = 6  [0.0s]
+
+  Rank through level 2 (18 generators x 1184 monomials)... rank = 17  [0.0s]
+  Rank: 17
+
+  Selecting basis of 17 independent generators... done [0.2s]
+    Selected generators: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]...
+  Selected 17 basis generators
+
+--- Step 3: Building configuration substitution ---
+  Substitution has 6 replacements
+    x1 -> 0
+    y1 -> 0
+    x2 -> 1
+    y2 -> 0
+    x3 -> mu/2
+    y3 -> sqrt(3)*mu/2
+
+--- Step 4: Substituting into basis generators ---
+  [1/17] H12: 5 p-monomials [0.0s]
+  [2/17] H13: 5 p-monomials [0.0s]
+  [3/17] H23: 5 p-monomials [0.0s]
+  [4/17] {H12,H13}: 2 p-monomials [0.0s]
+  [5/17] {H12,H23}: 2 p-monomials [0.0s]
+  [6/17] {H13,H23}: 2 p-monomials [0.1s]
+  [7/17] {{H12,H13},H12}: 6 p-monomials [0.1s]
+  [8/17] {{H12,H13},H13}: 8 p-monomials [0.1s]
+  [9/17] {{H12,H13},H23}: 6 p-monomials [0.1s]
+  [10/17] {{H12,H13},{H12,H23}}: 4 p-monomials [0.1s]
+  [11/17] {{H12,H13},{H13,H23}}: 4 p-monomials [0.1s]
+  [12/17] {{H12,H23},H12}: 6 p-monomials [0.2s]
+  [13/17] {{H12,H23},H13}: 6 p-monomials [0.2s]
+  [14/17] {{H12,H23},H23}: 8 p-monomials [0.2s]
+  [15/17] {{H12,H23},{H13,H23}}: 4 p-monomials [0.2s]
+  [16/17] {{H13,H23},H13}: 8 p-monomials [0.2s]
+  [17/17] {{H13,H23},H23}: 8 p-monomials [0.3s]
+
+--- Step 5: Computing symbolic norms ---
+  [1/17] ||H12||^2 : 1 terms [0.0s]
+  [2/17] ||H13||^2 : 2 terms [0.0s]
+  [3/17] ||H23||^2 : 9 terms [0.0s]
+  [4/17] ||{H12,H13}||^2 : 3 terms [0.0s]
+  [5/17] ||{H12,H23}||^2 : 5 terms [0.0s]
+  [6/17] ||{H13,H23}||^2 : 5 terms [0.0s]
+  [7/17] ||{{H12,H13},H12}||^2 : 5 terms [0.0s]
+  [8/17] ||{{H12,H13},H13}||^2 : 6 terms [0.0s]
+  [9/17] ||{{H12,H13},H23}||^2 : 2 terms [0.0s]
+  [10/17] ||{{H12,H13},{H12,H23}}||^2 : 6 terms [0.0s]
+  [11/17] ||{{H12,H13},{H13,H23}}||^2 : 6 terms [0.0s]
+  [12/17] ||{{H12,H23},H12}||^2 : 6 terms [0.1s]
+  [13/17] ||{{H12,H23},H13}||^2 : 5 terms [0.1s]
+  [14/17] ||{{H12,H23},H23}||^2 : 13 terms [0.1s]
+  [15/17] ||{{H12,H23},{H13,H23}}||^2 : 11 terms [0.1s]
+  [16/17] ||{{H13,H23},H13}||^2 : 9 terms [0.1s]
+  [17/17] ||{{H13,H23},H23}||^2 : 11 terms [0.1s]
+
+--- Step 6: Computing symbolic Gram matrix ---
+  row 5/17 [0.1s]
+  row 10/17 [0.2s]
+  row 15/17 [0.3s]
+  row 17/17 [0.3s]
+
+  Checking Gram entries for irrational terms...
+    All 153 entries are rational in mu
+
+--- Step 7: Computing symbolic Gram determinant (rationalized Bareiss) ---
+  Substituting sqrt(mu^2-mu+1) -> s and extracting rational numer/denom in QQ[mu,s]...
+    row 5/17 [0.1s]
+    row 10/17 [0.2s]
+    row 15/17 [0.3s]
+    row 17/17 [0.3s]
+    0 entries had non-trivial denominators
+  Computing LCM of all denominators...
+    1 distinct denominators
+      [0] 1
+  LCM denominator D(mu,s) = 1
+    D has 1 terms
+    D factored = 1
+  D(mu) [substituting s->sqrt(w)] = 1
+  Clearing denominators...
+  Reducing G_cleared entries modulo s^2 = mu^2 - mu + 1...
+  Building DomainMatrix over QQ[mu,s]...
+    DomainMatrix constructed [0.4s]
+  Computing det(G_cleared) via Bareiss...
+    det computed in 0.7s
+    raw det has 1 terms
+  det(G(mu)) = det(G_cleared) / D(mu)^17
+    simplified det has 1 terms
+
+  Factoring numerator and denominator...
+    Numerator factored [0.0s]
+    numer factors = 0
+    Denominator factored = 1
+
+  === SINGULARITY POLYNOMIAL ===
+  Poles (blow-up) at zeros of: 1
+  Zeros (degeneration) at zeros of: 0
+  ================================
+
+  Total Step 7 time: 1.1s
+
+--- Step 8: Evaluating along mu sweep ---
+  Lambdified [0.1s]
+  [1/200] mu=0.0500 ||e||^2_sum=6.3031e+03 cond=inf det=-3.3839e-07 [0.0s, ETA 0s]
+  [10/200] mu=0.2739 ||e||^2_sum=5.2212e+03 cond=4.6056e+17 det=6.5469e+03 [0.0s, ETA 0s]
+  [20/200] mu=0.5226 ||e||^2_sum=4.9652e+03 cond=4.7441e+16 det=2.0273e+08 [0.0s, ETA 0s]
+  [30/200] mu=0.7714 ||e||^2_sum=4.9638e+03 cond=inf det=-3.0484e+10 [0.0s, ETA 0s]
+  [40/200] mu=1.0201 ||e||^2_sum=8.1788e+03 cond=inf det=-9.2281e+04 [0.0s, ETA 0s]
+  [50/200] mu=1.2688 ||e||^2_sum=4.0814e+04 cond=1.6469e+16 det=7.0234e+19 [0.0s, ETA 0s]
+  [60/200] mu=1.5176 ||e||^2_sum=2.4761e+05 cond=inf det=-9.5539e+26 [0.0s, ETA 0s]
+  [70/200] mu=1.7663 ||e||^2_sum=1.2267e+06 cond=inf det=-3.2477e+32 [0.0s, ETA 0s]
+  [80/200] mu=2.0151 ||e||^2_sum=5.0010e+06 cond=3.6387e+16 det=6.7053e+36 [0.0s, ETA 0s]
+  [90/200] mu=2.2638 ||e||^2_sum=1.7481e+07 cond=inf det=-2.0841e+41 [0.0s, ETA 0s]
+  [100/200] mu=2.5126 ||e||^2_sum=5.4113e+07 cond=inf det=-2.4547e+44 [0.0s, ETA 0s]
+  [110/200] mu=2.7613 ||e||^2_sum=1.5183e+08 cond=2.8078e+16 det=1.5019e+48 [0.0s, ETA 0s]
+  [120/200] mu=3.0101 ||e||^2_sum=3.9271e+08 cond=inf det=-3.8499e+51 [0.0s, ETA 0s]
+  [130/200] mu=3.2588 ||e||^2_sum=9.4841e+08 cond=7.5649e+16 det=5.8957e+53 [0.0s, ETA 0s]
+  [140/200] mu=3.5075 ||e||^2_sum=2.1596e+09 cond=8.9837e+16 det=2.5645e+56 [0.0s, ETA 0s]
+  [150/200] mu=3.7563 ||e||^2_sum=4.6725e+09 cond=inf det=-2.0456e+59 [0.0s, ETA 0s]
+  [160/200] mu=4.0050 ||e||^2_sum=9.6650e+09 cond=1.2526e+17 det=1.4474e+61 [0.0s, ETA 0s]
+  [170/200] mu=4.2538 ||e||^2_sum=1.9211e+10 cond=inf det=-8.0299e+63 [0.0s, ETA 0s]
+  [180/200] mu=4.5025 ||e||^2_sum=3.6847e+10 cond=inf det=-3.3020e+65 [0.0s, ETA 0s]
+  [190/200] mu=4.7513 ||e||^2_sum=6.8440e+10 cond=inf det=-1.4489e+68 [0.0s, ETA 0s]
+  [200/200] mu=5.0000 ||e||^2_sum=1.2348e+11 cond=inf det=-4.6459e+69 [0.0s, ETA 0s]
+
+--- Step 9: Saving results ---
+
+======================================================================
+SYMBOLIC GRAM SWEEP COMPLETE
+  Potential: r^4
+  200/200 points OK
+  Total time: 4.6s (0.1 min)
+  ||e||^2 sum range: [4.896643e+03, 1.234779e+11]
+  Gram condition range: [1.257247e+15, 1.514217e+18]
+  Gram det range: [-4.645948e+69, 2.208365e+69]
+  Gram rank: [13, 14, 15, 16]
+  Results saved to: results/symbolic_gram_sweep/r4/
+  Gram determinant expression saved (exact in mu)
+  LCM denominator D(mu) = 1
+  det(G) numerator factored = 0
+  Poles at zeros of: 1
+======================================================================
++ EXIT_R4=0
++ MAIN_PID=
++ echo '=== r^4 exit code: 0 ==='
+=== r^4 exit code: 0 ===
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
+Completed 256.0 KiB/284.7 KiB (7.5 MiB/s) with 8 file(s) remainingCompleted 263.8 KiB/284.7 KiB (3.9 MiB/s) with 8 file(s) remainingupload: results/symbolic_gram_sweep/r4/full_results.json to s3://3body-compute-290318/results/symbolic_gram_sweep/r4/full_results.json
+Completed 263.8 KiB/284.7 KiB (3.9 MiB/s) with 7 file(s) remainingCompleted 274.7 KiB/284.7 KiB (3.4 MiB/s) with 7 file(s) remainingupload: results/symbolic_gram_sweep/r4/gram_sweep_data.npz to s3://3body-compute-290318/results/symbolic_gram_sweep/r4/gram_sweep_data.npz
+Completed 274.7 KiB/284.7 KiB (3.4 MiB/s) with 6 file(s) remainingCompleted 275.4 KiB/284.7 KiB (3.3 MiB/s) with 6 file(s) remainingupload: results/symbolic_gram_sweep/r4/config.json to s3://3body-compute-290318/results/symbolic_gram_sweep/r4/config.json
+Completed 275.4 KiB/284.7 KiB (3.3 MiB/s) with 5 file(s) remainingCompleted 275.8 KiB/284.7 KiB (3.2 MiB/s) with 5 file(s) remainingupload: results/symbolic_gram_sweep/r4/summary.json to s3://3body-compute-290318/results/symbolic_gram_sweep/r4/summary.json
+Completed 275.8 KiB/284.7 KiB (3.2 MiB/s) with 4 file(s) remainingCompleted 276.0 KiB/284.7 KiB (3.2 MiB/s) with 4 file(s) remainingCompleted 282.9 KiB/284.7 KiB (3.2 MiB/s) with 4 file(s) remainingupload: results/symbolic_gram_sweep/r4/gram_matrix_expressions.json to s3://3body-compute-290318/results/symbolic_gram_sweep/r4/gram_matrix_expressions.json
+Completed 282.9 KiB/284.7 KiB (3.2 MiB/s) with 3 file(s) remainingupload: results/symbolic_gram_sweep/r4/singularity_polynomial.json to s3://3body-compute-290318/results/symbolic_gram_sweep/r4/singularity_polynomial.json
+Completed 282.9 KiB/284.7 KiB (3.2 MiB/s) with 2 file(s) remainingCompleted 283.2 KiB/284.7 KiB (3.2 MiB/s) with 2 file(s) remainingCompleted 284.7 KiB/284.7 KiB (3.2 MiB/s) with 2 file(s) remainingupload: results/symbolic_gram_sweep/r4/gram_det_expression.txt to s3://3body-compute-290318/results/symbolic_gram_sweep/r4/gram_det_expression.txt
+Completed 284.7 KiB/284.7 KiB (3.2 MiB/s) with 1 file(s) remainingupload: results/symbolic_gram_sweep/r4/norm_expressions.json to s3://3body-compute-290318/results/symbolic_gram_sweep/r4/norm_expressions.json
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 72.6 KiB/72.6 KiB (1.3 MiB/s) with 1 file(s) remainingupload: ../../../var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T07:59:10Z", "uptime": " 07:59:10 up 13 min,  0 users,  load average: 1.00, 0.95, 0.62"}'
++ echo '=== Step 6c: Running 1/r^4 Gram sweep ==='
+=== Step 6c: Running 1/r^4 Gram sweep ===
++ echo 'Command: /usr/bin/python3.8 -u symbolic_gram_sweep.py --potential composite --composite -1 4 --n-mu 200 --max-level 2'
+Command: /usr/bin/python3.8 -u symbolic_gram_sweep.py --potential composite --composite -1 4 --n-mu 200 --max-level 2
+++ date -u
++ echo '=== Thu Apr  9 07:59:11 UTC 2026 ==='
+=== Thu Apr  9 07:59:11 UTC 2026 ===
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 73.6 KiB/73.6 KiB (1.1 MiB/s) with 1 file(s) remainingupload: ../../../var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T07:59:11Z", "uptime": " 07:59:11 up 13 min,  0 users,  load average: 0.92, 0.94, 0.62"}'
++ MAIN_PID=3541
++ wait 3541
++ /usr/bin/python3.8 -u symbolic_gram_sweep.py --potential composite --composite -1 4 --n-mu 200 --max-level 2
+======================================================================
+SYMBOLIC GRAM DETERMINANT SWEEP
+======================================================================
+Potential: composite
+mu range: [0.05, 5.0], 200 points
+phi: pi/3 (pi/3)
+Max level: 2
+
+--- Step 1: Building symbolic generators ---
+Building generators: N=3, d=2, potential=composite, max_level=2
+
+--- Level 0: 3 Pairwise Hamiltonians ---
+  H12: 5 terms
+  H13: 5 terms
+  H23: 5 terms
+
+--- Level 1: Brackets of 3 Hamiltonians ---
+  {H12,H13} -> 8 terms [0.0s]
+  {H12,H23} -> 8 terms [0.0s]
+  {H13,H23} -> 8 terms [0.0s]
+
+--- Level 2 ---
+  [   1] {{H12,H13},H12}  bracket 0.0s  simplify 0.1s  -> 54 terms
+  [   2] {{H12,H13},H13}  bracket 0.0s  simplify 0.0s  -> 54 terms
+  [   3] {{H12,H13},H23}  bracket 0.0s  simplify 0.0s  -> 32 terms
+  [   4] {{H12,H13},{H12,H23}}  bracket 0.0s  simplify 0.1s  -> 112 terms
+  [   5] {{H12,H13},{H13,H23}}  bracket 0.0s  simplify 0.1s  -> 112 terms
+  [   6] {{H12,H23},H12}  bracket 0.0s  simplify 0.1s  -> 54 terms
+  [   7] {{H12,H23},H13}  bracket 0.0s  simplify 0.0s  -> 32 terms
+  [   8] {{H12,H23},H23}  bracket 0.0s  simplify 0.0s  -> 54 terms
+  [   9] {{H12,H23},{H13,H23}}  bracket 0.0s  simplify 0.1s  -> 112 terms
+  [  10] {{H13,H23},H12}  bracket 0.0s  simplify 0.0s  -> 32 terms
+  [  11] {{H13,H23},H13}  bracket 0.0s  simplify 0.1s  -> 54 terms
+  [  12] {{H13,H23},H23}  bracket 0.0s  simplify 0.0s  -> 54 terms
+  Level 2: 12 candidates in 0.9s
+
+Total generators: 18 in 1.0s
+  18 generators through level 2 [1.0s]
+
+--- Step 2: Determining rank and selecting basis ---
+
+Extracting monomial-coefficient matrix...
+  Processed 18/18 generators, 531 distinct monomials so far
+  Matrix dimensions: 18 x 531
+  Non-zero entries: 795
+  Density: 0.0832
+  Extraction time: 0.3s
+
+  Rank through level 0 (3 generators x 531 monomials)... rank = 3  [0.0s]
+
+  Rank through level 1 (6 generators x 531 monomials)... rank = 6  [0.0s]
+
+  Rank through level 2 (18 generators x 531 monomials)... rank = 17  [0.0s]
+  Rank: 17
+
+  Selecting basis of 17 independent generators... done [0.1s]
+    Selected generators: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]...
+  Selected 17 basis generators
+
+--- Step 3: Building configuration substitution ---
+  Substitution has 9 replacements
+    x1 -> 0
+    y1 -> 0
+    x2 -> 1
+    y2 -> 0
+    x3 -> mu/2
+    y3 -> sqrt(3)*mu/2
+    u12 -> 1
+    u13 -> 1/mu
+    u23 -> 1/sqrt(mu**2 - mu + 1)
+
+--- Step 4: Substituting into basis generators ---
+  [1/17] H12: 5 p-monomials [0.0s]
+  [2/17] H13: 5 p-monomials [0.0s]
+  [3/17] H23: 5 p-monomials [0.0s]
+  [4/17] {H12,H13}: 2 p-monomials [0.1s]
+  [5/17] {H12,H23}: 2 p-monomials [0.2s]
+  [6/17] {H13,H23}: 2 p-monomials [0.2s]
+  [7/17] {{H12,H13},H12}: 6 p-monomials [0.2s]
+  [8/17] {{H12,H13},H13}: 8 p-monomials [0.2s]
+  [9/17] {{H12,H13},H23}: 6 p-monomials [0.2s]
+  [10/17] {{H12,H13},{H12,H23}}: 4 p-monomials [0.2s]
+  [11/17] {{H12,H13},{H13,H23}}: 4 p-monomials [0.3s]
+  [12/17] {{H12,H23},H12}: 6 p-monomials [0.4s]
+  [13/17] {{H12,H23},H13}: 6 p-monomials [0.5s]
+  [14/17] {{H12,H23},H23}: 8 p-monomials [0.7s]
+  [15/17] {{H12,H23},{H13,H23}}: 4 p-monomials [1.2s]
+  [16/17] {{H13,H23},H13}: 8 p-monomials [1.2s]
+  [17/17] {{H13,H23},H23}: 8 p-monomials [1.3s]
+
+--- Step 5: Computing symbolic norms ---
+  [1/17] ||H12||^2 : 1 terms [0.0s]
+  [2/17] ||H13||^2 : 1 terms [0.0s]
+  [3/17] ||H23||^2 : 1 terms [0.0s]
+  [4/17] ||{H12,H13}||^2 : 1 terms [0.0s]
+  [5/17] ||{H12,H23}||^2 : 1 terms [0.1s]
+  [6/17] ||{H13,H23}||^2 : 1 terms [0.1s]
+  [7/17] ||{{H12,H13},H12}||^2 : 1 terms [0.1s]
+  [8/17] ||{{H12,H13},H13}||^2 : 1 terms [0.1s]
+  [9/17] ||{{H12,H13},H23}||^2 : 1 terms [0.1s]
+  [10/17] ||{{H12,H13},{H12,H23}}||^2 : 1 terms [0.2s]
+  [11/17] ||{{H12,H13},{H13,H23}}||^2 : 1 terms [0.6s]
+  [12/17] ||{{H12,H23},H12}||^2 : 1 terms [1.3s]
+  [13/17] ||{{H12,H23},H13}||^2 : 1 terms [1.5s]
+  [14/17] ||{{H12,H23},H23}||^2 : 1 terms [4.2s]
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 78.2 KiB/78.2 KiB (890.6 KiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T08:01:25Z", "uptime": " 08:01:25 up 16 min,  0 users,  load average: 1.07, 0.98, 0.68"}'
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
++ true
++ sleep 300
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 78.9 KiB/78.9 KiB (954.6 KiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T08:06:27Z", "uptime": " 08:06:27 up 21 min,  0 users,  load average: 1.00, 1.00, 0.78"}'
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
++ true
++ sleep 300
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 79.6 KiB/79.6 KiB (1.0 MiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T08:11:28Z", "uptime": " 08:11:28 up 26 min,  0 users,  load average: 1.08, 1.03, 0.87"}'
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
++ true
++ sleep 300
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 80.3 KiB/80.3 KiB (1.0 MiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T08:16:29Z", "uptime": " 08:16:29 up 31 min,  0 users,  load average: 1.00, 1.00, 0.92"}'
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
++ true
++ sleep 300
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 81.1 KiB/81.1 KiB (1.1 MiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T08:21:30Z", "uptime": " 08:21:30 up 36 min,  0 users,  load average: 1.00, 1.00, 0.95"}'
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
++ true
++ sleep 300
+  [15/17] ||{{H12,H23},{H13,H23}}||^2 : 1 terms [1354.1s]
+  [16/17] ||{{H13,H23},H13}||^2 : 1 terms [1362.0s]
+  [17/17] ||{{H13,H23},H23}||^2 : 1 terms [1386.6s]
+
+--- Step 6: Computing symbolic Gram matrix ---
+  row 5/17 [25.8s]
+  row 10/17 [102.2s]
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 82.0 KiB/82.0 KiB (1.4 MiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T08:26:31Z", "uptime": " 08:26:31 up 41 min,  0 users,  load average: 1.08, 1.02, 0.98"}'
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
++ true
++ sleep 300
++ upload_log
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
+Completed 82.7 KiB/82.7 KiB (705.8 KiB/s) with 1 file(s) remainingupload: var/log/3body-gram-sweep.log to s3://3body-compute-290318/results/symbolic_gram_sweep/live.log
++ aws s3 cp - s3://3body-compute-290318/results/symbolic_gram_sweep/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "i-02cea5ca7bad4ef57", "type": "r6i.4xlarge", "job": "gram_sweep", "time": "2026-04-09T08:31:33Z", "uptime": " 08:31:33 up 46 min,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
++ true
++ sleep 300
+  row 15/17 [740.8s]
+  row 17/17 [770.5s]
+
+  Checking Gram entries for irrational terms...
+    All 153 entries are rational in mu
+
+--- Step 7: Computing symbolic Gram determinant (rationalized Bareiss) ---
+  Substituting sqrt(mu^2-mu+1) -> s and extracting rational numer/denom in QQ[mu,s]...
+    row 5/17 [0.9s]
+    row 10/17 [1.7s]
+    row 15/17 [3.4s]
+    row 17/17 [4.5s]
+    114 entries had non-trivial denominators
+  Computing LCM of all denominators...
+    46 distinct denominators
+      [0] 1
+      [1] 2*mu**4
+      [2] 2*mu**4 - 4*mu**3 + 6*mu**2 - 4*mu + 2
+      [3] mu**6
+      [4] mu**10
+      [5] mu**6 - 3*mu**5 + 6*mu**4 - 7*mu**3 + 6*mu**2 - 3*mu + 1
+      [6] mu**10 - 5*mu**9 + 15*mu**8 - 30*mu**7 + 45*mu**6 - 51*mu**5 + 45*mu**4 - 30*mu**3 + 15*mu**2 - 5*mu + 1
+      [7] mu**16 - 3*mu**15 + 6*mu**14 - 7*mu**13 + 6*mu**12 - 3*mu**11 + mu**10
+      [8] mu**15 - 5*mu**14 + 15*mu**13 - 30*mu**12 + 45*mu**11 - 51*mu**10 + 45*mu**9 - 30*mu**8 + 15*mu**7 - 5*mu**6 + mu**5
+      [9] mu**8
+  LCM denominator D(mu,s) = mu**44 - 11*mu**43 + 66*mu**42 - 275*mu**41 + 880*mu**40 - 2277*mu**39 + 4917*mu**38 - 9042*mu**37 + 14355*mu**36 - 19855*mu**35 + 24068*mu**34 - 25653*mu**33 + 24068*mu**32 - 19855*mu**31 + 14355*mu**30 - 9042*mu**29 + 4917*mu**28 - 2277*mu**27 + 880*mu**26 - 275*mu**25 + 66*mu**24 - 11*mu**23 + mu**22
+    D has 23 terms
+    D factored = mu**22*(mu**2 - mu + 1)**11
+  D(mu) [substituting s->sqrt(w)] = mu**22*(mu**2 - mu + 1)**11
+  Clearing denominators...
+  Reducing G_cleared entries modulo s^2 = mu^2 - mu + 1...
+  Building DomainMatrix over QQ[mu,s]...
+    DomainMatrix constructed [5.9s]
+  Computing det(G_cleared) via Bareiss...
+    det computed in 30.3s
+    raw det has 1 terms
+  det(G(mu)) = det(G_cleared) / D(mu)^17
+    simplified det has 1 terms
+
+  Factoring numerator and denominator...
+    Numerator factored [0.0s]
+    numer factors = 0
+    Denominator factored = 1
+
+  === SINGULARITY POLYNOMIAL ===
+  Poles (blow-up) at zeros of: 1
+  Zeros (degeneration) at zeros of: 0
+  ================================
+
+  Total Step 7 time: 36.2s
+
+--- Step 8: Evaluating along mu sweep ---
+  Lambdified [0.4s]
+  [1/200] mu=0.0500 ||e||^2_sum=5.3692e+32 cond=inf det=-7.1644e+223 [0.0s, ETA 0s]
+  [10/200] mu=0.2739 ||e||^2_sum=3.0375e+16 cond=3.1962e+20 det=3.5799e+89 [0.0s, ETA 0s]
+  [20/200] mu=0.5226 ||e||^2_sum=2.0086e+10 cond=inf det=-8.6122e+56 [0.0s, ETA 0s]
+  [30/200] mu=0.7714 ||e||^2_sum=3.1414e+06 cond=inf det=-3.5383e+36 [0.0s, ETA 0s]
+  [40/200] mu=1.0201 ||e||^2_sum=1.9833e+04 cond=inf det=-1.2877e+15 [0.0s, ETA 0s]
+  [50/200] mu=1.2688 ||e||^2_sum=1.4197e+04 cond=inf det=-8.5770e+13 [0.0s, ETA 0s]
+  [60/200] mu=1.5176 ||e||^2_sum=1.5577e+04 cond=inf det=-1.4464e+08 [0.0s, ETA 0s]
+  [70/200] mu=1.7663 ||e||^2_sum=1.6252e+04 cond=inf det=-1.6140e+02 [0.0s, ETA 0s]
+  [80/200] mu=2.0151 ||e||^2_sum=1.6510e+04 cond=inf det=-9.7477e-04 [0.0s, ETA 0s]
+  [90/200] mu=2.2638 ||e||^2_sum=1.6608e+04 cond=inf det=-4.3002e-09 [0.0s, ETA 0s]
+  [100/200] mu=2.5126 ||e||^2_sum=1.6647e+04 cond=2.6146e+16 det=2.0799e-14 [0.0s, ETA 0s]
+  [110/200] mu=2.7613 ||e||^2_sum=1.6663e+04 cond=8.8168e+15 det=5.8987e-18 [0.0s, ETA 0s]
+  [120/200] mu=3.0101 ||e||^2_sum=1.6670e+04 cond=1.2922e+16 det=7.9648e-22 [0.0s, ETA 0s]
+  [130/200] mu=3.2588 ||e||^2_sum=1.6673e+04 cond=inf det=-1.3334e-25 [0.0s, ETA 0s]
+  [140/200] mu=3.5075 ||e||^2_sum=1.6675e+04 cond=inf det=-1.5742e-28 [0.0s, ETA 0s]
+  [150/200] mu=3.7563 ||e||^2_sum=1.6675e+04 cond=inf det=-2.0118e-32 [0.1s, ETA 0s]
+  [160/200] mu=4.0050 ||e||^2_sum=1.6676e+04 cond=inf det=-6.9442e-35 [0.1s, ETA 0s]
+  [170/200] mu=4.2538 ||e||^2_sum=1.6676e+04 cond=inf det=-4.1530e-37 [0.1s, ETA 0s]
+  [180/200] mu=4.5025 ||e||^2_sum=1.6676e+04 cond=4.8502e+16 det=6.0991e-40 [0.1s, ETA 0s]
+  [190/200] mu=4.7513 ||e||^2_sum=1.6676e+04 cond=inf det=-2.9389e-42 [0.1s, ETA 0s]
+  [200/200] mu=5.0000 ||e||^2_sum=1.6676e+04 cond=inf det=-4.5530e-44 [0.1s, ETA 0s]
+
+--- Step 9: Saving results ---
+
+======================================================================
+SYMBOLIC GRAM SWEEP COMPLETE
+  Potential: composite
+  200/200 points OK
+  Total time: 2196.7s (36.6 min)
+  ||e||^2 sum range: [1.390634e+04, 5.369246e+32]
+  Gram condition range: [1.988097e+13, 3.196248e+20]
+  Gram det range: [-7.164399e+223, 2.436429e+189]
+  Gram rank: [2, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+  Results saved to: results/symbolic_gram_sweep/composite_u4/
+  Gram determinant expression saved (exact in mu)
+  LCM denominator D(mu) = mu**22*(mu**2 - mu + 1)**11
+  det(G) numerator factored = 0
+  Poles at zeros of: 1
+======================================================================
++ EXIT_1R4=0
++ MAIN_PID=
++ echo '=== 1/r^4 exit code: 0 ==='
+=== 1/r^4 exit code: 0 ===
++ echo '=== Final sync ==='
+=== Final sync ===
++ aws s3 sync /opt/3body/nbody/results/symbolic_gram_sweep/ s3://3body-compute-290318/results/symbolic_gram_sweep/
+Completed 1019 Bytes/307.2 KiB (23.6 KiB/s) with 8 file(s) remainingupload: results/symbolic_gram_sweep/composite_u4/gram_det_expression.txt to s3://3body-compute-290318/results/symbolic_gram_sweep/composite_u4/gram_det_expression.txt
+Completed 1019 Bytes/307.2 KiB (23.6 KiB/s) with 7 file(s) remainingCompleted 257.0 KiB/307.2 KiB (4.0 MiB/s) with 7 file(s) remaining  Completed 257.7 KiB/307.2 KiB (3.8 MiB/s) with 7 file(s) remaining  upload: results/symbolic_gram_sweep/composite_u4/config.json to s3://3body-compute-290318/results/symbolic_gram_sweep/composite_u4/config.json
+Completed 257.7 KiB/307.2 KiB (3.8 MiB/s) with 6 file(s) remainingCompleted 268.6 KiB/307.2 KiB (3.5 MiB/s) with 6 file(s) remainingupload: results/symbolic_gram_sweep/composite_u4/gram_sweep_data.npz to s3://3body-compute-290318/results/symbolic_gram_sweep/composite_u4/gram_sweep_data.npz
+Completed 268.6 KiB/307.2 KiB (3.5 MiB/s) with 5 file(s) remainingCompleted 284.4 KiB/307.2 KiB (3.3 MiB/s) with 5 file(s) remainingupload: results/symbolic_gram_sweep/composite_u4/full_results.json to s3://3body-compute-290318/results/symbolic_gram_sweep/composite_u4/full_results.json
+Completed 284.4 KiB/307.2 KiB (3.3 MiB/s) with 4 file(s) remainingCompleted 289.5 KiB/307.2 KiB (3.1 MiB/s) with 4 file(s) remainingupload: results/symbolic_gram_sweep/composite_u4/norm_expressions.json to s3://3body-compute-290318/results/symbolic_gram_sweep/composite_u4/norm_expressions.json
+Completed 289.5 KiB/307.2 KiB (3.1 MiB/s) with 3 file(s) remainingCompleted 290.0 KiB/307.2 KiB (2.9 MiB/s) with 3 file(s) remainingupload: results/symbolic_gram_sweep/composite_u4/singularity_polynomial.json to s3://3body-compute-290318/results/symbolic_gram_sweep/composite_u4/singularity_polynomial.json
+Completed 290.0 KiB/307.2 KiB (2.9 MiB/s) with 2 file(s) remainingCompleted 290.5 KiB/307.2 KiB (2.8 MiB/s) with 2 file(s) remainingupload: results/symbolic_gram_sweep/composite_u4/summary.json to s3://3body-compute-290318/results/symbolic_gram_sweep/composite_u4/summary.json
+Completed 290.5 KiB/307.2 KiB (2.8 MiB/s) with 1 file(s) remainingCompleted 307.2 KiB/307.2 KiB (2.8 MiB/s) with 1 file(s) remainingupload: results/symbolic_gram_sweep/composite_u4/gram_matrix_expressions.json to s3://3body-compute-290318/results/symbolic_gram_sweep/composite_u4/gram_matrix_expressions.json
++ aws s3 cp /var/log/3body-gram-sweep.log s3://3body-compute-290318/results/symbolic_gram_sweep/full.log

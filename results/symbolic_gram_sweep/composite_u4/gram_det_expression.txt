@@ -1,0 +1,17 @@
+det(G(mu)) = 0
+
+LCM denominator D(mu) = mu**44 - 11*mu**43 + 66*mu**42 - 275*mu**41 + 880*mu**40 - 2277*mu**39 + 4917*mu**38 - 9042*mu**37 + 14355*mu**36 - 19855*mu**35 + 24068*mu**34 - 25653*mu**33 + 24068*mu**32 - 19855*mu**31 + 14355*mu**30 - 9042*mu**29 + 4917*mu**28 - 2277*mu**27 + 880*mu**26 - 275*mu**25 + 66*mu**24 - 11*mu**23 + mu**22
+D(mu) factored = mu**22*(mu**2 - mu + 1)**11
+D(mu,s) [s=sqrt(mu^2-mu+1)] = mu**44 - 11*mu**43 + 66*mu**42 - 275*mu**41 + 880*mu**40 - 2277*mu**39 + 4917*mu**38 - 9042*mu**37 + 14355*mu**36 - 19855*mu**35 + 24068*mu**34 - 25653*mu**33 + 24068*mu**32 - 19855*mu**31 + 14355*mu**30 - 9042*mu**29 + 4917*mu**28 - 2277*mu**27 + 880*mu**26 - 275*mu**25 + 66*mu**24 - 11*mu**23 + mu**22
+D(mu,s) factored = mu**22*(mu**2 - mu + 1)**11
+
+det(G_cleared) [numerator before division] = 0
+
+Numerator of det(G) factored = 0
+
+Final numerator = 0
+Final denominator = 1
+Final denominator factored = 1
+
+Poles (denominator roots) are at zeros of: 1
+Zeros (degeneration loci) are at zeros of: 0

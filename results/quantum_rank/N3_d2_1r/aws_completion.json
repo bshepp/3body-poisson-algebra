@@ -1,0 +1,8 @@
+{
+    "status": "complete",
+    "job": "quantum_rank_N3_d2",
+    "instance": "i-0964d0161832d18e2",
+    "instance_type": "r6i.4xlarge",
+    "exit_code": 0,
+    "completed_at": "2026-04-10T01:04:10Z"
+}

@@ -1,6 +1,6 @@
 # Three-Body Poisson Algebra — Project Status & Roadmap
 
-*Last updated: April 9, 2026*
+*Last updated: April 10, 2026*
 
 ---
 
@@ -40,23 +40,25 @@ Additional completed work:
 - Sun-Earth-Moon atlas (100x100, 800 samples) — completed April 7, 2026 in 6h28m on r6i.4xlarge (on-demand, 16 workers). 10,000/10,000 valid points, unique ranks 102–108. Dynamic range 10²⁰–10²⁶ limits SVD rank detection.
 - Sun-Jupiter-Asteroid atlas (100x100, 800 samples) — completed April 8, 2026 in 9h33m on r6i.4xlarge (on-demand, 16 workers). 10,000/10,000 valid points, unique ranks 91–100. Dynamic range 10²⁵–10³² (most extreme system computed).
 
-### In Progress (1)
+### In Progress (2)
 
 | # | Task | Progress | Status |
 |---|---|---|---|
-| 1 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed. Rank=667, plateau=0. ETA ~574h. Checkpoint safe. |
+| 1 | **3-term composite (2PN)** | 138/138 generators built, matrix extraction 20/156 | Running locally |
+| 2 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed. Rank=667, plateau=0. Checkpoint safe. |
 
-### Not Yet Started (7)
+### Not Yet Started (8)
 
 | # | Task | Notes |
 |---|---|---|
-| 1 | **Parametric exponent sweep** (1,015 values of n) | Script written (`parametric_atlas_scan.py`), not yet run at scale. See Section 3 below. |
-| 2 | **Dusty plasma Yukawa atlas** | Prior run failed (exit code 1). Yukawa lambdification issue. |
-| 3 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
-| 4 | **SageMath verification** | Independent verification of dimension sequence. SageMath not yet installed. |
-| 5 | **N=4 body Level-3** | Sequence [6, 14, 62] through L2; L3 not computed. |
-| 6 | **Paper 3 (universality) finalization** | Depends on atlas campaign + parametric sweep + structure results. |
-| 7 | **Structure extraction at level 3 (rank 116)** | Level-2 structure computed for 4 potentials. Level 3 requires AWS. |
+| 1 | **Identify the 117th generator** | Find the specific hbar²-dependent combination independent of classical generators. |
+| 2 | **Quantum rank for other potentials** | Test r⁴, 1/r⁴, composite with Moyal bracket. |
+| 3 | **Parametric exponent sweep** (1,015 values of n) | Script written (`parametric_atlas_scan.py`), not yet run at scale. See Section 3 below. |
+| 4 | **Dusty plasma Yukawa atlas** | Prior run failed (exit code 1). Yukawa lambdification issue. |
+| 5 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
+| 6 | **SageMath verification** | Independent verification of dimension sequence. SageMath not yet installed. |
+| 7 | **N=4 body Level-3** | Sequence [6, 14, 62] through L2; L3 not computed. |
+| 8 | **Structure extraction at level 3 (rank 116)** | Level-2 structure computed for 6 potentials. Level 3 requires AWS. |
 
 ### Completed — Algebra Structure (April 9, 2026)
 
@@ -69,6 +71,17 @@ Additional completed work:
 | 5 | **Derived/lower central series** | Non-harmonic: solvable (length 3), nilpotent (class 3). Harmonic: neither. |
 | 6 | **Center dimension** | Non-harmonic: 11/17. Harmonic: 1/15. |
 | 7 | **SVD component saving** | `--save-svd` flag added to `exact_growth.py` and `nbody/exact_growth_nbody.py`. |
+
+### Completed — Quantum Commutator Algebra (April 10, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **Quantum engine** | `QuantumNBodyAlgebra` with Moyal bracket, validated (Jacobi, hbar→0 limit). |
+| 2 | **N=3 d=1 quantum rank** | [3, 6, 17, **117**] — one extra dimension vs classical 116. |
+| 3 | **N=3 d=2 quantum rank (L2)** | [3, 6, 17] — matches classical through level 2. |
+| 4 | **N=3 d=2 quantum rank (L3)** | [3, 6, 17, **117**] — confirmed +1 in 2D (AWS r6i.4xlarge, 3562s). |
+| 5 | **Post-Newtonian 1PN** | -1/r - 1/r² gives [3, 6, 17, 116] — GR correction does not change algebra. |
+| 6 | **Post-Newtonian 2PN** | -1/r - 1/r² - 1/r³ — level 3 in progress locally. |
 
 ---
 
@@ -308,3 +321,34 @@ arrays, leaving stale local copies from interrupted runs.
 **Solution**: Use `aws s3 cp --recursive` for numpy data, or add
 `--exact-timestamps` to `s3 sync`. Created `audit_atlas_data.py` to
 detect and fix stale syncs across all atlas configs.
+
+### Structure Cross-Section: Singularity Detection (April 9, 2026)
+
+New capability: numerical structure constant sweeps across parameter space.
+Script `nbody/structure_cross_section.py` evaluates generators at localized
+phase-space samples and solves for C_ijk by least-squares.
+
+Key findings from 1D sweep (mu=0.05..5.0, phi=pi/3, 200 points):
+- Singular potentials (1/r, 1/r^4) produce SC norm variation of 16-23 OOM
+- Smooth potential (r^4) varies only 5 OOM
+- Condition numbers: 1/r^4 reaches 10^13, r^4 stays under 10^3
+- Center dim instability: 1/r^4 varies {0..10}, r^4 stable at 0
+- Confirms that singularities are detectable through algebra conditioning
+
+### Symbolic Gram Determinant Sweep (completed, April 9, 2026)
+
+Exact symbolic Gram determinants computed for all three potentials
+using rationalized Bareiss (DomainMatrix over QQ[mu,s]). All
+potentials give det(G) = 0 on the 1D mu-manifold, confirming the
+17 generators are linearly dependent when restricted from the full
+phase space to a 1D configuration family.
+
+LCM denominators: 1/r has mu^10*(mu^2-mu+1)^6, r^4 has 1, 1/r^4
+has mu^22*(mu^2-mu+1)^11. The mu^k factor encodes collision
+singularity strength; mu^2-mu+1 has no real roots.
+
+### Level-3 Structure Extraction (in progress, April 9, 2026)
+
+Running on AWS (i-003c53042d76de01b, r6i.4xlarge): exact symbolic
+structure constants for the rank-116 algebra at N=3 d=2 1/r.
+6,670 Poisson bracket pairs. Expected 6-24 hours.
