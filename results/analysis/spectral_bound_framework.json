@@ -1,0 +1,63 @@
+{
+  "title": "Spectral Bound Interpretation Framework",
+  "date": "2026-04-10",
+  "description": "Framework for interpreting the results of the energy bound search (AWS computation). The search computes the commutant of H_total in both the classical (116-dim) and quantum (117-dim) Lie algebras.",
+
+  "setup": {
+    "classical_algebra": "116 generators over QQ, Poisson bracket",
+    "quantum_algebra": "117 generators over QQ[hbar], Moyal bracket (=commutator/i*hbar)",
+    "H_total": "H_12 + H_13 + H_23 (sum of pairwise Hamiltonians)",
+    "computation": "For each generator e_i, compute [e_i, H_total]. Build matrix, find kernel = commutant of H_total."
+  },
+
+  "possible_outcomes": {
+    "case_A": {
+      "condition": "dim(quantum commutant) > dim(classical commutant)",
+      "meaning": "The 117th generator participates in a conserved combination that doesn't exist classically.",
+      "interpretation": "There exists a linear combination C = sum c_i * e_i (with hbar-dependent coefficients) that commutes with H_total. If C has definite sign (or can be made sign-definite), it yields an operator inequality: C_hat >= 0 (or <= 0) on quantum states, constraining the energy spectrum from below (or above).",
+      "next_steps": [
+        "Extract the explicit conserved combination C from the kernel vectors",
+        "Check whether C (or any component) involves g_q with nonzero coefficient",
+        "Test sign-definiteness of C by evaluating at many configurations",
+        "If sign-definite: state the spectral bound explicitly",
+        "If not sign-definite: check if a quadratic (Casimir) construction helps"
+      ],
+      "significance": "A new spectral bound for the quantum three-body problem arising from Lie algebra structure — potentially novel in mathematical physics."
+    },
+
+    "case_B": {
+      "condition": "dim(quantum commutant) == dim(classical commutant)",
+      "meaning": "The 117th generator does NOT participate in any conserved combination. The quantum corrections create new algebra elements but don't create new conservation laws.",
+      "interpretation": "g_q is 'purely kinematic' — it's a valid observable that exists in the quantum algebra but doesn't commute with the total energy. It evolves in time and cannot be used to constrain the energy spectrum via a simple linear combination.",
+      "next_steps": [
+        "Check whether g_q participates in any APPROXIMATE conservation (small [g_q, H])",
+        "Explore quadratic combinations: is there a Casimir element involving g_q?",
+        "Consider whether the negative semi-definiteness of g_q still has physical consequences even without conservation (e.g., as a Berry phase or geometric contribution)"
+      ],
+      "significance": "Clean negative result: the quantum deformation is algebraic but not dynamical. Still publishable as it resolves the question and characterizes the nature of the 117th generator."
+    },
+
+    "case_C": {
+      "condition": "dim(quantum commutant) < dim(classical commutant)",
+      "meaning": "The quantum algebra has FEWER conserved combinations than the classical one. This would mean quantization breaks some classical conservation laws.",
+      "interpretation": "This would be surprising and potentially very interesting — it would mean the Moyal bracket algebra is 'more constrained' than the Poisson algebra. Needs careful verification.",
+      "next_steps": [
+        "Verify computation correctness (this outcome is unexpected)",
+        "Check for subtle errors in the QQ[hbar] domain handling"
+      ],
+      "significance": "If genuine, this would be a remarkable result about quantum symmetry breaking."
+    }
+  },
+
+  "additional_analyses": {
+    "casimir": "Regardless of commutant outcome, the Killing form computation provides structural information about the algebra (semisimplicity, center dimension). A nondegenerate Killing form implies semisimplicity and the existence of Casimir operators.",
+    "universality_of_bound": "If a spectral bound exists for 1/r, the Phase 1 result (all 1/r^n produce 117th generator) means the same analysis could yield bounds for 1/r^2, 1/r^3, 1/r^4 systems."
+  },
+
+  "current_status": {
+    "aws_instance": "i-05f31ce551dbe68f1 (r6i.2xlarge)",
+    "step1": "COMPLETE — g_q commutes with P_total and X_cm",
+    "step2": "IN PROGRESS — computing 156 Moyal brackets [e_i, H_total], at 40/156",
+    "estimated_completion": "12-24 hours from launch (launched ~03:34 UTC April 10)"
+  }
+}

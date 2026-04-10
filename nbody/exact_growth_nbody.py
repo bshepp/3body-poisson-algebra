@@ -38,7 +38,7 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 COORD_LABELS = {1: ["x"], 2: ["x", "y"], 3: ["x", "y", "z"]}
 
-VALID_POTENTIALS = ("1/r", "1/r^2", "1/r^3", "log", "yukawa")
+VALID_POTENTIALS = ("1/r", "1/r^2", "1/r^3", "1/r^4", "log", "yukawa")
 
 
 class NBodyAlgebra:
@@ -212,12 +212,12 @@ class NBodyAlgebra:
                     V = -mi * mj * u * sp_exp(-mu_param / u)
                 H = kinetic(bi) + kinetic(bj) + V
             elif charges is not None:
-                pot_power = {"1/r": 1, "1/r^2": 2, "1/r^3": 3}[self.potential]
+                pot_power = {"1/r": 1, "1/r^2": 2, "1/r^3": 3, "1/r^4": 4}[self.potential]
                 qi = Integer(charges[bi]) if isinstance(charges[bi], int) else charges[bi]
                 qj = Integer(charges[bj]) if isinstance(charges[bj], int) else charges[bj]
                 H = kinetic(bi) + kinetic(bj) + qi * qj * u ** pot_power
             else:
-                pot_power = {"1/r": 1, "1/r^2": 2, "1/r^3": 3}[self.potential]
+                pot_power = {"1/r": 1, "1/r^2": 2, "1/r^3": 3, "1/r^4": 4}[self.potential]
                 H = kinetic(bi) + kinetic(bj) - mi * mj * u ** pot_power
 
             if self.external_potential is not None:

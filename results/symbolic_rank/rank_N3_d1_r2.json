@@ -1,0 +1,29 @@
+{
+  "N": 3,
+  "d": 1,
+  "potential": "r^2",
+  "potential_label": "r^2",
+  "max_level": 4,
+  "quantum": false,
+  "bracket_type": "Poisson",
+  "n_generators": 12093,
+  "n_monomials": 21,
+  "cumulative_rank": [
+    3,
+    6,
+    13,
+    15,
+    15
+  ],
+  "new_per_level": [
+    3,
+    3,
+    7,
+    2,
+    0
+  ],
+  "matrix_density": 0.2590046189649266,
+  "computation_time_seconds": 25.8,
+  "sympy_version": "1.14.0",
+  "stabilized": true
+}

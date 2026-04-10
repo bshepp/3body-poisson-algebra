@@ -41,6 +41,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sympy as sp
 from sympy import Integer, Rational, Add, Poly, expand, cancel, diff, Symbol
 
+import pickle
+
 from exact_growth_nbody import NBodyAlgebra, COORD_LABELS
 
 
@@ -56,6 +58,9 @@ class NBodySymbolicRank:
 
         if potential in ('r^4', 'r^2'):
             self._init_polynomial_spring(n_bodies, d_spatial, masses, potential)
+            if quantum:
+                from quantum_algebra import hbar_sym
+                self.hbar_sym = hbar_sym
         elif quantum:
             from quantum_algebra import QuantumNBodyAlgebra, hbar_sym
             self.algebra = QuantumNBodyAlgebra(
@@ -132,21 +137,143 @@ class NBodySymbolicRank:
             return self.algebra.commutator(f, g)
         if self.uses_u:
             return self.algebra.poisson_bracket(f, g)
-        result = Integer(0)
+
+        # Classical Poisson bracket
+        pb = Integer(0)
         for q, p in zip(self.q_vars, self.p_vars):
-            result += diff(f, q) * diff(g, p) - diff(f, p) * diff(g, q)
+            pb += diff(f, q) * diff(g, p) - diff(f, p) * diff(g, q)
+
+        if not self.quantum:
+            return pb
+
+        # Moyal bracket for polynomial phase-space functions (no u_ij).
+        #
+        # [f,g]_M / (i*hbar) = sum_{n=0}^{...} (-1)^n (hbar/2)^{2n}
+        #                       / (2n+1)! * P_{2n+1}(f,g)
+        #
+        # P_m(f,g) = sum_{k=0}^{m} (-1)^k C(m,k)
+        #   * [sum over DOF distributions of (m-k) q-derivs and k p-derivs]
+        #   * (multi-deriv f) * (multi-deriv g)
+        #
+        # Implementation: distribute derivatives across DOFs via
+        # multinomial partitions.
+
+        from quantum_algebra import hbar_sym
+        from math import factorial, comb
+
+        result = pb
+        f_exp = expand(f)
+        g_exp = expand(g)
+
+        max_deg = 0
+        for v in self.q_vars + self.p_vars:
+            max_deg = max(max_deg, sp.degree(f_exp, v),
+                          sp.degree(g_exp, v))
+
+        n_dof = len(self.q_vars)
+
+        for n in range(1, max_deg // 2 + 1):
+            order = 2 * n + 1
+            coeff = Rational((-1)**n, factorial(order) * 2**(2*n))
+
+            p_term = Integer(0)
+            for k in range(order + 1):
+                sign = (-1)**k
+                nq = order - k  # q-derivatives on f, p-derivatives on g
+                np_ = k         # p-derivatives on f, q-derivatives on g
+
+                for qa in self._partitions(nq, n_dof):
+                    mn_q = factorial(nq)
+                    skip = False
+                    for v in qa:
+                        mn_q //= factorial(v)
+
+                    for pa in self._partitions(np_, n_dof):
+                        mn_p = factorial(np_)
+                        for v in pa:
+                            mn_p //= factorial(v)
+
+                        df = f_exp
+                        for j in range(n_dof):
+                            if qa[j] > 0:
+                                df = diff(df, self.q_vars[j], qa[j])
+                            if pa[j] > 0:
+                                df = diff(df, self.p_vars[j], pa[j])
+                        if df == 0:
+                            continue
+
+                        dg = g_exp
+                        for j in range(n_dof):
+                            if pa[j] > 0:
+                                dg = diff(dg, self.q_vars[j], pa[j])
+                            if qa[j] > 0:
+                                dg = diff(dg, self.p_vars[j], qa[j])
+                        if dg == 0:
+                            continue
+
+                        p_term += sign * mn_q * mn_p * df * dg
+
+            if p_term != 0:
+                result += hbar_sym**(2*n) * coeff * p_term
+
         return result
+
+    @staticmethod
+    def _partitions(n, k):
+        """Generate all k-tuples of non-negative integers summing to n."""
+        if k == 1:
+            yield (n,)
+            return
+        for i in range(n + 1):
+            for rest in NBodySymbolicRank._partitions(n - i, k - 1):
+                yield (i,) + rest
 
     def _simplify(self, expr):
         if self.uses_u:
             return cancel(expr)
         return expand(expr)
 
-    def build_generators(self, max_level):
-        """Build generators through max_level from scratch."""
+    def _ckpt_path(self, checkpoint_dir, tag):
+        """Return path for a checkpoint file."""
+        if checkpoint_dir is None:
+            return None
+        os.makedirs(checkpoint_dir, exist_ok=True)
+        return os.path.join(checkpoint_dir, f"{tag}.pkl")
+
+    def save_checkpoint(self, checkpoint_dir, tag, data):
+        """Save a checkpoint to disk."""
+        path = self._ckpt_path(checkpoint_dir, tag)
+        if path is None:
+            return
+        tmp = path + ".tmp"
+        with open(tmp, "wb") as f:
+            pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
+        os.replace(tmp, path)
+        print(f"  [checkpoint] Saved {tag} ({os.path.getsize(path)/1024/1024:.1f} MB)")
+
+    def load_checkpoint(self, checkpoint_dir, tag):
+        """Load a checkpoint if it exists. Returns None if not found."""
+        path = self._ckpt_path(checkpoint_dir, tag)
+        if path is None or not os.path.exists(path):
+            return None
+        print(f"  [checkpoint] Loading {tag}...")
+        with open(path, "rb") as f:
+            data = pickle.load(f)
+        print(f"  [checkpoint] Loaded {tag} ({os.path.getsize(path)/1024/1024:.1f} MB)")
+        return data
+
+    def build_generators(self, max_level, checkpoint_dir=None):
+        """Build generators through max_level, with optional per-level checkpointing."""
         print(f"Building generators: N={self.n_bodies}, d={self.d_spatial}, "
               f"potential={self.potential}, max_level={max_level}")
         t_total = time()
+
+        # Check for a complete checkpoint from a prior run
+        ckpt = self.load_checkpoint(checkpoint_dir, f"generators_level{max_level}")
+        if ckpt is not None:
+            all_exprs, all_names, all_levels, computed_pairs = ckpt
+            print(f"  Resumed from complete checkpoint: {len(all_exprs)} generators")
+            return all_exprs, all_names, all_levels
 
         if self.potential in ('r^4', 'r^2'):
             all_exprs = list(self.hamiltonian_list)
@@ -159,33 +286,49 @@ class NBodySymbolicRank:
         all_levels = [0] * n_l0
         computed_pairs = set()
 
-        print(f"\n--- Level 0: {n_l0} Pairwise Hamiltonians ---")
-        for name, expr in zip(all_names, all_exprs):
-            nterms = len(Add.make_args(expr))
-            print(f"  {name}: {nterms} terms")
+        # Try to resume from the highest available level checkpoint
+        resume_level = -1
+        for lv in range(max_level, -1, -1):
+            ckpt = self.load_checkpoint(checkpoint_dir, f"generators_level{lv}")
+            if ckpt is not None:
+                all_exprs, all_names, all_levels, computed_pairs = ckpt
+                resume_level = lv
+                print(f"  Resumed from level {lv} checkpoint: "
+                      f"{len(all_exprs)} generators")
+                break
 
-        for i in range(n_l0):
-            for j in range(i + 1, n_l0):
-                computed_pairs.add(frozenset({i, j}))
+        if resume_level < 0:
+            print(f"\n--- Level 0: {n_l0} Pairwise Hamiltonians ---")
+            for name, expr in zip(all_names, all_exprs):
+                nterms = len(Add.make_args(expr))
+                print(f"  {name}: {nterms} terms")
 
-        # Level 1
-        if max_level >= 1:
-            print(f"\n--- Level 1: Brackets of {n_l0} Hamiltonians ---")
             for i in range(n_l0):
                 for j in range(i + 1, n_l0):
-                    ni, nj = all_names[i], all_names[j]
-                    bname = f"{{{ni},{nj}}}"
-                    t0 = time()
-                    expr = self._poisson_bracket(all_exprs[i], all_exprs[j])
-                    expr = self._simplify(expr)
-                    nterms = len(Add.make_args(expr))
-                    print(f"  {bname} -> {nterms} terms [{time()-t0:.1f}s]")
-                    all_exprs.append(expr)
-                    all_names.append(bname)
-                    all_levels.append(1)
+                    computed_pairs.add(frozenset({i, j}))
+
+            # Level 1
+            if max_level >= 1:
+                print(f"\n--- Level 1: Brackets of {n_l0} Hamiltonians ---")
+                for i in range(n_l0):
+                    for j in range(i + 1, n_l0):
+                        ni, nj = all_names[i], all_names[j]
+                        bname = f"{{{ni},{nj}}}"
+                        t0 = time()
+                        expr = self._poisson_bracket(all_exprs[i], all_exprs[j])
+                        expr = self._simplify(expr)
+                        nterms = len(Add.make_args(expr))
+                        print(f"  {bname} -> {nterms} terms [{time()-t0:.1f}s]")
+                        all_exprs.append(expr)
+                        all_names.append(bname)
+                        all_levels.append(1)
+
+                self.save_checkpoint(checkpoint_dir, "generators_level1",
+                                     (all_exprs, all_names, all_levels, computed_pairs))
+            resume_level = 1
 
         # Levels 2+
-        for level in range(2, max_level + 1):
+        for level in range(max(2, resume_level + 1), max_level + 1):
             print(f"\n--- Level {level} ---")
             t_level = time()
             frontier = [i for i, lv in enumerate(all_levels) if lv == level - 1]
@@ -228,6 +371,8 @@ class NBodySymbolicRank:
 
             print(f"  Level {level}: {len(new_exprs)} candidates "
                   f"in {time()-t_level:.1f}s")
+            self.save_checkpoint(checkpoint_dir, f"generators_level{level}",
+                                 (all_exprs, all_names, all_levels, computed_pairs))
 
         print(f"\nTotal generators: {len(all_exprs)} "
               f"in {time()-t_total:.1f}s")
@@ -266,7 +411,8 @@ class NBodySymbolicRank:
 
         return poly_list, monom_list, monom_to_idx
 
-    def compute_exact_rank(self, poly_list, monom_list, monom_to_idx, levels):
+    def compute_exact_rank(self, poly_list, monom_list, monom_to_idx, levels,
+                           checkpoint_dir=None):
         """Compute exact rank using DomainMatrix over QQ (or QQ[hbar] for quantum)."""
         from sympy.polys.matrices import DomainMatrix
         from sympy.polys.domains import QQ
@@ -281,7 +427,19 @@ class NBodySymbolicRank:
         n_mon = len(monom_list)
         results = {}
 
+        # Try to load a rank checkpoint
+        ckpt = self.load_checkpoint(checkpoint_dir, "rank_results") \
+            if checkpoint_dir else None
+        if ckpt is not None:
+            results = ckpt
+            print(f"  Resumed rank checkpoint: levels {sorted(results.keys())}")
+
         for max_lv in range(max(levels) + 1):
+            if max_lv in results:
+                print(f"\n  Rank through level {max_lv}: "
+                      f"{results[max_lv]} (from checkpoint)")
+                continue
+
             mask = [i for i, lv in enumerate(levels) if lv <= max_lv]
             n_sel = len(mask)
 
@@ -305,6 +463,8 @@ class NBodySymbolicRank:
 
             print(f"rank = {rank}  [{elapsed:.1f}s]")
             results[max_lv] = rank
+
+            self.save_checkpoint(checkpoint_dir, "rank_results", results)
 
         return results
 
@@ -643,6 +803,8 @@ def main():
                     help="Use quantum commutator [f,g]/(i*hbar) instead of "
                          "Poisson bracket {f,g}")
     ap.add_argument("--output", default=None, help="Output JSON file")
+    ap.add_argument("--checkpoint-dir", default=None,
+                    help="Directory for per-level checkpoints (enables resume)")
     args = ap.parse_args()
 
     mode = "QUANTUM COMMUTATOR" if args.quantum else "POISSON"
@@ -676,8 +838,14 @@ def main():
         potential_params=potential_params,
         quantum=args.quantum)
 
+    ckpt_dir = args.checkpoint_dir
+    if ckpt_dir:
+        os.makedirs(ckpt_dir, exist_ok=True)
+        print(f"Checkpointing to: {ckpt_dir}")
+
     # Phase 1: Build generators
-    exprs, names, levels = engine.build_generators(args.max_level)
+    exprs, names, levels = engine.build_generators(args.max_level,
+                                                   checkpoint_dir=ckpt_dir)
 
     # Phase 2: Extract monomial-coefficient matrix
     poly_list, monom_list, monom_to_idx = engine.extract_monomial_matrix(exprs)
@@ -688,7 +856,7 @@ def main():
     print("=" * 70)
 
     rank_results = engine.compute_exact_rank(
-        poly_list, monom_list, monom_to_idx, levels)
+        poly_list, monom_list, monom_to_idx, levels, checkpoint_dir=ckpt_dir)
 
     # Summary
     print("\n" + "=" * 70)

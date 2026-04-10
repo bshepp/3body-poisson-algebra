@@ -51,7 +51,7 @@ Additional completed work:
 
 | # | Task | Notes |
 |---|---|---|
-| 1 | **Quantum rank for other potentials** | Test r⁴, 1/r⁴, composite with Moyal bracket. |
+| 1 | ~~Quantum rank for other potentials~~ | **DONE** — r², r⁴, 1/r², 1/r³, 1/r⁴ all tested. See Universality Classification above. |
 | 3 | **Parametric exponent sweep** (1,015 values of n) | Script written (`parametric_atlas_scan.py`), not yet run at scale. See Section 3 below. |
 | 4 | **Dusty plasma Yukawa atlas** | Prior run failed (exit code 1). Yukawa lambdification issue. |
 | 5 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
@@ -82,6 +82,42 @@ Additional completed work:
 | 5 | **Post-Newtonian 1PN** | -1/r - 1/r² gives [3, 6, 17, 116] — GR correction does not change algebra. |
 | 6 | **Post-Newtonian 2PN** | -1/r - 1/r² - 1/r³ — level 3 in progress locally. |
 | 7 | **117th generator identified** | Sum-of-squares proof: g = −(9/4)[(A−B)² + A²], negative semi-definite. Legendre P₃ structure. |
+
+### Completed — Quantum Universality Classification (April 10, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **1/r^2 quantum rank (d=1)** | [3, 6, 17, **117**] — grows by 1 (Calogero-Moser, integrable in 1D). |
+| 2 | **1/r^3 quantum rank (d=1)** | [3, 6, 17, **117**] — grows by 1. |
+| 3 | **1/r^4 quantum rank (d=1)** | [3, 6, 17, **117**] — grows by 1. Added 1/r^4 to `VALID_POTENTIALS`. |
+| 4 | **r^2 quantum rank (d=1)** | [3, 6, 13, 15] — no growth (finite algebra, no quantum corrections). |
+| 5 | **r^4 quantum rank (d=1)** | [3, 6, 17, 116] — no growth (quantum corrections are linearly dependent). |
+| 6 | **Classification** | ALL singular potentials (1/r^n, n≥1) grow by +1. NO polynomial potentials grow. The singularity is load-bearing. |
+
+### Completed — N-body Scaling Formulas (April 10, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **L1 formula** | L1(N) = N(3N-5)/2. Verified for N=3,4,5,6. New-per-level: N(N-2). |
+| 2 | **L2 formula** | L2(N) = (13N^3 - 42N^2 + 83N - 120)/6. Verified for N=3,4,5,6. |
+| 3 | **L3 formula** | Unknown — only one data point (N=3: L3=116). Need N=4 or N=5 level 3. |
+| 4 | **Degree pattern** | Leading polynomial degree in N: L0~N^2, L1~N^2, L2~N^3. Increases with level. |
+
+### Completed — Mass Invariance Statement (April 10, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **Symbolic rank** | Rank over Q(m_1,m_2,m_3) = [3,6,17,116] — proves generic mass invariance. |
+| 2 | **Specific verifications** | Tested at masses (1,1,1), (1,2,3), (1,1,5/2), (1,1,1/100), (1,1,1/10000) — all [3,6,17,116]. |
+| 3 | **Formal statement** | Algebra dimension is determined solely by potential type, N, and d. Masses play no role. |
+
+### Completed — Non-Integrability Analysis Framework (April 10, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **Evidence assessment** | Strong computational evidence for non-integrability, not yet a complete proof. |
+| 2 | **Key gap** | Need to show algebra is infinite-dimensional (level 4 data) or connect to Morales-Ramis theory. |
+| 3 | **Integrable comparison** | Harmonic (r^2) is the ONLY tested potential producing a finite algebra (dim 15). All others grow to 116+. |
 
 ### Completed — 117th Generator Analysis (April 10, 2026)
 
