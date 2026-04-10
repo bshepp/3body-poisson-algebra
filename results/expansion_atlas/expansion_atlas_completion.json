@@ -83,5 +83,25 @@
     "status": "complete",
     "exit_code": 0,
     "completed_at": "2026-03-23T03:06:23Z"
+  },
+  "dusty_plasma_ref": {
+    "status": "failed",
+    "exit_code": -9,
+    "completed_at": "2026-03-23T06:40:50Z"
+  },
+  "dusty_plasma_chg": {
+    "status": "failed",
+    "exit_code": 1,
+    "completed_at": "2026-03-23T06:40:52Z"
+  },
+  "two_d_vortices_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-23T09:21:15Z"
+  },
+  "magnetic_monopoles_ref": {
+    "status": "complete",
+    "exit_code": 0,
+    "completed_at": "2026-03-23T09:21:31Z"
   }
 }

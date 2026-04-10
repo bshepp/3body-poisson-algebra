@@ -57,6 +57,7 @@ from exact_growth_nbody import NBodyAlgebra, COORD_LABELS
 _WORKER_ENGINE = None
 _WORKER_EXPRS = None
 _WORKER_NAMES = None
+_WORKER_PHASE_VARS = None
 _shutdown_requested = False
 
 
@@ -84,6 +85,17 @@ def _compute_one_bracket(args):
     ni, nj = _WORKER_NAMES[i], _WORKER_NAMES[j]
     bname = f"{{{ni},{nj}}}"
     return (idx, i, j, bname, expr, nterms, t_b, t_s)
+
+
+def _extract_one_monomial(idx):
+    """Worker function: expand one expression and extract its monomial dict.
+
+    Uses fork-inherited _WORKER_EXPRS and _WORKER_PHASE_VARS.
+    Returns (idx, monom_dict) where monom_dict maps monomial tuples to coefficients.
+    """
+    expanded = expand(_WORKER_EXPRS[idx])
+    p = Poly(expanded, *_WORKER_PHASE_VARS, domain='QQ')
+    return (idx, p.as_dict())
 
 
 class NBodySymbolicRank:
@@ -519,28 +531,61 @@ class NBodySymbolicRank:
               f"in {time()-t_total:.1f}s")
         return all_exprs, all_names, all_levels
 
-    def extract_monomial_matrix(self, exprs):
+    def extract_monomial_matrix(self, exprs, n_workers=1):
         """Extract monomial-coefficient matrix over QQ."""
-        print("\nExtracting monomial-coefficient matrix...")
+        global _WORKER_EXPRS, _WORKER_PHASE_VARS
+
+        print(f"\nExtracting monomial-coefficient matrix "
+              f"({len(exprs)} generators, {n_workers} workers)...")
         t0 = time()
 
         all_monoms = set()
-        poly_list = []
+        n_gen = len(exprs)
+        use_mp = (n_workers > 1 and n_gen > 100 and os.name != 'nt')
 
-        for idx, expr in enumerate(exprs):
-            expanded = expand(expr)
-            p = Poly(expanded, *self.phase_vars, domain='QQ')
-            monom_dict = p.as_dict()
-            poly_list.append(monom_dict)
-            all_monoms.update(monom_dict.keys())
-            if (idx + 1) % 20 == 0 or idx == len(exprs) - 1:
-                print(f"  Processed {idx+1}/{len(exprs)} generators, "
-                      f"{len(all_monoms)} distinct monomials so far")
+        if use_mp:
+            _WORKER_EXPRS = exprs
+            _WORKER_PHASE_VARS = self.phase_vars
+
+            poly_list = [None] * n_gen
+            chunksize = max(1, min(100, n_gen // (n_workers * 10)))
+            n_done = 0
+            t_batch = time()
+
+            with Pool(processes=n_workers) as pool:
+                for idx, monom_dict in pool.imap_unordered(
+                        _extract_one_monomial, range(n_gen),
+                        chunksize=chunksize):
+                    poly_list[idx] = monom_dict
+                    all_monoms.update(monom_dict.keys())
+                    n_done += 1
+
+                    if n_done % 5000 == 0 or n_done == n_gen:
+                        elapsed = time() - t_batch
+                        rate = n_done / elapsed if elapsed > 0 else 0
+                        eta = (n_gen - n_done) / rate if rate > 0 else 0
+                        print(f"  Processed {n_done}/{n_gen} generators, "
+                              f"{len(all_monoms)} distinct monomials "
+                              f"({rate:.0f}/s, ETA {eta/60:.1f}min)",
+                              flush=True)
+
+            _WORKER_EXPRS = None
+            _WORKER_PHASE_VARS = None
+        else:
+            poly_list = []
+            for idx, expr in enumerate(exprs):
+                expanded = expand(expr)
+                p = Poly(expanded, *self.phase_vars, domain='QQ')
+                monom_dict = p.as_dict()
+                poly_list.append(monom_dict)
+                all_monoms.update(monom_dict.keys())
+                if (idx + 1) % 20 == 0 or idx == len(exprs) - 1:
+                    print(f"  Processed {idx+1}/{n_gen} generators, "
+                          f"{len(all_monoms)} distinct monomials so far")
 
         monom_list = sorted(all_monoms)
         monom_to_idx = {m: i for i, m in enumerate(monom_list)}
 
-        n_gen = len(exprs)
         n_mon = len(monom_list)
         n_nonzero = sum(len(d) for d in poly_list)
         density = n_nonzero / (n_gen * n_mon) if n_gen * n_mon > 0 else 0
@@ -1004,7 +1049,8 @@ def main():
                                                    n_workers=n_workers)
 
     # Phase 2: Extract monomial-coefficient matrix
-    poly_list, monom_list, monom_to_idx = engine.extract_monomial_matrix(exprs)
+    poly_list, monom_list, monom_to_idx = engine.extract_monomial_matrix(
+        exprs, n_workers=n_workers)
 
     # Phase 3: Exact rank
     print("\n" + "=" * 70)

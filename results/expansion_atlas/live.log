@@ -5097,3 +5097,2594 @@ Completed 700.8 KiB/700.8 KiB (44.6 MiB/s) with 1 file(s) remainingupload: ../.
 + true
 + sleep 60
 + aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 701.4 KiB/701.4 KiB (42.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:09:13Z", "uptime": " 05:09:13 up  5:55,  0 users,  load average: 1.08, 1.02, 1.01"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 702.0 KiB/702.0 KiB (48.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:10:14Z", "uptime": " 05:10:14 up  5:56,  0 users,  load average: 1.03, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 702.6 KiB/702.6 KiB (49.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:11:15Z", "uptime": " 05:11:15 up  5:57,  0 users,  load average: 1.01, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 703.2 KiB/703.2 KiB (42.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:12:16Z", "uptime": " 05:12:16 up  5:58,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 703.8 KiB/703.8 KiB (43.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:13:17Z", "uptime": " 05:13:17 up  5:59,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 704.4 KiB/704.4 KiB (47.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:14:18Z", "uptime": " 05:14:18 up  6:00,  0 users,  load average: 1.08, 1.02, 1.01"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 705.0 KiB/705.0 KiB (47.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:15:20Z", "uptime": " 05:15:20 up  6:01,  0 users,  load average: 1.03, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 705.6 KiB/705.6 KiB (42.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:16:21Z", "uptime": " 05:16:21 up  6:02,  0 users,  load average: 1.01, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 706.1 KiB/706.1 KiB (56.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:17:22Z", "uptime": " 05:17:22 up  6:03,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 706.7 KiB/706.7 KiB (52.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:18:23Z", "uptime": " 05:18:23 up  6:04,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 707.3 KiB/707.3 KiB (43.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:19:24Z", "uptime": " 05:19:24 up  6:05,  0 users,  load average: 1.08, 1.02, 1.01"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 707.9 KiB/707.9 KiB (48.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:20:25Z", "uptime": " 05:20:25 up  6:06,  0 users,  load average: 1.03, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 708.5 KiB/708.5 KiB (43.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:21:26Z", "uptime": " 05:21:26 up  6:07,  0 users,  load average: 1.01, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 709.1 KiB/709.1 KiB (54.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:22:27Z", "uptime": " 05:22:27 up  6:08,  0 users,  load average: 1.08, 1.03, 1.01"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 709.7 KiB/709.7 KiB (43.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:23:28Z", "uptime": " 05:23:28 up  6:09,  0 users,  load average: 1.03, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 710.3 KiB/710.3 KiB (49.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:24:29Z", "uptime": " 05:24:29 up  6:10,  0 users,  load average: 1.09, 1.03, 1.01"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 710.9 KiB/710.9 KiB (39.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:25:31Z", "uptime": " 05:25:31 up  6:11,  0 users,  load average: 1.03, 1.03, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 711.5 KiB/711.5 KiB (46.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:26:32Z", "uptime": " 05:26:32 up  6:12,  0 users,  load average: 1.05, 1.03, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 712.1 KiB/712.1 KiB (48.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:27:33Z", "uptime": " 05:27:33 up  6:13,  0 users,  load average: 1.02, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 712.7 KiB/712.7 KiB (43.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:28:34Z", "uptime": " 05:28:34 up  6:14,  0 users,  load average: 1.00, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 713.3 KiB/713.3 KiB (48.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:29:35Z", "uptime": " 05:29:35 up  6:15,  0 users,  load average: 1.00, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 713.9 KiB/713.9 KiB (55.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:30:36Z", "uptime": " 05:30:36 up  6:16,  0 users,  load average: 1.03, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 714.4 KiB/714.4 KiB (47.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:31:37Z", "uptime": " 05:31:37 up  6:17,  0 users,  load average: 1.01, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 715.0 KiB/715.0 KiB (46.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:32:38Z", "uptime": " 05:32:38 up  6:18,  0 users,  load average: 1.00, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 715.6 KiB/715.6 KiB (35.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:33:39Z", "uptime": " 05:33:39 up  6:19,  0 users,  load average: 1.00, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 716.2 KiB/716.2 KiB (49.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:34:40Z", "uptime": " 05:34:40 up  6:21,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 716.8 KiB/716.8 KiB (49.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:35:41Z", "uptime": " 05:35:41 up  6:22,  0 users,  load average: 1.03, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 717.4 KiB/717.4 KiB (43.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:36:43Z", "uptime": " 05:36:43 up  6:23,  0 users,  load average: 1.01, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 718.0 KiB/718.0 KiB (47.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:37:44Z", "uptime": " 05:37:44 up  6:24,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 718.6 KiB/718.6 KiB (49.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:38:45Z", "uptime": " 05:38:45 up  6:25,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 719.2 KiB/719.2 KiB (43.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:39:46Z", "uptime": " 05:39:46 up  6:26,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 719.8 KiB/719.8 KiB (46.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:40:47Z", "uptime": " 05:40:47 up  6:27,  0 users,  load average: 1.03, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 720.4 KiB/720.4 KiB (58.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:41:48Z", "uptime": " 05:41:48 up  6:28,  0 users,  load average: 1.01, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 721.0 KiB/721.0 KiB (51.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:42:49Z", "uptime": " 05:42:49 up  6:29,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 721.6 KiB/721.6 KiB (54.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:43:50Z", "uptime": " 05:43:50 up  6:30,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 722.2 KiB/722.2 KiB (23.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:44:51Z", "uptime": " 05:44:51 up  6:31,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 722.7 KiB/722.7 KiB (43.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:45:52Z", "uptime": " 05:45:52 up  6:32,  0 users,  load average: 1.08, 1.02, 1.01"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 723.3 KiB/723.3 KiB (56.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:46:53Z", "uptime": " 05:46:53 up  6:33,  0 users,  load average: 1.03, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 723.9 KiB/723.9 KiB (44.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:47:54Z", "uptime": " 05:47:54 up  6:34,  0 users,  load average: 1.01, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 724.5 KiB/724.5 KiB (50.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:48:56Z", "uptime": " 05:48:56 up  6:35,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 725.1 KiB/725.1 KiB (52.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:49:57Z", "uptime": " 05:49:57 up  6:36,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 725.7 KiB/725.7 KiB (45.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:50:58Z", "uptime": " 05:50:58 up  6:37,  0 users,  load average: 1.08, 1.02, 1.01"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 726.3 KiB/726.3 KiB (47.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:51:59Z", "uptime": " 05:51:59 up  6:38,  0 users,  load average: 1.03, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 726.9 KiB/726.9 KiB (48.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:53:00Z", "uptime": " 05:53:00 up  6:39,  0 users,  load average: 1.01, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 727.5 KiB/727.5 KiB (48.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:54:01Z", "uptime": " 05:54:01 up  6:40,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 728.1 KiB/728.1 KiB (34.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:55:02Z", "uptime": " 05:55:02 up  6:41,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 728.7 KiB/728.7 KiB (49.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:56:03Z", "uptime": " 05:56:03 up  6:42,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 729.3 KiB/729.3 KiB (47.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:57:04Z", "uptime": " 05:57:04 up  6:43,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 729.9 KiB/729.9 KiB (47.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:58:05Z", "uptime": " 05:58:05 up  6:44,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 730.5 KiB/730.5 KiB (49.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T05:59:06Z", "uptime": " 05:59:06 up  6:45,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 731.0 KiB/731.0 KiB (55.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:00:07Z", "uptime": " 06:00:07 up  6:46,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 731.6 KiB/731.6 KiB (51.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:01:09Z", "uptime": " 06:01:09 up  6:47,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 732.2 KiB/732.2 KiB (47.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:02:10Z", "uptime": " 06:02:10 up  6:48,  0 users,  load average: 1.03, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 732.8 KiB/732.8 KiB (37.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:03:11Z", "uptime": " 06:03:11 up  6:49,  0 users,  load average: 1.01, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 733.4 KiB/733.4 KiB (39.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:04:12Z", "uptime": " 06:04:12 up  6:50,  0 users,  load average: 1.05, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 734.0 KiB/734.0 KiB (50.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:05:13Z", "uptime": " 06:05:13 up  6:51,  0 users,  load average: 1.02, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 734.6 KiB/734.6 KiB (52.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:06:14Z", "uptime": " 06:06:14 up  6:52,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 735.2 KiB/735.2 KiB (44.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:07:15Z", "uptime": " 06:07:15 up  6:53,  0 users,  load average: 1.03, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 735.8 KiB/735.8 KiB (44.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:08:16Z", "uptime": " 06:08:16 up  6:54,  0 users,  load average: 1.06, 1.03, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 736.4 KiB/736.4 KiB (49.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:09:18Z", "uptime": " 06:09:18 up  6:55,  0 users,  load average: 1.02, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 737.0 KiB/737.0 KiB (46.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:10:19Z", "uptime": " 06:10:19 up  6:56,  0 users,  load average: 1.00, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 737.6 KiB/737.6 KiB (46.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:11:20Z", "uptime": " 06:11:20 up  6:57,  0 users,  load average: 1.00, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 738.2 KiB/738.2 KiB (53.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:12:21Z", "uptime": " 06:12:21 up  6:58,  0 users,  load average: 1.03, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 738.8 KiB/738.8 KiB (52.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:13:22Z", "uptime": " 06:13:22 up  6:59,  0 users,  load average: 1.01, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 739.3 KiB/739.3 KiB (49.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:14:23Z", "uptime": " 06:14:23 up  7:00,  0 users,  load average: 1.00, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 739.9 KiB/739.9 KiB (58.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:15:24Z", "uptime": " 06:15:24 up  7:01,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 740.5 KiB/740.5 KiB (54.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:16:25Z", "uptime": " 06:16:25 up  7:02,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [3.4s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 741.3 KiB/741.3 KiB (44.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:17:26Z", "uptime": " 06:17:26 up  7:03,  0 users,  load average: 1.03, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 741.9 KiB/741.9 KiB (50.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:18:27Z", "uptime": " 06:18:27 up  7:04,  0 users,  load average: 1.01, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 742.5 KiB/742.5 KiB (58.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:19:28Z", "uptime": " 06:19:28 up  7:05,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 743.1 KiB/743.1 KiB (55.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:20:30Z", "uptime": " 06:20:30 up  7:06,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 743.7 KiB/743.7 KiB (53.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:21:31Z", "uptime": " 06:21:31 up  7:07,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 744.3 KiB/744.3 KiB (52.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:22:32Z", "uptime": " 06:22:32 up  7:08,  0 users,  load average: 1.11, 1.03, 1.01"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 744.8 KiB/744.8 KiB (51.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:23:33Z", "uptime": " 06:23:33 up  7:09,  0 users,  load average: 1.04, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 745.4 KiB/745.4 KiB (57.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:24:34Z", "uptime": " 06:24:34 up  7:10,  0 users,  load average: 1.01, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 746.0 KiB/746.0 KiB (53.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:25:35Z", "uptime": " 06:25:35 up  7:11,  0 users,  load average: 1.00, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 746.6 KiB/746.6 KiB (50.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:26:36Z", "uptime": " 06:26:36 up  7:12,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 747.2 KiB/747.2 KiB (53.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:27:37Z", "uptime": " 06:27:37 up  7:13,  0 users,  load average: 1.08, 1.02, 1.01"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 747.8 KiB/747.8 KiB (43.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:28:38Z", "uptime": " 06:28:38 up  7:14,  0 users,  load average: 1.03, 1.01, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 748.4 KiB/748.4 KiB (51.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:29:39Z", "uptime": " 06:29:39 up  7:15,  0 users,  load average: 1.01, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 749.0 KiB/749.0 KiB (33.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:30:40Z", "uptime": " 06:30:40 up  7:17,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 749.6 KiB/749.6 KiB (50.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:31:42Z", "uptime": " 06:31:42 up  7:18,  0 users,  load average: 1.00, 1.00, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 750.2 KiB/750.2 KiB (53.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:32:43Z", "uptime": " 06:32:43 up  7:19,  0 users,  load average: 1.16, 1.03, 1.01"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 750.8 KiB/750.8 KiB (52.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:33:44Z", "uptime": " 06:33:44 up  7:20,  0 users,  load average: 1.06, 1.03, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 751.4 KiB/751.4 KiB (54.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:34:45Z", "uptime": " 06:34:45 up  7:21,  0 users,  load average: 1.02, 1.02, 1.00"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 752.0 KiB/752.0 KiB (23.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:40:49Z", "uptime": " 06:40:49 up  7:27,  0 users,  load average: 7.69, 5.72, 3.09"}'
+    reference completed: exit=-9, time=214.2min
++ true
++ sleep 60
+
+    Starting charged scan: /usr/bin/python3 -u /opt/3body/targeted_adaptive_scan.py --potential yukawa --yukawa-mu 0.1 --charges 1 1 1
+
+######################################################################
+# TARGETED ADAPTIVE SCANS
+# Regions: lagrange, euler_strip, charge_hotspot, tier_cluster, isosceles_ridge, small_mu
+# Configs: 1
+# Total points per config: 9000
+# Workers: 31
+# Estimated time per config: ~0.4 hrs (31 workers)
+######################################################################
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/coulomb_yukawa_+1_+1_+1/lagrange/ -> atlas_targeted/coulomb_yukawa_+1_+1_+1/lagrange/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: lagrange
+  Lagrange equilateral neighborhood (5-tier point nearby)
+  Potential: Yukawa (e^{-mu r}/r) Coulomb (+1, +1, +1)
+  Charges: [1, 1, 1]
+  mu: [0.850, 1.150]  phi: [50, 95] deg
+  Grid: 50x50 = 2500 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: Equilateral triangle, 5-tier point at (0.99, 84deg), tier count transition zone
+======================================================================
+
+  Building symbolic algebra for Yukawa (e^{-mu r}/r) Coulomb (+1, +1, +1)...
+  Building symbolic generators for Coulomb yukawa charges=(+1,+1,+1)...
+Traceback (most recent call last):
+  File "/opt/3body/targeted_adaptive_scan.py", line 743, in <module>
+    main()
+  File "/opt/3body/targeted_adaptive_scan.py", line 718, in main
+    run_region_scan(name, pot, charges,
+  File "/opt/3body/targeted_adaptive_scan.py", line 245, in run_region_scan
+    algebra = PoissonAlgebra(config)
+  File "/opt/3body/stability_atlas.py", line 368, in __init__
+    H12, H13, H23 = Potential.get_symbolic_hamiltonians(
+  File "/opt/3body/stability_atlas.py", line 283, in get_symbolic_hamiltonians
+    raise ValueError(
+ValueError: Charges not supported with potential 'yukawa'
+    charged completed: exit=1, time=0.0min
+  No completed regions for Yukawa (e^{-mu r}/r)
+  No completed regions for Yukawa (e^{-mu r}/r) Coulomb (+1, +1, +1)
+
+======================================================================
+  [13/14] Three 2D Vortices (log)
+  Point vortices in 2D fluid with logarithmic interaction
+======================================================================
+
+    Starting reference scan: /usr/bin/python3 -u /opt/3body/targeted_adaptive_scan.py --potential log
+
+######################################################################
+# TARGETED ADAPTIVE SCANS
+# Regions: lagrange, euler_strip, charge_hotspot, tier_cluster, isosceles_ridge, small_mu
+# Configs: 1
+# Total points per config: 9000
+# Workers: 31
+# Estimated time per config: ~0.4 hrs (31 workers)
+######################################################################
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/log/lagrange/ -> atlas_targeted/log/lagrange/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: lagrange
+  Lagrange equilateral neighborhood (5-tier point nearby)
+  Potential: log(r) (Logarithmic)
+  mu: [0.850, 1.150]  phi: [50, 95] deg
+  Grid: 50x50 = 2500 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: Equilateral triangle, 5-tier point at (0.99, 84deg), tier count transition zone
+======================================================================
+
+  Building symbolic algebra for log(r) (Logarithmic)...
+  Building symbolic generators for Logarithmic (log r)...
+    Level 2: 12 generators (0 zero)
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 756.2 KiB/756.2 KiB (37.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:41:50Z", "uptime": " 06:41:50 up  7:28,  0 users,  load average: 3.46, 4.86, 2.96"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 756.8 KiB/756.8 KiB (45.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:42:51Z", "uptime": " 06:42:51 up  7:29,  0 users,  load average: 1.90, 4.16, 2.83"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 757.4 KiB/757.4 KiB (51.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:43:52Z", "uptime": " 06:43:52 up  7:30,  0 users,  load average: 1.33, 3.58, 2.72"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 758.0 KiB/758.0 KiB (50.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:44:53Z", "uptime": " 06:44:53 up  7:31,  0 users,  load average: 1.12, 3.11, 2.61"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 758.6 KiB/758.6 KiB (58.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:45:54Z", "uptime": " 06:45:54 up  7:32,  0 users,  load average: 1.12, 2.71, 2.50"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 759.2 KiB/759.2 KiB (54.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:46:55Z", "uptime": " 06:46:55 up  7:33,  0 users,  load average: 1.04, 2.40, 2.40"}'
++ true
++ sleep 60
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.7s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 759.9 KiB/759.9 KiB (54.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:47:56Z", "uptime": " 06:47:56 up  7:34,  0 users,  load average: 1.01, 2.14, 2.31"}'
++ true
++ sleep 60
+      40/156  [61.3s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 760.5 KiB/760.5 KiB (59.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:48:57Z", "uptime": " 06:48:57 up  7:35,  0 users,  load average: 1.00, 1.93, 2.23"}'
++ true
++ sleep 60
+      60/156  [130.2s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 761.1 KiB/761.1 KiB (51.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:49:59Z", "uptime": " 06:49:59 up  7:36,  0 users,  load average: 1.00, 1.76, 2.15"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 761.7 KiB/761.7 KiB (51.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:51:00Z", "uptime": " 06:51:00 up  7:37,  0 users,  load average: 1.00, 1.62, 2.07"}'
++ true
++ sleep 60
+      80/156  [231.7s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 762.4 KiB/762.4 KiB (56.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:52:01Z", "uptime": " 06:52:01 up  7:38,  0 users,  load average: 1.03, 1.51, 2.00"}'
++ true
++ sleep 60
+      100/156  [313.0s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 763.0 KiB/763.0 KiB (58.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:53:02Z", "uptime": " 06:53:02 up  7:39,  0 users,  load average: 1.01, 1.41, 1.94"}'
++ true
++ sleep 60
+      120/156  [364.6s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 763.6 KiB/763.6 KiB (57.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:54:03Z", "uptime": " 06:54:03 up  7:40,  0 users,  load average: 1.00, 1.33, 1.88"}'
++ true
++ sleep 60
+      140/156  [410.4s]
+      156/156  [425.8s]
+    Total lambdify time: 426.2s
+  Algebra ready (808.2s)
+  Algebra ready (808.2s, 156 generators)
+  Starting worker pool (31 workers)...
+  Row   1/50  mu=0.850  [   50/2500]  row=33.0s  ETA=27m  ranks=[112,116]  gap_score=[17.7,18.5]  avg_eps=4.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 764.5 KiB/764.5 KiB (32.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:55:04Z", "uptime": " 06:55:04 up  7:41,  0 users,  load average: 10.55, 3.84, 2.69"}'
++ true
++ sleep 60
+  Row   2/50  mu=0.856  [  100/2500]  row=34.3s  ETA=27m  ranks=[112,116]  gap_score=[17.8,18.8]  avg_eps=4.0
+  Row   3/50  mu=0.862  [  150/2500]  row=30.3s  ETA=25m  ranks=[112,116]  gap_score=[17.7,18.4]  avg_eps=3.6
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 765.3 KiB/765.3 KiB (22.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:56:06Z", "uptime": " 06:56:06 up  7:42,  0 users,  load average: 15.32, 6.65, 3.75"}'
++ true
++ sleep 60
+  Row   4/50  mu=0.868  [  200/2500]  row=37.2s  ETA=26m  ranks=[112,116]  gap_score=[17.7,18.7]  avg_eps=4.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 766.0 KiB/766.0 KiB (52.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:57:08Z", "uptime": " 06:57:08 up  7:43,  0 users,  load average: 16.54, 8.76, 4.67"}'
++ true
++ sleep 60
+  Row   5/50  mu=0.874  [  250/2500]  row=29.5s  ETA=25m  ranks=[112,116]  gap_score=[17.7,18.7]  avg_eps=3.5
+  Row   6/50  mu=0.881  [  300/2500]  row=33.9s  ETA=24m  ranks=[112,116]  gap_score=[17.7,18.7]  avg_eps=3.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 766.8 KiB/766.8 KiB (50.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:58:09Z", "uptime": " 06:58:09 up  7:44,  0 users,  load average: 19.22, 10.98, 5.69"}'
++ true
++ sleep 60
+  Row   7/50  mu=0.887  [  350/2500]  row=29.5s  ETA=23m  ranks=[115,116]  gap_score=[17.7,18.4]  avg_eps=3.9
+  Row   8/50  mu=0.893  [  400/2500]  row=32.0s  ETA=23m  ranks=[115,116]  gap_score=[17.7,18.7]  avg_eps=3.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 767.6 KiB/767.6 KiB (53.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T06:59:10Z", "uptime": " 06:59:10 up  7:45,  0 users,  load average: 20.95, 12.85, 6.66"}'
++ true
++ sleep 60
+  Row   9/50  mu=0.899  [  450/2500]  row=28.5s  ETA=22m  ranks=[115,116]  gap_score=[17.7,18.6]  avg_eps=3.9
+  Row  10/50  mu=0.905  [  500/2500]  row=27.4s  ETA=21m  ranks=[113,116]  gap_score=[17.7,18.6]  avg_eps=3.6
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 768.4 KiB/768.4 KiB (56.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:00:11Z", "uptime": " 07:00:11 up  7:46,  0 users,  load average: 17.34, 13.64, 7.37"}'
++ true
++ sleep 60
+  Row  11/50  mu=0.911  [  550/2500]  row=35.8s  ETA=21m  ranks=[112,116]  gap_score=[17.7,18.7]  avg_eps=3.3
+  Row  12/50  mu=0.917  [  600/2500]  row=27.2s  ETA=20m  ranks=[115,116]  gap_score=[17.7,18.6]  avg_eps=3.7
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 769.2 KiB/769.2 KiB (48.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:01:13Z", "uptime": " 07:01:13 up  7:47,  0 users,  load average: 19.17, 14.96, 8.22"}'
++ true
++ sleep 60
+  Row  13/50  mu=0.923  [  650/2500]  row=32.0s  ETA=20m  ranks=[113,116]  gap_score=[17.7,18.4]  avg_eps=3.4
+  Row  14/50  mu=0.930  [  700/2500]  row=27.4s  ETA=19m  ranks=[115,116]  gap_score=[17.7,18.8]  avg_eps=3.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 770.0 KiB/770.0 KiB (46.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:02:14Z", "uptime": " 07:02:14 up  7:48,  0 users,  load average: 20.30, 16.10, 9.04"}'
++ true
++ sleep 60
+  Row  15/50  mu=0.936  [  750/2500]  row=38.5s  ETA=19m  ranks=[113,116]  gap_score=[17.7,18.9]  avg_eps=3.8
+  Row  16/50  mu=0.942  [  800/2500]  row=39.9s  ETA=18m  ranks=[112,116]  gap_score=[17.7,19.0]  avg_eps=4.3
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 770.8 KiB/770.8 KiB (31.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:03:15Z", "uptime": " 07:03:15 up  7:49,  0 users,  load average: 19.46, 16.55, 9.63"}'
++ true
++ sleep 60
+  Row  17/50  mu=0.948  [  850/2500]  row=40.1s  ETA=18m  ranks=[113,116]  gap_score=[17.7,19.0]  avg_eps=4.7
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 771.5 KiB/771.5 KiB (45.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:04:17Z", "uptime": " 07:04:17 up  7:50,  0 users,  load average: 21.23, 17.63, 10.47"}'
++ true
++ sleep 60
+  Row  18/50  mu=0.954  [  900/2500]  row=45.6s  ETA=18m  ranks=[112,116]  gap_score=[17.7,19.0]  avg_eps=5.9
+  Row  19/50  mu=0.960  [  950/2500]  row=42.6s  ETA=18m  ranks=[113,116]  gap_score=[17.7,19.0]  avg_eps=5.7
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 772.3 KiB/772.3 KiB (30.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:05:19Z", "uptime": " 07:05:19 up  7:51,  0 users,  load average: 21.14, 18.30, 11.15"}'
++ true
++ sleep 60
+  Row  20/50  mu=0.966  [ 1000/2500]  row=43.3s  ETA=17m  ranks=[112,116]  gap_score=[17.7,19.0]  avg_eps=5.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 773.0 KiB/773.0 KiB (29.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:06:21Z", "uptime": " 07:06:21 up  7:52,  0 users,  load average: 24.34, 19.68, 12.07"}'
++ true
++ sleep 60
+  Row  21/50  mu=0.972  [ 1050/2500]  row=43.7s  ETA=17m  ranks=[112,116]  gap_score=[17.7,19.0]  avg_eps=5.9
+  Row  22/50  mu=0.979  [ 1100/2500]  row=33.2s  ETA=16m  ranks=[115,116]  gap_score=[17.7,18.8]  avg_eps=5.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 773.9 KiB/773.9 KiB (23.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:07:23Z", "uptime": " 07:07:23 up  7:53,  0 users,  load average: 24.62, 20.52, 12.87"}'
++ true
++ sleep 60
+  Row  23/50  mu=0.985  [ 1150/2500]  row=35.1s  ETA=16m  ranks=[115,116]  gap_score=[17.7,18.9]  avg_eps=5.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 774.6 KiB/774.6 KiB (47.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:08:24Z", "uptime": " 07:08:24 up  7:54,  0 users,  load average: 24.24, 21.26, 13.61"}'
+  Row  24/50  mu=0.991  [ 1200/2500]  row=35.7s  ETA=15m  ranks=[115,116]  gap_score=[17.7,18.9]  avg_eps=5.4
++ true
++ sleep 60
+  Row  25/50  mu=0.997  [ 1250/2500]  row=43.2s  ETA=15m  ranks=[115,116]  gap_score=[17.7,18.9]  avg_eps=5.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 775.4 KiB/775.4 KiB (29.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:09:26Z", "uptime": " 07:09:26 up  7:55,  0 users,  load average: 23.80, 21.76, 14.27"}'
++ true
++ sleep 60
+  Row  26/50  mu=1.003  [ 1300/2500]  row=38.7s  ETA=14m  ranks=[115,116]  gap_score=[17.7,18.9]  avg_eps=5.4
+  Row  27/50  mu=1.009  [ 1350/2500]  row=33.8s  ETA=14m  ranks=[115,116]  gap_score=[17.7,18.9]  avg_eps=4.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 776.2 KiB/776.2 KiB (23.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:10:28Z", "uptime": " 07:10:28 up  7:56,  0 users,  load average: 23.25, 21.88, 14.81"}'
++ true
++ sleep 60
+  Row  28/50  mu=1.015  [ 1400/2500]  row=34.0s  ETA=13m  ranks=[115,116]  gap_score=[17.7,18.9]  avg_eps=4.9
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 776.9 KiB/776.9 KiB (51.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:11:29Z", "uptime": " 07:11:29 up  7:57,  0 users,  load average: 24.16, 22.42, 15.45"}'
++ true
++ sleep 60
+  Row  29/50  mu=1.021  [ 1450/2500]  row=38.0s  ETA=12m  ranks=[115,116]  gap_score=[17.7,18.8]  avg_eps=5.2
+  Row  30/50  mu=1.028  [ 1500/2500]  row=42.0s  ETA=12m  ranks=[113,116]  gap_score=[17.7,19.0]  avg_eps=5.7
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 777.7 KiB/777.7 KiB (32.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
+++ date -u +%Y-%m-%dT%H:%M:%SZ
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:12:31Z", "uptime": " 07:12:31 up  7:58,  0 users,  load average: 23.83, 22.59, 15.94"}'
++ true
++ sleep 60
+  Row  31/50  mu=1.034  [ 1550/2500]  row=43.8s  ETA=11m  ranks=[112,116]  gap_score=[17.7,19.0]  avg_eps=5.6
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 778.4 KiB/778.4 KiB (56.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:13:33Z", "uptime": " 07:13:33 up  7:59,  0 users,  load average: 23.05, 22.62, 16.40"}'
++ true
++ sleep 60
+  Row  32/50  mu=1.040  [ 1600/2500]  row=42.3s  ETA=11m  ranks=[113,116]  gap_score=[17.7,19.0]  avg_eps=5.5
+  Row  33/50  mu=1.046  [ 1650/2500]  row=43.4s  ETA=10m  ranks=[112,116]  gap_score=[17.7,19.0]  avg_eps=5.9
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 779.2 KiB/779.2 KiB (34.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:14:34Z", "uptime": " 07:14:34 up  8:00,  0 users,  load average: 21.64, 22.20, 16.64"}'
++ true
++ sleep 60
+  Row  34/50  mu=1.052  [ 1700/2500]  row=42.7s  ETA=10m  ranks=[112,116]  gap_score=[17.7,19.0]  avg_eps=5.7
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 779.9 KiB/779.9 KiB (40.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:15:36Z", "uptime": " 07:15:36 up  8:01,  0 users,  load average: 22.85, 22.41, 17.06"}'
++ true
++ sleep 60
+  Row  35/50  mu=1.058  [ 1750/2500]  row=40.4s  ETA=9m  ranks=[112,116]  gap_score=[17.7,19.0]  avg_eps=5.1
+  Row  36/50  mu=1.064  [ 1800/2500]  row=41.3s  ETA=9m  ranks=[113,116]  gap_score=[17.7,19.0]  avg_eps=4.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 780.7 KiB/780.7 KiB (26.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:16:38Z", "uptime": " 07:16:38 up  8:02,  0 users,  load average: 20.43, 21.69, 17.17"}'
++ true
++ sleep 60
+  Row  37/50  mu=1.070  [ 1850/2500]  row=38.9s  ETA=8m  ranks=[113,116]  gap_score=[17.7,18.9]  avg_eps=4.1
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 781.4 KiB/781.4 KiB (53.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:17:40Z", "uptime": " 07:17:40 up  8:03,  0 users,  load average: 19.91, 21.37, 17.35"}'
++ true
++ sleep 60
+  Row  38/50  mu=1.077  [ 1900/2500]  row=40.0s  ETA=7m  ranks=[112,116]  gap_score=[17.7,19.0]  avg_eps=4.0
+  Row  39/50  mu=1.083  [ 1950/2500]  row=35.9s  ETA=7m  ranks=[115,116]  gap_score=[17.7,18.6]  avg_eps=3.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 782.2 KiB/782.2 KiB (26.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:18:41Z", "uptime": " 07:18:41 up  8:05,  0 users,  load average: 20.78, 21.18, 17.52"}'
++ true
++ sleep 60
+  Row  40/50  mu=1.089  [ 2000/2500]  row=42.9s  ETA=6m  ranks=[112,116]  gap_score=[17.7,18.7]  avg_eps=4.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 782.9 KiB/782.9 KiB (47.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:19:43Z", "uptime": " 07:19:43 up  8:06,  0 users,  load average: 21.06, 21.06, 17.70"}'
++ true
++ sleep 60
+  Row  41/50  mu=1.095  [ 2050/2500]  row=42.0s  ETA=6m  ranks=[113,116]  gap_score=[17.7,18.7]  avg_eps=4.7
+  Row  42/50  mu=1.101  [ 2100/2500]  row=38.9s  ETA=5m  ranks=[112,116]  gap_score=[17.7,18.7]  avg_eps=4.5
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 783.7 KiB/783.7 KiB (31.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:20:45Z", "uptime": " 07:20:45 up  8:07,  0 users,  load average: 20.84, 20.86, 17.85"}'
++ true
++ sleep 60
+  Row  43/50  mu=1.107  [ 2150/2500]  row=41.0s  ETA=4m  ranks=[112,116]  gap_score=[17.7,18.7]  avg_eps=4.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 784.4 KiB/784.4 KiB (49.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:21:46Z", "uptime": " 07:21:46 up  8:08,  0 users,  load average: 19.37, 20.50, 17.92"}'
++ true
++ sleep 60
+  Row  44/50  mu=1.113  [ 2200/2500]  row=40.6s  ETA=4m  ranks=[112,116]  gap_score=[17.7,18.7]  avg_eps=4.1
+  Row  45/50  mu=1.119  [ 2250/2500]  row=41.5s  ETA=3m  ranks=[112,116]  gap_score=[17.7,18.8]  avg_eps=5.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 785.3 KiB/785.3 KiB (21.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:22:48Z", "uptime": " 07:22:48 up  8:09,  0 users,  load average: 19.06, 20.12, 17.95"}'
++ true
++ sleep 60
+  Row  46/50  mu=1.126  [ 2300/2500]  row=37.9s  ETA=3m  ranks=[113,116]  gap_score=[17.7,18.8]  avg_eps=4.5
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 786.0 KiB/786.0 KiB (56.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:23:50Z", "uptime": " 07:23:50 up  8:10,  0 users,  load average: 20.19, 20.23, 18.13"}'
++ true
++ sleep 60
+  Row  47/50  mu=1.132  [ 2350/2500]  row=39.7s  ETA=2m  ranks=[112,116]  gap_score=[17.7,18.8]  avg_eps=5.3
+  Row  48/50  mu=1.138  [ 2400/2500]  row=37.4s  ETA=1m  ranks=[112,116]  gap_score=[17.7,18.8]  avg_eps=5.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 786.8 KiB/786.8 KiB (30.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:24:52Z", "uptime": " 07:24:52 up  8:11,  0 users,  load average: 23.89, 21.30, 18.63"}'
++ true
++ sleep 60
+  Row  49/50  mu=1.144  [ 2450/2500]  row=42.3s  ETA=1m  ranks=[112,116]  gap_score=[17.7,18.8]  avg_eps=5.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 787.5 KiB/787.5 KiB (50.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:25:53Z", "uptime": " 07:25:53 up  8:12,  0 users,  load average: 20.13, 20.77, 18.62"}'
++ true
++ sleep 60
+  Row  50/50  mu=1.150  [ 2500/2500]  row=40.1s  ETA=0m  ranks=[112,116]  gap_score=[17.7,18.7]  avg_eps=5.0
+
+  lagrange complete: 1891s (31.5m)
+  Rank range: [112, 116]
+  Optimal eps: [7.60e-05, 5.00e-03]
+  Gap score: [17.67, 19.02]
+  Tier count: [2, 7], median=3.0
+  Rank distribution: 112:44, 113:44, 114:5, 115:171, 116:2236
+
+  Verification PASS: atlas_targeted/log/lagrange
+    Rank distribution: {112: 44, 113: 44, 114: 5, 115: 171, 116: 2236}
+    gap_map: min=8.625e+01 max=8.186e+06 mean=1.301e+06
+    optimal_eps_map: min=7.600e-05 max=5.000e-03 mean=3.537e-03
+    gap_score_map: min=1.767e+01 max=1.902e+01 mean=1.824e+01
+    Report saved: atlas_targeted/log/lagrange/verification_report.json
+
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/log/euler_strip/ -> atlas_targeted/log/euler_strip/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: euler_strip
+  Euler collinear / low-phi strip with anomalous ranks
+  Potential: log(r) (Logarithmic)
+  mu: [0.700, 1.300]  phi: [3, 20] deg
+  Grid: 40x40 = 1600 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: All unusual ranks (117-124) and lowest gap scores cluster here; near-collinear configurations
+======================================================================
+
+  Building symbolic algebra for log(r) (Logarithmic)...
+  Building symbolic generators for Logarithmic (log r)...
+    Level 2: 12 generators (0 zero)
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 789.6 KiB/789.6 KiB (62.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:26:54Z", "uptime": " 07:26:54 up  8:13,  0 users,  load average: 7.54, 16.91, 17.43"}'
++ true
++ sleep 60
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.6s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 790.3 KiB/790.3 KiB (54.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:27:55Z", "uptime": " 07:27:55 up  8:14,  0 users,  load average: 3.40, 14.01, 16.40"}'
++ true
++ sleep 60
+      40/156  [61.6s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 790.9 KiB/790.9 KiB (47.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:28:56Z", "uptime": " 07:28:56 up  8:15,  0 users,  load average: 1.88, 11.64, 15.43"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+      60/156  [129.4s]
+Completed 791.6 KiB/791.6 KiB (51.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:29:58Z", "uptime": " 07:29:58 up  8:16,  0 users,  load average: 1.32, 9.70, 14.53"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 792.1 KiB/792.1 KiB (53.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:30:59Z", "uptime": " 07:30:59 up  8:17,  0 users,  load average: 1.12, 8.12, 13.68"}'
++ true
++ sleep 60
+      80/156  [231.6s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 792.8 KiB/792.8 KiB (50.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:32:00Z", "uptime": " 07:32:00 up  8:18,  0 users,  load average: 1.12, 6.74, 12.82"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 793.4 KiB/793.4 KiB (53.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:33:01Z", "uptime": " 07:33:01 up  8:19,  0 users,  load average: 1.04, 5.69, 12.08"}'
++ true
++ sleep 60
+      100/156  [314.2s]
+      120/156  [368.8s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 794.0 KiB/794.0 KiB (47.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:34:02Z", "uptime": " 07:34:02 up  8:20,  0 users,  load average: 1.01, 4.84, 11.38"}'
++ true
++ sleep 60
+      140/156  [415.5s]
+      156/156  [431.3s]
+    Total lambdify time: 431.7s
+  Algebra ready (543.5s)
+  Algebra ready (543.5s, 156 generators)
+  Starting worker pool (31 workers)...
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 794.8 KiB/794.8 KiB (28.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:35:04Z", "uptime": " 07:35:04 up  8:21,  0 users,  load average: 3.41, 4.63, 10.89"}'
++ true
++ sleep 60
+  Row   1/40  mu=0.700  [   40/1600]  row=18.8s  ETA=12m  ranks=[116,117]  gap_score=[17.0,17.3]  avg_eps=3.0
+  Row   2/40  mu=0.715  [   80/1600]  row=19.1s  ETA=12m  ranks=[116,117]  gap_score=[16.9,17.3]  avg_eps=3.1
+  Row   3/40  mu=0.731  [  120/1600]  row=18.7s  ETA=12m  ranks=[116,117]  gap_score=[16.8,17.4]  avg_eps=3.1
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 795.7 KiB/795.7 KiB (27.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:36:06Z", "uptime": " 07:36:06 up  8:22,  0 users,  load average: 17.17, 8.50, 11.81"}'
++ true
++ sleep 60
+  Row   4/40  mu=0.746  [  160/1600]  row=18.7s  ETA=11m  ranks=[116,117]  gap_score=[16.9,17.3]  avg_eps=3.2
+  Row   5/40  mu=0.762  [  200/1600]  row=18.3s  ETA=11m  ranks=[116,117]  gap_score=[16.8,17.3]  avg_eps=3.1
+  Row   6/40  mu=0.777  [  240/1600]  row=18.5s  ETA=11m  ranks=[116,117]  gap_score=[16.9,17.4]  avg_eps=3.1
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 796.6 KiB/796.6 KiB (47.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:37:08Z", "uptime": " 07:37:08 up  8:23,  0 users,  load average: 21.40, 11.20, 12.53"}'
++ true
++ sleep 60
+  Row   7/40  mu=0.792  [  280/1600]  row=22.0s  ETA=11m  ranks=[116,118]  gap_score=[16.8,17.4]  avg_eps=3.1
+  Row   8/40  mu=0.808  [  320/1600]  row=20.3s  ETA=10m  ranks=[116,121]  gap_score=[16.7,17.4]  avg_eps=3.2
+  Row   9/40  mu=0.823  [  360/1600]  row=20.6s  ETA=10m  ranks=[116,122]  gap_score=[16.4,17.4]  avg_eps=3.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 797.5 KiB/797.5 KiB (51.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:38:09Z", "uptime": " 07:38:09 up  8:24,  0 users,  load average: 21.19, 12.96, 13.05"}'
++ true
++ sleep 60
+  Row  10/40  mu=0.838  [  400/1600]  row=20.2s  ETA=10m  ranks=[117,123]  gap_score=[16.4,17.3]  avg_eps=3.1
+  Row  11/40  mu=0.854  [  440/1600]  row=20.0s  ETA=10m  ranks=[117,123]  gap_score=[16.4,17.3]  avg_eps=3.2
+  Row  12/40  mu=0.869  [  480/1600]  row=20.3s  ETA=9m  ranks=[117,124]  gap_score=[16.0,17.3]  avg_eps=3.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 798.4 KiB/798.4 KiB (50.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:39:11Z", "uptime": " 07:39:11 up  8:25,  0 users,  load average: 20.10, 14.13, 13.44"}'
++ true
++ sleep 60
+  Row  13/40  mu=0.885  [  520/1600]  row=22.4s  ETA=9m  ranks=[117,124]  gap_score=[16.0,17.3]  avg_eps=3.2
+  Row  14/40  mu=0.900  [  560/1600]  row=18.2s  ETA=9m  ranks=[117,125]  gap_score=[16.0,17.3]  avg_eps=3.2
+  Row  15/40  mu=0.915  [  600/1600]  row=19.0s  ETA=8m  ranks=[117,128]  gap_score=[16.0,17.3]  avg_eps=3.3
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 799.4 KiB/799.4 KiB (34.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:40:12Z", "uptime": " 07:40:12 up  8:26,  0 users,  load average: 22.03, 15.76, 14.04"}'
++ true
++ sleep 60
+  Row  16/40  mu=0.931  [  640/1600]  row=20.3s  ETA=8m  ranks=[117,130]  gap_score=[16.0,17.2]  avg_eps=3.4
+  Row  17/40  mu=0.946  [  680/1600]  row=19.1s  ETA=8m  ranks=[117,130]  gap_score=[16.0,17.2]  avg_eps=3.4
+  Row  18/40  mu=0.962  [  720/1600]  row=20.7s  ETA=7m  ranks=[117,131]  gap_score=[16.0,17.2]  avg_eps=3.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 800.3 KiB/800.3 KiB (52.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:41:14Z", "uptime": " 07:41:14 up  8:27,  0 users,  load average: 23.47, 17.20, 14.64"}'
++ true
++ sleep 60
+  Row  19/40  mu=0.977  [  760/1600]  row=18.6s  ETA=7m  ranks=[117,133]  gap_score=[16.0,17.2]  avg_eps=3.3
+  Row  20/40  mu=0.992  [  800/1600]  row=20.6s  ETA=7m  ranks=[117,133]  gap_score=[16.0,17.4]  avg_eps=3.4
+  Row  21/40  mu=1.008  [  840/1600]  row=20.8s  ETA=6m  ranks=[117,133]  gap_score=[16.0,17.4]  avg_eps=3.5
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 801.2 KiB/801.2 KiB (49.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:42:15Z", "uptime": " 07:42:15 up  8:28,  0 users,  load average: 23.92, 18.35, 15.19"}'
++ true
++ sleep 60
+  Row  22/40  mu=1.023  [  880/1600]  row=18.5s  ETA=6m  ranks=[117,133]  gap_score=[16.0,17.1]  avg_eps=3.3
+  Row  23/40  mu=1.038  [  920/1600]  row=20.5s  ETA=6m  ranks=[117,132]  gap_score=[16.0,17.2]  avg_eps=3.4
+  Row  24/40  mu=1.054  [  960/1600]  row=20.2s  ETA=5m  ranks=[117,130]  gap_score=[16.0,17.2]  avg_eps=3.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 802.1 KiB/802.1 KiB (45.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:43:16Z", "uptime": " 07:43:16 up  8:29,  0 users,  load average: 23.39, 19.24, 15.71"}'
++ true
++ sleep 60
+  Row  25/40  mu=1.069  [ 1000/1600]  row=20.9s  ETA=5m  ranks=[117,129]  gap_score=[16.0,17.2]  avg_eps=3.5
+  Row  26/40  mu=1.085  [ 1040/1600]  row=19.7s  ETA=5m  ranks=[117,128]  gap_score=[16.0,17.2]  avg_eps=3.4
+  Row  27/40  mu=1.100  [ 1080/1600]  row=19.6s  ETA=4m  ranks=[117,127]  gap_score=[16.0,17.2]  avg_eps=3.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 803.0 KiB/803.0 KiB (50.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:44:17Z", "uptime": " 07:44:17 up  8:30,  0 users,  load average: 24.74, 20.49, 16.36"}'
++ true
++ sleep 60
+  Row  28/40  mu=1.115  [ 1120/1600]  row=20.8s  ETA=4m  ranks=[117,124]  gap_score=[16.0,17.2]  avg_eps=3.2
+  Row  29/40  mu=1.131  [ 1160/1600]  row=20.4s  ETA=4m  ranks=[117,124]  gap_score=[16.0,17.2]  avg_eps=3.3
+  Row  30/40  mu=1.146  [ 1200/1600]  row=18.4s  ETA=3m  ranks=[117,124]  gap_score=[16.0,17.3]  avg_eps=3.3
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 803.9 KiB/803.9 KiB (44.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:45:19Z", "uptime": " 07:45:19 up  8:31,  0 users,  load average: 22.88, 20.64, 16.67"}'
++ true
++ sleep 60
+  Row  31/40  mu=1.162  [ 1240/1600]  row=18.9s  ETA=3m  ranks=[117,123]  gap_score=[16.0,17.2]  avg_eps=3.1
+  Row  32/40  mu=1.177  [ 1280/1600]  row=18.7s  ETA=3m  ranks=[117,123]  gap_score=[16.3,17.3]  avg_eps=3.1
+  Row  33/40  mu=1.192  [ 1320/1600]  row=18.9s  ETA=2m  ranks=[117,122]  gap_score=[16.4,17.3]  avg_eps=3.2
+  Row  34/40  mu=1.208  [ 1360/1600]  row=20.8s  ETA=2m  ranks=[116,122]  gap_score=[16.4,17.2]  avg_eps=3.3
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 805.0 KiB/805.0 KiB (28.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:46:20Z", "uptime": " 07:46:20 up  8:32,  0 users,  load average: 21.91, 20.95, 17.03"}'
++ true
++ sleep 60
+  Row  35/40  mu=1.223  [ 1400/1600]  row=18.9s  ETA=2m  ranks=[116,122]  gap_score=[16.4,17.2]  avg_eps=3.1
+  Row  36/40  mu=1.238  [ 1440/1600]  row=18.7s  ETA=1m  ranks=[116,120]  gap_score=[16.4,17.3]  avg_eps=3.3
+  Row  37/40  mu=1.254  [ 1480/1600]  row=18.6s  ETA=1m  ranks=[116,118]  gap_score=[16.7,17.2]  avg_eps=3.1
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 805.9 KiB/805.9 KiB (20.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:47:23Z", "uptime": " 07:47:23 up  8:33,  0 users,  load average: 23.20, 21.51, 17.49"}'
++ true
++ sleep 60
+  Row  38/40  mu=1.269  [ 1520/1600]  row=18.2s  ETA=1m  ranks=[116,118]  gap_score=[16.8,17.3]  avg_eps=3.0
+  Row  39/40  mu=1.285  [ 1560/1600]  row=20.5s  ETA=0m  ranks=[116,118]  gap_score=[16.8,17.2]  avg_eps=3.1
+  Row  40/40  mu=1.300  [ 1600/1600]  row=20.5s  ETA=0m  ranks=[116,117]  gap_score=[16.8,17.3]  avg_eps=3.1
+
+  euler_strip complete: 797s (13.3m)
+  Rank range: [116, 133]
+  Optimal eps: [9.37e-04, 5.00e-03]
+  Gap score: [16.00, 17.44]
+  Tier count: [1, 4], median=3.0
+  Rank distribution: 116:135, 117:812, 118:111, 119:31, 120:35, 121:35, 122:142, 123:124, 124:86, 125:9, 126:8, 127:10, 128:23, 129:5, 130:20, 131:6, 132:2, 133:6
+
+  Verification PASS: atlas_targeted/log/euler_strip
+    Rank distribution: {116: 135, 117: 812, 118: 111, 119: 31, 120: 35, 121: 35, 122: 142, 123: 124, 124: 86, 125: 9, 126: 8, 127: 10, 128: 23, 129: 5, 130: 20, 131: 6, 132: 2, 133: 6}
+    gap_map: min=5.969e+00 max=3.051e+04 mean=1.122e+03
+    optimal_eps_map: min=9.369e-04 max=5.000e-03 mean=4.638e-03
+    gap_score_map: min=1.600e+01 max=1.744e+01 mean=1.688e+01
+    Report saved: atlas_targeted/log/euler_strip/verification_report.json
+
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/log/charge_hotspot/ -> atlas_targeted/log/charge_hotspot/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: charge_hotspot
+  Maximum charge-sensitivity region
+  Potential: log(r) (Logarithmic)
+  mu: [0.500, 0.850]  phi: [85, 105] deg
+  Grid: 40x40 = 1600 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: Largest gap score difference between charged and uncharged (delta=-2.64 at mu=0.65, phi=94deg); helium needs finest scale (eps=9.35e-4) here
+======================================================================
+
+  Building symbolic algebra for log(r) (Logarithmic)...
+  Building symbolic generators for Logarithmic (log r)...
+    Level 2: 12 generators (0 zero)
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 808.4 KiB/808.4 KiB (50.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:48:24Z", "uptime": " 07:48:24 up  8:34,  0 users,  load average: 19.27, 20.95, 17.57"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 809.0 KiB/809.0 KiB (50.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:49:25Z", "uptime": " 07:49:25 up  8:35,  0 users,  load average: 7.71, 17.32, 16.53"}'
++ true
++ sleep 60
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.6s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 809.8 KiB/809.8 KiB (47.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:50:26Z", "uptime": " 07:50:26 up  8:36,  0 users,  load average: 3.46, 14.34, 15.55"}'
++ true
++ sleep 60
+      40/156  [61.7s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 810.4 KiB/810.4 KiB (53.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:51:27Z", "uptime": " 07:51:27 up  8:37,  0 users,  load average: 1.86, 11.74, 14.57"}'
++ true
++ sleep 60
+      60/156  [131.0s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 811.0 KiB/811.0 KiB (49.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:52:29Z", "uptime": " 07:52:28 up  8:38,  0 users,  load average: 1.31, 9.79, 13.72"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 811.6 KiB/811.6 KiB (55.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:53:30Z", "uptime": " 07:53:30 up  8:39,  0 users,  load average: 1.11, 8.18, 12.92"}'
++ true
++ sleep 60
+      80/156  [235.2s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 812.2 KiB/812.2 KiB (51.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:54:31Z", "uptime": " 07:54:31 up  8:40,  0 users,  load average: 1.04, 6.87, 12.17"}'
++ true
++ sleep 60
+      100/156  [318.0s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 812.8 KiB/812.8 KiB (57.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:55:32Z", "uptime": " 07:55:32 up  8:41,  0 users,  load average: 1.01, 5.80, 11.47"}'
++ true
++ sleep 60
+      120/156  [369.9s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 813.5 KiB/813.5 KiB (56.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:56:33Z", "uptime": " 07:56:33 up  8:42,  0 users,  load average: 1.11, 4.89, 10.77"}'
++ true
++ sleep 60
+      140/156  [415.6s]
+      156/156  [430.5s]
+    Total lambdify time: 430.9s
+  Algebra ready (544.4s)
+  Algebra ready (544.4s, 156 generators)
+  Starting worker pool (31 workers)...
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 814.2 KiB/814.2 KiB (54.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:57:34Z", "uptime": " 07:57:34 up  8:43,  0 users,  load average: 7.69, 5.65, 10.64"}'
++ true
++ sleep 60
+  Row   1/40  mu=0.500  [   40/1600]  row=18.1s  ETA=12m  ranks=[116,116]  gap_score=[18.2,18.3]  avg_eps=3.0
+  Row   2/40  mu=0.509  [   80/1600]  row=18.3s  ETA=12m  ranks=[116,116]  gap_score=[18.2,18.3]  avg_eps=3.0
+  Row   3/40  mu=0.518  [  120/1600]  row=19.0s  ETA=11m  ranks=[116,116]  gap_score=[18.2,18.3]  avg_eps=3.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 815.2 KiB/815.2 KiB (53.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:58:36Z", "uptime": " 07:58:36 up  8:44,  0 users,  load average: 14.70, 8.06, 11.15"}'
++ true
++ sleep 60
+  Row   4/40  mu=0.527  [  160/1600]  row=19.1s  ETA=11m  ranks=[116,116]  gap_score=[18.2,18.3]  avg_eps=3.0
+  Row   5/40  mu=0.536  [  200/1600]  row=18.6s  ETA=11m  ranks=[116,116]  gap_score=[18.2,18.3]  avg_eps=3.0
+  Row   6/40  mu=0.545  [  240/1600]  row=18.6s  ETA=11m  ranks=[116,116]  gap_score=[18.2,18.3]  avg_eps=3.0
+  Row   7/40  mu=0.554  [  280/1600]  row=18.4s  ETA=10m  ranks=[116,116]  gap_score=[18.2,18.3]  avg_eps=3.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 816.2 KiB/816.2 KiB (36.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T07:59:37Z", "uptime": " 07:59:37 up  8:45,  0 users,  load average: 19.29, 10.81, 11.92"}'
++ true
++ sleep 60
+  Row   8/40  mu=0.563  [  320/1600]  row=20.0s  ETA=10m  ranks=[116,116]  gap_score=[18.2,18.3]  avg_eps=3.1
+  Row   9/40  mu=0.572  [  360/1600]  row=20.7s  ETA=10m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=3.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 817.0 KiB/817.0 KiB (48.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:00:39Z", "uptime": " 08:00:39 up  8:46,  0 users,  load average: 17.41, 12.15, 12.32"}'
++ true
++ sleep 60
+  Row  10/40  mu=0.581  [  400/1600]  row=27.2s  ETA=10m  ranks=[116,116]  gap_score=[18.2,18.3]  avg_eps=3.2
+  Row  11/40  mu=0.590  [  440/1600]  row=29.1s  ETA=10m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=3.4
+  Row  12/40  mu=0.599  [  480/1600]  row=27.3s  ETA=10m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=3.6
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 817.9 KiB/817.9 KiB (35.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:01:40Z", "uptime": " 08:01:40 up  8:48,  0 users,  load average: 16.84, 13.20, 12.68"}'
++ true
++ sleep 60
+  Row  13/40  mu=0.608  [  520/1600]  row=21.3s  ETA=10m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=3.4
+  Row  14/40  mu=0.617  [  560/1600]  row=26.9s  ETA=9m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=3.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 818.7 KiB/818.7 KiB (35.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:02:42Z", "uptime": " 08:02:42 up  8:49,  0 users,  load average: 20.33, 14.83, 13.28"}'
++ true
++ sleep 60
+  Row  15/40  mu=0.626  [  600/1600]  row=27.3s  ETA=9m  ranks=[116,116]  gap_score=[18.2,18.5]  avg_eps=4.1
+  Row  16/40  mu=0.635  [  640/1600]  row=27.2s  ETA=9m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=4.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 819.5 KiB/819.5 KiB (59.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:03:44Z", "uptime": " 08:03:44 up  8:50,  0 users,  load average: 19.78, 15.72, 13.69"}'
++ true
++ sleep 60
+  Row  17/40  mu=0.644  [  680/1600]  row=33.8s  ETA=9m  ranks=[115,116]  gap_score=[18.2,18.6]  avg_eps=4.4
+  Row  18/40  mu=0.653  [  720/1600]  row=30.2s  ETA=9m  ranks=[116,116]  gap_score=[18.2,18.5]  avg_eps=4.3
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 820.3 KiB/820.3 KiB (53.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:04:45Z", "uptime": " 08:04:45 up  8:51,  0 users,  load average: 20.20, 16.48, 14.07"}'
++ true
++ sleep 60
+  Row  19/40  mu=0.662  [  760/1600]  row=26.7s  ETA=8m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=3.7
+  Row  20/40  mu=0.671  [  800/1600]  row=27.8s  ETA=8m  ranks=[116,116]  gap_score=[18.2,18.6]  avg_eps=4.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 821.1 KiB/821.1 KiB (57.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:05:47Z", "uptime": " 08:05:47 up  8:52,  0 users,  load average: 19.46, 16.93, 14.37"}'
++ true
++ sleep 60
+  Row  21/40  mu=0.679  [  840/1600]  row=26.5s  ETA=8m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=4.0
+  Row  22/40  mu=0.688  [  880/1600]  row=34.1s  ETA=7m  ranks=[114,116]  gap_score=[18.1,18.6]  avg_eps=4.0
+  Row  23/40  mu=0.697  [  920/1600]  row=23.8s  ETA=7m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=3.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 822.1 KiB/822.1 KiB (30.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:06:48Z", "uptime": " 08:06:48 up  8:53,  0 users,  load average: 17.97, 16.92, 14.53"}'
++ true
++ sleep 60
+  Row  24/40  mu=0.706  [  960/1600]  row=26.3s  ETA=7m  ranks=[116,116]  gap_score=[18.1,18.6]  avg_eps=4.3
+  Row  25/40  mu=0.715  [ 1000/1600]  row=29.1s  ETA=6m  ranks=[113,116]  gap_score=[18.1,18.6]  avg_eps=4.1
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 822.9 KiB/822.9 KiB (34.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:07:50Z", "uptime": " 08:07:50 up  8:54,  0 users,  load average: 19.57, 17.65, 14.95"}'
++ true
++ sleep 60
+  Row  26/40  mu=0.724  [ 1040/1600]  row=30.1s  ETA=6m  ranks=[116,116]  gap_score=[18.1,18.6]  avg_eps=4.0
+  Row  27/40  mu=0.733  [ 1080/1600]  row=28.5s  ETA=5m  ranks=[113,116]  gap_score=[18.1,18.6]  avg_eps=4.1
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 823.7 KiB/823.7 KiB (37.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:08:52Z", "uptime": " 08:08:52 up  8:55,  0 users,  load average: 19.94, 18.03, 15.25"}'
++ true
++ sleep 60
+  Row  28/40  mu=0.742  [ 1120/1600]  row=28.4s  ETA=5m  ranks=[113,116]  gap_score=[18.1,18.6]  avg_eps=4.0
+  Row  29/40  mu=0.751  [ 1160/1600]  row=24.3s  ETA=5m  ranks=[116,116]  gap_score=[18.1,18.5]  avg_eps=3.6
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 824.5 KiB/824.5 KiB (49.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:09:54Z", "uptime": " 08:09:54 up  8:56,  0 users,  load average: 18.98, 18.05, 15.43"}'
++ true
++ sleep 60
+  Row  30/40  mu=0.760  [ 1200/1600]  row=25.4s  ETA=4m  ranks=[116,116]  gap_score=[18.1,18.6]  avg_eps=3.5
+  Row  31/40  mu=0.769  [ 1240/1600]  row=25.4s  ETA=4m  ranks=[116,116]  gap_score=[18.1,18.6]  avg_eps=3.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 825.3 KiB/825.3 KiB (59.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:10:55Z", "uptime": " 08:10:55 up  8:57,  0 users,  load average: 15.04, 17.17, 15.30"}'
++ true
++ sleep 60
+  Row  32/40  mu=0.778  [ 1280/1600]  row=29.4s  ETA=3m  ranks=[112,116]  gap_score=[18.1,18.6]  avg_eps=3.8
+  Row  33/40  mu=0.787  [ 1320/1600]  row=31.3s  ETA=3m  ranks=[112,116]  gap_score=[18.1,18.8]  avg_eps=3.8
+  Row  34/40  mu=0.796  [ 1360/1600]  row=25.6s  ETA=3m  ranks=[115,116]  gap_score=[18.1,18.8]  avg_eps=4.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 826.2 KiB/826.2 KiB (25.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:11:56Z", "uptime": " 08:11:56 up  8:58,  0 users,  load average: 17.82, 17.54, 15.54"}'
++ true
++ sleep 60
+  Row  35/40  mu=0.805  [ 1400/1600]  row=33.7s  ETA=2m  ranks=[113,116]  gap_score=[18.1,18.8]  avg_eps=4.3
+  Row  36/40  mu=0.814  [ 1440/1600]  row=27.9s  ETA=2m  ranks=[113,116]  gap_score=[18.1,18.8]  avg_eps=4.3
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 827.0 KiB/827.0 KiB (28.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:12:58Z", "uptime": " 08:12:58 up  8:59,  0 users,  load average: 16.05, 17.27, 15.59"}'
++ true
++ sleep 60
+  Row  37/40  mu=0.823  [ 1480/1600]  row=24.0s  ETA=1m  ranks=[116,116]  gap_score=[18.1,18.8]  avg_eps=3.6
+  Row  38/40  mu=0.832  [ 1520/1600]  row=30.6s  ETA=1m  ranks=[112,116]  gap_score=[18.0,18.8]  avg_eps=4.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 827.8 KiB/827.8 KiB (25.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:14:00Z", "uptime": " 08:14:00 up  9:00,  0 users,  load average: 17.16, 17.36, 15.74"}'
++ true
++ sleep 60
+  Row  39/40  mu=0.841  [ 1560/1600]  row=28.0s  ETA=0m  ranks=[113,116]  gap_score=[18.1,18.8]  avg_eps=4.0
+  Row  40/40  mu=0.850  [ 1600/1600]  row=31.2s  ETA=0m  ranks=[113,116]  gap_score=[18.0,18.8]  avg_eps=3.4
+
+  charge_hotspot complete: 1049s (17.5m)
+  Rank range: [112, 116]
+  Optimal eps: [5.00e-05, 5.00e-03]
+  Gap score: [18.03, 18.84]
+  Tier count: [2, 6], median=2.0
+  Rank distribution: 112:3, 113:10, 114:1, 115:19, 116:1567
+
+  Verification PASS: atlas_targeted/log/charge_hotspot
+    Rank distribution: {112: 3, 113: 10, 114: 1, 115: 19, 116: 1567}
+    gap_map: min=1.868e+02 max=4.519e+07 mean=1.720e+07
+    optimal_eps_map: min=5.000e-05 max=5.000e-03 mean=4.312e-03
+    gap_score_map: min=1.803e+01 max=1.884e+01 mean=1.826e+01
+    Report saved: atlas_targeted/log/charge_hotspot/verification_report.json
+
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/log/tier_cluster/ -> atlas_targeted/log/tier_cluster/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: tier_cluster
+  High-tier helium cluster (asymmetric from Lagrange)
+  Potential: log(r) (Logarithmic)
+  mu: [1.450, 1.900]  phi: [65, 85] deg
+  Grid: 40x40 = 1600 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: 18 points with 4 tiers in helium scan; this region has rich internal structure displaced from equilateral
+======================================================================
+
+  Building symbolic algebra for log(r) (Logarithmic)...
+  Building symbolic generators for Logarithmic (log r)...
+    Level 2: 12 generators (0 zero)
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 830.0 KiB/830.0 KiB (58.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:15:02Z", "uptime": " 08:15:02 up  9:01,  0 users,  load average: 12.20, 16.15, 15.44"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 830.6 KiB/830.6 KiB (52.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:16:03Z", "uptime": " 08:16:03 up  9:02,  0 users,  load average: 5.11, 13.39, 14.53"}'
++ true
++ sleep 60
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [1.3s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 831.4 KiB/831.4 KiB (48.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:17:04Z", "uptime": " 08:17:04 up  9:03,  0 users,  load average: 2.51, 11.14, 13.68"}'
++ true
++ sleep 60
+      40/156  [61.2s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 832.0 KiB/832.0 KiB (61.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:18:05Z", "uptime": " 08:18:05 up  9:04,  0 users,  load average: 1.55, 9.29, 12.88"}'
++ true
++ sleep 60
+      60/156  [131.1s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 832.6 KiB/832.6 KiB (51.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:19:06Z", "uptime": " 08:19:06 up  9:05,  0 users,  load average: 1.21, 7.68, 12.08"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 833.2 KiB/833.2 KiB (67.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:20:07Z", "uptime": " 08:20:07 up  9:06,  0 users,  load average: 1.08, 6.46, 11.39"}'
++ true
++ sleep 60
+      80/156  [235.3s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 833.9 KiB/833.9 KiB (55.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:21:08Z", "uptime": " 08:21:08 up  9:07,  0 users,  load average: 1.03, 5.46, 10.73"}'
++ true
++ sleep 60
+      100/156  [317.3s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 834.5 KiB/834.5 KiB (64.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:22:09Z", "uptime": " 08:22:09 up  9:08,  0 users,  load average: 1.01, 4.65, 10.12"}'
++ true
++ sleep 60
+      120/156  [369.1s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 835.1 KiB/835.1 KiB (43.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:23:11Z", "uptime": " 08:23:11 up  9:09,  0 users,  load average: 1.00, 3.98, 9.55"}'
++ true
++ sleep 60
+      140/156  [415.5s]
+      156/156  [430.4s]
+    Total lambdify time: 430.9s
+  Algebra ready (543.5s)
+  Algebra ready (543.5s, 156 generators)
+  Starting worker pool (31 workers)...
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 835.9 KiB/835.9 KiB (27.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:24:12Z", "uptime": " 08:24:12 up  9:10,  0 users,  load average: 7.67, 4.88, 9.45"}'
++ true
++ sleep 60
+  Row   1/40  mu=1.450  [   40/1600]  row=43.8s  ETA=28m  ranks=[112,116]  gap_score=[17.8,18.6]  avg_eps=7.5
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 836.6 KiB/836.6 KiB (52.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:25:14Z", "uptime": " 08:25:14 up  9:11,  0 users,  load average: 19.65, 8.80, 10.51"}'
++ true
++ sleep 60
+  Row   2/40  mu=1.462  [   80/1600]  row=40.1s  ETA=27m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=7.3
+  Row   3/40  mu=1.473  [  120/1600]  row=43.5s  ETA=26m  ranks=[112,116]  gap_score=[18.0,18.6]  avg_eps=7.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 837.4 KiB/837.4 KiB (34.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
+++ date -u +%Y-%m-%dT%H:%M:%SZ
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:26:15Z", "uptime": " 08:26:15 up  9:12,  0 users,  load average: 22.35, 11.61, 11.38"}'
++ true
++ sleep 60
+  Row   4/40  mu=1.485  [  160/1600]  row=35.5s  ETA=25m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=6.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 838.1 KiB/838.1 KiB (59.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:27:17Z", "uptime": " 08:27:17 up  9:13,  0 users,  load average: 24.04, 14.25, 12.31"}'
++ true
++ sleep 60
+  Row   5/40  mu=1.496  [  200/1600]  row=43.7s  ETA=24m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=7.8
+  Row   6/40  mu=1.508  [  240/1600]  row=43.8s  ETA=24m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=6.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 838.9 KiB/838.9 KiB (24.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:28:19Z", "uptime": " 08:28:19 up  9:14,  0 users,  load average: 21.20, 15.26, 12.78"}'
++ true
++ sleep 60
+  Row   7/40  mu=1.519  [  280/1600]  row=38.0s  ETA=23m  ranks=[112,116]  gap_score=[17.8,18.4]  avg_eps=6.6
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 839.6 KiB/839.6 KiB (61.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:29:20Z", "uptime": " 08:29:20 up  9:15,  0 users,  load average: 24.47, 17.27, 13.63"}'
++ true
++ sleep 60
+  Row   8/40  mu=1.531  [  320/1600]  row=44.7s  ETA=22m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=7.1
+  Row   9/40  mu=1.542  [  360/1600]  row=43.8s  ETA=22m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=6.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 840.4 KiB/840.4 KiB (24.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:30:22Z", "uptime": " 08:30:22 up  9:16,  0 users,  load average: 21.25, 17.68, 14.01"}'
++ true
++ sleep 60
+  Row  10/40  mu=1.554  [  400/1600]  row=38.7s  ETA=21m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=6.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 841.1 KiB/841.1 KiB (34.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:31:24Z", "uptime": " 08:31:24 up  9:17,  0 users,  load average: 25.12, 19.39, 14.83"}'
++ true
++ sleep 60
+  Row  11/40  mu=1.565  [  440/1600]  row=40.8s  ETA=20m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=7.1
+  Row  12/40  mu=1.577  [  480/1600]  row=43.9s  ETA=20m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=7.5
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 841.9 KiB/841.9 KiB (37.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:32:26Z", "uptime": " 08:32:26 up  9:18,  0 users,  load average: 23.97, 20.16, 15.38"}'
++ true
++ sleep 60
+  Row  13/40  mu=1.588  [  520/1600]  row=42.1s  ETA=19m  ranks=[112,116]  gap_score=[17.8,18.4]  avg_eps=7.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 842.6 KiB/842.6 KiB (34.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:33:28Z", "uptime": " 08:33:28 up  9:19,  0 users,  load average: 26.87, 21.73, 16.25"}'
++ true
++ sleep 60
+  Row  14/40  mu=1.600  [  560/1600]  row=45.7s  ETA=18m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=7.6
+  Row  15/40  mu=1.612  [  600/1600]  row=41.5s  ETA=18m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=6.3
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 843.4 KiB/843.4 KiB (27.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:34:30Z", "uptime": " 08:34:30 up  9:20,  0 users,  load average: 21.79, 21.35, 16.47"}'
++ true
++ sleep 60
+  Row  16/40  mu=1.623  [  640/1600]  row=45.6s  ETA=17m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=6.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 844.1 KiB/844.1 KiB (52.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:35:32Z", "uptime": " 08:35:32 up  9:21,  0 users,  load average: 22.58, 21.73, 16.91"}'
++ true
++ sleep 60
+  Row  17/40  mu=1.635  [  680/1600]  row=35.2s  ETA=16m  ranks=[112,116]  gap_score=[17.8,18.4]  avg_eps=6.2
+  Row  18/40  mu=1.646  [  720/1600]  row=39.0s  ETA=15m  ranks=[112,116]  gap_score=[17.8,18.4]  avg_eps=6.7
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 844.9 KiB/844.9 KiB (20.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:36:34Z", "uptime": " 08:36:34 up  9:22,  0 users,  load average: 22.22, 21.88, 17.30"}'
++ true
++ sleep 60
+  Row  19/40  mu=1.658  [  760/1600]  row=35.4s  ETA=15m  ranks=[112,116]  gap_score=[17.8,18.5]  avg_eps=5.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 845.6 KiB/845.6 KiB (60.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:37:36Z", "uptime": " 08:37:36 up  9:23,  0 users,  load average: 21.65, 21.84, 17.58"}'
++ true
++ sleep 60
+  Row  20/40  mu=1.669  [  800/1600]  row=32.7s  ETA=14m  ranks=[112,116]  gap_score=[17.8,18.4]  avg_eps=5.5
+  Row  21/40  mu=1.681  [  840/1600]  row=34.7s  ETA=13m  ranks=[112,116]  gap_score=[17.8,18.4]  avg_eps=5.4
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 846.5 KiB/846.5 KiB (49.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:38:37Z", "uptime": " 08:38:37 up  9:24,  0 users,  load average: 21.65, 21.66, 17.77"}'
++ true
++ sleep 60
+  Row  22/40  mu=1.692  [  880/1600]  row=38.0s  ETA=12m  ranks=[112,116]  gap_score=[17.8,18.4]  avg_eps=6.2
+  Row  23/40  mu=1.704  [  920/1600]  row=35.8s  ETA=11m  ranks=[112,116]  gap_score=[17.7,18.4]  avg_eps=5.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 847.3 KiB/847.3 KiB (30.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
+++ date -u +%Y-%m-%dT%H:%M:%SZ
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:39:39Z", "uptime": " 08:39:39 up  9:25,  0 users,  load average: 22.78, 21.87, 18.10"}'
++ true
++ sleep 60
+  Row  24/40  mu=1.715  [  960/1600]  row=32.7s  ETA=11m  ranks=[112,116]  gap_score=[17.7,18.4]  avg_eps=5.3
+  Row  25/40  mu=1.727  [ 1000/1600]  row=33.8s  ETA=10m  ranks=[112,116]  gap_score=[17.8,18.4]  avg_eps=5.1
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 848.1 KiB/848.1 KiB (33.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:40:41Z", "uptime": " 08:40:41 up  9:27,  0 users,  load average: 20.15, 21.36, 18.17"}'
++ true
++ sleep 60
+  Row  26/40  mu=1.738  [ 1040/1600]  row=35.8s  ETA=9m  ranks=[112,116]  gap_score=[17.7,18.4]  avg_eps=5.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 848.8 KiB/848.8 KiB (61.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:41:43Z", "uptime": " 08:41:43 up  9:28,  0 users,  load average: 21.38, 21.57, 18.45"}'
++ true
++ sleep 60
+  Row  27/40  mu=1.750  [ 1080/1600]  row=33.2s  ETA=9m  ranks=[112,116]  gap_score=[17.7,18.4]  avg_eps=5.5
+  Row  28/40  mu=1.762  [ 1120/1600]  row=29.7s  ETA=8m  ranks=[112,116]  gap_score=[17.7,18.3]  avg_eps=4.7
+  Row  29/40  mu=1.773  [ 1160/1600]  row=28.0s  ETA=7m  ranks=[113,116]  gap_score=[17.8,18.3]  avg_eps=4.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 849.7 KiB/849.7 KiB (31.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:42:44Z", "uptime": " 08:42:44 up  9:29,  0 users,  load average: 20.85, 21.30, 18.56"}'
++ true
++ sleep 60
+  Row  30/40  mu=1.785  [ 1200/1600]  row=35.1s  ETA=6m  ranks=[112,116]  gap_score=[17.8,18.4]  avg_eps=5.5
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 850.4 KiB/850.4 KiB (52.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:43:46Z", "uptime": " 08:43:46 up  9:30,  0 users,  load average: 20.68, 21.33, 18.75"}'
++ true
++ sleep 60
+  Row  31/40  mu=1.796  [ 1240/1600]  row=33.7s  ETA=6m  ranks=[112,116]  gap_score=[17.7,18.3]  avg_eps=4.7
+  Row  32/40  mu=1.808  [ 1280/1600]  row=30.7s  ETA=5m  ranks=[112,116]  gap_score=[17.7,18.3]  avg_eps=4.6
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 851.2 KiB/851.2 KiB (57.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:44:47Z", "uptime": " 08:44:47 up  9:31,  0 users,  load average: 20.91, 21.29, 18.90"}'
++ true
++ sleep 60
+  Row  33/40  mu=1.819  [ 1320/1600]  row=34.1s  ETA=4m  ranks=[112,116]  gap_score=[17.7,18.4]  avg_eps=4.8
+  Row  34/40  mu=1.831  [ 1360/1600]  row=30.8s  ETA=4m  ranks=[112,116]  gap_score=[17.7,18.3]  avg_eps=4.8
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 852.0 KiB/852.0 KiB (63.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:45:48Z", "uptime": " 08:45:48 up  9:32,  0 users,  load average: 21.81, 21.30, 19.04"}'
++ true
++ sleep 60
+  Row  35/40  mu=1.842  [ 1400/1600]  row=27.0s  ETA=3m  ranks=[113,116]  gap_score=[17.7,18.3]  avg_eps=4.5
+  Row  36/40  mu=1.854  [ 1440/1600]  row=32.9s  ETA=3m  ranks=[112,116]  gap_score=[17.7,18.3]  avg_eps=4.7
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 852.8 KiB/852.8 KiB (35.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:46:50Z", "uptime": " 08:46:50 up  9:33,  0 users,  load average: 22.03, 21.28, 19.18"}'
++ true
++ sleep 60
+  Row  37/40  mu=1.865  [ 1480/1600]  row=34.8s  ETA=2m  ranks=[112,116]  gap_score=[17.7,18.3]  avg_eps=5.5
+  Row  38/40  mu=1.877  [ 1520/1600]  row=31.2s  ETA=1m  ranks=[112,116]  gap_score=[17.7,18.3]  avg_eps=5.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 853.6 KiB/853.6 KiB (55.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:47:52Z", "uptime": " 08:47:52 up  9:34,  0 users,  load average: 21.61, 21.21, 19.28"}'
++ true
++ sleep 60
+  Row  39/40  mu=1.888  [ 1560/1600]  row=29.0s  ETA=1m  ranks=[112,116]  gap_score=[17.7,18.2]  avg_eps=4.8
+  Row  40/40  mu=1.900  [ 1600/1600]  row=25.7s  ETA=0m  ranks=[115,116]  gap_score=[17.7,18.3]  avg_eps=4.0
+
+  tier_cluster complete: 1475s (24.6m)
+  Rank range: [112, 116]
+  Optimal eps: [5.00e-05, 5.00e-03]
+  Gap score: [17.67, 18.55]
+  Tier count: [2, 6], median=4.0
+  Rank distribution: 112:159, 113:94, 114:64, 115:94, 116:1189
+
+  Verification PASS: atlas_targeted/log/tier_cluster
+    Rank distribution: {112: 159, 113: 94, 114: 64, 115: 94, 116: 1189}
+    gap_map: min=9.230e+01 max=5.305e+06 mean=7.432e+05
+    optimal_eps_map: min=5.000e-05 max=5.000e-03 mean=2.434e-03
+    gap_score_map: min=1.767e+01 max=1.855e+01 mean=1.815e+01
+    Report saved: atlas_targeted/log/tier_cluster/verification_report.json
+
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/log/isosceles_ridge/ -> atlas_targeted/log/isosceles_ridge/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: isosceles_ridge
+  mu=1 isosceles symmetry line
+  Potential: log(r) (Logarithmic)
+  mu: [0.900, 1.100]  phi: [10, 170] deg
+  Grid: 10x80 = 800 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: Narrow strip along mu=1 isosceles line; tracks how tier structure evolves along the symmetry curve
+======================================================================
+
+  Building symbolic algebra for log(r) (Logarithmic)...
+  Building symbolic generators for Logarithmic (log r)...
+    Level 2: 12 generators (0 zero)
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 855.8 KiB/855.8 KiB (58.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:48:53Z", "uptime": " 08:48:53 up  9:35,  0 users,  load average: 13.54, 19.24, 18.74"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 856.4 KiB/856.4 KiB (59.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:49:54Z", "uptime": " 08:49:54 up  9:36,  0 users,  load average: 5.60, 15.92, 17.62"}'
++ true
++ sleep 60
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.6s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 857.2 KiB/857.2 KiB (55.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:50:55Z", "uptime": " 08:50:55 up  9:37,  0 users,  load average: 2.59, 13.01, 16.50"}'
++ true
++ sleep 60
+      40/156  [61.2s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 857.8 KiB/857.8 KiB (67.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:51:56Z", "uptime": " 08:51:56 up  9:38,  0 users,  load average: 1.58, 10.82, 15.53"}'
++ true
++ sleep 60
+      60/156  [128.9s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 858.4 KiB/858.4 KiB (51.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:52:57Z", "uptime": " 08:52:57 up  9:39,  0 users,  load average: 1.21, 9.03, 14.62"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 859.0 KiB/859.0 KiB (63.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:53:58Z", "uptime": " 08:53:58 up  9:40,  0 users,  load average: 1.08, 7.57, 13.76"}'
++ true
++ sleep 60
+      80/156  [233.4s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 859.6 KiB/859.6 KiB (60.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:54:59Z", "uptime": " 08:54:59 up  9:41,  0 users,  load average: 1.03, 6.37, 12.96"}'
++ true
++ sleep 60
+      100/156  [316.4s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 860.2 KiB/860.2 KiB (60.4 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:56:00Z", "uptime": " 08:56:00 up  9:42,  0 users,  load average: 1.04, 5.33, 12.15"}'
++ true
++ sleep 60
+      120/156  [368.5s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 860.9 KiB/860.9 KiB (49.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:57:01Z", "uptime": " 08:57:01 up  9:43,  0 users,  load average: 1.01, 4.54, 11.45"}'
++ true
++ sleep 60
+      140/156  [414.4s]
+      156/156  [429.2s]
+    Total lambdify time: 429.7s
+  Algebra ready (543.5s)
+  Algebra ready (543.5s, 156 generators)
+  Starting worker pool (31 workers)...
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 861.6 KiB/861.6 KiB (48.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:58:03Z", "uptime": " 08:58:03 up  9:44,  0 users,  load average: 11.29, 6.32, 11.60"}'
++ true
++ sleep 60
+  Row   1/10  mu=0.900  [   80/800]  row=37.6s  ETA=6m  ranks=[115,122]  gap_score=[16.7,18.6]  avg_eps=3.2
+  Row   2/10  mu=0.922  [  160/800]  row=34.0s  ETA=5m  ranks=[116,122]  gap_score=[16.8,18.4]  avg_eps=3.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 862.4 KiB/862.4 KiB (37.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T08:59:05Z", "uptime": " 08:59:05 up  9:45,  0 users,  load average: 21.41, 9.98, 12.52"}'
++ true
++ sleep 60
+  Row   3/10  mu=0.944  [  240/800]  row=44.3s  ETA=5m  ranks=[113,122]  gap_score=[16.8,19.0]  avg_eps=3.7
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 863.1 KiB/863.1 KiB (30.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
+++ date -u +%Y-%m-%dT%H:%M:%SZ
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:00:07Z", "uptime": " 09:00:07 up  9:46,  0 users,  load average: 25.08, 13.17, 13.45"}'
++ true
++ sleep 60
+  Row   4/10  mu=0.967  [  320/800]  row=47.7s  ETA=4m  ranks=[112,123]  gap_score=[16.8,19.0]  avg_eps=4.0
+  Row   5/10  mu=0.989  [  400/800]  row=44.7s  ETA=3m  ranks=[115,123]  gap_score=[16.7,18.9]  avg_eps=4.1
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 864.0 KiB/864.0 KiB (34.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:01:09Z", "uptime": " 09:01:09 up  9:47,  0 users,  load average: 26.14, 15.53, 14.23"}'
++ true
++ sleep 60
+  Row   6/10  mu=1.011  [  480/800]  row=47.4s  ETA=3m  ranks=[115,123]  gap_score=[16.7,18.9]  avg_eps=4.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 864.7 KiB/864.7 KiB (28.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:02:11Z", "uptime": " 09:02:11 up  9:48,  0 users,  load average: 27.97, 18.17, 15.24"}'
++ true
++ sleep 60
+  Row   7/10  mu=1.033  [  560/800]  row=49.9s  ETA=2m  ranks=[112,123]  gap_score=[16.8,19.0]  avg_eps=4.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 865.4 KiB/865.4 KiB (34.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:03:13Z", "uptime": " 09:03:13 up  9:49,  0 users,  load average: 27.04, 19.59, 15.91"}'
++ true
++ sleep 60
+  Row   8/10  mu=1.056  [  640/800]  row=44.2s  ETA=1m  ranks=[115,123]  gap_score=[16.8,19.0]  avg_eps=3.6
+  Row   9/10  mu=1.078  [  720/800]  row=39.9s  ETA=1m  ranks=[115,122]  gap_score=[16.8,18.9]  avg_eps=3.3
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 866.2 KiB/866.2 KiB (31.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:04:15Z", "uptime": " 09:04:15 up  9:50,  0 users,  load average: 24.01, 20.06, 16.30"}'
++ true
++ sleep 60
+  Row  10/10  mu=1.100  [  800/800]  row=46.2s  ETA=0m  ranks=[112,122]  gap_score=[16.7,18.7]  avg_eps=3.5
+
+  isosceles_ridge complete: 439s (7.3m)
+  Rank range: [112, 123]
+  Optimal eps: [1.16e-04, 5.00e-03]
+  Gap score: [16.72, 18.98]
+  Tier count: [2, 7], median=2.0
+  Rank distribution: 112:6, 113:3, 115:20, 116:707, 117:39, 118:5, 119:3, 120:1, 121:2, 122:9, 123:5
+
+  Verification PASS: atlas_targeted/log/isosceles_ridge
+    Rank distribution: {112: 6, 113: 3, 115: 20, 116: 707, 117: 39, 118: 5, 119: 3, 120: 1, 121: 2, 122: 9, 123: 5}
+    gap_map: min=1.697e+01 max=9.943e+06 mean=2.701e+06
+    optimal_eps_map: min=1.155e-04 max=5.000e-03 mean=4.301e-03
+    gap_score_map: min=1.672e+01 max=1.898e+01 mean=1.798e+01
+    Report saved: atlas_targeted/log/isosceles_ridge/verification_report.json
+
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/log/small_mu/ -> atlas_targeted/log/small_mu/
+  [S3] No existing checkpoint found
+
+======================================================================
+  TARGETED ADAPTIVE SCAN: small_mu
+  Small mu (extreme mass ratio / near-collision)
+  Potential: log(r) (Logarithmic)
+  mu: [0.200, 0.400]  phi: [70, 100] deg
+  Grid: 30x30 = 900 points
+  Samples/point: 800, Eps candidates: 12, Level: 3
+  Workers: 31, Point timeout: 600s
+  Reason: Reference scan needed finest epsilon (1.64e-3) near mu=0.2, phi=84deg; extreme mass ratios may hide structure
+======================================================================
+
+  Building symbolic algebra for log(r) (Logarithmic)...
+  Building symbolic generators for Logarithmic (log r)...
+    Level 2: 12 generators (0 zero)
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 868.4 KiB/868.4 KiB (61.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:05:17Z", "uptime": " 09:05:17 up  9:51,  0 users,  load average: 14.95, 18.74, 16.13"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 869.0 KiB/869.0 KiB (55.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:06:18Z", "uptime": " 09:06:18 up  9:52,  0 users,  load average: 6.12, 15.51, 15.18"}'
++ true
++ sleep 60
+    Level 3: 138 generators (0 zero)
+    Total: 156 generators, 156 non-zero
+    Compiling evaluator...
+    Lambdifying 156 expressions individually...
+      20/156  [0.6s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 869.7 KiB/869.7 KiB (61.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:07:19Z", "uptime": " 09:07:19 up  9:53,  0 users,  load average: 2.88, 12.86, 14.29"}'
++ true
++ sleep 60
+      40/156  [61.5s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 870.3 KiB/870.3 KiB (57.0 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:08:20Z", "uptime": " 09:08:20 up  9:54,  0 users,  load average: 1.69, 10.70, 13.46"}'
++ true
++ sleep 60
+      60/156  [129.9s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 870.9 KiB/870.9 KiB (59.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:09:21Z", "uptime": " 09:09:21 up  9:55,  0 users,  load average: 1.23, 8.80, 12.61"}'
++ true
++ sleep 60
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 871.5 KiB/871.5 KiB (55.7 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:10:22Z", "uptime": " 09:10:22 up  9:56,  0 users,  load average: 1.08, 7.38, 11.88"}'
++ true
++ sleep 60
+      80/156  [233.1s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 872.2 KiB/872.2 KiB (61.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:11:23Z", "uptime": " 09:11:23 up  9:57,  0 users,  load average: 1.03, 6.22, 11.20"}'
++ true
++ sleep 60
+      100/156  [317.1s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 872.8 KiB/872.8 KiB (61.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:12:25Z", "uptime": " 09:12:25 up  9:58,  0 users,  load average: 1.01, 5.26, 10.56"}'
++ true
++ sleep 60
+      120/156  [368.8s]
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 873.4 KiB/873.4 KiB (58.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:13:26Z", "uptime": " 09:13:26 up  9:59,  0 users,  load average: 1.00, 4.49, 9.96"}'
++ true
++ sleep 60
+      140/156  [415.2s]
+      156/156  [430.3s]
+    Total lambdify time: 430.7s
+  Algebra ready (544.0s)
+  Algebra ready (544.0s, 156 generators)
+  Starting worker pool (31 workers)...
+  Row   1/30  mu=0.200  [   30/900]  row=11.7s  ETA=6m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=3.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+  Row   2/30  mu=0.207  [   60/900]  row=15.2s  ETA=6m  ranks=[116,116]  gap_score=[18.2,18.4]  avg_eps=3.1
+Completed 874.4 KiB/874.4 KiB (36.6 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:14:27Z", "uptime": " 09:14:27 up 10:00,  0 users,  load average: 11.94, 6.46, 10.23"}'
++ true
++ sleep 60
+  Row   3/30  mu=0.214  [   90/900]  row=15.6s  ETA=6m  ranks=[116,116]  gap_score=[18.2,18.5]  avg_eps=3.1
+  Row   4/30  mu=0.221  [  120/900]  row=14.8s  ETA=6m  ranks=[116,116]  gap_score=[18.0,18.4]  avg_eps=3.1
+  Row   5/30  mu=0.228  [  150/900]  row=15.2s  ETA=6m  ranks=[116,116]  gap_score=[17.9,18.4]  avg_eps=3.1
+  Row   6/30  mu=0.234  [  180/900]  row=13.2s  ETA=6m  ranks=[116,116]  gap_score=[18.0,18.4]  avg_eps=3.1
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 875.4 KiB/875.4 KiB (38.2 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:15:29Z", "uptime": " 09:15:29 up 10:01,  0 users,  load average: 18.64, 9.30, 10.97"}'
++ true
++ sleep 60
+  Row   7/30  mu=0.241  [  210/900]  row=13.7s  ETA=6m  ranks=[116,116]  gap_score=[18.0,18.4]  avg_eps=3.1
+  Row   8/30  mu=0.248  [  240/900]  row=15.6s  ETA=5m  ranks=[116,116]  gap_score=[18.0,18.4]  avg_eps=3.1
+  Row   9/30  mu=0.255  [  270/900]  row=15.5s  ETA=5m  ranks=[116,116]  gap_score=[18.0,18.4]  avg_eps=3.3
+  Row  10/30  mu=0.262  [  300/900]  row=15.1s  ETA=5m  ranks=[116,116]  gap_score=[18.0,18.4]  avg_eps=3.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 876.4 KiB/876.4 KiB (39.9 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:16:31Z", "uptime": " 09:16:31 up 10:02,  0 users,  load average: 20.42, 11.75, 11.72"}'
++ true
++ sleep 60
+  Row  11/30  mu=0.269  [  330/900]  row=14.9s  ETA=5m  ranks=[116,116]  gap_score=[18.0,18.4]  avg_eps=3.2
+  Row  12/30  mu=0.276  [  360/900]  row=13.8s  ETA=4m  ranks=[116,116]  gap_score=[18.0,18.2]  avg_eps=3.1
+  Row  13/30  mu=0.283  [  390/900]  row=13.4s  ETA=4m  ranks=[116,116]  gap_score=[18.0,18.3]  avg_eps=3.1
+  Row  14/30  mu=0.290  [  420/900]  row=13.5s  ETA=4m  ranks=[116,116]  gap_score=[18.1,18.2]  avg_eps=3.2
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 877.4 KiB/877.4 KiB (37.8 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:17:33Z", "uptime": " 09:17:33 up 10:03,  0 users,  load average: 23.99, 14.54, 12.69"}'
++ true
++ sleep 60
+  Row  15/30  mu=0.297  [  450/900]  row=15.2s  ETA=4m  ranks=[116,116]  gap_score=[18.1,18.2]  avg_eps=3.2
+  Row  16/30  mu=0.303  [  480/900]  row=15.5s  ETA=3m  ranks=[116,116]  gap_score=[18.1,18.3]  avg_eps=3.1
+  Row  17/30  mu=0.310  [  510/900]  row=14.0s  ETA=3m  ranks=[116,116]  gap_score=[18.1,18.3]  avg_eps=3.2
+  Row  18/30  mu=0.317  [  540/900]  row=13.5s  ETA=3m  ranks=[116,116]  gap_score=[18.1,18.3]  avg_eps=3.1
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 878.4 KiB/878.4 KiB (53.5 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:18:34Z", "uptime": " 09:18:34 up 10:04,  0 users,  load average: 22.08, 15.61, 13.17"}'
++ true
++ sleep 60
+  Row  19/30  mu=0.324  [  570/900]  row=13.4s  ETA=3m  ranks=[116,116]  gap_score=[18.1,18.4]  avg_eps=3.0
+  Row  20/30  mu=0.331  [  600/900]  row=15.8s  ETA=2m  ranks=[116,116]  gap_score=[18.1,18.2]  avg_eps=3.2
+  Row  21/30  mu=0.338  [  630/900]  row=16.0s  ETA=2m  ranks=[116,116]  gap_score=[18.1,18.3]  avg_eps=3.1
+  Row  22/30  mu=0.345  [  660/900]  row=13.2s  ETA=2m  ranks=[116,116]  gap_score=[18.1,18.4]  avg_eps=3.1
+  Row  23/30  mu=0.352  [  690/900]  row=12.9s  ETA=2m  ranks=[116,116]  gap_score=[18.1,18.4]  avg_eps=3.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 879.6 KiB/879.6 KiB (36.1 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:19:36Z", "uptime": " 09:19:36 up 10:05,  0 users,  load average: 24.57, 17.53, 13.99"}'
++ true
++ sleep 60
+  Row  24/30  mu=0.359  [  720/900]  row=13.5s  ETA=1m  ranks=[116,116]  gap_score=[18.1,18.3]  avg_eps=3.1
+  Row  25/30  mu=0.366  [  750/900]  row=11.8s  ETA=1m  ranks=[116,116]  gap_score=[18.1,18.4]  avg_eps=3.0
+  Row  26/30  mu=0.372  [  780/900]  row=12.1s  ETA=1m  ranks=[116,116]  gap_score=[18.1,18.4]  avg_eps=3.0
+  Row  27/30  mu=0.379  [  810/900]  row=13.2s  ETA=1m  ranks=[116,116]  gap_score=[18.1,18.4]  avg_eps=3.0
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
+Completed 880.6 KiB/880.6 KiB (55.3 MiB/s) with 1 file(s) remainingupload: ../../var/log/3body-expansion-atlas.log to s3://3body-compute-290318/results/expansion_atlas/live.log
++ aws s3 cp - s3://3body-compute-290318/results/expansion_atlas/heartbeat.json
+++ date -u +%Y-%m-%dT%H:%M:%SZ
+++ uptime
++ echo '{"instance": "unknown", "type": "unknown", "job": "expansion_atlas", "time": "2026-03-23T09:20:38Z", "uptime": " 09:20:38 up 10:06,  0 users,  load average: 25.66, 19.16, 14.79"}'
++ true
++ sleep 60
+  Row  28/30  mu=0.386  [  840/900]  row=13.4s  ETA=0m  ranks=[116,116]  gap_score=[18.1,18.4]  avg_eps=3.0
+  Row  29/30  mu=0.393  [  870/900]  row=13.5s  ETA=0m  ranks=[116,116]  gap_score=[18.0,18.2]  avg_eps=3.1
+  Row  30/30  mu=0.400  [  900/900]  row=11.8s  ETA=0m  ranks=[116,116]  gap_score=[18.0,18.4]  avg_eps=3.0
+
+  small_mu complete: 427s (7.1m)
+  Rank range: [116, 116]
+  Optimal eps: [2.16e-03, 5.00e-03]
+  Gap score: [17.94, 18.45]
+  Tier count: [2, 4], median=2.0
+  Rank distribution: 116:900
+
+  Verification PASS: atlas_targeted/log/small_mu
+    Rank distribution: {116: 900}
+    gap_map: min=1.462e+05 max=3.018e+07 mean=9.722e+06
+    optimal_eps_map: min=2.164e-03 max=5.000e-03 mean=4.847e-03
+    gap_score_map: min=1.794e+01 max=1.845e+01 mean=1.818e+01
+    Report saved: atlas_targeted/log/small_mu/verification_report.json
+
+  Saved atlas_targeted/log/plots/lagrange_overview.png
+  Saved atlas_targeted/log/plots/euler_strip_overview.png
+  Saved atlas_targeted/log/plots/charge_hotspot_overview.png
+  Saved atlas_targeted/log/plots/tier_cluster_overview.png
+  Saved atlas_targeted/log/plots/isosceles_ridge_overview.png
+  Saved atlas_targeted/log/plots/small_mu_overview.png
+
+  All plots saved to atlas_targeted/log/plots/
+
+######################################################################
+# ALL TARGETED SCANS COMPLETE
+######################################################################
+    reference completed: exit=0, time=160.3min
+  Saved atlas_targeted/log/plots/lagrange_overview.png
+  Saved atlas_targeted/log/plots/euler_strip_overview.png
+  Saved atlas_targeted/log/plots/charge_hotspot_overview.png
+  Saved atlas_targeted/log/plots/tier_cluster_overview.png
+  Saved atlas_targeted/log/plots/isosceles_ridge_overview.png
+  Saved atlas_targeted/log/plots/small_mu_overview.png
+
+  All plots saved to atlas_targeted/log/plots/
+
+======================================================================
+  [14/14] Three Magnetic Monopoles (1/r^2)
+  Hypothetical magnetic monopoles with 1/r^2 interaction
+======================================================================
+
+    Starting reference scan: /usr/bin/python3 -u /opt/3body/targeted_adaptive_scan.py --potential 1/r^2
+
+######################################################################
+# TARGETED ADAPTIVE SCANS
+# Regions: lagrange, euler_strip, charge_hotspot, tier_cluster, isosceles_ridge, small_mu
+# Configs: 1
+# Total points per config: 9000
+# Workers: 31
+# Estimated time per config: ~0.4 hrs (31 workers)
+######################################################################
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/1_r2/lagrange/ -> atlas_targeted/1_r2/lagrange/
+  [S3] Found checkpoint: 50 rows done
+  [lagrange] 1/r^2 (Calogero-Moser): COMPLETE (skipping)
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/1_r2/euler_strip/ -> atlas_targeted/1_r2/euler_strip/
+  [S3] Found checkpoint: 40 rows done
+  [euler_strip] 1/r^2 (Calogero-Moser): COMPLETE (skipping)
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/1_r2/charge_hotspot/ -> atlas_targeted/1_r2/charge_hotspot/
+  [S3] Found checkpoint: 40 rows done
+  [charge_hotspot] 1/r^2 (Calogero-Moser): COMPLETE (skipping)
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/1_r2/tier_cluster/ -> atlas_targeted/1_r2/tier_cluster/
+  [S3] Found checkpoint: 40 rows done
+  [tier_cluster] 1/r^2 (Calogero-Moser): COMPLETE (skipping)
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/1_r2/isosceles_ridge/ -> atlas_targeted/1_r2/isosceles_ridge/
+  [S3] Found checkpoint: 10 rows done
+  [isosceles_ridge] 1/r^2 (Calogero-Moser): COMPLETE (skipping)
+  [S3] Downloading s3://3body-compute-290318/atlas_targeted/1_r2/small_mu/ -> atlas_targeted/1_r2/small_mu/
+  [S3] Found checkpoint: 30 rows done
+  [small_mu] 1/r^2 (Calogero-Moser): COMPLETE (skipping)
+  Saved atlas_targeted/1_r2/plots/lagrange_overview.png
+  Saved atlas_targeted/1_r2/plots/euler_strip_overview.png
+  Saved atlas_targeted/1_r2/plots/charge_hotspot_overview.png
+  Saved atlas_targeted/1_r2/plots/tier_cluster_overview.png
+  Saved atlas_targeted/1_r2/plots/isosceles_ridge_overview.png
+  Saved atlas_targeted/1_r2/plots/small_mu_overview.png
+
+  All plots saved to atlas_targeted/1_r2/plots/
+
+######################################################################
+# ALL TARGETED SCANS COMPLETE
+######################################################################
+    reference completed: exit=0, time=0.1min
+  Saved atlas_targeted/1_r2/plots/lagrange_overview.png
+  Saved atlas_targeted/1_r2/plots/euler_strip_overview.png
+  Saved atlas_targeted/1_r2/plots/charge_hotspot_overview.png
+  Saved atlas_targeted/1_r2/plots/tier_cluster_overview.png
+  Saved atlas_targeted/1_r2/plots/isosceles_ridge_overview.png
+  Saved atlas_targeted/1_r2/plots/small_mu_overview.png
+
+  All plots saved to atlas_targeted/1_r2/plots/
+
+======================================================================
+ALL ATLAS SCANS COMPLETE
+  Completed: 14/14
+  Total time: 607.2 min (10.12 hours)
+======================================================================
++ EXIT_CODE=0
++ SCAN_PID=
++ echo '=== Orchestrator exit code: 0 ==='
+=== Orchestrator exit code: 0 ===
++ echo '=== Final data sync (with retries) ==='
+=== Final data sync (with retries) ===
++ for attempt in 1 2 3
++ echo '  Sync attempt 1...'
+  Sync attempt 1...
++ aws s3 sync /opt/3body/atlas_targeted/ s3://3body-compute-290318/atlas_targeted/
++ aws s3 cp /var/log/3body-expansion-atlas.log s3://3body-compute-290318/results/expansion_atlas/live.log
