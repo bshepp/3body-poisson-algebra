@@ -25,7 +25,7 @@ by estimated value per compute-hour.
 | Spatial dimension independence | d=1,2,3 all give [3,6,17,116]; sequence is d-independent (Mar 2026) |
 | ND engine (`exact_growth_nd.py`) | Parameterized by d_spatial ∈ {1,2,3}; validated against known 2D results |
 | N-body engine (`exact_growth_nbody.py`) | Parameterized by N, d, potential; validated against N=3 results (Mar 2026) |
-| N=4 dimension sequence | **[6, 14, 62]** through L2, definitive SVD gap 3.4×10¹¹ (Mar 2026) |
+| N=4 dimension sequence | **[6, 14, 62, 1260]** through L3, new_L3(4)=1198 (Apr 2026). L2 definitive SVD gap 3.4×10¹¹ (Mar 2026) |
 | N=4 mass invariance | Confirmed: 3 configs (equal, hierarchical, mixed) all give [6, 14, 62] |
 | N=4 d-independence | Confirmed: d=1,2,3 all give [6, 14, 62] |
 | 1/r³ potential (N=3) | [3, 6, 17, 116] — matches 1/r and 1/r², universality across pole orders |
@@ -340,17 +340,21 @@ and results are documented.
 |-----------|--------|
 | **Energy bound search** | Quantum commutant (40) < classical (41). Case C: quantization breaks symmetry. No energy bound possible via this approach. |
 | **N=5 d=1 exact rank (L0-L2)** | [10, 25, 145]. d-independence confirmed. |
-| **N=8 d=1 exact rank (L0-L2)** | [28, 76, 748]. L1 formula confirmed at N=8; **L2 cubic formula falsified** (predicted 752, observed 748). |
+| **N=7 d=1 exact rank (L0-L2)** | [21, 56, 476]. L1 formula confirmed at N=7. Old L2 cubic off by 1 (predicted 477). Together with N=8, resolves L2 formula. |
+| **N=8 d=1 exact rank (L0-L2)** | [28, 76, 748]. L1 formula confirmed at N=8; **L2 cubic formula falsified** (predicted 752, observed 748). Cross-verified: SymPy 1.12 (local) and 1.14.0 (AWS) agree exactly. Full code audit passed. |
+| **L2 formula resolved** | new_L2 = 12·C(N,3) for N≥4 (boundary: −1 at N=3). Cumulative: L2(N) = N(4N²−9N+3)/2 for N≥4. True formula IS cubic, just not the one fitted from N=3-6. Graph-theoretic decomposition: edges → wedges → triangles of K_N. |
+| **N=4 d=1 exact rank (L0-L3)** | [6, 14, 62, 1260]. new_L3(4) = 1198. First L3 data point beyond N=3. Computed in 52 min on r6i.8xlarge (sweep). |
+| **N-body rank sweep** | Systematic sweep N=3-10 L3, N=11-15 L2 on r6i.8xlarge. N=3 validated, N=4 L3 obtained. N=5,6 L3 OOM-killed. ~$23 total compute. |
 | **Quantum universality classification** | ALL singular 1/r^n grow by +1. NO polynomial potentials grow. Singularity is load-bearing. |
 | **Mass invariance (symbolic)** | Rank over Q(m1,m2,m3) = [3,6,17,116]. Proved for all mass ratios. |
 
 ### Next priorities (post-energy-bound, updated April 11)
 | Analysis | Priority | Compute | Notes |
 |----------|----------|---------|-------|
-| **N=7 d=1 Level 2 exact rank** | HIGHEST | ~minutes (AWS) | Disambiguate L2 formula after N=8 falsification. Cubic predicts 477 — will it match? |
-| **N=5 d=1 Level 3 exact rank** | HIGHEST | Running (r6i.8xlarge, 8 workers) | Extends L3 formula; need 2nd data point beyond N=3 |
-| arXiv submission (Papers 1-3) | HIGHEST | ~0h | Establish priority; energy bound + L2 falsification strengthen paper |
-| N=4 Level 3 | HIGH | ~hours (AWS) | Extends [6,14,62,...] sequence |
+| ~~N=7 d=1 Level 2 exact rank~~ | ~~HIGHEST~~ | **DONE** | [21, 56, 476]. Resolved L2 formula: new_L2 = 12·C(N,3) for N≥4, cumulative L2(N) = N(4N²−9N+3)/2. |
+| **N=5 d=1 Level 3 exact rank** | HIGHEST | **BLOCKED** (OOM on 256 GB) | 1.1M L3 brackets checkpointed on S3. Matrix 1.1M×760K over QQ exceeds memory. Needs modular rank or 512+ GB instance. Prediction if a=1198: new_L3(5) = 5990. |
+| arXiv submission (Papers 1-3) | HIGHEST | ~0h | Establish priority; energy bound + L2 falsification + N=4 L3 strengthen paper |
+| ~~N=4 Level 3~~ | ~~HIGH~~ | **DONE** | [6,14,62,1260]. new_L3(4) = 1198. Computed in 52 min (sweep, r6i.8xlarge). |
 | N=4 with 1/r² potential | HIGH | ~hours | Paper 3 falsifiable prediction #2 |
 | Complete Yukawa dimseq (3 scenarios) | HIGH | ~hours (AWS) | Recursion fix deployed, awaiting results |
 | **Quantum commutant universality** | MED-HIGH | ~hours (AWS) | Does Case C (quantum < classical) hold for 1/r², 1/r³, r⁴? |

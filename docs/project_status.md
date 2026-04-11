@@ -52,6 +52,36 @@ Additional completed work:
 | 6 | **Casimir construction** | Level-2 Casimir: rank 17, Killing rank 0, center dim 17. |
 | 7 | **Interpretation** | The 117th generator does NOT participate in any conserved combination with H_total. Energy bound via this approach is not possible. The quantum deformation strictly reduces symmetry (Case C). |
 
+### Completed — N-Body Rank Sweep (April 11, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **N=4 d=1 Level 3 exact rank** | **[6, 14, 62, 1260]**. new_L3(4) = 1198. Computed in 3140s (52 min) on r6i.8xlarge (31 workers). |
+| 2 | **N=3 d=1 Level 3 validation** | [3, 6, 17, 116]. Matches previous result. 8.2s. |
+| 3 | **N=5 d=1 Level 3** | **OOM killed** (exit -9). Generated 1,115,280 L3 brackets (checkpointed to S3). Rank of 1.1M × 760K matrix over QQ exceeds 256 GB RAM. |
+| 4 | **N=6 d=1 Level 3** | **OOM killed**. Died during L2 bracket generation. Infeasible on current hardware. |
+| 5 | **Graph-theoretic test** | new_L3(4) = 1198 with C(4,4) = 1. Consistent with a = 1198 but N=4 is a boundary case. Critical test is N=5 (prediction: new_L3 = 5990 if a = 1198). |
+| 6 | **Instance cleanup** | All 5 EC2 instances terminated. All data synced to S3. ~$23 compute cost. |
+
+### Blocked — N=5 d=1 Level 3
+
+The N=5 L3 computation is **memory-blocked**: the 1.1M × 760K matrix
+over QQ cannot be rank-computed in 256 GB. Each worker consumes ~27 GB.
+The 1.1M L3 brackets are checkpointed on S3. Options to unblock:
+1. Algorithmic: modular rank (compute over GF(p) for several primes)
+2. Hardware: r6i.16xlarge (512 GB) or x2idn.xlarge (768+ GB)
+3. Out-of-core: stream matrix rows from disk
+
+### Completed — N=7 d=1 Level 2 (April 11, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **N=7 d=1 Level 2 exact rank** | [21, 56, 476]. Computed in 50.9s on r6i.4xlarge (15 workers). |
+| 2 | **L1 formula verification** | L1(7) = 7·16/2 = 56. **Matches** formula N(3N−5)/2. Now verified for N=3–8. |
+| 3 | **Old L2 cubic check** | Predicted 477, observed 476. Discrepancy of 1 (at N=8 it was 4). |
+| 4 | **L2 formula RESOLVED** | The old cubic (13N³−42N²+83N−120)/6, fitted from N=3-6, was polluted by a boundary effect at N=3. The correct formula is **L2(N) = N(4N²−9N+3)/2** for N≥4, arising from new_L2 = 12·C(N,3). At N=3, new_L2 = 11 (boundary: 12−1). |
+| 5 | **Graph-theoretic structure** | new_L0 = C(N,2) [edges], new_L1 = N(N−2) [wedges], new_L2 = 12·C(N,3) [triangles]. The algebra sees K_N subgraph structure at each bracket depth. |
+
 ### Completed — N=8 d=1 Level 2 (April 11, 2026)
 
 | # | Task | Result |
@@ -60,13 +90,13 @@ Additional completed work:
 | 2 | **L1 formula verification** | L1(8) = 8(3·8−5)/2 = 76. **Matches** formula N(3N−5)/2. |
 | 3 | **L2 formula falsification** | L2(8) predicted 752 by cubic formula, observed **748**. Discrepancy of 4. |
 | 4 | **Implication** | The cubic L2(N) = (13N³−42N²+83N−120)/6, fitted from N=3,4,5,6, is **not the correct formula**. A higher-degree polynomial or different functional form is needed. N=7 data would help disambiguate. |
+| 5 | **Cross-version verification** | Independently reproduced locally on SymPy 1.12 (887.9s, single-threaded Windows). Exact match with AWS result (SymPy 1.14.0). Both give [28, 76, 748]. |
 
-### In Progress (2)
+### In Progress (1)
 
 | # | Task | Progress | Status |
 |---|---|---|---|
-| 1 | **N=5 d=1 Level 3 exact rank** | Brackets complete (1.1M), monomial extraction in progress | r6i.8xlarge (256 GB), 8 workers |
-| 2 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed. Rank=667, plateau=0. Checkpoint safe. |
+| 1 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed. Rank=667, plateau=0. Checkpoint safe. |
 
 ### Not Yet Started (7)
 
@@ -77,15 +107,15 @@ Additional completed work:
 | 4 | **Dusty plasma Yukawa atlas** | Prior run failed (exit code 1). Yukawa lambdification issue. |
 | 5 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
 | 6 | **SageMath verification** | Independent verification of dimension sequence. SageMath not yet installed. |
-| 7 | **N=4 body Level-3** | Sequence [6, 14, 62] through L2; L3 not computed. |
-| 9 | **N=7 d=1 Level 2** | Needed to disambiguate L2 formula (cubic falsified at N=8). Formula predicts 477. |
+| 7 | ~~N=4 body Level-3~~ | **DONE** — [6, 14, 62, 1260]. new_L3(4) = 1198. See Completed — Sweep below. |
+| 9 | ~~N=7 d=1 Level 2~~ | **DONE** — [21, 56, 476]. See Completed — N=7 below. |
 | 8 | **Structure extraction at level 3 (rank 116)** | Level-2 structure computed for 6 potentials. Level 3 requires AWS. |
 
 ### Completed — Algebra Structure (April 9, 2026)
 
 | # | Task | Result |
 |---|---|---|
-| 1 | **N-body exact rank scaling** | N=5: [10, 25, 145], N=6: [15, 39, 279], N=8: [28, 76, 748]. d-independence confirmed for N=3–6. |
+| 1 | **N-body exact rank scaling** | N=3: [3,6,17,116], N=4: [6,14,62,1260], N=5: [10,25,145], N=6: [15,39,279], N=7: [21,56,476], N=8: [28,76,748]. L3 available for N=3,4. d-independence confirmed for N=3–6. |
 | 2 | **New potentials (r⁴, 1/r⁴)** | Both give [3, 6, 17, 116]. Singular/regular dichotomy falsified. |
 | 3 | **Structure constants (exact/Q)** | Computed for 1/r, 1/r⁴, r⁴, r² at level 2 (rank 17). |
 | 4 | **Killing form & signature** | Non-harmonic: (6+, 0-, 11 zero). Harmonic: (14+, 0-, 1 zero). |
@@ -120,10 +150,11 @@ Additional completed work:
 
 | # | Task | Result |
 |---|---|---|
-| 1 | **L1 formula** | L1(N) = N(3N-5)/2. Verified for N=3,4,5,6,8. New-per-level: N(N-2). |
-| 2 | **L2 formula** | L2(N) = (13N^3 - 42N^2 + 83N - 120)/6 **FALSIFIED at N=8**: predicts 752, observed 748. Cubic was fitted from N=3,4,5,6 (4 points determine a unique cubic) but does not extrapolate. Needs N=7 to determine correct form. |
-| 3 | **L3 formula** | Unknown — only one data point (N=3: L3=116). Need N=4 or N=5 level 3. |
-| 4 | **Degree pattern** | Leading polynomial degree in N: L0~N^2, L1~N^2, L2>=N^3. The L2 growth is faster than cubic for large N. |
+| 1 | **L1 formula** | L1(N) = N(3N-5)/2. Verified for N=3,4,5,6,7,8. New-per-level: N(N-2). |
+| 2 | **L2 formula (original)** | L2(N) = (13N^3 - 42N^2 + 83N - 120)/6 **FALSIFIED at N=7,8**: predicts 477/752, observed 476/748. Cubic was fitted from N=3,4,5,6 (4 points determine a unique cubic) but does not extrapolate. This was a legitimate inference that failed at the next data points. |
+| 2b | **L2 formula (resolved)** | With N=7 filling the gap, the falsification is resolved. new_L2 = 12·C(N,3) for N≥4 (boundary: 11 at N=3). Cumulative: **L2(N) = N(4N²−9N+3)/2** for N≥4. The true formula IS cubic — a different cubic. The original was polluted by the N=3 boundary effect. Verified for N=4,5,6,7,8. |
+| 3 | **L3 formula** | Two data points: N=3 L3=116 (new_L3=99), N=4 L3=1260 (new_L3=1198). Both are boundary cases for C(N,4): C(3,4)=0, C(4,4)=1. If a=1198, prediction: new_L3(5)=5990. N=5 L3 OOM-killed on 256 GB; needs algorithmic improvement or larger instance. |
+| 4 | **Degree pattern** | Leading polynomial degree in N: L0~N^2, L1~N^2, L2~N^3. Confirmed cubic growth at L2. |
 
 ### Completed — Mass Invariance Statement (April 10, 2026)
 

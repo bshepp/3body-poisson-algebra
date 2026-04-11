@@ -5453,7 +5453,259 @@ Sequence: 11, 48, 120, 240, 672. These are NOT factorials or simple
 combinatorial numbers. The jump from 240 (N=6) to 672 (N=8) skips N=7,
 which would help determine the growth rate.
 
+### Cross-Version Verification
+
+Independent local reproduction on Windows with SymPy 1.12 (vs AWS
+SymPy 1.14.0) produced identical results: [28, 76, 748].
+
+| Environment | SymPy | Workers | Time | Rank |
+|-------------|-------|---------|------|------|
+| AWS r6i.4xlarge (Linux) | 1.14.0 | 15 | 190.8s | [28, 76, 748] |
+| Local Windows (single-threaded) | 1.12 | 1 | 887.9s | [28, 76, 748] |
+
+The full code audit verified:
+- Generator enumeration: 82,243 generators, every pair computed exactly once
+- Level 0: 28 Hamiltonians (C(8,2)), correct construction
+- Level 1: 378 brackets (C(28,2)), all L0-L0 pairs
+- Level 2: 81,837 brackets (378×28 L1-L0 + C(378,2) L1-L1), correct
+  frozenset dedup — no missed or double-counted pairs
+- Poisson bracket: same code path validated at N=3,4,5,6
+- Chain rule: 56 entries (2 bodies × 28 pairs × 1 spatial dim)
+- Monomial extraction: `Poly.as_dict()` over QQ, exact
+- Rank: `DomainMatrix.rank()` over QQ, exact Gaussian elimination
+
+No enumeration bugs, no SymPy version artifacts, no simplification
+differences. The L2=748 result (vs cubic prediction 752) is genuine.
+
+### Quartic Fit Analysis
+
+Fitting a quartic through all 5 data points (N=3,4,5,6,8) gives:
+
+L2(N) = (-1/30)N⁴ + (83/30)N³ - (329/30)N² + (757/30)N - 32
+
+This predicts L2(7) = 2381/5 = 476.2 — **not an integer**. Since L2
+must be a non-negative integer, the quartic is also wrong, confirming
+that 5 data points are insufficient. The true L2(N) is at least
+degree 5 (or non-polynomial). N=7 is the critical missing data point.
+
 ### Impact
 This is the first falsification of any proposed scaling formula and
 elevates the importance of computing N=7 to identify the true functional
 form of L2(N).
+
+---
+
+## N=7 d=1 Level 2 Exact Rank (April 11, 2026)
+
+### Setup
+Launched on AWS r6i.4xlarge (16 vCPU, 128 GB RAM) with 15 workers.
+Userdata script: `infra/userdata_n7d1_level2.sh`. The run completed
+in **50.9 seconds** (exit code 0) and the instance auto-terminated.
+
+### Results
+
+| Level | Generators | Cumulative Rank | New per Level |
+|-------|-----------|----------------|---------------|
+| 0 | 21 | **21** | 21 |
+| 1 | 231 | **56** | 35 |
+| 2 | 26,586 | **476** | 420 |
+
+- 26,586 total generators, 4,249 distinct monomials
+- Matrix: 26,586 × 4,249 over QQ
+- Rank computation: L0 in 0.0s, L1 in 0.1s, L2 in 23.2s
+- Status: **GROWING** (not stabilized through level 2)
+
+### Formula checks at N=7
+
+**L1 formula CONFIRMED**: L1(7) = 7(3·7−5)/2 = 7·16/2 = 56. Matches.
+The formula is now verified for N = 3, 4, 5, 6, 7, 8.
+
+**Old L2 cubic**: predicted 477, observed **476**. Discrepancy of 1.
+(At N=8 the discrepancy was 4. Pattern: 0, 0, 0, 0, 1, 4 for N=3-8.)
+
+### Resolution of L2 Formula Falsification
+
+The N=7 data point fills the gap in the scaling table and, together
+with N=8, resolves the "falsification" reported in the previous section.
+
+**The old cubic was not wrong in kind — it was polluted by a boundary
+effect at N=3.** Here is the full error history:
+
+1. **Original cubic** (fitted from N=3,4,5,6):
+   L2(N) = (13N³ − 42N² + 83N − 120)/6.
+   This was a legitimate inference from 4 data points, which uniquely
+   determine a cubic. It agreed perfectly for all 4 points.
+
+2. **Falsification** (N=7, N=8): The cubic predicted 477 and 752;
+   we observed 476 and 748. Discrepancies of 1 and 4. This was
+   correctly reported as a falsification.
+
+3. **Quartic fit attempt** (5 points, N=3,4,5,6,8): Predicted
+   L2(7) = 476.2 — not an integer. Correctly ruled out a quartic.
+
+4. **Resolution** (6 data points): The key insight came from
+   analyzing **new_L2 = L2 − L1** instead of L2 directly:
+
+| N | new_L2 | 12·C(N,3) | Difference |
+|---|--------|-----------|------------|
+| 3 | 11 | 12 | −1 |
+| 4 | 48 | 48 | 0 |
+| 5 | 120 | 120 | 0 |
+| 6 | 240 | 240 | 0 |
+| 7 | 420 | 420 | 0 |
+| 8 | 672 | 672 | 0 |
+
+**For N ≥ 4, new_L2 = 12·C(N,3) exactly.** At N=3, new_L2 = 11 = 12−1,
+a boundary correction when K_N has only one triangle.
+
+This gives the **correct cumulative formula** (for N ≥ 4):
+
+    L2(N) = C(N,2) + N(N−2) + 12·C(N,3)
+           = N(4N² − 9N + 3)/2
+
+Verification:
+
+| N | N(4N²−9N+3)/2 | Actual L2 | Match |
+|---|---------------|-----------|-------|
+| 3 | 18 | 17 | No (boundary: −1) |
+| 4 | 62 | 62 | Yes |
+| 5 | 145 | 145 | Yes |
+| 6 | 279 | 279 | Yes |
+| 7 | 476 | 476 | Yes |
+| 8 | 748 | 748 | Yes |
+
+The true L2(N) IS cubic — just a different cubic than the one we
+fitted from 4 points. The original fit was corrupted because the N=3
+boundary effect shifted all the coefficients.
+
+**Why did the quartic fit also fail?** Because the quartic tried to
+accommodate the N=3 boundary term as a smooth polynomial correction,
+but it is a discrete −1, not a smooth function. With 5 points
+(N=3,4,5,6,8) and a quartic (5 coefficients), the fit was overdetermined
+by the anomalous N=3 point and produced non-integer predictions.
+
+### Updated N-Body Scaling Table (complete through L2)
+
+| N | L0 = C(N,2) | L1 | L2 | new_L0 | new_L1 | new_L2 |
+|---|-------------|----|----|--------|--------|--------|
+| 3 | 3 | 6 | 17 | 3 | 3 | 11 |
+| 4 | 6 | 14 | 62 | 6 | 8 | 48 |
+| 5 | 10 | 25 | 145 | 10 | 15 | 120 |
+| 6 | 15 | 39 | 279 | 15 | 24 | 240 |
+| 7 | 21 | 56 | 476 | 21 | 35 | 420 |
+| 8 | 28 | 76 | 748 | 28 | 48 | 672 |
+
+### Graph-Theoretic Decomposition
+
+The new-per-level sequences have clean combinatorial interpretations
+tied to subgraphs of the complete interaction graph K_N:
+
+| Level | new_L_k | Formula | Graph object |
+|-------|---------|---------|-------------|
+| 0 | C(N,2) | = C(N,2) | edges of K_N |
+| 1 | N(N−2) | = N(N−2) | vertex-edge incidences (wedges) |
+| 2 | 12·C(N,3) | for N≥4 | 12 per triangle of K_N |
+
+The algebra "sees" the combinatorial structure of K_N at each level,
+with the bracket depth k probing (k+1)-body subgraph structures.
+
+### Prediction for Level 3
+
+If the pattern holds — new_L_k ~ f(k)·C(N,k+1) for large N —
+then new_L3 should scale as a·C(N,4) for some coefficient a, with
+possible boundary corrections at small N. We currently have only
+one L3 data point (N=3: L3=116, new_L3=99). The N=5 L3 run on AWS
+will provide the next data point.
+
+---
+
+## Systematic N-Body Rank Sweep (April 11, 2026)
+
+### Setup
+Launched on AWS r6i.8xlarge (32 vCPU, 256 GB RAM) with 31 workers.
+Userdata script: `infra/userdata_sweep_nbody.sh`. Target: N=3-10 L3,
+N=11-15 L2. Used AL2023 AMI (ami-0ea87431b78a82070) with Python 3.9 /
+SymPy 1.14.0. Instance ran ~11.5 hours before manual termination.
+
+Note: First two launch attempts failed — AMI ami-05024c2628f651b80 is
+Amazon Linux 2 (Python 3.7), which cannot install SymPy >=1.13.
+
+### Results
+
+| N | max_level | Status | Time | Result |
+|---|-----------|--------|------|--------|
+| 3 | 3 | PASSED (validation) | 8.2s | [3, 6, 17, 116] |
+| 3 | 3 | SKIPPED | — | Already had result |
+| **4** | **3** | **SUCCESS** | **3140s (52 min)** | **[6, 14, 62, 1260]** |
+| 5 | 3 | **OOM KILLED** (exit -9) | 11352s (3.15h) | Generated 1,115,280 L3 brackets; died during monomial extraction/rank |
+| 6 | 3 | **OOM KILLED** | ~minutes | Got through L1, died during L2 bracket generation |
+| 7–15 | 3/2 | **Never ran** | — | Sweep process killed by N=6 OOM cascade |
+
+Total cost: ~$23 (r6i.8xlarge at $2.016/hr × 11.5h).
+
+### N=4 Level 3: [6, 14, 62, 1260] — First L3 Data Beyond N=3
+
+This is the key result of the sweep. Details:
+
+- 23,226 total generators, 143,016 distinct monomials
+- Matrix: 23,226 × 143,016 over QQ
+- Rank computation: L0 in 0.1s, L1 in 0.3s, L2 in 5.5s, L3 in 2469.8s
+- **new_L3(4) = 1198**
+- Status: **GROWING** (not stabilized through level 3)
+
+### L3 Scaling: First Test of Graph-Theoretic Conjecture
+
+| N | L3 | new_L3 | C(N,4) | new_L3 / C(N,4) |
+|---|-----|--------|--------|-----------------|
+| 3 | 116 | 99 | 0 | undefined (boundary) |
+| 4 | 1260 | 1198 | 1 | 1198 |
+
+With C(3,4) = 0, N=3 is necessarily a boundary case. At N=4,
+C(4,4) = 1, so new_L3(4) = 1198·C(4,4) = 1198. This is consistent
+with the conjecture new_L3 = a·C(N,4) with **a = 1198**, but N=4 is
+also likely a boundary case (only one K₄ subgraph).
+
+The critical test is N=5: if a = 1198, then new_L3(5) should be
+1198·C(5,4) = 1198·5 = **5990**, giving L3(5) = 145 + 5990 = 6135.
+However, N=5 L3 requires >256 GB RAM for exact QQ rank and is not
+feasible on current hardware without algorithmic improvements.
+
+### N=5 Level 3 OOM Analysis
+
+The OOM kill occurred during monomial extraction or rank computation
+on the 1,116,775 × 759,855 matrix over QQ. Each worker process
+consumed ~27 GB (visible in EC2 console output). With 31 workers
+sharing 256 GB, the system was fatally oversubscribed.
+
+The earlier dedicated N=5 L3 run (8 workers) also died at the same
+point with exit code 137. The bracket generation (1.1M brackets)
+succeeds and is checkpointed on S3 (3.6 GB generators_level3.pkl),
+but the rank computation exceeds available memory.
+
+### Sweep Script Issues
+
+1. **Sync loop blocked**: The `sync_all()` function's `aws s3 sync`
+   uploaded the entire `nbody/` directory (6.7 MB of unrelated .py
+   files, PNGs, etc.) as "checkpoints" because `--include` without
+   `--exclude "*"` is a no-op. This blocked the background sync for
+   the entire run, so intermediate results and heartbeat were not
+   reliably updated.
+
+2. **Auto-termination failed**: After the OOM cascade killed the
+   sweep process, the background sync loop continued indefinitely
+   but `shutdown -h now` never executed, leaving the instance idle
+   for ~3 hours (~$6 wasted).
+
+3. **AMI mismatch**: The hardcoded AMI `ami-05024c2628f651b80` is
+   Amazon Linux 2 (Python 3.7), incompatible with SymPy >=1.13.
+   Required switch to AL2023 AMI.
+
+### Data Preserved
+
+All results synced to S3 before instance termination. Key artifacts:
+- `s3://3body-compute-290318/results/symbolic_rank/rank_N3_d1_1r.json`
+- `s3://3body-compute-290318/results/symbolic_rank/rank_N4_d1_1r.json`
+- `s3://3body-compute-290318/results/symbolic_rank/sweep_nbody_ranks/full_run3.log` (16.6 MB)
+- `s3://3body-compute-290318/results/symbolic_rank/N5_d1_level3/checkpoints/generators_level3.pkl` (3.6 GB — all 1.1M brackets, reusable)
+- Local copies: `results/symbolic_rank/rank_N{3,4}_d1_1r.json`
+- All stopped EC2 instances terminated (4 instances, saving ~$32/mo EBS)

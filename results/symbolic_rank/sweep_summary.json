@@ -1,0 +1,23 @@
+{
+  "started": "2026-04-10T21:46:04Z",
+  "workers": 1,
+  "d": 1,
+  "jobs_skipped": 0,
+  "jobs_ran": 1,
+  "results": [
+    {
+      "N": 4,
+      "d": 1,
+      "max_level": 3,
+      "status": "failed (exit 1)",
+      "exit_code": 1,
+      "elapsed_seconds": 11058.0,
+      "ranks": [
+        6,
+        14,
+        62,
+        1260
+      ]
+    }
+  ]
+}

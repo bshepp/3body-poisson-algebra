@@ -37,10 +37,11 @@ See revised statement in Section 4 below.
 | Composite (1/r + 1/r²) | **[3, 6, 17, 116]** (Mar 2026) — multi-pole composite universal | — |
 | Penning trap (+1,+1,+1 with harmonic confinement) | **[3, 6, 17, 116]** (Mar 2026) — all-repulsive + external potential | — |
 | Mass invariance for 1/r^2 | Not tested | 100×100 atlas running (instance `i-05548f68fbcbd54e5`, ETA ~3.5h) |
-| N=4 dimension sequence | **[6, 14, 62]** (Mar 2026) | L3 not yet computed |
+| N=4 dimension sequence | **[6, 14, 62, 1260]** (Apr 2026). new_L3(4)=1198. | L3 computed. Graph-theoretic: 1198·C(4,4) with C(4,4)=1. |
 | N=4 mass invariance | **Proved** (3 configs: equal, 100:10:1:1, 3:7:11:2) | — |
-| N=8 dimension sequence | **[28, 76, 748]** (Apr 2026) | L1 formula confirmed; **L2 cubic falsified** (predicts 752) |
-| Dependence on N | Tested at N=3, 4, 5, 6, 8 | N=7 needed to disambiguate L2 formula |
+| N=7 dimension sequence | **[21, 56, 476]** (Apr 2026) | L1 formula confirmed; old L2 cubic off by 1 (predicts 477). Resolves L2 formula — see below. |
+| N=8 dimension sequence | **[28, 76, 748]** (Apr 2026). Cross-verified: SymPy 1.12 (local) and 1.14.0 (AWS) both agree. | L1 formula confirmed; old L2 cubic off by 4 (predicts 752) |
+| Dependence on N | Tested at N=3, 4, 5, 6, 7, 8 | Complete through L2 |
 | Dependence on spatial dim | **Independent of d** for N=3 AND N=4 | d=1,2,3 identical |
 | 1/r, 1/r^2, 1/r^3, log(r) give same sequence | **Proved** for N=3 through L3 | Could diverge at L4 |
 | Charge-sign invariance (1/r) | **Proved** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
@@ -282,6 +283,7 @@ singular central potential in d = 1, 2, or 3 spatial dimensions:
 - N=4: sequence [6, 14, 62] through Level 2
 - N=5: sequence [10, 25, 145] through Level 2
 - N=6: sequence [15, 39, 279] through Level 2
+- N=7: sequence [21, 56, 476] through Level 2
 - N=8: sequence [28, 76, 748] through Level 2
 
 All independent of spatial dimension. The N=3 algebra has infinite
@@ -289,9 +291,40 @@ GK dimension (d(4) ≥ 5,604).
 
 **L2 scaling formula status (Apr 2026):** The cubic formula
 L2(N) = (13N³−42N²+83N−120)/6, fitted from N=3,4,5,6, has been
-**falsified at N=8** (predicts 752, observed 748). The L1 formula
-L1(N) = N(3N−5)/2 remains valid for all tested N. The true L2(N)
-is not a degree-3 polynomial in N.
+**falsified at N=8** (predicts 752, observed 748). The result was
+independently verified on two SymPy versions (1.12 local, 1.14.0 AWS)
+with a full code audit confirming correct enumeration and exact QQ
+arithmetic. The L1 formula L1(N) = N(3N−5)/2 remains valid for all
+tested N. The true L2(N) is not a degree-3 polynomial in N.
+A quartic fit through all 5 data points predicts L2(7) = 476.2
+(non-integer), so the true form is at least degree 5 or non-polynomial.
+
+**L2 formula RESOLVED (Apr 11, 2026):** With N=7 data (L2=476) filling
+the gap, the falsification is explained. The error was not in the
+degree — the true L2(N) IS cubic — but in the specific cubic. The
+original fit was corrupted by a boundary effect at N=3.
+
+The resolution comes from analyzing new_L2 = L2 − L1:
+- new_L2 = 12·C(N,3) for all N ≥ 4 (verified N=4,5,6,7,8)
+- new_L2(3) = 11 = 12·C(3,3) − 1 (boundary correction)
+
+This gives **L2(N) = N(4N²−9N+3)/2** for N ≥ 4, which matches all
+five data points exactly. At N=3, the formula gives 18 vs actual 17
+(the −1 boundary correction).
+
+The original cubic and the correct cubic differ because the N=3 anomaly
+shifted all fitted coefficients. The quartic attempt also failed because
+it tried to smoothly interpolate a discrete boundary effect.
+
+**Graph-theoretic decomposition conjecture (Apr 2026):** The new-per-level
+sequences are indexed by subgraphs of the complete interaction graph K_N:
+- new_L0 = C(N,2): one per **edge** of K_N
+- new_L1 = N(N−2): related to **wedges** (vertex-edge incidences)
+- new_L2 = 12·C(N,3) for N≥4: 12 per **triangle** of K_N
+
+If this pattern continues, new_L3 should scale as a·C(N,4) for large N
+(with possible boundary corrections at small N). The coefficient "a" is
+unknown — we need at least two L3 data points beyond N=3 to determine it.
 
 **Conjecture** (revised, Mar 2026): For N ≥ 3 particles in d ≥ 1
 spatial dimensions, interacting via a singular central potential:
@@ -433,6 +466,74 @@ the dimension sequence is mass-invariant and the critical locus
 tracks S_4 fixed points, the conjecture gains evidence. Each
 subsequent N strengthens it. The universe is just a large value
 of N.
+
+---
+
+## 6. Graph-Theoretic Decomposition Conjecture
+
+*Added April 11, 2026*
+
+> For N particles interacting via a singular central potential on the
+> complete interaction graph K_N, the number of **new** independent
+> Poisson algebra generators at bracket depth k scales as
+>
+>     new_L_k(N) = f(k) · C(N, k+1)    for N sufficiently large
+>
+> where f(k) is a coefficient depending only on k (not N), and C(N,k+1)
+> counts the (k+1)-cliques of K_N. Boundary corrections of O(1) may
+> occur at the smallest values of N where C(N,k+1) is small.
+
+### Evidence
+
+| Level k | new_L_k formula | f(k) | Graph object | Verified N | Boundary |
+|---------|----------------|------|-------------|-----------|----------|
+| 0 | C(N,2) | 1 | edges | N=3–8 | none |
+| 1 | N(N−2) | — | wedges (not exactly f·C(N,2)) | N=3–8 | none |
+| 2 | 12·C(N,3) | 12 | triangles | N=4–8 | N=3: 11 instead of 12 |
+| 3 | a·C(N,4)? | 1198? | K₄ subgraphs? | N=3 (99, boundary), N=4 (1198) | N=3: C(3,4)=0 |
+
+**Note on Level 1:** new_L1 = N(N−2) does not factor cleanly as
+f(1)·C(N,2) = f(1)·N(N−1)/2. Instead, N(N−2) = 2·C(N,2) − (N−2),
+suggesting a slight deviation from the pure C(N,k+1) pattern at k=1.
+Nevertheless, the dominant growth is quadratic (∼ N²), consistent with
+C(N,2). The conjecture may require refinement at k=1 or the wedge
+count N(N−2) may itself be the natural generalization.
+
+### Falsifiable predictions
+
+1. ~~**N=4 Level 3**~~: **DONE**. new_L3(4) = 1198, with C(4,4) = 1.
+   If interpreted as the coefficient, a = 1198. However, N=4 has only
+   one K₄ subgraph (K_4 itself), analogous to N=3 having one triangle
+   at L2 where the boundary effect was −1. N=4 is likely also a
+   boundary case for L3.
+
+2. **N=5 Level 3** (OOM-killed on 256 GB): new_L3(5) should be
+   a·C(5,4) = 1198·5 = 5990 if a=1198 holds without boundary
+   corrections, giving L3(5) = 145 + 5990 = **6135**. This is the
+   first non-trivial test. The 1.1M L3 brackets are checkpointed on
+   S3 but exact QQ rank exceeds available memory.
+
+3. **N=6 Level 3**: new_L3(6) = 1198·C(6,4) = 1198·15 = 17,970 if
+   the conjecture holds. Also currently infeasible.
+
+4. **General prediction**: For any k, the cumulative rank L_k(N) should
+   be a polynomial of degree k+1 in N for sufficiently large N.
+
+### Why it might be true
+
+The Poisson bracket {·,·} at level k involves k+1 nested brackets of
+pairwise Hamiltonians. Each bracket introduces one new body index. After
+k levels, the generators involve correlations among k+1 bodies — exactly
+the (k+1)-body subgraph structure. The coefficient f(k) counts the
+number of algebraically independent ways to combine these correlations.
+
+### N=3 boundary effect
+
+At N=3 Level 2, there is exactly one triangle (K_3 itself), and the 12
+would-be generators satisfy one algebraic relation (syzygy), leaving
+only 11 independent. For N≥4, multiple triangles break this relation.
+A similar boundary effect is expected at N = k+1 for each level k
+(when there is only one (k+1)-clique).
 
 ---
 
