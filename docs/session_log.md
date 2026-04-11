@@ -5395,3 +5395,65 @@ derived from a completely different method.
 promising path to a proof is completing the level 4 computation
 (showing continued growth) combined with the structure theory of
 the full algebra.
+
+---
+
+## N=8 d=1 Level 2 Exact Rank (April 11, 2026)
+
+### Setup
+Launched on AWS r6i.4xlarge (16 vCPU, 128 GB RAM) with 15 workers.
+Userdata script: `infra/userdata_n8d1_level2.sh`. The run completed
+in **190.8 seconds** (exit code 0) and the instance auto-terminated.
+
+### Results
+
+| Level | Generators | Cumulative Rank | New per Level |
+|-------|-----------|----------------|---------------|
+| 0 | 28 | **28** | 28 |
+| 1 | 406 | **76** | 48 |
+| 2 | 82,243 | **748** | 672 |
+
+- 82,243 total generators, 6,616 distinct monomials
+- Matrix: 82,243 × 6,616 over QQ
+- Monomial extraction: 14.4s (15 workers)
+- Rank computation: L0 in 0.0s, L1 in 0.3s, L2 in 110.1s
+- Status: **GROWING** (not stabilized through level 2)
+
+### Formula Verification
+
+**L1 formula CONFIRMED**: L1(N) = N(3N−5)/2 gives L1(8) = 76. Matches.
+The formula is now verified for N = 3, 4, 5, 6, 8.
+
+**L2 formula FALSIFIED**: The cubic L2(N) = (13N³ − 42N² + 83N − 120)/6
+was fitted from the four data points N=3,4,5,6 (which uniquely determine
+a cubic). At N=8, it predicts 752 but we observe **748** — a discrepancy
+of 4.
+
+This means:
+1. The true L2(N) is NOT a cubic polynomial in N.
+2. Four data points (N=3,4,5,6) were insufficient to determine L2(N).
+3. We need N=7 (predicted 477 by the cubic) to disambiguate between a
+   quartic/quintic polynomial and a non-polynomial functional form.
+
+### Updated N-Body Scaling Table
+
+| N | L0 = C(N,2) | L1 | L2 | L2/L1 | L1/L0 |
+|---|-------------|----|----|-------|-------|
+| 3 | 3           | 6  | 17 | 2.83  | 2.00  |
+| 4 | 6           | 14 | 62 | 4.43  | 2.33  |
+| 5 | 10          | 25 | 145 | 5.80  | 2.50  |
+| 6 | 15          | 39 | 279 | 7.15  | 2.60  |
+| 8 | 28          | 76 | 748 | 9.84  | 2.71  |
+
+Note: N=7 gap — need to run to fill in the sequence.
+
+### New-per-level analysis
+New generators at L2: 17−6=11, 62−14=48, 145−25=120, 279−39=240, 748−76=672.
+Sequence: 11, 48, 120, 240, 672. These are NOT factorials or simple
+combinatorial numbers. The jump from 240 (N=6) to 672 (N=8) skips N=7,
+which would help determine the growth rate.
+
+### Impact
+This is the first falsification of any proposed scaling formula and
+elevates the importance of computing N=7 to identify the true functional
+form of L2(N).

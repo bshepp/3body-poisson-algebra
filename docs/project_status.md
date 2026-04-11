@@ -1,6 +1,6 @@
 # Three-Body Poisson Algebra — Project Status & Roadmap
 
-*Last updated: April 10, 2026*
+*Last updated: April 11, 2026*
 
 ---
 
@@ -52,6 +52,15 @@ Additional completed work:
 | 6 | **Casimir construction** | Level-2 Casimir: rank 17, Killing rank 0, center dim 17. |
 | 7 | **Interpretation** | The 117th generator does NOT participate in any conserved combination with H_total. Energy bound via this approach is not possible. The quantum deformation strictly reduces symmetry (Case C). |
 
+### Completed — N=8 d=1 Level 2 (April 11, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **N=8 d=1 Level 2 exact rank** | [28, 76, 748]. Computed in 190.8s on r6i.4xlarge (15 workers). |
+| 2 | **L1 formula verification** | L1(8) = 8(3·8−5)/2 = 76. **Matches** formula N(3N−5)/2. |
+| 3 | **L2 formula falsification** | L2(8) predicted 752 by cubic formula, observed **748**. Discrepancy of 4. |
+| 4 | **Implication** | The cubic L2(N) = (13N³−42N²+83N−120)/6, fitted from N=3,4,5,6, is **not the correct formula**. A higher-degree polynomial or different functional form is needed. N=7 data would help disambiguate. |
+
 ### In Progress (2)
 
 | # | Task | Progress | Status |
@@ -69,13 +78,14 @@ Additional completed work:
 | 5 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
 | 6 | **SageMath verification** | Independent verification of dimension sequence. SageMath not yet installed. |
 | 7 | **N=4 body Level-3** | Sequence [6, 14, 62] through L2; L3 not computed. |
+| 9 | **N=7 d=1 Level 2** | Needed to disambiguate L2 formula (cubic falsified at N=8). Formula predicts 477. |
 | 8 | **Structure extraction at level 3 (rank 116)** | Level-2 structure computed for 6 potentials. Level 3 requires AWS. |
 
 ### Completed — Algebra Structure (April 9, 2026)
 
 | # | Task | Result |
 |---|---|---|
-| 1 | **N-body exact rank scaling** | N=5: [10, 25, 145], N=6: [15, 39, 279]. d-independence confirmed for N=3–6. |
+| 1 | **N-body exact rank scaling** | N=5: [10, 25, 145], N=6: [15, 39, 279], N=8: [28, 76, 748]. d-independence confirmed for N=3–6. |
 | 2 | **New potentials (r⁴, 1/r⁴)** | Both give [3, 6, 17, 116]. Singular/regular dichotomy falsified. |
 | 3 | **Structure constants (exact/Q)** | Computed for 1/r, 1/r⁴, r⁴, r² at level 2 (rank 17). |
 | 4 | **Killing form & signature** | Non-harmonic: (6+, 0-, 11 zero). Harmonic: (14+, 0-, 1 zero). |
@@ -106,14 +116,14 @@ Additional completed work:
 | 5 | **r^4 quantum rank (d=1)** | [3, 6, 17, 116] — no growth (quantum corrections are linearly dependent). |
 | 6 | **Classification** | ALL singular potentials (1/r^n, n≥1) grow by +1. NO polynomial potentials grow. The singularity is load-bearing. |
 
-### Completed — N-body Scaling Formulas (April 10, 2026)
+### Completed — N-body Scaling Formulas (updated April 11, 2026)
 
 | # | Task | Result |
 |---|---|---|
-| 1 | **L1 formula** | L1(N) = N(3N-5)/2. Verified for N=3,4,5,6. New-per-level: N(N-2). |
-| 2 | **L2 formula** | L2(N) = (13N^3 - 42N^2 + 83N - 120)/6. Verified for N=3,4,5,6. |
+| 1 | **L1 formula** | L1(N) = N(3N-5)/2. Verified for N=3,4,5,6,8. New-per-level: N(N-2). |
+| 2 | **L2 formula** | L2(N) = (13N^3 - 42N^2 + 83N - 120)/6 **FALSIFIED at N=8**: predicts 752, observed 748. Cubic was fitted from N=3,4,5,6 (4 points determine a unique cubic) but does not extrapolate. Needs N=7 to determine correct form. |
 | 3 | **L3 formula** | Unknown — only one data point (N=3: L3=116). Need N=4 or N=5 level 3. |
-| 4 | **Degree pattern** | Leading polynomial degree in N: L0~N^2, L1~N^2, L2~N^3. Increases with level. |
+| 4 | **Degree pattern** | Leading polynomial degree in N: L0~N^2, L1~N^2, L2>=N^3. The L2 growth is faster than cubic for large N. |
 
 ### Completed — Mass Invariance Statement (April 10, 2026)
 

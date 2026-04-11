@@ -335,19 +335,21 @@ and results are documented.
 | **Sun-Earth-Moon atlas** (Apr 2026) | 100×100, 800 samples, ranks 102–108. 10K/10K valid. Extreme mass ratio 1:3×10⁻⁶:3.7×10⁻⁸. 6.5h on r6i.4xlarge |
 | **Sun-Jupiter-Asteroid atlas** (Apr 2026) | 100×100, 800 samples, ranks 91–100. 10K/10K valid. Most extreme ratio 1:9.5×10⁻⁴:10⁻¹⁰. 9.5h on r6i.4xlarge |
 
-### Completed (April 10, 2026)
+### Completed (April 10–11, 2026)
 | Milestone | Result |
 |-----------|--------|
 | **Energy bound search** | Quantum commutant (40) < classical (41). Case C: quantization breaks symmetry. No energy bound possible via this approach. |
 | **N=5 d=1 exact rank (L0-L2)** | [10, 25, 145]. d-independence confirmed. |
+| **N=8 d=1 exact rank (L0-L2)** | [28, 76, 748]. L1 formula confirmed at N=8; **L2 cubic formula falsified** (predicted 752, observed 748). |
 | **Quantum universality classification** | ALL singular 1/r^n grow by +1. NO polynomial potentials grow. Singularity is load-bearing. |
 | **Mass invariance (symbolic)** | Rank over Q(m1,m2,m3) = [3,6,17,116]. Proved for all mass ratios. |
 
-### Next priorities (post-energy-bound)
+### Next priorities (post-energy-bound, updated April 11)
 | Analysis | Priority | Compute | Notes |
 |----------|----------|---------|-------|
+| **N=7 d=1 Level 2 exact rank** | HIGHEST | ~minutes (AWS) | Disambiguate L2 formula after N=8 falsification. Cubic predicts 477 — will it match? |
 | **N=5 d=1 Level 3 exact rank** | HIGHEST | Running (r6i.8xlarge, 8 workers) | Extends L3 formula; need 2nd data point beyond N=3 |
-| arXiv submission (Papers 1-3) | HIGHEST | ~0h | Establish priority; energy bound result strengthens paper |
+| arXiv submission (Papers 1-3) | HIGHEST | ~0h | Establish priority; energy bound + L2 falsification strengthen paper |
 | N=4 Level 3 | HIGH | ~hours (AWS) | Extends [6,14,62,...] sequence |
 | N=4 with 1/r² potential | HIGH | ~hours | Paper 3 falsifiable prediction #2 |
 | Complete Yukawa dimseq (3 scenarios) | HIGH | ~hours (AWS) | Recursion fix deployed, awaiting results |

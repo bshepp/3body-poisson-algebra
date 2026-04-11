@@ -39,7 +39,8 @@ See revised statement in Section 4 below.
 | Mass invariance for 1/r^2 | Not tested | 100×100 atlas running (instance `i-05548f68fbcbd54e5`, ETA ~3.5h) |
 | N=4 dimension sequence | **[6, 14, 62]** (Mar 2026) | L3 not yet computed |
 | N=4 mass invariance | **Proved** (3 configs: equal, 100:10:1:1, 3:7:11:2) | — |
-| Dependence on N | Tested at N=3 and N=4 | N=5 would extend |
+| N=8 dimension sequence | **[28, 76, 748]** (Apr 2026) | L1 formula confirmed; **L2 cubic falsified** (predicts 752) |
+| Dependence on N | Tested at N=3, 4, 5, 6, 8 | N=7 needed to disambiguate L2 formula |
 | Dependence on spatial dim | **Independent of d** for N=3 AND N=4 | d=1,2,3 identical |
 | 1/r, 1/r^2, 1/r^3, log(r) give same sequence | **Proved** for N=3 through L3 | Could diverge at L4 |
 | Charge-sign invariance (1/r) | **Proved** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
@@ -269,7 +270,7 @@ The conjecture has been formally stated in
 (Universality). The Multi-System Universality Survey (Mar 2026)
 has both **strengthened** and **refined** the conjecture.
 
-**Theorem** (proved, extended Mar 2026): For the N-body problem with
+**Theorem** (proved, extended Apr 2026): For the N-body problem with
 singular central potential in d = 1, 2, or 3 spatial dimensions:
 - N=3, all mass ratios: sequence [3, 6, 17, 116] through Level 3
   for 1/r, 1/r², 1/r³, log(r), and composite (1/r + 1/r²)
@@ -279,9 +280,18 @@ singular central potential in d = 1, 2, or 3 spatial dimensions:
   - (+3,−1,−1): [3, 6, 17, 111] (possible SVD artifact, under investigation)
   - (+1,+1,−1): [3, 6, 17, 115] (possible SVD artifact, under investigation)
 - N=4: sequence [6, 14, 62] through Level 2
+- N=5: sequence [10, 25, 145] through Level 2
+- N=6: sequence [15, 39, 279] through Level 2
+- N=8: sequence [28, 76, 748] through Level 2
 
 All independent of spatial dimension. The N=3 algebra has infinite
 GK dimension (d(4) ≥ 5,604).
+
+**L2 scaling formula status (Apr 2026):** The cubic formula
+L2(N) = (13N³−42N²+83N−120)/6, fitted from N=3,4,5,6, has been
+**falsified at N=8** (predicts 752, observed 748). The L1 formula
+L1(N) = N(3N−5)/2 remains valid for all tested N. The true L2(N)
+is not a degree-3 polynomial in N.
 
 **Conjecture** (revised, Mar 2026): For N ≥ 3 particles in d ≥ 1
 spatial dimensions, interacting via a singular central potential:
