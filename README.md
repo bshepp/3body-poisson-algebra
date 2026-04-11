@@ -35,6 +35,14 @@ The N=4 sequence is mass-invariant and potential-invariant: 1/r², 1/r³, and lo
 
 The harmonic potential (r²) produces a finite-dimensional algebra closing at dimension 15.
 
+### GUE log-gas and prime number distribution (April 2026, in progress)
+
+The Montgomery-Odlyzko law states that nontrivial zeros of the Riemann zeta function have pair correlations matching GUE random matrix eigenvalues. The GUE joint density P(t₁,...,tₙ) ∝ ∏|tᵢ−tⱼ|² · exp(−½Σtᵢ²) is a Boltzmann weight whose energy decomposes into pairwise Hamiltonians H_ij = −2 log|tᵢ−tⱼ| + harmonic confinement — exactly the 1D N-body problem with logarithmic potential and harmonic trap.
+
+This maps directly to `NBodyAlgebra(N=3, d=1, potential="log", external_potential={"omega": 1})`. The universality conjecture predicts the dimension sequence **[3, 6, 17, 116]** — the same as Newtonian gravity. If confirmed, this establishes that the algebraic structure governing correlations between zeta zeros (and hence prime distributions via the explicit formula) belongs to the same universality class.
+
+**Status:** AWS computation launched April 11, 2026 (instance i-0255259da7fdfb045). Four configs: pure log-gas, GUE composite, Penning trap reference, harmonic-only reference. See [`primes/`](primes/) for details.
+
 ### The Universality Conjecture — refined (Paper 3 + Survey)
 
 The original conjecture — that the dimension sequence depends only on N and the singularity class — has been **refined** by the Multi-System Universality Survey (Mar 2026). The emerging picture:
@@ -149,6 +157,11 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 │   ├── exact_growth_nbody.py   # NBodyAlgebra class — arbitrary N, d, potential
 │   ├── expansion_configs.py    # 21-system universality survey registry
 │   └── ...                     # N=4, helium, PN, charge sensitivity scripts
+├── primes/                     # GUE log-gas / prime distribution sub-project
+│   ├── gue_prime_connection.tex # LaTeX: mathematical framework
+│   ├── run_gue_logas.py        # Computation script (4 configs)
+│   ├── launch_gue.py           # AWS launcher
+│   └── userdata_gue.sh         # EC2 userdata template
 ├── 3d/                         # d-dimensional engine for N=3 (Paper 3)
 ├── results/                    # Computation logs and result JSONs
 ├── atlas_figures/              # Atlas survey figures (76 PNGs)
@@ -198,6 +211,14 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 | `website/preprocess_atlas_data.py` | Converts raw `.npy` atlas data to web-friendly JSON + Float32 binary |
 | `website/render_knee_index.py` | Spectral decay knee index renderer for dashboard |
 
+### GUE log-gas / prime distribution (new)
+| File | Description |
+|------|-------------|
+| `primes/run_gue_logas.py` | Dyson log-gas computation — 4 configs comparing GUE composite, pure log, Penning trap, harmonic |
+| `primes/gue_prime_connection.tex` | Mathematical framework: Montgomery-Odlyzko → Dyson log-gas → pairwise Hamiltonians |
+| `primes/launch_gue.py` | AWS EC2 spot launcher for GUE computation |
+| `primes/userdata_gue.sh` | EC2 userdata template with S3 sync and checkpointing |
+
 ## Reproducing results
 
 ```bash
@@ -217,6 +238,24 @@ python run_cm_exact.py
 ```
 
 Level 4 computation requires an AWS instance (r6i.4xlarge recommended). See `level4_highsample.py` and `aws_level4.py`.
+
+### GUE log-gas (Dyson model of zeta zeros)
+
+```bash
+# Local: quick verification (level 2, ~2 min)
+python primes/run_gue_logas.py --max-level 2
+
+# Local: full computation (level 3, ~1 hour)
+python primes/run_gue_logas.py --max-level 3
+
+# AWS: dry run then launch
+python primes/launch_gue.py --dry-run
+python primes/launch_gue.py
+
+# Monitor / pull results
+aws s3 cp s3://3body-compute-290318/results/primes/live.log -
+aws s3 sync s3://3body-compute-290318/results/primes/ primes/results/
+```
 
 ```bash
 # Multi-epsilon atlas scan with charges (helium Coulomb)

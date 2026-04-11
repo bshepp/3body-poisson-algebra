@@ -98,13 +98,31 @@ The 1.1M L3 brackets are checkpointed on S3. Options to unblock:
 |---|---|---|---|
 | 1 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed, instance terminated. Rank=667, plateau=0. Checkpoint on S3. Needs relaunch on new instance. |
 
+### In Progress — GUE Log-Gas / Prime Distribution (April 11, 2026)
+
+Testing whether the Poisson algebra of the Dyson log-gas (the Hamiltonian system underlying GUE random matrix statistics and, via the Montgomery-Odlyzko law, Riemann zeta zero correlations) belongs to the same universality class as Newtonian gravity.
+
+| # | Config | Potential | Confinement | Expected | Status |
+|---|--------|-----------|-------------|----------|--------|
+| 1 | Pure log-gas | log(r) | none | [3, 6, 17, 116] | Running |
+| 2 | **GUE composite** | log(r) | harmonic ω=1 | [3, 6, 17, 116] | Running |
+| 3 | Penning trap (1D) | 1/r | harmonic ω=1 | [3, 6, 17, 116] | Running |
+| 4 | Harmonic only | r² (pairwise) | — | closes at 15 | Running |
+
+- **Instance:** i-0255259da7fdfb045 (r6i.2xlarge spot, ~$0.15/hr)
+- **Parameters:** N=3, d=1, level 3, 500 samples, seed 42
+- **Code:** `primes/run_gue_logas.py`, launched via `primes/launch_gue.py`
+- **Results:** `s3://3body-compute-290318/results/primes/gue_comparison.json`
+- **Significance:** If config (2) yields [3, 6, 17, 116], the algebraic structure governing zeta zero correlations (and hence prime distribution via the explicit formula) is in the same universality class as gravity.
+
 ### Not Yet Started (7)
 
 | # | Task | Notes |
 |---|---|---|
 | 1 | ~~Quantum rank for other potentials~~ | **DONE** — r², r⁴, 1/r², 1/r³, 1/r⁴ all tested. See Universality Classification above. |
-| 3 | **Parametric exponent sweep** (1,015 values of n) | Script written (`parametric_atlas_scan.py`), not yet run at scale. See Section 3 below. |
+| 3 | **Parametric exponent sweep** (1,015 values of n) | Script written and multiprocessing added (`--workers 16`). First attempt April 11 — **aborted** after cost analysis. 280s/row × 50 rows × 1,007 exponents = ~$1,493 on r6i.4xlarge. Need faster approach. para-special (π, e, φ, √2, -π, -φ) still running (~$8). Partial data (2–5 rows of first exponent each) in S3 for all 5 ranges. |
 | 4 | **Dusty plasma Yukawa atlas** | Prior run failed (exit code 1). Yukawa lambdification issue. |
+| 10 | **Binary BH + Neutron Star atlas** | Running: row ~26/100, ETA ~5.4h from ~18:30 UTC April 11. r6i.2xlarge, 100×100 grid, 400 samples. |
 | 5 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
 | 6 | **SageMath verification** | Independent verification of dimension sequence. SageMath not yet installed. |
 | 7 | ~~N=4 body Level-3~~ | **DONE** — [6, 14, 62, 1260]. new_L3(4) = 1198. See Completed — Sweep below. |
