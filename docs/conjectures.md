@@ -36,7 +36,7 @@ See revised statement in Section 4 below.
 | log(r) potential | **[3, 6, 17, 116]** (Mar 2026) — transcendental singularity universal | — |
 | Composite (1/r + 1/r²) | **[3, 6, 17, 116]** (Mar 2026) — multi-pole composite universal | — |
 | Penning trap (+1,+1,+1 with harmonic confinement) | **[3, 6, 17, 116]** (Mar 2026) — all-repulsive + external potential | — |
-| Mass invariance for 1/r^2 | Not tested | 100×100 atlas running (instance `i-05548f68fbcbd54e5`, ETA ~3.5h) |
+| Mass invariance for 1/r^2 | **Atlas complete** (Mar 2026): 100×100, rank 116 at 87.9%. Instance terminated. | — |
 | N=4 dimension sequence | **[6, 14, 62, 1260]** (Apr 2026). new_L3(4)=1198. | L3 computed. Graph-theoretic: 1198·C(4,4) with C(4,4)=1. |
 | N=4 mass invariance | **Proved** (3 configs: equal, 100:10:1:1, 3:7:11:2) | — |
 | N=7 dimension sequence | **[21, 56, 476]** (Apr 2026) | L1 formula confirmed; old L2 cubic off by 1 (predicts 477). Resolves L2 formula — see below. |
@@ -46,7 +46,7 @@ See revised statement in Section 4 below.
 | 1/r, 1/r^2, 1/r^3, log(r) give same sequence | **Proved** for N=3 through L3 | Could diverge at L4 |
 | Charge-sign invariance (1/r) | **Proved** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
 | Charge-sign invariance (1/r²) | **Dimension preserved**, gap structure differs (Mar 2026): rank=116 at most grid points but gap correlation r≈0.76 vs r≈0.85 for 1/r | Deeper investigation needed |
-| Yukawa (e^{-μr}/r) potential | **In progress** (Mar 2026) — atlas scans failed OOM; dimseq in progress | — |
+| Yukawa (e^{-μr}/r) potential | **BLOCKED** (Mar 2026) — atlas scans failed OOM; lambdification recursion issue. Instances terminated. | — |
 | **Shape sphere atlas universality** | **Confirmed** (Mar 2026, extended Apr 2026): rank 116 is the mode across 85–93% of shape sphere for 11 equal-mass configurations (75% for log); extreme mass ratio systems show non-trivial rank (91–108) across 100% of grid with zero failures | Rank deficit at extreme mass ratios is numerical (SVD conditioning at dynamic ranges 10²⁰–10³²), not algebraic |
 
 ### Why it might be true — and where it breaks
@@ -280,8 +280,8 @@ singular central potential in d = 1, 2, or 3 spatial dimensions:
   - (+q,−1,−1) with |q| ≤ 2: [3, 6, 17, 116]
   - (+3,−1,−1): [3, 6, 17, 111] (possible SVD artifact, under investigation)
   - (+1,+1,−1): [3, 6, 17, 115] (possible SVD artifact, under investigation)
-- N=4: sequence [6, 14, 62] through Level 2
-- N=5: sequence [10, 25, 145] through Level 2
+- N=4: sequence [6, 14, 62, 1260] through Level 3. new_L3(4) = 1198.
+- N=5: sequence [10, 25, 145] through Level 2. L3 OOM-killed on 256 GB.
 - N=6: sequence [15, 39, 279] through Level 2
 - N=7: sequence [21, 56, 476] through Level 2
 - N=8: sequence [28, 76, 748] through Level 2

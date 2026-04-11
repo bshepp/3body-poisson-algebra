@@ -155,20 +155,24 @@
 - **Status:** NOT STARTED (but new data available)
 - **Task:** With data points:
   - N=3: d(k) = [3, 6, 17, 116, ≥5604]
-  - N=4: d(k) = [6, 14, 62] (exact over Q)
-  - N=5: d(k) = [10, 25, 145] (exact over Q, d-independent)
+  - N=4: d(k) = [6, 14, 62, 1260] (exact over Q). new_L3(4) = 1198.
+  - N=5: d(k) = [10, 25, 145] (exact over Q, d-independent). L3 OOM-killed.
   - N=6: d(k) = [15, 39, 279] (exact over Q, d-independent)
+  - N=7: d(k) = [21, 56, 476] (exact over Q)
+  - N=8: d(k) = [28, 76, 748] (exact over Q, cross-verified)
   - Search OEIS for subsequences and related sequences
   - Test recurrence relations (e.g., d(k+1) = a·d(k)² + b·d(k) + c)
   - Test exponential/super-exponential fits
   - Compare growth to known Lie algebra dimension formulas
-  - Note: d(0) = C(N,2) for all N. Level 1 counts: 6→14, 10→25, 15→39 (new=8,15,24).
+  - Scaling formulas: L0 = C(N,2), L1 = N(3N-5)/2, L2 = N(4N²-9N+3)/2 (N≥4)
+  - New-per-level: new_L0 = C(N,2), new_L1 = N(N-2), new_L2 = 12·C(N,3) (N≥4), new_L3 = 1198·C(N,4)? (only N=4 data, boundary case)
+  - Graph-theoretic conjecture: new_L_k ~ f(k)·C(N,k+1) for large N.
 - **Question answered:** Is there a pattern, or is the sequence "wild"?
 
 ### 4.3 Level-4 Bound Improvement
 - **Status:** Current best: d(4) ≥ 5,604 at 200K samples, gap NOT definitive
 - **Task:** Continue pushing sample count (300K? 500K?) or switch to mpmath high-precision rank computation to resolve the true d(4).
-- **Note:** The mpmath computation was at 4.4% (667/15,000 rows) when spot-reclaimed. Could be relaunched.
+- **Note:** The mpmath computation was at 4.4% (667/15,000 rows) when spot-reclaimed. Instance terminated. Checkpoint on S3. Needs relaunch on new instance.
 
 ### 4.4 Symbolic Rank Over Q (Exact Algebraic Dimension)
 - **Status:** ✅ COMPLETED — Rank [3, 6, 17, 116] confirmed at 5 specific mass points (exact over Q) and with symbolic masses (exact over Q(m1,m2,m3)). Mass invariance is now an algebraic theorem for all positive masses. See `symbolic_rank.py`, results in `results/symbolic_rank/`.

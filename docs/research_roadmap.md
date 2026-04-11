@@ -307,7 +307,7 @@ and results are documented.
 |----------|--------|
 | Multi-epsilon analysis | **DONE** — 12 scans in S3 |
 | Spatial dimension independence (N=3) | **DONE** (d=1,2,3 all [3,6,17,116]) |
-| N=4 dimension sequence | **DONE** [6, 14, 62] through L2 |
+| N=4 dimension sequence | **DONE** [6, 14, 62, 1260] through L3. new_L3(4) = 1198 (Apr 2026). |
 | N=4 mass invariance | **DONE** (3 configs identical) |
 | N=4 d-independence | **DONE** (d=1,2,3 identical) |
 | 1/r³ potential (N=3) | **DONE** [3,6,17,116] matches 1/r |
@@ -319,8 +319,8 @@ and results are documented.
 ### In progress
 | Analysis | Status | Key results |
 |----------|--------|-------------|
-| Multi-System Universality Survey | **18/21 atlas configs complete** | Sun-Earth-Moon + Sun-Jupiter-Asteroid completed Apr 2026 (extreme mass ratios) |
-| Composite/PN Pipeline | **Running on AWS** | 2/6 tasks complete (control, two-term) |
+| Multi-System Universality Survey | **18/18 atlas configs complete** | Sun-Earth-Moon + Sun-Jupiter-Asteroid completed Apr 2026 (extreme mass ratios) |
+| Composite/PN Pipeline | **STALLED** (instances terminated) | 2/6 tasks complete (control, two-term). Needs relaunch. |
 | 1/r³ Targeted Scan | **DONE** | Reference + charged scans complete |
 
 ### Completed (Multi-System Survey, Mar–Apr 2026)
@@ -360,7 +360,7 @@ and results are documented.
 | **Quantum commutant universality** | MED-HIGH | ~hours (AWS) | Does Case C (quantum < classical) hold for 1/r², 1/r³, r⁴? |
 | S₄ tier structure (N=4) | MED-HIGH | ~hours | Paper 2 → Paper 3 bridge |
 | Survey analysis + comparative plots | MED-HIGH | ~0h | Post-processing once compute completes |
-| OEIS submission | MEDIUM | ~0h | [3,6,17,116], [6,14,62] |
+| OEIS submission | MEDIUM | ~0h | [3,6,17,116], [6,14,62,1260]. N-body L1/L2 formulas. |
 | Collaborator outreach | MEDIUM | ~0h | Full trilogy + survey + energy bound available |
 | Spectral depth mining | MEDIUM | ~0h (post-proc) | Existing data |
 | Lagrange hires 1000x1000 | MEDIUM | ~$3-12 AWS | Resolve ring/bead structure |

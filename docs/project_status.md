@@ -92,11 +92,11 @@ The 1.1M L3 brackets are checkpointed on S3. Options to unblock:
 | 4 | **Implication** | The cubic L2(N) = (13N³−42N²+83N−120)/6, fitted from N=3,4,5,6, is **not the correct formula**. A higher-degree polynomial or different functional form is needed. N=7 data would help disambiguate. |
 | 5 | **Cross-version verification** | Independently reproduced locally on SymPy 1.12 (887.9s, single-threaded Windows). Exact match with AWS result (SymPy 1.14.0). Both give [28, 76, 748]. |
 
-### In Progress (1)
+### Stalled (1)
 
 | # | Task | Progress | Status |
 |---|---|---|---|
-| 1 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed. Rank=667, plateau=0. Checkpoint safe. |
+| 1 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed, instance terminated. Rank=667, plateau=0. Checkpoint on S3. Needs relaunch on new instance. |
 
 ### Not Yet Started (7)
 
@@ -116,7 +116,7 @@ The 1.1M L3 brackets are checkpointed on S3. Options to unblock:
 | # | Task | Result |
 |---|---|---|
 | 1 | **N-body exact rank scaling** | N=3: [3,6,17,116], N=4: [6,14,62,1260], N=5: [10,25,145], N=6: [15,39,279], N=7: [21,56,476], N=8: [28,76,748]. L3 available for N=3,4. d-independence confirmed for N=3–6. |
-| 2 | **New potentials (r⁴, 1/r⁴)** | Both give [3, 6, 17, 116]. Singular/regular dichotomy falsified. |
+| 2 | **New potentials (r⁴, 1/r⁴)** | Both give [3, 6, 17, 116]. The r² (harmonic) finite algebra is special, not representative of all regular potentials. |
 | 3 | **Structure constants (exact/Q)** | Computed for 1/r, 1/r⁴, r⁴, r² at level 2 (rank 17). |
 | 4 | **Killing form & signature** | Non-harmonic: (6+, 0-, 11 zero). Harmonic: (14+, 0-, 1 zero). |
 | 5 | **Derived/lower central series** | Non-harmonic: solvable (length 3), nilpotent (class 3). Harmonic: neither. |
