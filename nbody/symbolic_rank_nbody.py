@@ -102,11 +102,13 @@ class NBodySymbolicRank:
     """Exact rank computation for N-body Poisson algebras."""
 
     def __init__(self, n_bodies, d_spatial, potential, potential_params=None,
-                 masses=None, charges=None, quantum=False):
+                 masses=None, charges=None, quantum=False,
+                 external_potential=None):
         self.n_bodies = n_bodies
         self.d_spatial = d_spatial
         self.potential = potential
         self.quantum = quantum
+        self.external_potential = external_potential
 
         if potential in ('r^4', 'r^2'):
             self._init_polynomial_spring(n_bodies, d_spatial, masses, potential)
@@ -118,7 +120,8 @@ class NBodySymbolicRank:
             self.algebra = QuantumNBodyAlgebra(
                 n_bodies, d_spatial, potential,
                 potential_params=potential_params,
-                masses=masses, charges=charges)
+                masses=masses, charges=charges,
+                external_potential=external_potential)
             self.phase_vars = list(self.algebra.all_vars)
             self.uses_u = True
             self.hbar_sym = hbar_sym
@@ -126,7 +129,8 @@ class NBodySymbolicRank:
             self.algebra = NBodyAlgebra(
                 n_bodies, d_spatial, potential,
                 potential_params=potential_params,
-                masses=masses, charges=charges)
+                masses=masses, charges=charges,
+                external_potential=external_potential)
             self.phase_vars = list(self.algebra.all_vars)
             self.uses_u = True
 
@@ -699,7 +703,7 @@ class NBodySymbolicRank:
 
     def compute_structure_constants(self, exprs, names, levels,
                                     poly_list, monom_list, monom_to_idx,
-                                    basis_indices):
+                                    basis_indices, checkpoint_dir=None):
         """Compute structure constants C[i,j,k] exactly over Q.
 
         For basis generators e_i, e_j: {e_i, e_j} = sum_k C[i,j,k] * e_k
@@ -734,12 +738,29 @@ class NBodySymbolicRank:
         C_exact = [[[None for _ in range(r)] for _ in range(r)] for _ in range(r)]
         C_float = np.zeros((r, r, r))
 
+        # Resume from checkpoint if available
+        resume_from = 0
+        sc_ckpt_path = None
+        if checkpoint_dir:
+            sc_ckpt_path = os.path.join(checkpoint_dir, "structure_constants_partial.pkl")
+            if os.path.exists(sc_ckpt_path):
+                import pickle
+                with open(sc_ckpt_path, 'rb') as f:
+                    ckpt = pickle.load(f)
+                C_float = ckpt['C_float']
+                C_exact = ckpt['C_exact']
+                resume_from = ckpt['n_computed']
+                print(f"  Resuming from checkpoint: {resume_from}/{r*(r-1)//2} brackets")
+
         n_computed = 0
         for a in range(r):
             i = basis_indices[a]
             for b in range(a + 1, r):
                 j = basis_indices[b]
                 n_computed += 1
+
+                if n_computed <= resume_from:
+                    continue
 
                 bracket = self._poisson_bracket(exprs[i], exprs[j])
                 bracket = self._simplify(bracket)
@@ -778,6 +799,16 @@ class NBodySymbolicRank:
                 if n_computed % 50 == 0 or n_computed == r*(r-1)//2:
                     print(f"    [{n_computed}/{r*(r-1)//2}] "
                           f"[{time()-t_total:.1f}s]")
+
+                # Checkpoint every 500 brackets
+                if sc_ckpt_path and n_computed % 500 == 0:
+                    import pickle
+                    ckpt = {'C_float': C_float, 'C_exact': C_exact,
+                            'n_computed': n_computed}
+                    with open(sc_ckpt_path + '.tmp', 'wb') as f:
+                        pickle.dump(ckpt, f)
+                    os.replace(sc_ckpt_path + '.tmp', sc_ckpt_path)
+                    print(f"    [checkpoint saved at {n_computed}]")
 
         for a in range(r):
             for k in range(r):
@@ -991,6 +1022,11 @@ def main():
     ap.add_argument("--output", default=None, help="Output JSON file")
     ap.add_argument("--checkpoint-dir", default=None,
                     help="Directory for per-level checkpoints (enables resume)")
+    ap.add_argument("--external-potential", nargs=2, action='append',
+                    metavar=('KEY', 'VALUE'),
+                    help="External potential parameter: key value "
+                         "(e.g. --external-potential omega 1). "
+                         "Can be repeated for multiple parameters.")
     ap.add_argument("--workers", type=int,
                     default=1,
                     help="Number of multiprocessing workers for bracket "
@@ -1026,17 +1062,28 @@ def main():
         potential_params = [(Rational(c), int(p)) for c, p in args.composite]
         print(f"Composite terms: {potential_params}")
 
+    external_potential = None
+    if args.external_potential:
+        external_potential = {}
+        for key, value in args.external_potential:
+            external_potential[key] = float(value)
+        print(f"External potential: {external_potential}")
+
     pot_label = args.potential
     if args.potential == 'composite' and potential_params:
         powers = [str(p) for _, p in potential_params]
         pot_label = f"composite_u{'_'.join(powers)}"
+    if external_potential:
+        ext_tag = "_".join(f"{k}{v}" for k, v in external_potential.items())
+        pot_label = f"{pot_label}_ext_{ext_tag}"
     if args.quantum:
         pot_label = f"quantum_{pot_label}"
 
     engine = NBodySymbolicRank(
         args.N, args.d, args.potential,
         potential_params=potential_params,
-        quantum=args.quantum)
+        quantum=args.quantum,
+        external_potential=external_potential)
 
     ckpt_dir = args.checkpoint_dir
     if ckpt_dir:
@@ -1122,7 +1169,7 @@ def main():
 
         C_float, C_exact = engine.compute_structure_constants(
             exprs, names, levels, poly_list, monom_list, monom_to_idx,
-            basis_indices)
+            basis_indices, checkpoint_dir=ckpt_dir)
 
         # Killing form
         print(f"\n{'='*70}")

@@ -41,7 +41,22 @@ The Montgomery-Odlyzko law states that nontrivial zeros of the Riemann zeta func
 
 This maps directly to `NBodyAlgebra(N=3, d=1, potential="log", external_potential={"omega": 1})`. The universality conjecture predicts the dimension sequence **[3, 6, 17, 116]** — the same as Newtonian gravity. If confirmed, this establishes that the algebraic structure governing correlations between zeta zeros (and hence prime distributions via the explicit formula) belongs to the same universality class.
 
-**Status:** AWS computation launched April 11, 2026 (instance i-0255259da7fdfb045). Four configs: pure log-gas, GUE composite, Penning trap reference, harmonic-only reference. See [`primes/`](primes/) for details.
+**Status:** AWS computation launched April 11, 2026 (instance i-0255259da7fdfb045). Four configs: pure log-gas, GUE composite, Penning trap reference, harmonic-only reference. All confirmed **[3, 6, 17, 116]** — universality holds for the GUE Hamiltonian. See [`primes/`](primes/) for details.
+
+### Level-2 spectral analysis: BGS conjecture in algebraic structure (April 2026)
+
+Spectral analysis of the level-2 bracket tensor (structure constants) via Kirillov coadjoint orbit theory reveals a striking dichotomy:
+
+| Algebra | Level spacing var | Mean ratio ⟨r⟩ | Statistical class |
+|---------|------------------|---------------|-------------------|
+| **1/r** (singular, dim 17) | **0.117** | **0.639** | GUE–GSE |
+| **r²** (harmonic, dim 15) | **1.168** | **0.401** | Poisson |
+
+The non-integrable 1/r bracket tensor shows GUE-to-GSE level repulsion in its coadjoint orbit frequencies, while the integrable r² algebra shows Poisson statistics. This is the **Bohigas-Giannoni-Schmit conjecture manifested in the algebraic structure itself** — the bracket tensor of a non-integrable system has the same spectral universality as chaotic quantum Hamiltonians. The symplectic lean (toward GSE rather than exact GUE) reflects the inherent symplectic structure of the Poisson bracket.
+
+Additionally, the Jacobi identity FAILS for the 1/r structure constants, confirming the algebra is **infinite-dimensional** — the 17 generators at level 2 are not a closed Lie subalgebra. The harmonic r² algebra passes Jacobi and is a genuine 15-dim Lie algebra (likely sp(6) ⊕ center).
+
+See [`primes/level2_spectral_analysis.py`](primes/level2_spectral_analysis.py) and figures in [`primes/figures/`](primes/figures/).
 
 ### The Universality Conjecture — refined (Paper 3 + Survey)
 
@@ -160,6 +175,12 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 ├── primes/                     # GUE log-gas / prime distribution sub-project
 │   ├── gue_prime_connection.tex # LaTeX: mathematical framework
 │   ├── run_gue_logas.py        # Computation script (4 configs)
+│   ├── run_quantum_gue.py      # Quantum Moyal bracket computation
+│   ├── level2_spectral_analysis.py # Kirillov orbit spectral analysis (BGS conjecture)
+│   ├── hilbert_polya_search.py # HP operator search (superseded by closure discovery)
+│   ├── diagnose_brackets.py    # Bracket computation diagnostics
+│   ├── check_1r_closure.py     # Infinite-dimensionality proof
+│   ├── figures/                # Spectral analysis figures (6 PNGs)
 │   ├── launch_gue.py           # AWS launcher
 │   └── userdata_gue.sh         # EC2 userdata template
 ├── 3d/                         # d-dimensional engine for N=3 (Paper 3)
@@ -211,10 +232,15 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 | `website/preprocess_atlas_data.py` | Converts raw `.npy` atlas data to web-friendly JSON + Float32 binary |
 | `website/render_knee_index.py` | Spectral decay knee index renderer for dashboard |
 
-### GUE log-gas / prime distribution (new)
+### GUE log-gas / prime distribution
 | File | Description |
 |------|-------------|
 | `primes/run_gue_logas.py` | Dyson log-gas computation — 4 configs comparing GUE composite, pure log, Penning trap, harmonic |
+| `primes/run_quantum_gue.py` | Quantum Moyal bracket computation — confirms ℏ-deformation preserves [3, 6, 17, 116] |
+| `primes/level2_spectral_analysis.py` | **Kirillov coadjoint orbit spectral analysis** — BGS conjecture in algebraic structure |
+| `primes/hilbert_polya_search.py` | Hilbert-Pólya operator search (superseded by infinite-dimensionality discovery) |
+| `primes/diagnose_brackets.py` | 4-test diagnostic validating bracket computation pipeline |
+| `primes/check_1r_closure.py` | Closure test proving algebra is infinite-dimensional (116 → 306) |
 | `primes/gue_prime_connection.tex` | Mathematical framework: Montgomery-Odlyzko → Dyson log-gas → pairwise Hamiltonians |
 | `primes/launch_gue.py` | AWS EC2 spot launcher for GUE computation |
 | `primes/userdata_gue.sh` | EC2 userdata template with S3 sync and checkpointing |
