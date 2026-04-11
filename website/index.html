@@ -745,8 +745,8 @@ body::before {
     </div>
     <div class="stat-card">
       <div class="label">N-body Scaling (L2)</div>
-      <div class="value val-cyan" style="font-size:0.85em">N=4: 62 · N=5: 145 · N=6: 279</div>
-      <div class="sub">L2(N) = (13N³−42N²+83N−120)/6</div>
+      <div class="value val-cyan" style="font-size:0.85em">N=4: 62 · N=5: 145 · N=6: 279 · N=7: 476 · N=8: 748</div>
+      <div class="sub">L2(N) = N(4N²−9N+3)/2 (N≥4, corrected Apr 11)</div>
     </div>
     <div class="stat-card">
       <div class="label">Completed Atlas Configs</div>
@@ -859,13 +859,15 @@ body::before {
     <h3>N-body Dimension Scaling Formulas (Apr 2026)</h3>
     <table class="invariance-table">
       <thead>
-        <tr><th>N</th><th>L0 (= C(N,2))</th><th>L1 (= N(3N−5)/2)</th><th>L2 (= (13N³−42N²+83N−120)/6)</th><th>L3</th></tr>
+        <tr><th>N</th><th>L0 (= C(N,2))</th><th>L1 (= N(3N−5)/2)</th><th>L2 (= N(4N²−9N+3)/2, N≥4)</th><th>L3</th></tr>
       </thead>
       <tbody>
         <tr><td>N=3</td><td class="inv-yes">3</td><td class="inv-yes">6</td><td class="inv-yes">17</td><td class="inv-yes">116</td></tr>
-        <tr><td>N=4</td><td class="inv-yes">6</td><td class="inv-yes">14</td><td class="inv-yes">62</td><td class="inv-unknown">—</td></tr>
-        <tr><td>N=5</td><td class="inv-yes">10</td><td class="inv-yes">25</td><td class="inv-yes">145</td><td class="inv-partial">In progress</td></tr>
+        <tr><td>N=4</td><td class="inv-yes">6</td><td class="inv-yes">14</td><td class="inv-yes">62</td><td class="inv-yes">1,260</td></tr>
+        <tr><td>N=5</td><td class="inv-yes">10</td><td class="inv-yes">25</td><td class="inv-yes">145</td><td class="inv-partial">Blocked (OOM, 256 GB)</td></tr>
         <tr><td>N=6</td><td class="inv-yes">15</td><td class="inv-yes">39</td><td class="inv-yes">279</td><td class="inv-unknown">—</td></tr>
+        <tr><td>N=7</td><td class="inv-yes">21</td><td class="inv-yes">56</td><td class="inv-yes">476</td><td class="inv-unknown">—</td></tr>
+        <tr><td>N=8</td><td class="inv-yes">28</td><td class="inv-yes">76</td><td class="inv-yes">748</td><td class="inv-unknown">—</td></tr>
       </tbody>
     </table>
     <div class="result-row" style="margin-top:0.8rem;">
@@ -874,7 +876,7 @@ body::before {
     </div>
     <div class="result-row">
       <span class="prop">L3 formula</span>
-      <span class="val" style="color:var(--amber)">Unknown — need N=4 or N=5 L3 data to determine</span>
+      <span class="val" style="color:var(--amber)">Two data points: N=3→116 (new_L3=99), N=4→1260 (new_L3=1198). Predicts new_L3(5)=5990 if pattern continues. N=5 OOM-blocked on 256 GB RAM.</span>
     </div>
   </div>
 
@@ -939,9 +941,9 @@ body::before {
 
   <div class="filter-bar">
     <button class="filter-btn active" data-filter="all">All (28)</button>
-    <button class="filter-btn" data-filter="notstarted">Not Started (17)</button>
-    <button class="filter-btn" data-filter="blocked">Blocked (1)</button>
-    <button class="filter-btn" data-filter="complete">Complete (10)</button>
+    <button class="filter-btn" data-filter="notstarted">Not Started (10)</button>
+    <button class="filter-btn" data-filter="blocked">Blocked (2)</button>
+    <button class="filter-btn" data-filter="complete">Complete (16)</button>
   </div>
 
   <!-- Phase 1 -->
@@ -952,53 +954,53 @@ body::before {
       <span class="phase-badge badge-free">Zero Compute</span>
     </div>
     <div class="phase-items">
-      <div class="work-item" data-status="notstarted">
+      <div class="work-item" data-status="complete">
         <span class="id">1.1</span>
         <div>
           <div class="title">Spectral Depth Mining — Interior SV Landscapes</div>
-          <div class="desc">Plot SV #50, #80, #100, #110 as shape-sphere heatmaps. Data exists in sv_spectra.npy.</div>
+          <div class="desc">Plot SV #50, #80, #100, #110 as shape-sphere heatmaps. Data exists in sv_spectra.npy. Done (Apr 1, 2026). SV landscapes at indices 50, 80, 100, 110, 116 — smooth variation, no phase boundaries.</div>
         </div>
-        <span class="status-chip chip-notstarted">Not Started</span>
+        <span class="status-chip chip-complete">Complete</span>
       </div>
-      <div class="work-item" data-status="notstarted">
+      <div class="work-item" data-status="complete">
         <span class="id">1.2</span>
         <div>
           <div class="title">Spectral Decay Rate Map</div>
-          <div class="desc">Log-slope between SV #80–#115 at each grid point. Reveals near-degenerate generators.</div>
+          <div class="desc">Log-slope between SV #80–#115 at each grid point. Reveals near-degenerate generators. Done (Apr 1, 2026). Log-slope decay map and knee-index heatmap rendered. S₃ symmetry ridge visible.</div>
         </div>
-        <span class="status-chip chip-notstarted">Not Started</span>
+        <span class="status-chip chip-complete">Complete</span>
       </div>
-      <div class="work-item" data-status="notstarted">
+      <div class="work-item" data-status="complete">
         <span class="id">1.3</span>
         <div>
           <div class="title">Spectral Clustering on Shape Sphere</div>
-          <div class="desc">k-means/hierarchical clustering (k=3,4,5) on normalized 156-dim SV vectors.</div>
+          <div class="desc">k-means/hierarchical clustering (k=3,4,5) on normalized 156-dim SV vectors. Done (Apr 1, 2026). k-means k=3,5,7. Clusters align with S₃ orbits (Lagrange, Euler, generic).</div>
         </div>
-        <span class="status-chip chip-notstarted">Not Started</span>
+        <span class="status-chip chip-complete">Complete</span>
       </div>
-      <div class="work-item" data-status="notstarted">
+      <div class="work-item" data-status="complete">
         <span class="id">1.4</span>
         <div>
           <div class="title">Clebsch-Gordan Predictions vs Full Atlas</div>
-          <div class="desc">Extend CG doublet count comparison from Lagrange-only to full shape sphere.</div>
+          <div class="desc">Extend CG doublet count comparison from Lagrange-only to full shape sphere. Done (Apr 1, 2026). Lagrange=33 doublets (E-frac=0.57), Euler=14 (0.24), Isos-90=24 (0.41). Extends CG prediction globally.</div>
         </div>
-        <span class="status-chip chip-notstarted">Not Started</span>
+        <span class="status-chip chip-complete">Complete</span>
       </div>
-      <div class="work-item" data-status="notstarted">
+      <div class="work-item" data-status="complete">
         <span class="id">1.5</span>
         <div>
           <div class="title">Level-4 Comparison Chart</div>
-          <div class="desc">Bar chart + convergence curves of d(4) across configuration types.</div>
+          <div class="desc">Bar chart + convergence curves of d(4) across configuration types. Done (Apr 1, 2026). Global 200K→5604, Scalene 20K→3218, Lagrange 20K→3112, Euler 20K→2194.</div>
         </div>
-        <span class="status-chip chip-notstarted">Not Started</span>
+        <span class="status-chip chip-complete">Complete</span>
       </div>
-      <div class="work-item" data-status="notstarted">
+      <div class="work-item" data-status="complete">
         <span class="id">1.6</span>
         <div>
           <div class="title">Analytical Prediction of SV #116</div>
-          <div class="desc">Predict weakest generator landscape from symbolic structure. Most complex free item.</div>
+          <div class="desc">Predict weakest generator landscape from symbolic structure. Most complex free item. Done (Apr 1, 2026). R²=0.630 correlation between analytical prediction and SV #116 landscape.</div>
         </div>
-        <span class="status-chip chip-notstarted">Not Started</span>
+        <span class="status-chip chip-complete">Complete</span>
       </div>
     </div>
   </div>
@@ -1015,7 +1017,7 @@ body::before {
         <span class="id">2.1</span>
         <div>
           <div class="title">N=5 Level 1–2</div>
-          <div class="desc">Third data point for d_N(k) vs N. Result: N=5 gives [10, 25, 145]. Formula L2(N)=(13N³−42N²+83N−120)/6 verified. L3 in progress (AWS r6i.8xlarge, 256 GB).</div>
+          <div class="desc">Third data point for d_N(k) vs N. Result: N=5 gives [10, 25, 145]. Formula L2(N)=N(4N²−9N+3)/2 (N≥4) confirmed (old cubic falsified at N=7,8). L3 for N=4: rank=1,260 (52 min, r6i.8xlarge, Apr 11, 2026). N=5 L3 OOM-blocked on 256 GB.</div>
         </div>
         <span class="status-chip chip-complete">Complete</span>
       </div>
@@ -1212,13 +1214,13 @@ body::before {
         </div>
         <span class="status-chip chip-notstarted">Not Started</span>
       </div>
-      <div class="work-item" data-status="notstarted">
+      <div class="work-item" data-status="blocked">
         <span class="id">5.7</span>
         <div>
           <div class="title">N=5 d=1 Level-3 Exact Rank</div>
-          <div class="desc">In progress on AWS r6i.8xlarge (256 GB, 8 workers). Brackets complete (1.1M), monomial extraction in progress. Will determine L3 formula.</div>
+          <div class="desc">OOM-killed on r6i.8xlarge (256 GB, 8 workers). 1.1M L3 brackets checkpointed on S3. Matrix 1.1M×760K over ℚ exceeds 256 GB. Options: modular rank over GF(p), r6i.16xlarge (512 GB), or out-of-core streaming.</div>
         </div>
-        <span class="status-chip chip-inprogress">In Progress</span>
+        <span class="status-chip chip-blocked">Blocked</span>
       </div>
     </div>
   </div>
@@ -1322,7 +1324,7 @@ body::before {
     <div>
       <div class="paper-title">Universal dimension sequences of pairwise Poisson algebras: independence from spatial dimension, potential exponent, and charge sign</div>
       <div class="paper-file">paper3_universality.tex</div>
-      <div class="paper-results">N=4 sequence [6, 14, 62]. N=5 sequence [10, 25, 145] (L2 confirmed; L3 in progress). N-body scaling formulas: L0(N)=N(N−1)/2, L1(N)=N(3N−5)/2, L2(N)=(13N³−42N²+83N−120)/6, verified N=3,4,5,6. d-independence for N=3 and N=4. Post-Newtonian 1PN: [3,6,17,116]. Pole-order invariance (1/r, 1/r², 1/r³, 1/r⁴). Charge-sign invariance. Mass invariance proved symbolically over ℚ(m₁,m₂,m₃). Formal universality conjecture. Three falsifiable predictions (P1 confirmed through L2).</div>
+      <div class="paper-results">N=4 sequence [6, 14, 62, 1260] (L3 exact, Apr 11, 2026). N=5 sequence [10, 25, 145] (L2; L3 OOM-blocked on 256 GB). N=7 [21, 56, 476], N=8 [28, 76, 748]. N-body scaling: L0(N)=N(N−1)/2, L1(N)=N(3N−5)/2, L2(N)=N(4N²−9N+3)/2 (N≥4, corrected Apr 11; old cubic falsified at N=7,8). L3: two data points, N=3→116 and N=4→1260; predicts new_L3(5)=5990 if pattern continues. d-independence for N=3 and N=4. Post-Newtonian 1PN: [3,6,17,116]. Pole-order invariance (1/r, 1/r², 1/r³, 1/r⁴). Charge-sign invariance. Mass invariance proved symbolically over ℚ(m₁,m₂,m₃). Formal universality conjecture. Three falsifiable predictions (P1 confirmed through L2).</div>
     </div>
     <span class="paper-status paper-draft">Draft</span>
   </div>
