@@ -28,6 +28,9 @@
 | 16 | Triple BH (LISA) | 1/r | 1:0.01:1e-5 | — | |
 | 17 | Sun-Earth-Moon | 1/r | 1:3e-6:3.7e-8 | — | Extreme mass ratio; ranks 102–108 due to SVD conditioning |
 | 18 | Sun-Jupiter-Asteroid | 1/r | 1:9.5e-4:1e-10 | — | Most extreme mass ratio; ranks 91–100 due to SVD conditioning |
+| 19 | Irrational exponent (π) | 1/r^π | 1:1:1 | (1,1,1) | 50×50 atlas, 200 samples, level 3. 60% rank 116, unique ranks {90–116}. |
+| 20 | Irrational exponent (e) | 1/r^e | 1:1:1 | (1,1,1) | 50×50 atlas, 200 samples, level 3. 63.2% rank 116, unique ranks {89–116}. |
+| 21 | Irrational exponent (φ) | 1/r^φ | 1:1:1 | (1,1,1) | 50×50 atlas, 200 samples, level 3. 63.4% rank 116, unique ranks {106–116}. |
 
 Additional completed work:
 - Harmonic oscillator 1/r^-2 atlas (100x100) — finite algebra, rank 15
@@ -120,7 +123,7 @@ Testing whether the Poisson algebra of the Dyson log-gas (the Hamiltonian system
 | # | Task | Notes |
 |---|---|---|
 | 1 | ~~Quantum rank for other potentials~~ | **DONE** — r², r⁴, 1/r², 1/r³, 1/r⁴ all tested. See Universality Classification above. |
-| 3 | **Parametric exponent sweep** (1,015 values of n) | Script written and multiprocessing added (`--workers 16`). First attempt April 11 — **aborted** after cost analysis. 280s/row × 50 rows × 1,007 exponents = ~$1,493 on r6i.4xlarge. Need faster approach. para-special (π, e, φ, √2, -π, -φ) still running (~$8). Partial data (2–5 rows of first exponent each) in S3 for all 5 ranges. |
+| 3 | **Parametric exponent sweep** (1,015 values of n) | Script written and multiprocessing added (`--workers 16`). First attempt April 11 — **aborted** after cost analysis. 280s/row × 50 rows × 1,007 exponents = ~$1,493 on r6i.4xlarge. Need faster approach. para-special (π, e, φ) completed April 11–12, ~$12 compute cost. √2, -π, -φ deliberately skipped (instance terminated after φ). Data synced locally to `results/atlas_full/atlas-1r-{pi,e,phi}`. Remaining: √2, -π, -φ, plus 1,009 rational-step exponents. |
 | 4 | **Dusty plasma Yukawa atlas** | Prior run failed (exit code 1). Yukawa lambdification issue. |
 | 10 | ~~**Binary BH + Neutron Star atlas**~~ | **DONE** — masses [1.0, 1.0, 0.047], 100×100 grid, 400 samples; 98.7% rank-116; unique ranks {112,113,114,115,116}; 26,343s (439 min) on r6i.2xlarge. Triptych rendered (`triptych_binary_bh_ns_1r_m1p0_1p0_0p047.png`). Physics: NS at 5% mass breaks BH↔BH exchange symmetry, paradoxically *increases* universality vs equal-mass baseline (98.7% vs 87.9%). |
 | 5 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |

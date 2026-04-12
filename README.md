@@ -97,6 +97,9 @@ Testing the conjecture across 21 physical three-body systems spanning gravitatio
 | PN | Kozai-Lidov (1PN) | composite | — | In progress |
 | Exotic | Magnetic Monopoles | 1/r² | — | In progress |
 | Exotic | Dark Matter Halos | 1/r | — | In progress |
+| Parametric | 1/r^π (irrational) | 1/r^3.14159… | [3, 6, 17, 116] | Complete |
+| Parametric | 1/r^e (irrational) | 1/r^2.71828… | [3, 6, 17, 116] | Complete |
+| Parametric | 1/r^φ (irrational) | 1/r^1.61803… | [3, 6, 17, 116] | Complete |
 
 ‡ Directly re-run on AWS with SymPy 1.13.3 and confirmed (Mar 24, 2026).
 § True rank 116 guaranteed by symbolic mass invariance proof over ℚ(m₁,m₂,m₃); direct numerical computation shows SVD conditioning artifacts at these physical mass ratios (extreme values prevent clean gap detection).
