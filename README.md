@@ -33,7 +33,11 @@ The N=3 sequence is:
 
 The N=4 sequence is mass-invariant and potential-invariant: 1/r², 1/r³, and log(r) all give [6, 14, 62, 1,260] (L3 exact, Apr 11, 2026), and d-independent (d = 1, 2, 3). The old L2 scaling formula (13N³−42N²+83N−120)/6 is **falsified** at N=7, 8; the corrected formula is **L2(N) = N(4N²−9N+3)/2** (N≥4, equivalent to new_L2 = 12·C(N,3)).
 
-The harmonic potential (r²) produces a finite-dimensional algebra closing at dimension 15.
+The harmonic potential (r²) produces a finite-dimensional algebra closing at dimension 15 (standard construction) or 13 (composite pairwise formulation V = −u^(−2)).
+
+### Potential exponent universality (April 2026)
+
+Dense numerical survey of V = −u^p for 79+ rational p-values confirms [3, 6, 17] is universal across all exponents with a single exception: p = −2 (harmonic oscillator, V = −r²) gives [3, 6, 13]. The transition is **infinitely sharp** — even p = −2 ± 0.001 gives dim = 17. The n→0⁺ degeneration test confirms the transition is topological (rank jumps discretely, never degrades continuously). See `nbody/symbolic_n_proof.py` for the survey scripts.
 
 ### GUE log-gas and prime number distribution (April 2026, in progress)
 
