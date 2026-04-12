@@ -134,6 +134,24 @@ class NBodySymbolicRank:
             self.phase_vars = list(self.algebra.all_vars)
             self.uses_u = True
 
+        # For log potential: log(u_ij) is transcendental, not polynomial.
+        # Substitute log(u_ij) -> fresh symbols to keep Poly() exact.
+        # Valid because log(u_ij) is algebraically independent of u_ij,
+        # and only level-0 Hamiltonians contain log terms (chain rule
+        # cancels them in all brackets: d/du log(u) = 1/u, times u^3).
+        self._log_subs = {}
+        self._log_syms = []
+        if potential == 'log' and hasattr(self, 'algebra'):
+            from sympy import log as sp_log
+            for u_var in self.algebra.u_vars:
+                log_sym = Symbol(f'_L_{u_var.name}', real=True)
+                self._log_subs[sp_log(u_var)] = log_sym
+                self._log_syms.append(log_sym)
+            if self._log_syms:
+                self.phase_vars = self.phase_vars + self._log_syms
+                print(f"  Log substitution: {len(self._log_syms)} symbols "
+                      f"({', '.join(str(s) for s in self._log_syms)})")
+
     def _init_polynomial_spring(self, n_bodies, d_spatial, masses, potential):
         """Build polynomial potential Hamiltonians directly.
 
@@ -579,6 +597,8 @@ class NBodySymbolicRank:
             poly_list = []
             for idx, expr in enumerate(exprs):
                 expanded = expand(expr)
+                if self._log_subs:
+                    expanded = expanded.subs(self._log_subs)
                 p = Poly(expanded, *self.phase_vars, domain='QQ')
                 monom_dict = p.as_dict()
                 poly_list.append(monom_dict)
@@ -766,6 +786,8 @@ class NBodySymbolicRank:
                 bracket = self._simplify(bracket)
 
                 expanded = expand(bracket)
+                if self._log_subs:
+                    expanded = expanded.subs(self._log_subs)
                 p = Poly(expanded, *self.phase_vars, domain='QQ')
                 bracket_dict = p.as_dict()
 

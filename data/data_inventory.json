@@ -205,16 +205,24 @@
         100
       ],
       "rank_range": [
-        0,
-        116
+        115,
+        124
       ],
       "rank_distribution": {
-        "0": 9800,
-        "116": 200
+        "115": 195,
+        "116": 9724,
+        "117": 59,
+        "118": 4,
+        "119": 2,
+        "120": 1,
+        "121": 2,
+        "122": 9,
+        "123": 1,
+        "124": 3
       },
       "gap_range": [
-        276372.2319143601,
-        22713912.659685474
+        6.9933912494850805,
+        39314631.90432783
       ],
       "sv_spectra_shape": [
         100,
@@ -1028,6 +1036,94 @@
       "type": "level4"
     },
     {
+      "path": "results\\level4_global_100000",
+      "results": {
+        "config": "global_highsample",
+        "n_samples": 100000,
+        "n_generators": 156,
+        "n_pairs": 11523,
+        "level_dims": {
+          "0": 3,
+          "1": 6,
+          "2": 17,
+          "3": 116,
+          "4": 5449
+        },
+        "dims": [
+          3,
+          6,
+          17,
+          116,
+          5449
+        ],
+        "d4_lower_bound": 5449,
+        "best_d4_so_far": 5449,
+        "boundary_gap_ratio": 1.0165744496676337,
+        "meaningful_max_gap_ratio": 1.1747997567952095,
+        "meaningful_max_gap_index": 1,
+        "max_gap_ratio": 7405.722064734512,
+        "max_gap_index": 11669,
+        "n_meaningful": 5449,
+        "svd_time_seconds": 1208.858140707016,
+        "elapsed_seconds": 1219.270715713501,
+        "definitive_gap": false,
+        "timestamp": "2026-03-24 10:36:59",
+        "seed": 137
+      },
+      "spectrum_shape": [
+        11679
+      ],
+      "gap_ratios_shape": [
+        11678
+      ],
+      "has_analysis_png": false,
+      "type": "level4"
+    },
+    {
+      "path": "results\\level4_global_150000",
+      "results": {
+        "config": "global_highsample",
+        "n_samples": 150000,
+        "n_generators": 156,
+        "n_pairs": 11523,
+        "level_dims": {
+          "0": 3,
+          "1": 6,
+          "2": 17,
+          "3": 116,
+          "4": 5588
+        },
+        "dims": [
+          3,
+          6,
+          17,
+          116,
+          5588
+        ],
+        "d4_lower_bound": 5588,
+        "best_d4_so_far": 5588,
+        "boundary_gap_ratio": 1.006339442631023,
+        "meaningful_max_gap_ratio": 1.0987947365044841,
+        "meaningful_max_gap_index": 13,
+        "max_gap_ratio": 8833.738153784214,
+        "max_gap_index": 11669,
+        "n_meaningful": 5588,
+        "svd_time_seconds": 1535.182228565216,
+        "elapsed_seconds": 1550.9037022590637,
+        "definitive_gap": false,
+        "timestamp": "2026-03-24 11:02:51",
+        "seed": 137
+      },
+      "spectrum_shape": [
+        11679
+      ],
+      "gap_ratios_shape": [
+        11678
+      ],
+      "has_analysis_png": false,
+      "type": "level4"
+    },
+    {
       "path": "results\\level4_global_20000",
       "results": {
         "config": "global",
@@ -1071,6 +1167,50 @@
         11678
       ],
       "has_analysis_png": true,
+      "type": "level4"
+    },
+    {
+      "path": "results\\level4_global_200000",
+      "results": {
+        "config": "global_highsample",
+        "n_samples": 200000,
+        "n_generators": 156,
+        "n_pairs": 11523,
+        "level_dims": {
+          "0": 3,
+          "1": 6,
+          "2": 17,
+          "3": 116,
+          "4": 5604
+        },
+        "dims": [
+          3,
+          6,
+          17,
+          116,
+          5604
+        ],
+        "d4_lower_bound": 5604,
+        "best_d4_so_far": 5604,
+        "boundary_gap_ratio": 1.0095833054302183,
+        "meaningful_max_gap_ratio": 1.5470492779080136,
+        "meaningful_max_gap_index": 1,
+        "max_gap_ratio": 10438.331333826713,
+        "max_gap_index": 11669,
+        "n_meaningful": 5604,
+        "svd_time_seconds": 1831.0721487998962,
+        "elapsed_seconds": 1851.8143541812897,
+        "definitive_gap": false,
+        "timestamp": "2026-03-24 11:33:44",
+        "seed": 137
+      },
+      "spectrum_shape": [
+        11679
+      ],
+      "gap_ratios_shape": [
+        11678
+      ],
+      "has_analysis_png": false,
       "type": "level4"
     },
     {
@@ -1157,6 +1297,94 @@
         4999
       ],
       "has_analysis_png": true,
+      "type": "level4"
+    },
+    {
+      "path": "results\\level4_global_50000",
+      "results": {
+        "config": "global_highsample",
+        "n_samples": 50000,
+        "n_generators": 156,
+        "n_pairs": 11523,
+        "level_dims": {
+          "0": 3,
+          "1": 6,
+          "2": 17,
+          "3": 116,
+          "4": 5009
+        },
+        "dims": [
+          3,
+          6,
+          17,
+          116,
+          5009
+        ],
+        "d4_lower_bound": 5009,
+        "best_d4_so_far": 5009,
+        "boundary_gap_ratio": 1.0101382280419373,
+        "meaningful_max_gap_ratio": 1.3771646513183344,
+        "meaningful_max_gap_index": 1,
+        "max_gap_ratio": 133.16620417705985,
+        "max_gap_index": 11667,
+        "n_meaningful": 5009,
+        "svd_time_seconds": 910.99378657341,
+        "elapsed_seconds": 916.4260053634644,
+        "definitive_gap": false,
+        "timestamp": "2026-03-24 09:58:56",
+        "seed": 137
+      },
+      "spectrum_shape": [
+        11679
+      ],
+      "gap_ratios_shape": [
+        11678
+      ],
+      "has_analysis_png": false,
+      "type": "level4"
+    },
+    {
+      "path": "results\\level4_global_75000",
+      "results": {
+        "config": "global_highsample",
+        "n_samples": 75000,
+        "n_generators": 156,
+        "n_pairs": 11523,
+        "level_dims": {
+          "0": 3,
+          "1": 6,
+          "2": 17,
+          "3": 116,
+          "4": 5310
+        },
+        "dims": [
+          3,
+          6,
+          17,
+          116,
+          5310
+        ],
+        "d4_lower_bound": 5310,
+        "best_d4_so_far": 5310,
+        "boundary_gap_ratio": 1.0126226031783132,
+        "meaningful_max_gap_ratio": 1.3903262076884226,
+        "meaningful_max_gap_index": 1,
+        "max_gap_ratio": 1148.6989898778522,
+        "max_gap_index": 11669,
+        "n_meaningful": 5310,
+        "svd_time_seconds": 1053.2030770778656,
+        "elapsed_seconds": 1061.093761920929,
+        "definitive_gap": false,
+        "timestamp": "2026-03-24 10:16:38",
+        "seed": 137
+      },
+      "spectrum_shape": [
+        11679
+      ],
+      "gap_ratios_shape": [
+        11678
+      ],
+      "has_analysis_png": false,
       "type": "level4"
     },
     {
@@ -1295,6 +1523,26 @@
         4999
       ],
       "has_analysis_png": true,
+      "type": "level4"
+    },
+    {
+      "path": "results\\level4_mpmath",
+      "results": {
+        "status": "complete",
+        "dps": 50,
+        "total_rank": 3,
+        "rows_processed": 3,
+        "plateau_count": 0,
+        "total_columns": 11679,
+        "total_time_hours": 3.0897308239009647,
+        "timestamp": "2026-03-24 19:21:31"
+      },
+      "has_analysis_png": false,
+      "type": "level4"
+    },
+    {
+      "path": "results\\level4_refine",
+      "has_analysis_png": false,
       "type": "level4"
     },
     {
@@ -1459,24 +1707,37 @@
       "location": "atlas_output_hires\\multi_epsilon",
       "label": "multi_epsilon_viz",
       "files": [
+        "bead_analysis_1_r2.png",
+        "cross_potential_epsilon.png",
         "differential_rank_drop_1_r.png",
         "differential_rank_drop_1_r2.png",
+        "epsilon_rotation_1r.gif",
         "epsilon_sweep_1_r.gif",
         "epsilon_sweep_1_r2.gif",
         "gap_sensitivity_1_r.png",
         "gap_sensitivity_1_r2.png",
         "interactive_epsilon_1_r.html",
         "interactive_epsilon_1_r2.html",
+        "lagrange_zoom_medium_2e-4_1_r.png",
+        "lagrange_zoom_medium_2e-4_1_r2.png",
+        "lagrange_zoom_tight_2e-4_1_r.png",
+        "lagrange_zoom_tight_2e-4_1_r2.png",
+        "lagrange_zoom_wide_2e-4_1_r.png",
+        "lagrange_zoom_wide_2e-4_1_r2.png",
         "multi_epsilon_panels_1_r.png",
         "multi_epsilon_panels_1_r2.png",
+        "multi_epsilon_panels_1_r2_clean.png",
+        "multi_epsilon_panels_1_r_clean.png",
         "rank_drop_onset_1_r.png",
         "rank_drop_onset_1_r2.png",
         "rank_vs_epsilon_1_r.png",
         "rank_vs_epsilon_1_r2.png",
+        "single_panel_2e-4_1_r2_full.png",
+        "single_panel_2e-4_1_r_full.png",
         "summary_1_r.txt",
         "summary_1_r2.txt"
       ],
-      "count": 16
+      "count": 29
     },
     {
       "location": "atlas_1000\\viz",
@@ -1485,12 +1746,9 @@
         "atlas_1000_interactive.html",
         "atlas_1000_rank_detail.png",
         "atlas_1000_rank_gap.png",
-        "atlas_1000_rotation.gif",
-        "atlas_1000_s3_symmetry.png",
-        "atlas_1000_sphere_gap.png",
         "atlas_1000_sv116.png"
       ],
-      "count": 7
+      "count": 4
     },
     {
       "location": "atlas_output_hires",

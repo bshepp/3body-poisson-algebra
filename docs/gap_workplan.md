@@ -113,10 +113,18 @@
 ## Phase 3: Medium Compute (AWS, $10–$200)
 
 ### 3.1 Parametric Exponent Sweep (1/r^n for 1,015 values of n)
-- **Status:** Script ready (`parametric_atlas_scan.py`), only n={2,−2} attempted
-- **Estimated cost:** ~$13–50 (Tier 3 pragmatic hybrid)
-- **Task:** Run the full sweep: n from −5 to +5 in 0.01 steps, plus special values (π, e, φ, √2). 50×50 grid at 200 samples for the coarse pass, 100×100 for ~20 interesting values.
-- **Output:** Gap ratio at Lagrange vs. n (continuous curve), Jahn-Teller ring radius vs. n, phase boundary at n=0.
+- **Status:** ⚠️ ATTEMPTED — ABORTED April 11, 2026. Needs redesign.
+- **What happened:** Multiprocessing added to `parametric_atlas_scan.py` (16 workers). 6× r6i.4xlarge spot instances launched at `--resolution 50 --samples 200`. Algebra build time: ~3350s per instance (one-time). Per-row wall-clock: **~280s** (16 cores, 50 phi-points, 200 samples, level-3 generators). Per-exponent: 280 × 50 = 13,990s ≈ 3.9h. Projected total: ~$1,493 for 1,007 exponents. Terminated after 2–5 rows per first exponent.
+- **Partial data in S3:** `atlas_full/1r-5/` (3 rows), `1r-2/` (2 rows), `1r0/` (4 rows), `1r1p01/` (4 rows), `1r2p01/` (5 rows). para-special (π, e, φ, √2, −π, −φ) still running (~$8, ~1 day total).
+- **Bottleneck:** Level-3 generator evaluation. 156 large polynomial generators × 200 samples × 2500 grid points = 78M polynomial evaluations per exponent. ~90s per grid point even with 16 workers.
+- **Approaches to investigate before relaunch:**
+  1. **Reduce parameters:** `--resolution 20 --samples 50` → 25× fewer evaluations → ~$60 total, ~1.5 days max job.
+  2. **Bare metal:** c7i.48xlarge (4.1 GHz, 192 vCPUs) for faster per-core polynomial evaluation. Could parallelize exponents too.
+  3. **Compiled generators:** SymPy codegen → C via `autowrap` or `Cython`. Level-3 lambdas are large rational polynomials; C compilation could give 10–100× speedup per evaluation.
+  4. **Level-2 broad sweep first:** Run full 1,015-exponent sweep at level 2 (trivially fast, seconds per exponent) to map which n values show anomalous rank before committing to level-3 compute.
+  5. **Coarser grid:** 0.1-step exponents (~100 values) first; refine to 0.01 around transitions.
+- **Recommendation:** Do level-2 sweep first (free), then target interesting n-values at full resolution.
+- **Estimated revised cost:** $50–100 with reduced parameters; $15–25 if coarse grid only.
 - **Impact:** VERY HIGH — unique result, probably a paper figure.
 
 ### 3.2 Yukawa Potential (3 Scenarios)

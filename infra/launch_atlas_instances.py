@@ -28,8 +28,9 @@ AMI = "ami-05024c2628f651b80"
 KEY_NAME = "3body-compute"
 SECURITY_GROUP = "sg-01db2d9932427a00a"
 IAM_PROFILE = "3body-profile"
+INSTANCE_TYPE_SMALL  = "r6i.2xlarge"
 INSTANCE_TYPE_NORMAL = "r6i.4xlarge"
-INSTANCE_TYPE_LARGE = "r6i.8xlarge"
+INSTANCE_TYPE_LARGE  = "r6i.8xlarge"
 
 TIER_1 = [
     {"job": "atlas-1r3",     "args": "--resolution 100 --potential 1/r^3 --samples 400"},
@@ -51,6 +52,8 @@ TIER_3 = [
     {"job": "atlas-triple-bh",    "args": "--resolution 100 --scenario triple_bh_lisa --samples 400"},
     {"job": "atlas-sun-earth",    "args": "--resolution 100 --scenario sun_earth_moon --samples 800"},
     {"job": "atlas-sun-jup",      "args": "--resolution 100 --scenario sun_jupiter_asteroid --samples 800"},
+    {"job": "atlas-binary-bh-ns", "args": "--resolution 100 --scenario binary_bh_ns --samples 400",
+     "instance_type": INSTANCE_TYPE_SMALL},
     {"job": "atlas-positronium",  "args": "--resolution 100 --scenario positronium_neg --samples 400"},
     {"job": "atlas-h-minus",      "args": "--resolution 100 --scenario h_minus_ion --samples 400"},
     {"job": "atlas-lithium",      "args": "--resolution 100 --scenario lithium_ion --samples 400"},

@@ -16,6 +16,7 @@ import argparse
 import json
 import os
 import sys
+import multiprocessing
 import signal
 import numpy as np
 from time import time, strftime
@@ -34,12 +35,40 @@ from exact_growth import (
 from stability_atlas import AtlasConfig, ShapeSpace
 
 _shutdown_requested = False
+_para_evaluate = None
+_para_masses = None
+_para_n_samples = None
 
 
 def _sigterm_handler(signum, frame):
     global _shutdown_requested
     _shutdown_requested = True
     print("\n[SIGTERM] Graceful shutdown requested — finishing current row...")
+
+
+def _compute_para_cell(args):
+    """Worker function for parallel row scans. Uses module-level globals."""
+    j, mu, phi, n_val = args
+    try:
+        shape = ShapeSpace()
+        positions = shape.shape_to_positions(mu, phi)
+        p = positions.reshape(3, 2)
+        r12 = np.linalg.norm(p[0] - p[1])
+        r13 = np.linalg.norm(p[0] - p[2])
+        r23 = np.linalg.norm(p[1] - p[2])
+        r_min = min(r12, r13, r23)
+        eps = min(1e-2, 0.1 * r_min)
+        Z_qp, Z_u = sample_local(positions, _para_n_samples, eps, _para_masses)
+        full_matrix = _para_evaluate(Z_qp, Z_u, n_val)
+        norms = np.linalg.norm(full_matrix, axis=0)
+        norms[norms < 1e-15] = 1.0
+        sub = full_matrix / norms
+        from numpy.linalg import svd
+        _, S, _ = svd(sub, full_matrices=False)
+        rank, gap = rank_from_gap(S)
+        return (j, rank, gap)
+    except Exception:
+        return (j, -1, 0.0)
 
 
 n_sym = sp.Symbol('n', real=True)
@@ -391,8 +420,11 @@ def flush_arrays(out_dir, mu_vals, phi_vals, rank_map, gap_map):
 
 
 def run_parametric_scan(evaluate, levels, n_val, grid_n, n_samples,
-                        masses, out_dir, label):
-    global _shutdown_requested
+                        masses, out_dir, label, n_workers=1):
+    global _shutdown_requested, _para_evaluate, _para_masses, _para_n_samples
+    _para_evaluate = evaluate
+    _para_masses = masses
+    _para_n_samples = n_samples
     os.makedirs(out_dir, exist_ok=True)
 
     n_gen = len(levels)
@@ -445,6 +477,10 @@ def run_parametric_scan(evaluate, levels, n_val, grid_n, n_samples,
     t_total = time()
     shape = ShapeSpace()
 
+    pool = None
+    if n_workers > 1 and sys.platform != 'win32':
+        pool = multiprocessing.Pool(n_workers)
+
     for i in range(start_row, grid_n):
         if _shutdown_requested:
             print(f"  [SIGTERM] Stopping after row {i-1}")
@@ -453,31 +489,37 @@ def run_parametric_scan(evaluate, levels, n_val, grid_n, n_samples,
         t_row = time()
         mu = mu_vals[i]
 
-        for j in range(grid_n):
-            phi = phi_vals[j]
-            positions = shape.shape_to_positions(mu, phi)
+        if pool is not None:
+            tasks = [(j, mu_vals[i], phi_vals[j], n_val) for j in range(grid_n)]
+            for j, rank, gap in pool.map(_compute_para_cell, tasks):
+                rank_map[i, j] = rank
+                gap_map[i, j] = gap
+        else:
+            for j in range(grid_n):
+                phi = phi_vals[j]
+                positions = shape.shape_to_positions(mu, phi)
 
-            p = positions.reshape(3, 2)
-            r12 = np.linalg.norm(p[0] - p[1])
-            r13 = np.linalg.norm(p[0] - p[2])
-            r23 = np.linalg.norm(p[1] - p[2])
-            r_min = min(r12, r13, r23)
-            eps = min(1e-2, 0.1 * r_min)
+                p = positions.reshape(3, 2)
+                r12 = np.linalg.norm(p[0] - p[1])
+                r13 = np.linalg.norm(p[0] - p[2])
+                r23 = np.linalg.norm(p[1] - p[2])
+                r_min = min(r12, r13, r23)
+                eps = min(1e-2, 0.1 * r_min)
 
-            Z_qp, Z_u = sample_local(positions, n_samples, eps, masses)
+                Z_qp, Z_u = sample_local(positions, n_samples, eps, masses)
 
-            full_matrix = evaluate(Z_qp, Z_u, n_val)
+                full_matrix = evaluate(Z_qp, Z_u, n_val)
 
-            norms = np.linalg.norm(full_matrix, axis=0)
-            norms[norms < 1e-15] = 1.0
-            sub = full_matrix / norms
+                norms = np.linalg.norm(full_matrix, axis=0)
+                norms[norms < 1e-15] = 1.0
+                sub = full_matrix / norms
 
-            from numpy.linalg import svd
-            U, S, Vt = svd(sub, full_matrices=False)
+                from numpy.linalg import svd
+                U, S, Vt = svd(sub, full_matrices=False)
 
-            rank, gap = rank_from_gap(S)
-            rank_map[i, j] = rank
-            gap_map[i, j] = gap
+                rank, gap = rank_from_gap(S)
+                rank_map[i, j] = rank
+                gap_map[i, j] = gap
 
         flush_arrays(out_dir, mu_vals, phi_vals, rank_map, gap_map)
         save_checkpoint_atomic(out_dir, i, grid_n)
@@ -512,6 +554,9 @@ def run_parametric_scan(evaluate, levels, n_val, grid_n, n_samples,
           f"({100*n_116/n_valid:.1f}%)" if n_valid > 0 else "  No valid points")
     print(f"  Unique ranks: {summary['unique_ranks']}")
     print(f"  Time: {total_time:.0f}s ({total_time/60:.1f}min)\n")
+    if pool is not None:
+        pool.terminate()
+        pool.join()
     return summary
 
 
@@ -538,6 +583,8 @@ def main():
                         help="Max bracket level (default: 3)")
     parser.add_argument("--masses", nargs=3, type=float, default=[1.0, 1.0, 1.0],
                         metavar=("M1", "M2", "M3"))
+    parser.add_argument("--workers", type=int, default=1,
+                        help="Parallel workers per exponent scan (default: 1; >1 requires Linux/fork)")
     parser.add_argument("--output-dir", type=str, default="aws_results/atlas_full",
                         help="Base output directory")
 
@@ -583,7 +630,7 @@ def main():
         print(f"\n  [{idx+1}/{len(exponents)}] Scanning n = {n_val}")
         run_parametric_scan(
             evaluate, levels, n_val, args.resolution, args.samples,
-            masses, out_dir, label)
+            masses, out_dir, label, n_workers=args.workers)
 
     print("\n  All exponents complete.")
 

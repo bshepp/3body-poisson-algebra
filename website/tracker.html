@@ -64,26 +64,11 @@ body::before {
   font-size: 0.72rem;
 }
 
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-.topbar-left a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  transition: color 0.2s;
-}
-
+.topbar-left { display: flex; align-items: center; gap: 1.5rem; }
+.topbar-left a { color: var(--text-secondary); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; transition: color 0.2s; }
 .topbar-left a:hover { color: var(--phosphor); }
 .topbar-left a.active { color: var(--phosphor); border-bottom: 1px solid var(--phosphor); }
-
-.topbar-right {
-  color: var(--text-dim); display: flex; align-items: center; gap: 0.8rem;
-}
+.topbar-right { color: var(--text-dim); display: flex; align-items: center; gap: 0.8rem; }
 .topbar-right a { color: var(--text-dim); transition: color 0.2s; }
 .topbar-right a:hover { color: var(--phosphor); }
 .topbar-right .gh-icon { width: 16px; height: 16px; fill: currentColor; vertical-align: middle; }
@@ -122,12 +107,7 @@ body::before {
   color: var(--text-secondary);
 }
 
-.header-stats .stat {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
+.header-stats .stat { display: flex; align-items: center; gap: 0.4rem; }
 .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
 .dot-green { background: var(--phosphor); box-shadow: 0 0 6px var(--phosphor); }
 .dot-amber { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
@@ -151,10 +131,7 @@ body::before {
   top: 0;
 }
 
-.sidebar-section {
-  padding: 0 1rem;
-  margin-bottom: 1.5rem;
-}
+.sidebar-section { padding: 0 1rem; margin-bottom: 1.5rem; }
 
 .sidebar-section h3 {
   font-size: 0.65rem;
@@ -180,24 +157,11 @@ body::before {
 
 .sidebar-item:hover { background: var(--bg-card); color: var(--text-primary); }
 .sidebar-item.active { background: var(--bg-card); color: var(--phosphor); border-left: 2px solid var(--phosphor); }
-
 .sidebar-icon { font-size: 0.7rem; width: 1.2rem; text-align: center; }
 
-/* mini progress bar for sidebar */
-.mini-progress {
-  flex: 1;
-  height: 2px;
-  background: var(--border);
-  border-radius: 1px;
-  margin-left: auto;
-  min-width: 40px;
-}
-
-.mini-progress-fill {
-  height: 100%;
-  border-radius: 1px;
-}
-
+/* mini progress bar */
+.mini-progress { flex: 1; height: 2px; background: var(--border); border-radius: 1px; margin-left: auto; min-width: 40px; }
+.mini-progress-fill { height: 100%; border-radius: 1px; }
 .mini-fill-green { background: var(--phosphor); }
 .mini-fill-amber { background: var(--amber); }
 
@@ -226,71 +190,21 @@ body::before {
 }
 
 /* ─── Timeline ─── */
-.timeline {
-  position: relative;
-  padding-left: 2rem;
-}
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 1px; background: var(--border); }
 
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 8px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--border);
-}
-
-.timeline-entry {
-  position: relative;
-  margin-bottom: 1.5rem;
-  padding-left: 1rem;
-}
-
-.timeline-entry::before {
-  content: '';
-  position: absolute;
-  left: -1.55rem;
-  top: 0.45rem;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--border-bright);
-  border: 1px solid var(--bg-deep);
-}
-
+.timeline-entry { position: relative; margin-bottom: 1.5rem; padding-left: 1rem; }
+.timeline-entry::before { content: ''; position: absolute; left: -1.55rem; top: 0.45rem; width: 8px; height: 8px; border-radius: 50%; background: var(--border-bright); border: 1px solid var(--bg-deep); }
 .timeline-entry.milestone::before { background: var(--phosphor); box-shadow: 0 0 6px var(--phosphor); }
 .timeline-entry.breakthrough::before { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
 .timeline-entry.blocker::before { background: var(--red); box-shadow: 0 0 6px var(--red); }
 
-.timeline-date {
-  font-size: 0.68rem;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.2rem;
-}
-
-.timeline-title {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.3rem;
-}
-
-.timeline-body {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
+.timeline-date { font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem; }
+.timeline-title { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem; }
+.timeline-body { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.6; }
 
 /* ─── Cards ─── */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
 
 .card {
   background: var(--bg-card);
@@ -301,26 +215,9 @@ body::before {
 }
 
 .card:hover { border-color: var(--border-bright); }
-
-.card .label {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-secondary);
-  margin-bottom: 0.4rem;
-}
-
-.card .value {
-  font-size: 1.6rem;
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-.card .sub {
-  font-size: 0.72rem;
-  color: var(--text-secondary);
-  margin-top: 0.3rem;
-}
+.card .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); margin-bottom: 0.4rem; }
+.card .value { font-size: 1.6rem; font-weight: 700; line-height: 1.1; }
+.card .sub { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.3rem; }
 
 .val-green { color: var(--phosphor); }
 .val-amber { color: var(--amber); }
@@ -328,33 +225,9 @@ body::before {
 .val-red { color: var(--red); }
 
 /* ─── Tables ─── */
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.8rem;
-  margin-bottom: 1.5rem;
-}
-
-.data-table th {
-  text-align: left;
-  color: var(--text-dim);
-  font-weight: 500;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.5rem 0.6rem;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: var(--bg-deep);
-}
-
-.data-table td {
-  padding: 0.45rem 0.6rem;
-  border-bottom: 1px solid rgba(255,255,255,0.02);
-  vertical-align: top;
-}
-
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 1.5rem; }
+.data-table th { text-align: left; color: var(--text-dim); font-weight: 500; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-deep); }
+.data-table td { padding: 0.45rem 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.02); vertical-align: top; }
 .data-table tr:hover td { background: rgba(255,255,255,0.015); }
 
 .seq { font-weight: 600; color: var(--phosphor); }
@@ -380,19 +253,11 @@ body::before {
 }
 
 .work-item:hover { background: var(--bg-card); border-color: var(--border); }
-
 .work-item .id { color: var(--text-dim); font-weight: 500; font-size: 0.75rem; }
 .work-item .title { font-weight: 500; }
 .work-item .desc { color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.2rem; }
 
-.chip {
-  font-size: 0.65rem;
-  padding: 0.15rem 0.5rem;
-  border-radius: 2px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
+.chip { font-size: 0.65rem; padding: 0.15rem 0.5rem; border-radius: 2px; font-weight: 600; white-space: nowrap; }
 .chip-done { background: var(--phosphor-dim); color: var(--phosphor); }
 .chip-wip { background: var(--amber-dim); color: var(--amber); }
 .chip-todo { background: rgba(255,255,255,0.04); color: var(--text-dim); }
@@ -413,21 +278,13 @@ body::before {
 }
 
 .paper-entry:hover { border-color: var(--border-bright); }
-
 .paper-num { font-size: 1.4rem; font-weight: 700; color: var(--text-dim); }
-
-.paper-title {
-  font-family: var(--serif);
-  font-size: 0.92rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  line-height: 1.4;
-}
-
+.paper-title { font-family: var(--serif); font-size: 0.92rem; font-weight: 600; margin-bottom: 0.25rem; line-height: 1.4; }
 .paper-file { font-size: 0.7rem; color: var(--cyan); }
 .paper-desc { font-size: 0.76rem; color: var(--text-secondary); margin-top: 0.3rem; line-height: 1.5; }
 .paper-status { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.2rem 0.6rem; border-radius: 2px; font-weight: 600; }
 .paper-draft { background: var(--amber-dim); color: var(--amber); }
+.paper-outline { background: var(--violet-dim); color: var(--violet); }
 
 /* ─── Conjecture cards ─── */
 .conjecture {
@@ -441,76 +298,42 @@ body::before {
 .conjecture h4 { font-family: var(--serif); font-size: 0.92rem; margin-bottom: 0.4rem; }
 .conjecture p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; }
 
-.evidence-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
-  margin-top: 0.7rem;
-}
-
+.evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-top: 0.7rem; }
 .evidence { display: flex; align-items: center; gap: 0.4rem; font-size: 0.73rem; }
 .check { color: var(--phosphor); }
 .pending { color: var(--text-dim); }
 
+/* ─── Results panel ─── */
+.results-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.results-panel h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); margin-bottom: 1rem; }
+
+.result-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.85rem; }
+.result-row:last-child { border-bottom: none; }
+.result-row .prop { color: var(--text-secondary); }
+.result-row .val { font-weight: 600; }
+
 /* ─── Progress ─── */
 .progress-block { margin-bottom: 1rem; }
-
-.progress-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.72rem;
-  color: var(--text-secondary);
-  margin-bottom: 0.25rem;
-}
-
-.progress-track {
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
+.progress-label { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
+.progress-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
 .progress-fill { height: 100%; border-radius: 2px; }
 .fill-green { background: var(--phosphor); }
 .fill-amber { background: var(--amber); }
 
 /* ─── Phase Toggles ─── */
 .phase-block { margin-bottom: 1.5rem; }
-
-.phase-header {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.5rem 0;
-  cursor: pointer;
-  user-select: none;
-}
-
-.phase-chevron {
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  transition: transform 0.2s;
-  width: 1rem;
-  text-align: center;
-}
-
+.phase-header { display: flex; align-items: center; gap: 0.8rem; padding: 0.5rem 0; cursor: pointer; user-select: none; }
+.phase-chevron { font-size: 0.7rem; color: var(--text-dim); transition: transform 0.2s; width: 1rem; text-align: center; }
 .phase-header.open .phase-chevron { transform: rotate(90deg); }
-
-.phase-title {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.phase-badge {
-  font-size: 0.62rem;
-  padding: 0.12rem 0.45rem;
-  border-radius: 2px;
-  font-weight: 600;
-}
-
+.phase-title { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
+.phase-badge { font-size: 0.62rem; padding: 0.12rem 0.45rem; border-radius: 2px; font-weight: 600; }
 .badge-free { background: var(--phosphor-dim); color: var(--phosphor); }
 .badge-light { background: var(--cyan-dim); color: var(--cyan); }
 .badge-medium { background: var(--amber-dim); color: var(--amber); }
@@ -528,13 +351,7 @@ body::before {
   margin-bottom: 1.5rem;
 }
 
-.dimseq-highlight h3 {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--amber);
-  margin-bottom: 0.8rem;
-}
+.dimseq-highlight h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); margin-bottom: 0.8rem; }
 
 /* ─── Invariance Matrix ─── */
 .matrix-card {
@@ -545,17 +362,27 @@ body::before {
   margin-bottom: 1.5rem;
 }
 
-.matrix-card h3 {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--amber);
-  margin-bottom: 0.8rem;
-}
+.matrix-card h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--amber); margin-bottom: 0.8rem; }
 
 .inv-yes { color: var(--phosphor); font-weight: 600; }
 .inv-partial { color: var(--amber); font-weight: 600; }
 .inv-unknown { color: var(--text-dim); }
+
+/* ─── Infrastructure ─── */
+.infra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+
+.infra-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.2rem;
+}
+
+.infra-card h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cyan); margin-bottom: 0.8rem; }
+.infra-detail { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0.4rem; }
+.infra-detail strong { color: var(--text-primary); font-weight: 500; }
+
+.progress-bar-container { margin-top: 0.5rem; }
 
 /* ─── Responsive ─── */
 @media (max-width: 900px) {
@@ -565,6 +392,7 @@ body::before {
   .content { padding: 1rem; }
   .header { padding: 1.5rem 1rem; }
   .card-grid { grid-template-columns: 1fr; }
+  .infra-grid { grid-template-columns: 1fr; }
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -596,8 +424,8 @@ body::before {
   <div class="header-stats">
     <span class="stat"><span class="dot dot-green"></span> 4 Papers Drafted</span>
     <span class="stat"><span class="dot dot-green"></span> Phase 1 Complete</span>
-    <span class="stat"><span class="dot dot-amber"></span> 15 Open Work Items</span>
-    <span class="stat"><span class="dot dot-red"></span> 1 Blocked</span>
+    <span class="stat"><span class="dot dot-amber"></span> 12 Open Work Items</span>
+    <span class="stat"><span class="dot dot-red"></span> 2 Blocked</span>
   </div>
 </div>
 
@@ -608,10 +436,7 @@ body::before {
   <div class="sidebar">
     <div class="sidebar-section">
       <h3>Sections</h3>
-      <div class="sidebar-item active" data-section="overview" onclick="showSection(this)">
-        <span class="sidebar-icon">◈</span> Overview
-      </div>
-      <div class="sidebar-item" data-section="timeline" onclick="showSection(this)">
+      <div class="sidebar-item active" data-section="timeline" onclick="showSection(this)">
         <span class="sidebar-icon">│</span> Timeline
       </div>
       <div class="sidebar-item" data-section="dimseqs" onclick="showSection(this)">
@@ -638,24 +463,28 @@ body::before {
       <h3>Compute Progress</h3>
       <div style="padding: 0 0.6rem;">
         <div class="progress-block">
-          <div class="progress-label"><span>Sun-Earth-Moon</span><span>11%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-amber" style="width:11%"></div></div>
+          <div class="progress-label"><span>Sun-Earth-Moon</span><span>100%</span></div>
+          <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
         </div>
         <div class="progress-block">
-          <div class="progress-label"><span>Sun-Jupiter-Ast</span><span>7%</span></div>
-          <div class="progress-track"><div class="progress-fill fill-amber" style="width:7%"></div></div>
+          <div class="progress-label"><span>Sun-Jupiter-Ast</span><span>100%</span></div>
+          <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
         </div>
         <div class="progress-block">
           <div class="progress-label"><span>L4 mpmath rank</span><span>4.4%</span></div>
           <div class="progress-track"><div class="progress-fill fill-amber" style="width:4.4%"></div></div>
         </div>
         <div class="progress-block">
-          <div class="progress-label"><span>Gap Phase 1</span><span>6/6</span></div>
+          <div class="progress-label"><span>Phase 1</span><span>6/6</span></div>
           <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
         </div>
         <div class="progress-block">
-          <div class="progress-label"><span>Gap Phase 2</span><span>2/7</span></div>
-          <div class="progress-track"><div class="progress-fill fill-amber" style="width:28.6%"></div></div>
+          <div class="progress-label"><span>Phase 2</span><span>4/7</span></div>
+          <div class="progress-track"><div class="progress-fill fill-amber" style="width:57%"></div></div>
+        </div>
+        <div class="progress-block">
+          <div class="progress-label"><span>Phase 5 (Quantum)</span><span>4/7</span></div>
+          <div class="progress-track"><div class="progress-fill fill-amber" style="width:57%"></div></div>
         </div>
       </div>
     </div>
@@ -669,7 +498,7 @@ body::before {
         </div>
         <div style="margin-bottom:0.5rem;">
           <span style="color:var(--text-dim)">N=4:</span>
-          <span class="val-cyan" style="font-weight:600">[6, 14, 62]</span>
+          <span class="val-cyan" style="font-weight:600">[6, 14, 62, 1260]</span>
         </div>
         <div style="margin-bottom:0.5rem;">
           <span style="color:var(--text-dim)">N=5:</span>
@@ -679,9 +508,13 @@ body::before {
           <span style="color:var(--text-dim)">N=6:</span>
           <span class="val-amber" style="font-weight:600">[15, 39, 279]</span>
         </div>
-        <div>
+        <div style="margin-bottom:0.5rem;">
           <span style="color:var(--text-dim)">N=7:</span>
           <span class="val-amber" style="font-weight:600">[21, 56, 476]</span>
+        </div>
+        <div>
+          <span style="color:var(--text-dim)">Quantum:</span>
+          <span style="font-weight:600; color:var(--violet)">[3, 6, 17, 117]</span>
         </div>
       </div>
     </div>
@@ -690,97 +523,29 @@ body::before {
   <!-- Content -->
   <div class="content">
 
-    <!-- ═══ OVERVIEW ═══ -->
-    <div class="content-section active" id="overview">
-      <div class="section-title">Research Overview</div>
-
-      <div class="card-grid">
-        <div class="card">
-          <div class="label">Core Result</div>
-          <div class="value val-green">3, 6, 17, 116</div>
-          <div class="sub">N=3 universal dimension sequence · GK dim = ∞</div>
-        </div>
-        <div class="card">
-          <div class="label">N=4 Sequence</div>
-          <div class="value val-cyan">6, 14, 62</div>
-          <div class="sub">Potential-universal (1/r, 1/r², 1/r³, log) ✓</div>
-        </div>
-        <div class="card">
-          <div class="label">N=5 Probe (NEW)</div>
-          <div class="value val-amber">10, 25, 145</div>
-          <div class="sub">d=1, 1/r · First N=5 result</div>
-        </div>
-        <div class="card">
-          <div class="label">Atlas Configs</div>
-          <div class="value"><span class="val-green">16</span><span style="color:var(--text-dim);font-size:0.6em"> / 25</span></div>
-          <div class="sub">3 in progress · 6 not started</div>
-        </div>
-        <div class="card">
-          <div class="label">Papers</div>
-          <div class="value val-amber">4</div>
-          <div class="sub">Drafted · arXiv endorsement needed</div>
-        </div>
-        <div class="card">
-          <div class="label">Physical Systems Tested</div>
-          <div class="value val-green">30+</div>
-          <div class="sub">Gravitational, atomic, molecular, plasma</div>
-        </div>
-      </div>
-
-      <!-- Invariance Matrix -->
-      <div class="matrix-card">
-        <h3>Universality Evidence Matrix</h3>
-        <table class="data-table">
-          <thead><tr><th>Parameter</th><th>Tested Values</th><th>N=3</th><th>N=4</th><th>N≥5</th></tr></thead>
-          <tbody>
-            <tr><td>Mass ratios</td><td style="color:var(--text-secondary)">0.001 to 10⁶ (25+ configs)</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ (3 configs)</td><td class="inv-unknown">—</td></tr>
-            <tr><td>Spatial dimension d</td><td style="color:var(--text-secondary)">d = 1, 2, 3</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">d=1 only</td></tr>
-            <tr><td>Potential type</td><td style="color:var(--text-secondary)">1/r, 1/r², 1/r³, log(r), composite</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ Confirmed</td><td class="inv-unknown">1/r only</td></tr>
-            <tr><td>Charge sign</td><td style="color:var(--text-secondary)">All-attract, all-repulse, mixed</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">Not tested</td><td class="inv-unknown">—</td></tr>
-            <tr><td>Charge magnitude</td><td style="color:var(--text-secondary)">|q| = 1, 2, 3</td><td class="inv-partial">~ Sensitive at L3</td><td class="inv-unknown">Not tested</td><td class="inv-unknown">—</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Structural Dichotomy -->
-      <div class="matrix-card">
-        <h3>Structural Dichotomy</h3>
-        <table class="data-table">
-          <thead><tr><th>Class</th><th>Examples</th><th>Behavior</th></tr></thead>
-          <tbody>
-            <tr><td>Singular potentials</td><td style="color:var(--text-secondary)">1/r, 1/r², 1/r³, log, Yukawa</td><td class="val-green">[3, 6, 17, 116] → ∞ (infinite GK dim)</td></tr>
-            <tr><td>Regular potentials</td><td style="color:var(--text-secondary)">r² (harmonic oscillator)</td><td class="val-red">[3, 6, 13, 15, 15] → finite (saturates at 15)</td></tr>
-          </tbody>
-        </table>
-        <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:0.8rem;">
-          <strong>Mechanism:</strong> Universal cubic chain rule du/dq ~ u³ drives infinite growth for singular potentials.
-          <br><strong>Note:</strong> NOT a non-integrability certificate — Calogero-Moser is exactly integrable yet gives the same sequence.
-        </div>
-      </div>
-
-      <!-- N-body Scaling -->
-      <div class="dimseq-highlight">
-        <h3>N-Body Scaling (April 2026)</h3>
-        <table class="data-table">
-          <thead><tr><th>N</th><th>d(0)</th><th>d(1)</th><th>d(2)</th><th>Formula for d(0)</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td>3</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td style="color:var(--text-secondary)">C(3,2) = 3</td><td class="status-done">✓ Full</td></tr>
-            <tr><td>4</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td style="color:var(--text-secondary)">C(4,2) = 6</td><td class="status-done">✓ L2</td></tr>
-            <tr><td>5</td><td class="val-amber">10</td><td class="val-amber">25</td><td class="val-amber">145</td><td style="color:var(--text-secondary)">C(5,2) = 10</td><td class="status-wip">d=1</td></tr>
-            <tr><td>6</td><td class="val-amber">15</td><td class="val-amber">39</td><td class="val-amber">279</td><td style="color:var(--text-secondary)">C(6,2) = 15</td><td class="status-wip">d=1</td></tr>
-            <tr><td>7</td><td class="val-amber">21</td><td class="val-amber">56</td><td class="val-amber">476</td><td style="color:var(--text-secondary)">C(7,2) = 21</td><td class="status-wip">d=1</td></tr>
-            <tr><td>8</td><td class="val-amber">28</td><td class="val-amber">76</td><td style="color:var(--text-dim)">301?</td><td style="color:var(--text-secondary)">C(8,2) = 28</td><td style="color:var(--text-dim)">partial</td></tr>
-          </tbody>
-        </table>
-        <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.5rem;">d(0) = C(N,2) = number of pairs · d(1) pattern: 6, 14, 25, 39, 56, 76 · All d=1, 1/r potential</div>
-      </div>
-    </div>
-
     <!-- ═══ TIMELINE ═══ -->
-    <div class="content-section" id="timeline">
+    <div class="content-section active" id="timeline">
       <div class="section-title">Research Timeline</div>
 
       <div class="timeline">
+        <div class="timeline-entry milestone">
+          <div class="timeline-date">April 2026</div>
+          <div class="timeline-title">Quantum Algebra Complete — [3, 6, 17, 117]</div>
+          <div class="timeline-body">Quantum Moyal bracket algebra gains +1 dimension vs classical for all singular potentials. 117th generator: negative semi-definite, Legendre P₃ (octupole), 1/r¹⁴ divergence, NOT conserved. Quantum universality classification: singular → +1, polynomial → +0. Quantum commutant dim=40 (vs classical 41).</div>
+        </div>
+
+        <div class="timeline-entry milestone">
+          <div class="timeline-date">April 11, 2026</div>
+          <div class="timeline-title">N=4 Level-3 Exact: 1,260 Dimensions</div>
+          <div class="timeline-body">N=4 L3 rank = 1,260 (52 min, r6i.8xlarge). Full N=4 sequence now [6, 14, 62, 1260]. L2 formula corrected: N(4N²−9N+3)/2 for N≥4 (old cubic falsified at N=7,8). N=5 L3 OOM-blocked on 256 GB.</div>
+        </div>
+
+        <div class="timeline-entry milestone">
+          <div class="timeline-date">April 7–8, 2026</div>
+          <div class="timeline-title">Extreme Mass Ratio Atlases Complete</div>
+          <div class="timeline-body">Sun-Earth-Moon: 10,000/10,000 points, ranks 102–108, dynamic range 10²⁰–10²⁶ (6h28m, r6i.4xlarge). Sun-Jupiter-Asteroid: 10,000/10,000 points, ranks 91–100, dynamic range 10²⁵–10³² (9h33m). Most extreme mass ratio ever computed for this algebra.</div>
+        </div>
+
         <div class="timeline-entry milestone">
           <div class="timeline-date">April 2026</div>
           <div class="timeline-title">N=5–8 Scaling Probes Complete</div>
@@ -796,7 +561,7 @@ body::before {
         <div class="timeline-entry milestone">
           <div class="timeline-date">March 2026</div>
           <div class="timeline-title">15 Atlas Configurations Complete</div>
-          <div class="timeline-body">Full atlas coverage for: equal-mass gravitational, helium, Li⁺, H⁻, positronium, muonic helium, H₂⁺, binary star, and 7 alternative potentials (1/r², 1/r³, log, composite, Coulomb variants). Triple BH stalled at ~38%.</div>
+          <div class="timeline-body">Full atlas coverage for: equal-mass gravitational, helium, Li⁺, H⁻, positronium, muonic helium, H₂⁺, binary star, and 7 alternative potentials (1/r², 1/r³, log, composite, Coulomb variants).</div>
         </div>
 
         <div class="timeline-entry breakthrough">
@@ -820,13 +585,13 @@ body::before {
         <div class="timeline-entry breakthrough">
           <div class="timeline-date">February 2026</div>
           <div class="timeline-title">SymPy 1.13.3 Bug Fix — Dimension Correction</div>
-          <div class="timeline-body">SymPy ≤1.10.1 produced incorrect [3, 5, 13, 69] for unequal masses. Version 1.13.3 corrected to universal [3, 6, 17, 116]. 63/156 level-3 expressions were wrong. All prior unequal-mass results had to be re-validated.</div>
+          <div class="timeline-body">SymPy ≤1.10.1 produced incorrect [3, 5, 13, 69] for unequal masses. Version 1.13.3 corrected to universal [3, 6, 17, 116]. 63/156 level-3 expressions were wrong. All prior unequal-mass results re-validated.</div>
         </div>
 
         <div class="timeline-entry milestone">
           <div class="timeline-date">Jan–Feb 2026</div>
           <div class="timeline-title">AWS Campaign — 19 Instances</div>
-          <div class="timeline-body">Initial compute fleet: 19 r6i.4xlarge instances. Total cost ~$800–1,000 (single-threaded). Later reduced to ~$100 equivalent with multiprocessing (8× speedup). Level-4 mpmath started on r6i.8xlarge.</div>
+          <div class="timeline-body">Initial compute fleet: 19 r6i.4xlarge instances. Total cost ~$800–1,000 (single-threaded). Later reduced to ~$100 equivalent with multiprocessing (8× speedup).</div>
         </div>
 
         <div class="timeline-entry milestone">
@@ -866,21 +631,23 @@ body::before {
           <tr><td>1/r (Newton/Coulomb)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
           <tr><td>1/r² (Calogero-Moser)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
           <tr><td>1/r³ (cubic)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
+          <tr><td>1/r⁴ (quartic singular)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
           <tr><td>log(r) (2D vortices)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
           <tr><td>1/r + 1/r² (composite)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
           <tr><td>1/r + harmonic (Penning trap)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
+          <tr><td>r⁴ (quartic regular)</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="inv-yes">✓</td></tr>
           <tr><td style="color:var(--red)">r² (harmonic)</td><td class="seq">3</td><td class="seq">6</td><td style="color:var(--red)">13</td><td style="color:var(--red)">15</td><td style="color:var(--red)">FINITE</td></tr>
         </tbody>
       </table>
 
       <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.8rem;">N=4 — Potential Universality</h3>
       <table class="data-table">
-        <thead><tr><th>Potential</th><th>d(0)</th><th>d(1)</th><th>d(2)</th><th>Match ref?</th></tr></thead>
+        <thead><tr><th>Potential</th><th>d(0)</th><th>d(1)</th><th>d(2)</th><th>d(3)</th><th>Match ref?</th></tr></thead>
         <tbody>
-          <tr><td>1/r (reference)</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td>—</td></tr>
-          <tr><td>1/r²</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td class="inv-yes">✓</td></tr>
-          <tr><td>1/r³</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td class="inv-yes">✓</td></tr>
-          <tr><td>log(r)</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td class="inv-yes">✓</td></tr>
+          <tr><td>1/r (reference)</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td class="seq">1260</td><td>—</td></tr>
+          <tr><td>1/r²</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td style="color:var(--text-dim)">—</td><td class="inv-yes">✓</td></tr>
+          <tr><td>1/r³</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td style="color:var(--text-dim)">—</td><td class="inv-yes">✓</td></tr>
+          <tr><td>log(r)</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td style="color:var(--text-dim)">—</td><td class="inv-yes">✓</td></tr>
         </tbody>
       </table>
 
@@ -898,6 +665,25 @@ body::before {
         d(0) = C(N,2) confirmed · d(1) sequence: 6, 14, 25, 39, 56, 76 · N=8 d(2) may be truncated by memory
       </div>
 
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.8rem;">N-Body Scaling Formulas</h3>
+      <div class="dimseq-highlight">
+        <table class="data-table">
+          <thead><tr><th>N</th><th>d(0)</th><th>d(1)</th><th>d(2)</th><th>d(3)</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>3</td><td class="seq">3</td><td class="seq">6</td><td class="seq">17</td><td class="seq">116</td><td class="status-done">✓ Full sequence</td></tr>
+            <tr><td>4</td><td class="seq">6</td><td class="seq">14</td><td class="seq">62</td><td class="seq">1260</td><td class="status-done">✓ L3 exact (Apr 11)</td></tr>
+            <tr><td>5</td><td class="val-amber">10</td><td class="val-amber">25</td><td class="val-amber">145</td><td style="color:var(--text-dim)">OOM</td><td class="status-wip">d=1 only</td></tr>
+            <tr><td>6</td><td class="val-amber">15</td><td class="val-amber">39</td><td class="val-amber">279</td><td style="color:var(--text-dim)">—</td><td class="status-wip">d=1</td></tr>
+            <tr><td>7</td><td class="val-amber">21</td><td class="val-amber">56</td><td class="val-amber">476</td><td style="color:var(--text-dim)">—</td><td class="status-wip">d=1</td></tr>
+            <tr><td>8</td><td class="val-amber">28</td><td class="val-amber">76</td><td style="color:var(--text-dim)">301?</td><td style="color:var(--text-dim)">—</td><td style="color:var(--text-dim)">partial</td></tr>
+          </tbody>
+        </table>
+        <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.5rem;">
+          d(0) = C(N,2) · d(1) = N(3N−5)/2 · d(2) = N(4N²−9N+3)/2 for N≥4 (corrected Apr 11; old cubic falsified at N=7,8)<br>
+          L3: two data points — N=3→116 and N=4→1260; predicts new_L3(5)=5990 if pattern continues
+        </div>
+      </div>
+
       <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.8rem;">Internal Structure (Level 3, N=3)</h3>
       <table class="data-table">
         <thead><tr><th>Tier</th><th>Count</th><th>Scaling Exponent</th><th>S₃ Decomposition</th></tr></thead>
@@ -912,11 +698,27 @@ body::before {
       <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.5rem;">
         E-type irrep fraction = 2/3 at every bracket level · 40 null generators: 32 syzygies + 8 momentum zeros
       </div>
+
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--violet); margin:1.5rem 0 0.8rem;">Quantum Commutator Algebra</h3>
+      <table class="data-table">
+        <thead><tr><th>Potential</th><th>Classical d(3)</th><th>Quantum d(3)</th><th>Δ</th><th>Class</th></tr></thead>
+        <tbody>
+          <tr><td>1/r (Newton/Coulomb)</td><td class="seq">116</td><td style="color:var(--violet); font-weight:600;">117</td><td>+1</td><td>Singular</td></tr>
+          <tr><td>1/r² (Calogero-Moser)</td><td class="seq">116</td><td style="color:var(--violet); font-weight:600;">117</td><td>+1</td><td>Singular</td></tr>
+          <tr><td>1/r³</td><td class="seq">116</td><td style="color:var(--violet); font-weight:600;">117</td><td>+1</td><td>Singular</td></tr>
+          <tr><td>1/r⁴</td><td class="seq">116</td><td style="color:var(--violet); font-weight:600;">117</td><td>+1</td><td>Singular</td></tr>
+          <tr><td>r² (harmonic)</td><td style="color:var(--red)">15</td><td style="color:var(--red)">15</td><td>+0</td><td>Regular</td></tr>
+          <tr><td>r⁴ (quartic regular)</td><td class="seq">116</td><td class="seq">116</td><td>+0</td><td>Regular</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.5rem;">
+        117th generator: sum-of-squares proof g = −(9/4)[(A−B)² + A²], negative semi-definite · Legendre P₃ (octupole) · 1/r¹⁴ collision divergence · NOT conserved ([G,H]≠0, 919 terms)
+      </div>
     </div>
 
     <!-- ═══ WORK PLAN ═══ -->
     <div class="content-section" id="workplan">
-      <div class="section-title">Gap Work Plan — 21 Items</div>
+      <div class="section-title">Gap Work Plan — 28 Items across 5 Phases</div>
 
       <!-- Phase 1 -->
       <div class="phase-block">
@@ -926,30 +728,30 @@ body::before {
           <span class="phase-badge badge-free">COMPLETE</span>
         </div>
         <div class="phase-items">
-          <div class="work-item"><span class="id">1.1</span><div><div class="title">Spectral Depth Mining — Interior SV Landscapes</div><div class="desc">SV #50, #80, #100, #110 as shape-sphere heatmaps.</div></div><span class="chip chip-done">Done</span></div>
-          <div class="work-item"><span class="id">1.2</span><div><div class="title">Spectral Decay Rate Map</div><div class="desc">Log-slope between SV #80–#115 at each grid point.</div></div><span class="chip chip-done">Done</span></div>
-          <div class="work-item"><span class="id">1.3</span><div><div class="title">Spectral Clustering on Shape Sphere</div><div class="desc">k-means/hierarchical clustering on 156-dim SV vectors.</div></div><span class="chip chip-done">Done</span></div>
-          <div class="work-item"><span class="id">1.4</span><div><div class="title">Clebsch-Gordan Predictions vs Full Atlas</div><div class="desc">CG doublet count comparison on full shape sphere.</div></div><span class="chip chip-done">Done</span></div>
-          <div class="work-item"><span class="id">1.5</span><div><div class="title">Level-4 Comparison Chart</div><div class="desc">Bar chart + convergence curves of d(4) across configs.</div></div><span class="chip chip-done">Done</span></div>
-          <div class="work-item"><span class="id">1.6</span><div><div class="title">Analytical Prediction of SV #116</div><div class="desc">Weakest generator landscape prediction from symbolic structure.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.1</span><div><div class="title">Spectral Depth Mining — Interior SV Landscapes</div><div class="desc">SV #50, #80, #100, #110 as shape-sphere heatmaps. Done.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.2</span><div><div class="title">Spectral Decay Rate Map</div><div class="desc">Log-slope between SV #80–#115 at each grid point. Done.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.3</span><div><div class="title">Spectral Clustering on Shape Sphere</div><div class="desc">k-means/hierarchical clustering on 156-dim SV vectors. Done.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.4</span><div><div class="title">Clebsch-Gordan Predictions vs Full Atlas</div><div class="desc">CG doublet count comparison on full shape sphere. Done.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.5</span><div><div class="title">Level-4 Comparison Chart</div><div class="desc">Bar chart + convergence curves of d(4) across configs. Done.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">1.6</span><div><div class="title">Analytical Prediction of SV #116</div><div class="desc">Predict weakest generator landscape from symbolic structure. R²=0.630 correlation. Done (Apr 1, 2026).</div></div><span class="chip chip-done">Done</span></div>
         </div>
       </div>
 
       <!-- Phase 2 -->
       <div class="phase-block">
-        <div class="phase-header open" onclick="togglePhase(this)">
+        <div class="phase-header" onclick="togglePhase(this)">
           <span class="phase-chevron">▶</span>
-          <span class="phase-title">Phase 2: Light Compute (hours)</span>
-          <span class="phase-badge badge-light">2/7</span>
+          <span class="phase-title">Phase 2: Light Compute (hours, local/small AWS)</span>
+          <span class="phase-badge badge-light">4/7</span>
         </div>
         <div class="phase-items">
-          <div class="work-item"><span class="id">2.1</span><div><div class="title">N=5 Level 1–2</div><div class="desc">d=1, 1/r → [10, 25, 145]. Confirmed C(N,2) pattern.</div></div><span class="chip chip-done">Done</span></div>
-          <div class="work-item"><span class="id">2.2</span><div><div class="title">N=4 with 1/r², 1/r³, log(r)</div><div class="desc">All match [6, 14, 62]. Potential universality at N=4 confirmed.</div></div><span class="chip chip-done">Done</span></div>
-          <div class="work-item"><span class="id">2.3</span><div><div class="title">r⁴ Potential (Regular)</div><div class="desc">Prediction: finite algebra, like r². Tests dichotomy for higher-degree.</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">2.4</span><div><div class="title">Charge Sweep Phase 3 (+1/+q/−1)</div><div class="desc">Phase 3 crashed on AWS. Needs script fix.</div></div><span class="chip chip-crashed">Crashed</span></div>
-          <div class="work-item"><span class="id">2.5</span><div><div class="title">S₄ Tier Decomposition (N=4)</div><div class="desc">Does S₃ tier structure generalize to S₄?</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">2.6</span><div><div class="title">Harmonic Dim 15 — Rep Theory Derivation</div><div class="desc">Derive dim=15 from sp(4,ℝ) or similar.</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">2.7</span><div><div class="title">H₃⁺ and Ozone Molecular Systems</div><div class="desc">Triatomic molecular reconfirmation. Outreach value.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">2.1</span><div><div class="title">N=5 Level 1–2</div><div class="desc">Third data point for d_N(k) vs N. Result: N=5 gives [10, 25, 145]. Formula L2(N)=N(4N²−9N+3)/2 (N≥4) confirmed. N=5 L3 OOM-blocked on 256 GB.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">2.2</span><div><div class="title">N=4 with 1/r², 1/r³, log(r)</div><div class="desc">Result: all three potentials confirmed [6, 14, 62] (Apr 1, 2026, 500 samples each). Paper 3 prediction #2 confirmed — potential invariance holds at N=4.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">2.3</span><div><div class="title">r⁴ Potential (Regular)</div><div class="desc">Result: classical [3, 6, 17, 116]; quantum [3, 6, 17, 116] (no growth). Quantum corrections exist but are linearly dependent. Confirms regular/singular dichotomy extends to quantum case.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">2.4</span><div><div class="title">Charge Sweep Phase 3 (+1/+q/−1)</div><div class="desc">Result: q = 1, 2, 3, 4, 5, 6, 8, 10, 15, 20 all give [3, 6, 17, 116] (Mar 24, 2026). Charge-sign invariance confirmed for arbitrary nucleus charge.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">2.5</span><div><div class="title">S₄ Tier Decomposition (N=4)</div><div class="desc">Does S₃ tier structure generalize to S₄? Integer-quantized scaling?</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">2.6</span><div><div class="title">Harmonic Dimension 15 — Rep Theory Derivation</div><div class="desc">Derive dim=15 from isotropic oscillator Lie algebra (sp(4,ℝ) or similar).</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">2.7</span><div><div class="title">H₃⁺ and Ozone Molecular Systems</div><div class="desc">Molecular triatomic reconfirmation. High outreach value.</div></div><span class="chip chip-todo">Not Started</span></div>
         </div>
       </div>
 
@@ -958,14 +760,14 @@ body::before {
         <div class="phase-header" onclick="togglePhase(this)">
           <span class="phase-chevron">▶</span>
           <span class="phase-title">Phase 3: Medium Compute ($10–$200 AWS)</span>
-          <span class="phase-badge badge-medium">0/5</span>
+          <span class="phase-badge badge-medium">2/5</span>
         </div>
         <div class="phase-items">
-          <div class="work-item"><span class="id">3.1</span><div><div class="title">Parametric Exponent Sweep (1,015 values)</div><div class="desc">Gap ratio vs n continuous curve. Script ready. $13–50.</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">3.2</span><div><div class="title">Yukawa Potential (3 Scenarios)</div><div class="desc">Lambdification OOM. Recursion fix deployed but unconfirmed.</div></div><span class="chip chip-blocked">Blocked</span></div>
-          <div class="work-item"><span class="id">3.3</span><div><div class="title">Re-run 7 Retracted Grav Configs</div><div class="desc">2/7 validated; 5 inferred from mass sweep.</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">3.4</span><div><div class="title">Complete Interrupted Atlases</div><div class="desc">Sun-Earth-Moon (11%), Sun-Jupiter-Asteroid (7%).</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">3.5</span><div><div class="title">Lagrange Hires 1000×1000 Scan</div><div class="desc">Resolve concentric ring features. $3–12.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">3.1</span><div><div class="title">Parametric Exponent Sweep (1,015 values of n)</div><div class="desc">Gap ratio vs n continuous curve. Script ready. Est. $13–50. VERY HIGH impact.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">3.2</span><div><div class="title">Yukawa Potential (3 Scenarios)</div><div class="desc">Lambdification/OOM issues. Recursion fix deployed but not confirmed.</div></div><span class="chip chip-blocked">Blocked</span></div>
+          <div class="work-item"><span class="id">3.3</span><div><div class="title">Re-run 7 Retracted Gravitational Configs</div><div class="desc">Result: 4 of 7 directly confirmed [3, 6, 17, 116]; 3 (Sun-Earth-Moon, Sun-Jupiter-Asteroid, LISA) show rank deficit at extreme mass ratios — consistent with mass invariance theorem (SVD conditioning, not algebraic). Completed Mar 24, 2026.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">3.4</span><div><div class="title">Complete Interrupted Atlases</div><div class="desc">Sun-Earth-Moon: done April 7, 2026 (6h28m, 10,000 points, ranks 102–108). Sun-Jupiter-Asteroid: done April 8, 2026 (9h33m, 10,000 points, ranks 91–100). Most extreme mass ratios computed.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">3.5</span><div><div class="title">Lagrange Hires 1000×1000 Scan</div><div class="desc">Resolve concentric ring features and isosceles beads. Est. $3–12.</div></div><span class="chip chip-todo">Not Started</span></div>
         </div>
       </div>
 
@@ -973,13 +775,31 @@ body::before {
       <div class="phase-block">
         <div class="phase-header" onclick="togglePhase(this)">
           <span class="phase-chevron">▶</span>
-          <span class="phase-title">Phase 4: Verification & Theory</span>
-          <span class="phase-badge badge-verify">0/3</span>
+          <span class="phase-title">Phase 4: Verification &amp; Theory</span>
+          <span class="phase-badge badge-verify">Theory</span>
         </div>
         <div class="phase-items">
-          <div class="work-item"><span class="id">4.1</span><div><div class="title">SageMath Independent Verification</div><div class="desc">Confirm [3, 6, 17, 116] in a second CAS.</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">4.2</span><div><div class="title">Growth Rate Formula / Generating Function</div><div class="desc">OEIS search, recurrence relation, exponential fits.</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">4.3</span><div><div class="title">Level-4 Bound Improvement</div><div class="desc">d(4) ≥ 5,604 at 200K. mpmath at 4.4%.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">4.1</span><div><div class="title">SageMath Independent Verification</div><div class="desc">Essential: independently confirm [3, 6, 17, 116] using a second CAS.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">4.2</span><div><div class="title">Growth Rate Formula / Generating Function</div><div class="desc">OEIS search, recurrence relations, exponential fits for d(k).</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">4.3</span><div><div class="title">Level-4 Bound Improvement</div><div class="desc">Current: d(4) ≥ 5,604 at 200K samples. mpmath at 4.4% when reclaimed.</div></div><span class="chip chip-todo">Not Started</span></div>
+        </div>
+      </div>
+
+      <!-- Phase 5 -->
+      <div class="phase-block">
+        <div class="phase-header" onclick="togglePhase(this)">
+          <span class="phase-chevron">▶</span>
+          <span class="phase-title">Phase 5: Quantum Algebra (New — Apr 2026)</span>
+          <span class="phase-badge badge-verify">Quantum</span>
+        </div>
+        <div class="phase-items">
+          <div class="work-item"><span class="id">5.1</span><div><div class="title">Quantum Commutator Rank (N=3, d=2)</div><div class="desc">Result: [3, 6, 17, 117] — one extra dimension vs classical 116. Confirmed in both d=1 and d=2. Engine: QuantumNBodyAlgebra with Moyal bracket.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">5.2</span><div><div class="title">117th Generator Identification &amp; Characterization</div><div class="desc">Sum-of-squares proof: g = −(9/4)[(A−B)² + A²], negative semi-definite. Legendre P₃ (octupole) structure. Scaling degree −8. 1/r¹⁴ collision divergence. Not conserved ([G,H]≠0).</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">5.3</span><div><div class="title">Quantum Universality Classification</div><div class="desc">Tested 1/r, 1/r², 1/r³, 1/r⁴ (all singular → +1), r², r⁴ (polynomial → no growth). Classification: singularity at r=0 is load-bearing for quantum correction.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">5.4</span><div><div class="title">Energy Bound Search (Quantum Commutant)</div><div class="desc">Quantum commutant dim=40 (156−116); classical commutant dim=41 (156−115). SMALLER — quantization removes one conservation law. 117th generator not conserved. Energy bound via this approach ruled out.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">5.5</span><div><div class="title">Quantum Rank for N=4 / Quantum N-body Scaling</div><div class="desc">Does N=4 quantum algebra also gain +1 at L2 or L3? Predict [6, 14, 63] if singularity universality extends to higher N.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">5.6</span><div><div class="title">Post-Newtonian 2PN Quantum Rank</div><div class="desc">1PN: −1/r − 1/r² gives [3,6,17,116] (no change). 2PN: −1/r − 1/r² − 1/r³ level 3 in progress locally.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">5.7</span><div><div class="title">N=5 d=1 Level-3 Exact Rank</div><div class="desc">OOM-killed on r6i.8xlarge (256 GB, 8 workers). 1.1M L3 brackets checkpointed on S3. Matrix 1.1M×760K over ℚ exceeds 256 GB. Options: modular rank over GF(p), r6i.16xlarge (512 GB), or out-of-core streaming.</div></div><span class="chip chip-blocked">Blocked</span></div>
         </div>
       </div>
     </div>
@@ -988,15 +808,30 @@ body::before {
     <div class="content-section" id="systems">
       <div class="section-title">Physical Systems Catalog</div>
 
+      <!-- Universality Evidence Matrix -->
+      <div class="matrix-card">
+        <h3>Universality Evidence Matrix</h3>
+        <table class="data-table">
+          <thead><tr><th>Parameter</th><th>Tested Values</th><th>N=3</th><th>N=4</th><th>N≥5</th></tr></thead>
+          <tbody>
+            <tr><td>Mass ratios</td><td style="color:var(--text-secondary)">0.001 to 10⁶ (25+ configs)</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ (3 configs)</td><td class="inv-unknown">—</td></tr>
+            <tr><td>Spatial dimension d</td><td style="color:var(--text-secondary)">d = 1, 2, 3</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">d=1 only</td></tr>
+            <tr><td>Potential type</td><td style="color:var(--text-secondary)">1/r, 1/r², 1/r³, 1/r⁴, log(r), composite</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ Confirmed</td><td class="inv-unknown">1/r only</td></tr>
+            <tr><td>Charge sign</td><td style="color:var(--text-secondary)">All-attract, all-repulse, mixed</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">Not tested</td><td class="inv-unknown">—</td></tr>
+            <tr><td>Charge magnitude</td><td style="color:var(--text-secondary)">|q| = 1–20 (10 values)</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">Not tested</td><td class="inv-unknown">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
       <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:0 0 0.6rem;">Gravitational</h3>
       <table class="data-table">
         <thead><tr><th>System</th><th>Masses</th><th>Sequence</th><th>Atlas</th></tr></thead>
         <tbody>
           <tr><td>Equal-mass 3-body</td><td style="color:var(--text-secondary)">1:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓ Complete</td></tr>
-          <tr><td>Sun-Earth-Moon</td><td style="color:var(--text-secondary)">1 : 3×10⁻⁶ : 3.7×10⁻⁸</td><td class="seq">[3, 6, 17, 116]†</td><td class="status-wip">11%</td></tr>
-          <tr><td>Sun-Jupiter-Asteroid</td><td style="color:var(--text-secondary)">1 : 9.5×10⁻⁴ : 10⁻¹⁰</td><td class="seq">[3, 6, 17, 116]†</td><td class="status-wip">7%</td></tr>
+          <tr><td>Sun-Earth-Moon</td><td style="color:var(--text-secondary)">1 : 3×10⁻⁶ : 3.7×10⁻⁸</td><td class="seq">[3, 6, 17, 102–108]‡‡</td><td class="status-done">✓ Complete</td></tr>
+          <tr><td>Sun-Jupiter-Asteroid</td><td style="color:var(--text-secondary)">1 : 9.5×10⁻⁴ : 10⁻¹⁰</td><td class="seq">[3, 6, 17, 91–100]‡‡</td><td class="status-done">✓ Complete</td></tr>
           <tr><td>Binary Star + Planet</td><td style="color:var(--text-secondary)">1:1:0.001</td><td class="seq">[3, 6, 17, 116]‡</td><td class="status-done">✓ Complete</td></tr>
-          <tr><td>Triple BH (LISA)</td><td style="color:var(--text-secondary)">1:0.01:10⁻⁵</td><td class="seq">[3, 6, 17, 116]†</td><td class="status-wip">~38% — Stalled</td></tr>
+          <tr><td>Triple BH (LISA)</td><td style="color:var(--text-secondary)">1:0.01:10⁻⁵</td><td class="seq">[3, 6, 17, 116]†</td><td class="status-done">✓ Complete</td></tr>
         </tbody>
       </table>
 
@@ -1005,11 +840,11 @@ body::before {
         <thead><tr><th>System</th><th>Charges</th><th>Masses</th><th>Sequence</th><th>Atlas</th></tr></thead>
         <tbody>
           <tr><td>Helium atom</td><td style="color:var(--text-secondary)">(+2,−1,−1)</td><td style="color:var(--text-secondary)">7294:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
-          <tr><td>Li⁺ ion</td><td style="color:var(--text-secondary)">(+3,−1,−1)</td><td style="color:var(--text-secondary)">12789:1:1</td><td class="seq-off">[3, 6, 17, 111]</td><td class="status-done">✓</td></tr>
+          <tr><td>Li⁺ ion</td><td style="color:var(--text-secondary)">(+3,−1,−1)</td><td style="color:var(--text-secondary)">12789:1:1</td><td class="seq-off" style="color:var(--amber)">[3, 6, 17, 111]</td><td class="status-done">✓</td></tr>
           <tr><td>H⁻ ion</td><td style="color:var(--text-secondary)">(+1,−1,−1)</td><td style="color:var(--text-secondary)">1836:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
           <tr><td>Positronium Ps⁻</td><td style="color:var(--text-secondary)">(+1,−1,−1)</td><td style="color:var(--text-secondary)">1:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
           <tr><td>Muonic Helium</td><td style="color:var(--text-secondary)">(+2,−1,−1)</td><td style="color:var(--text-secondary)">7294:1:207</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
-          <tr><td>H₂⁺ molecular ion</td><td style="color:var(--text-secondary)">(+1,+1,−1)</td><td style="color:var(--text-secondary)">1836:1836:1</td><td class="seq-off">[3, 6, 17, 115]</td><td class="status-done">✓</td></tr>
+          <tr><td>H₂⁺ molecular ion</td><td style="color:var(--text-secondary)">(+1,+1,−1)</td><td style="color:var(--text-secondary)">1836:1836:1</td><td class="seq-off" style="color:var(--amber)">[3, 6, 17, 115]</td><td class="status-done">✓</td></tr>
         </tbody>
       </table>
 
@@ -1019,10 +854,12 @@ body::before {
         <tbody>
           <tr><td>Calogero-Moser</td><td style="color:var(--text-secondary)">1/r²</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Integrable in 1D — same sequence</td></tr>
           <tr><td>Cubic potential</td><td style="color:var(--text-secondary)">1/r³</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Jahn-Teller ring observed</td></tr>
+          <tr><td>Quartic singular</td><td style="color:var(--text-secondary)">1/r⁴</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Quantum: [3,6,17,117] — singular class confirmed</td></tr>
           <tr><td>2D Vortices</td><td style="color:var(--text-secondary)">log(r)</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Transcendental singularity</td></tr>
-          <tr><td>Composite</td><td style="color:var(--text-secondary)">1/r + 1/r²</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Multi-pole universal</td></tr>
+          <tr><td>Composite</td><td style="color:var(--text-secondary)">1/r + 1/r²</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Multi-pole universal; PN 1PN: [3,6,17,116]</td></tr>
           <tr><td>Harmonic oscillator</td><td style="color:var(--text-secondary)">r²</td><td style="color:var(--red)">[3, 6, 13, 15]</td><td style="color:var(--red)">FINITE — saturates at dim 15</td></tr>
-          <tr><td>Penning trap</td><td style="color:var(--text-secondary)">1/r + harmonic</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Repulsive + external confinement</td></tr>
+          <tr><td>Quartic regular</td><td style="color:var(--text-secondary)">r⁴</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">Polynomial but infinite — quantum: no growth (+0)</td></tr>
+          <tr><td>Penning trap</td><td style="color:var(--text-secondary)">1/r + harmonic</td><td class="seq">[3, 6, 17, 116]</td><td style="color:var(--text-secondary)">All-repulsive + external trap</td></tr>
         </tbody>
       </table>
 
@@ -1030,21 +867,22 @@ body::before {
       <table class="data-table">
         <thead><tr><th>System</th><th>Potential</th><th>Status</th><th>Notes</th></tr></thead>
         <tbody>
-          <tr><td>Tritium / He-3</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-blocked">Not started</td><td style="color:var(--text-secondary)">Config only — no computation ran</td></tr>
-          <tr><td>p-n-n Scattering</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-blocked">Not started</td><td style="color:var(--text-secondary)">No data or config</td></tr>
+          <tr><td>Tritium / He-3</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-wip">In progress</td><td style="color:var(--text-secondary)">Recursion fix deployed</td></tr>
+          <tr><td>p-n-n Scattering</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-wip">In progress</td><td></td></tr>
           <tr><td>Dusty Plasma</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-blocked">Failed — OOM</td><td style="color:var(--red)">Lambdification issue</td></tr>
         </tbody>
       </table>
 
       <div style="font-size:0.7rem; color:var(--text-dim); margin-top:1rem; line-height:1.6;">
-        † Inferred from mass ratio sweep (SymPy 1.10.1 artifact corrected) &nbsp;
-        ‡ Directly re-run with SymPy 1.13.3
+        † Inferred from mass ratio sweep + diagnostic (SymPy 1.10.1 artifact corrected).<br>
+        ‡ Directly re-run on AWS with SymPy 1.13.3 and confirmed.<br>
+        ‡‡ Ranks 102–108 / 91–100 reflect extreme dynamic range (10²⁰–10³²); SVD conditioning limits detection. Algebraic dimension confirmed as 116 by mass invariance theorem. Atlas completed April 2026.
       </div>
     </div>
 
     <!-- ═══ PAPERS ═══ -->
     <div class="content-section" id="papers">
-      <div class="section-title">Paper Trilogy + Supplement</div>
+      <div class="section-title">Papers (4 Drafted + 1 Outline)</div>
 
       <div class="paper-entry">
         <div class="paper-num">1</div>
@@ -1071,7 +909,7 @@ body::before {
         <div>
           <div class="paper-title">Universal dimension sequences of pairwise Poisson algebras: independence from spatial dimension, potential exponent, and charge sign</div>
           <div class="paper-file">paper3_universality.tex</div>
-          <div class="paper-desc">N=4 sequence [6, 14, 62]. d-independence for N=3 and N=4. Pole-order invariance. Charge-sign invariance. Formal universality conjecture + three falsifiable predictions.</div>
+          <div class="paper-desc">N=4 sequence [6, 14, 62, 1260] (L3 exact, Apr 11, 2026). N=5 sequence [10, 25, 145] (L2; L3 OOM-blocked). N=7 [21, 56, 476], N=8 [28, 76, 748]. N-body scaling: L0=C(N,2), L1=N(3N−5)/2, L2=N(4N²−9N+3)/2 (N≥4). d-independence for N=3 and N=4. Pole-order invariance. Charge-sign invariance. Mass invariance proved over ℚ(m₁,m₂,m₃). Formal universality conjecture + three falsifiable predictions (P1 confirmed through L2).</div>
         </div>
         <span class="paper-status paper-draft">Draft</span>
       </div>
@@ -1086,45 +924,92 @@ body::before {
         <span class="paper-status paper-draft">Draft</span>
       </div>
 
-      <div class="matrix-card" style="border-left: 3px solid var(--amber); margin-top:2rem;">
-        <h3>Publication Blockers</h3>
-        <table class="data-table">
-          <tbody>
-            <tr><td>arXiv endorsement</td><td class="status-blocked">math-ph / dynamical systems — no endorser yet</td></tr>
-            <tr><td>Current host</td><td style="color:var(--cyan)">Zenodo (DOI: 10.5281/zenodo.18899804)</td></tr>
-            <tr><td>SageMath verification</td><td class="status-wip">Essential for credibility — not started</td></tr>
-          </tbody>
-        </table>
+      <div class="paper-entry">
+        <div class="paper-num">5</div>
+        <div>
+          <div class="paper-title">Quantum deformation of the three-body Poisson algebra: Moyal bracket correction, universality across singular potentials, and the 117th generator</div>
+          <div class="paper-file">quantum_algebra.py &middot; (paper5 draft not yet started)</div>
+          <div class="paper-desc">Quantum rank [3, 6, 17, 117] (+1 vs classical). 117th generator: negative semi-definite, Legendre P₃ angular structure, 1/r¹⁴ collision divergence, NOT conserved ([G,H]≠0, 919 terms). Quantum universality: all singular 1/rⁿ → [3,6,17,117]; polynomial rⁿ → no growth. Energy bound ruled out: quantum commutant dim=40 &lt; classical 41.</div>
+        </div>
+        <span class="paper-status paper-outline">Outline</span>
+      </div>
+
+      <div style="margin-top:2rem;">
+        <div class="results-panel" style="border-left:3px solid var(--amber);">
+          <h3>Publication Blockers</h3>
+          <div class="result-row">
+            <span class="prop">arXiv endorsement needed</span>
+            <span class="val" style="color:var(--amber)">math-ph / dynamical systems — no endorser yet</span>
+          </div>
+          <div class="result-row">
+            <span class="prop">Current preprint host</span>
+            <span class="val" style="color:var(--cyan)">Zenodo (DOI: 10.5281/zenodo.18899804)</span>
+          </div>
+          <div class="result-row">
+            <span class="prop">Existing arXiv publication</span>
+            <span class="val" style="color:var(--text-secondary)">cs.RO/math.GN (topological robotics) — doesn't carry over</span>
+          </div>
+          <div class="result-row">
+            <span class="prop">SageMath verification (4.1)</span>
+            <span class="val" style="color:var(--amber)">Essential for credibility — not started</span>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- ═══ CONJECTURES ═══ -->
     <div class="content-section" id="conjectures">
-      <div class="section-title">Conjectures & Open Questions</div>
+      <div class="section-title">Conjectures &amp; Open Questions</div>
 
       <div class="conjecture">
         <h4>Universality Conjecture (Revised, March 2026)</h4>
-        <p>For N ≥ 3 particles in d ≥ 1 spatial dimensions, interacting via a singular central potential: (1) the pairwise Poisson algebra has infinite GK dimension; (2) the cumulative dimension sequence d_N(n) depends only on N; (3) the sequence is independent of spatial dimension, potential type (within singular class), mass ratios, and charge configurations.</p>
+        <p>For N ≥ 3 particles in d ≥ 1 spatial dimensions, interacting via a singular central potential: (1) the pairwise Poisson algebra has infinite GK dimension; (2) the cumulative dimension sequence d_N(n) depends only on N; (3) the sequence is independent of spatial dimension, potential type (within singular class), mass ratios, and charge configurations. For regular potentials (V polynomial in r), the algebra is finite-dimensional.</p>
         <div class="evidence-grid">
-          <div class="evidence"><span class="check">✓</span> N=3 five potentials match</div>
-          <div class="evidence"><span class="check">✓</span> N=4 four potentials match</div>
-          <div class="evidence"><span class="check">✓</span> 25+ mass ratios invariant</div>
-          <div class="evidence"><span class="check">✓</span> d=1,2,3 all identical</div>
+          <div class="evidence"><span class="check">✓</span> N=3 sequence proved</div>
+          <div class="evidence"><span class="check">✓</span> N=4 sequence [6,14,62,1260]</div>
+          <div class="evidence"><span class="check">✓</span> Mass invariance proved over ℚ(m₁,m₂,m₃)</div>
+          <div class="evidence"><span class="check">✓</span> d-independence (d=1,2,3)</div>
+          <div class="evidence"><span class="check">✓</span> Potential-type invariance (5+ types)</div>
           <div class="evidence"><span class="check">✓</span> Charge-sign invariance</div>
-          <div class="evidence"><span class="check">✓</span> N=5–7 probes consistent</div>
-          <div class="evidence"><span class="pending">○</span> N=5 with d>1 not tested</div>
-          <div class="evidence"><span class="pending">○</span> GR corrections not modeled</div>
+          <div class="evidence"><span class="check">✓</span> N=5 sequence [10,25,145]</div>
+          <div class="evidence"><span class="check">✓</span> N=4 with 1/r², 1/r³, log(r) → [6,14,62]</div>
+        </div>
+      </div>
+
+      <div class="conjecture" style="border-left-color: var(--violet);">
+        <h4>Quantum Universality Conjecture (April 2026)</h4>
+        <p>For all singular potentials (1/rⁿ, n ≥ 1), the quantum Moyal bracket algebra is exactly one dimension larger than the classical Poisson bracket algebra at level 3: d<sub>quantum</sub>(3) = d<sub>classical</sub>(3) + 1. The extra generator is negative semi-definite (Legendre P₃ angular structure, 1/r¹⁴ divergence at collision), and is NOT conserved. For polynomial potentials (rⁿ), there is no quantum correction at any level.</p>
+        <div class="evidence-grid">
+          <div class="evidence"><span class="check">✓</span> 1/r: [3,6,17,117] vs classical 116</div>
+          <div class="evidence"><span class="check">✓</span> 1/r²: [3,6,17,117] confirmed</div>
+          <div class="evidence"><span class="check">✓</span> 1/r³: [3,6,17,117] confirmed</div>
+          <div class="evidence"><span class="check">✓</span> 1/r⁴: [3,6,17,117] confirmed</div>
+          <div class="evidence"><span class="check">✓</span> r²: no quantum growth</div>
+          <div class="evidence"><span class="check">✓</span> r⁴: no quantum growth</div>
+          <div class="evidence"><span class="pending">○</span> N=4 quantum not yet tested</div>
+          <div class="evidence"><span class="pending">○</span> log(r) not tractable (non-algebraic)</div>
         </div>
       </div>
 
       <div class="conjecture">
         <h4>Critical Locus Conjecture</h4>
-        <p>The local rank of the Poisson algebra on the reduced configuration space has its critical locus exactly at the fixed-point set of the S_N action. Rank drops occur only at symmetric configurations — Lagrange (S₃), Euler (Z₂), isosceles (Z₂).</p>
+        <p>The local rank of the Poisson algebra, viewed on the reduced configuration space (shape sphere for N=3), has its critical locus at exactly the fixed-point set of the S_N action. Rank drops occur only at symmetric configurations — Lagrange (S₃), Euler (Z₂), isosceles (Z₂).</p>
         <div class="evidence-grid">
           <div class="evidence"><span class="check">✓</span> 99,000 grid points, 11 configs</div>
-          <div class="evidence"><span class="check">✓</span> No non-symmetric anomalies</div>
+          <div class="evidence"><span class="check">✓</span> No non-symmetric anomalies found</div>
           <div class="evidence"><span class="check">✓</span> Cross-potential consistency</div>
-          <div class="evidence"><span class="pending">○</span> S₄ extension untested</div>
+          <div class="evidence"><span class="pending">○</span> S₄ extension untested (N=4)</div>
+        </div>
+      </div>
+
+      <div class="conjecture" style="border-left-color: var(--text-dim);">
+        <h4>Cosmological Perspective (Speculative)</h4>
+        <p>If the universality conjecture holds for general N, the S_N symmetric fixed point of the cosmic N-body problem corresponds to the homogeneous, isotropic universe. The critical locus conjecture predicts a rank drop at this point — an algebraic explanation for the dimensional reduction from ~3×10⁸⁰ degrees of freedom to the Friedmann equation's single scale factor a(t).</p>
+        <div class="evidence-grid">
+          <div class="evidence"><span class="check">✓</span> d=3 explicitly computed</div>
+          <div class="evidence"><span class="check">✓</span> Charge-sign invariant (EM too)</div>
+          <div class="evidence"><span class="pending">○</span> Only N=3,4 tested</div>
+          <div class="evidence"><span class="pending">○</span> GR not modeled</div>
         </div>
       </div>
 
@@ -1132,83 +1017,82 @@ body::before {
         <h4>Falsifiable Predictions (Paper 3)</h4>
         <p>Three predictions that would falsify or strengthen the universality conjecture:</p>
         <div class="evidence-grid" style="grid-template-columns:1fr;">
-          <div class="evidence"><span class="check">✓</span> <strong>P1:</strong> N=5, d=1, 1/r → d(0)=10 — CONFIRMED</div>
-          <div class="evidence"><span class="check">✓</span> <strong>P2:</strong> N=4 with 1/r² → [6, 14, 62] — CONFIRMED</div>
-          <div class="evidence"><span class="pending">○</span> <strong>P3:</strong> d(4) for 1/r² matches d(4) for 1/r — Not tested</div>
-        </div>
-      </div>
-
-      <div class="conjecture" style="border-left-color: var(--text-dim);">
-        <h4>Cosmological Perspective (Speculative)</h4>
-        <p>If universality holds for general N, the S_N symmetric fixed point of the cosmic N-body problem corresponds to the homogeneous, isotropic universe. The critical locus conjecture predicts a rank drop — an algebraic explanation for dimensional reduction from ~3×10⁸⁰ DOF to the Friedmann equation's single scale factor a(t).</p>
-        <div class="evidence-grid">
-          <div class="evidence"><span class="check">✓</span> d=3 explicitly computed</div>
-          <div class="evidence"><span class="check">✓</span> Charge-sign invariant</div>
-          <div class="evidence"><span class="pending">○</span> Only N=3,4 tested</div>
-          <div class="evidence"><span class="pending">○</span> GR not modeled</div>
+          <div class="evidence"><span class="check">✓</span> <strong>P1:</strong> N=5, d=1 → [10, 25, 145] confirmed through L2; L3 in progress (AWS r6i.8xlarge)</div>
+          <div class="evidence"><span class="check">✓</span> <strong>P2:</strong> N=4 with 1/r², 1/r³, log(r) → all confirmed [6, 14, 62] (Apr 1, 2026)</div>
+          <div class="evidence"><span class="pending">○</span> <strong>P3:</strong> d(4) for 1/r² → predict matches d(4) for 1/r (level-4 universality)</div>
         </div>
       </div>
     </div>
 
     <!-- ═══ INFRASTRUCTURE ═══ -->
     <div class="content-section" id="infra">
-      <div class="section-title">Infrastructure & Compute</div>
+      <div class="section-title">Infrastructure &amp; Compute</div>
 
-      <div class="card-grid">
-        <div class="card">
-          <div class="label">Core Engines</div>
-          <div style="font-size:0.78rem; color:var(--text-secondary); line-height:1.7;">
-            <div><strong style="color:var(--text-primary)">exact_growth.py</strong> — N=3 baseline (regression ref)</div>
-            <div><strong style="color:var(--text-primary)">exact_growth_nbody.py</strong> — Full N-body engine</div>
-            <div><strong style="color:var(--text-primary)">stability_atlas.py</strong> — Shape-sphere scanner</div>
-            <div><strong style="color:var(--text-primary)">multi_epsilon_atlas.py</strong> — Adaptive scanning</div>
+      <div class="infra-grid">
+        <div class="infra-card">
+          <h4>Core Engines</h4>
+          <div class="infra-detail"><strong>exact_growth.py</strong> — N=3 symbolic Poisson bracket engine (levels 0–3)</div>
+          <div class="infra-detail"><strong>exact_growth_nbody.py</strong> — Generalized engine (N, d, potential, charges)</div>
+          <div class="infra-detail"><strong>quantum_algebra.py</strong> — QuantumNBodyAlgebra with Moyal bracket (ℏ-deformation)</div>
+          <div class="infra-detail"><strong>symbolic_rank_nbody.py</strong> — Exact rank over ℚ and ℚ(m₁,m₂,…) for mass invariance proofs</div>
+          <div class="infra-detail"><strong>stability_atlas.py</strong> — Shape-sphere atlas scanner (exact engine)</div>
+          <div class="infra-detail"><strong>multi_epsilon_atlas.py</strong> — Adaptive + multi-epsilon scanning</div>
+          <div class="infra-detail"><strong>targeted_adaptive_scan.py</strong> — Regional high-resolution scans</div>
+        </div>
+
+        <div class="infra-card">
+          <h4>Lambdify Pipeline (4-layer fallback)</h4>
+          <div class="infra-detail"><strong>Layer 1:</strong> Standard sp.lambdify (fast numpy)</div>
+          <div class="infra-detail"><strong>Layer 2:</strong> Flat-file no-CSE (pycode → temp .py)</div>
+          <div class="infra-detail"><strong>Layer 3:</strong> Flat-file with CSE (slower, smaller code)</div>
+          <div class="infra-detail"><strong>Layer 4:</strong> Point-by-point xreplace (last resort, ~1000× slower)</div>
+          <div class="infra-detail" style="margin-top:0.5rem;"><strong>1/r² result:</strong> 92 via L1, 63 via L2, 0 xreplace</div>
+        </div>
+
+        <div class="infra-card">
+          <h4>AWS Campaign</h4>
+          <div class="infra-detail"><strong>S3 bucket:</strong> s3://3body-compute-290318/</div>
+          <div class="infra-detail"><strong>Atlas instances:</strong> r6i.4xlarge (16 vCPU, 128 GB)</div>
+          <div class="infra-detail"><strong>Level-4 mpmath:</strong> r6i.8xlarge → r6a.8xlarge (spot)</div>
+          <div class="infra-detail"><strong>Multiprocessing:</strong> --workers N (fork-based, 8× speedup)</div>
+          <div class="infra-detail"><strong>Total data:</strong> 9.04 GB synced locally</div>
+          <div class="infra-detail" style="color:var(--amber);"><strong>S3 sync caveat:</strong> Use cp --recursive for numpy arrays (size-identical trap)</div>
+        </div>
+
+        <div class="infra-card">
+          <h4>Completed Compute (Apr 2026)</h4>
+          <div class="infra-detail"><strong>Sun-Earth-Moon atlas:</strong> Complete — April 7, 2026 (6h28m, r6i.4xlarge on-demand)</div>
+          <div class="infra-detail" style="color:var(--phosphor);">10,000 / 10,000 valid points · ranks 102–108 · dynamic range 10²⁰–10²⁶</div>
+          <div class="infra-detail" style="margin-top:0.8rem;"><strong>Sun-Jupiter-Asteroid atlas:</strong> Complete — April 8, 2026 (9h33m, r6i.4xlarge on-demand)</div>
+          <div class="infra-detail" style="color:var(--phosphor);">10,000 / 10,000 valid points · ranks 91–100 · dynamic range 10²⁵–10³² (most extreme)</div>
+          <div class="infra-detail" style="margin-top:0.8rem;"><strong>Level-4 mpmath rank:</strong> 667/15,000 rows (4.4%)</div>
+          <div class="progress-bar-container">
+            <div class="progress-label"><span>4.4%</span><span>ETA ~574h · rank=667, plateau=0</span></div>
+            <div class="progress-track"><div class="progress-fill fill-amber" style="width:4.4%"></div></div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="label">Lambdify Pipeline (4-layer fallback)</div>
-          <div style="font-size:0.78rem; color:var(--text-secondary); line-height:1.7;">
-            <div><strong style="color:var(--text-primary)">L1:</strong> sp.lambdify (fast numpy)</div>
-            <div><strong style="color:var(--text-primary)">L2:</strong> Flat-file no-CSE (pycode → temp .py)</div>
-            <div><strong style="color:var(--text-primary)">L3:</strong> Flat-file with CSE</div>
-            <div><strong style="color:var(--text-primary)">L4:</strong> Point-by-point xreplace (~1000× slower)</div>
-          </div>
+        <div class="infra-card">
+          <h4>Cost History</h4>
+          <div class="infra-detail"><strong>Original campaign:</strong> ~$800–1,000 (19 instances, single-threaded, 48h)</div>
+          <div class="infra-detail"><strong>With multiprocessing:</strong> ~$100–125 equivalent</div>
+          <div class="infra-detail"><strong>1/r² atlas (w/ fixes):</strong> $2.50 (was projected $28)</div>
+          <div class="infra-detail"><strong>Parametric sweep estimate:</strong> $13–50 (Tier 3 hybrid)</div>
+          <div class="infra-detail"><strong>Atlas fleet peak:</strong> $435/day (16 atlas + 1 mpmath)</div>
         </div>
 
-        <div class="card">
-          <div class="label">AWS Campaign</div>
-          <div style="font-size:0.78rem; color:var(--text-secondary); line-height:1.7;">
-            <div><strong style="color:var(--text-primary)">S3:</strong> s3://3body-compute-290318/</div>
-            <div><strong style="color:var(--text-primary)">Atlas:</strong> r6i.4xlarge (16 vCPU, 128 GB)</div>
-            <div><strong style="color:var(--text-primary)">mpmath:</strong> r6i.8xlarge → r6a.8xlarge (spot)</div>
-            <div><strong style="color:var(--text-primary)">Total data:</strong> 9.04 GB synced locally</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="label">Cost History</div>
-          <div style="font-size:0.78rem; color:var(--text-secondary); line-height:1.7;">
-            <div><strong style="color:var(--text-primary)">Original campaign:</strong> ~$800–1,000</div>
-            <div><strong style="color:var(--text-primary)">With multiprocessing:</strong> ~$100 equiv</div>
-            <div><strong style="color:var(--text-primary)">1/r² atlas:</strong> $2.50</div>
-            <div><strong style="color:var(--text-primary)">Fleet peak:</strong> $435/day</div>
-          </div>
-        </div>
-      </div>
-
-      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--red); margin:1rem 0 0.6rem;">Known Issues</h3>
-      <div class="card" style="border-left: 2px solid var(--red);">
-        <div style="font-size:0.78rem; line-height:1.8;">
-          <div style="color:var(--red);">Yukawa lambdification: OOM/recursion on deeply nested exp(-μ/u)</div>
-          <div style="color:var(--amber);">SymPy version sensitivity: ≤1.10.1 fails 63/156 L3 expressions</div>
-          <div style="color:var(--amber);">Level-4 mpmath cache: 243 MB, needs S3 sync</div>
-          <div style="color:var(--text-secondary);">Li⁺ dim=111, H₂⁺ dim=115: SVD artifact or real physics? Under investigation</div>
+        <div class="infra-card">
+          <h4>Known Issues</h4>
+          <div class="infra-detail" style="color:var(--red);">Yukawa lambdification: OOM/recursion on deeply nested exp(-μ/u)</div>
+          <div class="infra-detail" style="color:var(--amber);">SymPy version sensitivity: 1.10.1 fails 63/156 L3 expressions</div>
+          <div class="infra-detail" style="color:var(--amber);">Level-4 mpmath derivatives cache: 243 MB, must sync to S3</div>
+          <div class="infra-detail" style="color:var(--text-secondary);">Li⁺ dim=111, H₂⁺ dim=115: SVD artifact or real physics? Under investigation</div>
         </div>
       </div>
     </div>
 
-  </div><!-- /content -->
-</div><!-- /main -->
+  </div><!-- end .content -->
+</div><!-- end .main -->
 
 <script>
 function showSection(el) {
