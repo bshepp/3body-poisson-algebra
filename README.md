@@ -39,6 +39,12 @@ The harmonic potential (r²) produces a finite-dimensional algebra closing at di
 
 Dense numerical survey of V = −u^p for 79+ rational p-values confirms [3, 6, 17] is universal across all exponents with a single exception: p = −2 (harmonic oscillator, V = −r²) gives [3, 6, 13]. The transition is **infinitely sharp** — even p = −2 ± 0.001 gives dim = 17. The n→0⁺ degeneration test confirms the transition is topological (rank jumps discretely, never degrades continuously). See `nbody/symbolic_n_proof.py` for the survey scripts.
 
+### Neural network training dynamics (April 2026)
+
+A 3-layer linear network `f(x) = w₃·w₂·w₁·x` trained with SGD+momentum defines a Hamiltonian system on 6D phase space with gradient-product pairwise coupling `V_ij = (∂L/∂wᵢ)(∂L/∂wⱼ)/2`. The resulting Poisson algebra has dimension sequence **[3, 6, 17, 119]** (exact over ℚ) — 3 extra generators at level 3 compared to the gravitational universal [3, 6, 17, 116].
+
+The 3 extra generators all transform in the standard (2D) representation of S₃ and prominently involve H₂₃ at the outermost bracket level. The gradient-product potential has polynomial degree 10 (vs degree 1 for gravitational −u_ij), enabling richer bracket structure. Compare: quantum ℏ-deformation adds 1 generator (117 vs 116). See [`neural/`](neural/) for scripts and detailed characterization.
+
 ### GUE log-gas and prime number distribution (April 2026, in progress)
 
 The Montgomery-Odlyzko law states that nontrivial zeros of the Riemann zeta function have pair correlations matching GUE random matrix eigenvalues. The GUE joint density P(t₁,...,tₙ) ∝ ∏|tᵢ−tⱼ|² · exp(−½Σtᵢ²) is a Boltzmann weight whose energy decomposes into pairwise Hamiltonians H_ij = −2 log|tᵢ−tⱼ| + harmonic confinement — exactly the 1D N-body problem with logarithmic potential and harmonic trap.

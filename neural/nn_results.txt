@@ -1,0 +1,46 @@
+NEURAL NETWORK POISSON BRACKET ALGEBRA RESULTS
+==================================================
+
+Reference: 3-body gravity [3, 6, 17, 116]
+Reference: Harmonic       [3, 6, 13, 15]
+
+Potential: Linear NN (gradient-product coupling)
+  Dimensions: [3, 6, 17, 119]
+  New-per-level: [3, 3, 11, 102]
+  Stabilised: False
+  Generators: 156 (non-zero: 156)
+
+EXTRA GENERATOR ANALYSIS (neural 119 vs gravitational 116)
+============================================================
+
+Method:
+  Neural:        Exact rank via incremental Gaussian elimination over QQ
+                 (6-variable polynomials, 6097 monomials, 25.5s)
+  Gravitational: Numerical rank via SVD gap-ratio detection
+                 (15 variables, 2000 samples, gap threshold 1e6, 127.6s)
+
+Confirmed dimensions:
+  Neural:        [3, 6, 17, 119]  (exact over QQ)
+  Gravitational: [3, 6, 17, 116]  (SVD gap ratio 1.44e+14 at level 2)
+
+3 extra generators (all at level 3):
+
+  [125] {{K2,H23},{K3,H23}}
+         502 terms, momentum degrees 1/3, S3 representation: standard (2D)
+
+  [128] {{K2,K3},H23}
+         258 terms, momentum degrees 0/2, S3 representation: standard (2D)
+
+  [152] {{K3,H23},H23}
+         73 terms, momentum degrees 1/3, S3 representation: standard (2D)
+
+Structural observations:
+  - All 3 extra generators prominently involve H23 at the outermost level
+  - All transform in the 2-dimensional standard representation of S3
+  - Momentum parity split: 2 odd (v^1/v^3) + 1 even (v^0/v^2)
+  - Compare: quantum hbar deformation adds 1 generator (117 vs 116),
+    neural gradient coupling adds 3 (119 vs 116)
+  - The gradient-product potential V_ij = (dL/dw_i)(dL/dw_j)/2 has
+    polynomial degree 10 vs degree 1 for gravitational -u_ij, allowing
+    richer bracket structure at level 3
+
