@@ -48,6 +48,7 @@ See revised statement in Section 4 below.
 | Charge-sign invariance (1/r²) | **Dimension preserved**, gap structure differs (Mar 2026): rank=116 at most grid points but gap correlation r≈0.76 vs r≈0.85 for 1/r | Deeper investigation needed |
 | Yukawa (e^{-μr}/r) potential | **BLOCKED** (Mar 2026) — atlas scans failed OOM; lambdification recursion issue. Instances terminated. | — |
 | **Shape sphere atlas universality** | **Confirmed** (Mar 2026, extended Apr 2026): rank 116 is the mode across 85–93% of shape sphere for 11 equal-mass configurations (75% for log); extreme mass ratio systems show non-trivial rank (91–108) across 100% of grid with zero failures | Rank deficit at extreme mass ratios is numerical (SVD conditioning at dynamic ranges 10²⁰–10³²), not algebraic |
+| **Neural network coupling (non-physical)** | **[3, 6, 17, 119]** (Apr 2026) — gradient-product coupling V_ij = (∂L/∂w_i)(∂L/∂w_j)/2 for 3-layer linear network. 3 extra generators at level 3 (all S₃ standard rep, all involving H₂₃). Exact rank over ℚ. | First coupling to break level-3 universality. Confirms 116 is specific to singular/physical potentials, not a generic 3-body property. Strengthens the conjecture by sharpening its scope. |
 
 ### Why it might be true — and where it breaks
 

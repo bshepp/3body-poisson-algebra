@@ -34,6 +34,7 @@ by estimated value per compute-hour.
 | **Paper 1 (preprint.tex)** | Dimension sequence, mass invariance, potential comparison (Mar 2026) |
 | **Paper 2 (paper2_s3_filtration.tex)** | S₃ tier decomposition, jet filtration, syzygies (Mar 2026) |
 | **Paper 3 (paper3_universality.tex)** | N=4 sequence, d-independence, 1/r³, charge-sign, universality conjecture (Mar 2026) |
+| **Neural network algebra** | Gradient-product coupling gives [3, 6, 17, **119**] — 3 extra generators vs gravitational 116. First non-physical coupling to break level-3 universality (Apr 2026) |
 
 ---
 

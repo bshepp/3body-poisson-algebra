@@ -132,6 +132,15 @@ Testing whether the Poisson algebra of the Dyson log-gas (the Hamiltonian system
 | 9 | ~~N=7 d=1 Level 2~~ | **DONE** — [21, 56, 476]. See Completed — N=7 below. |
 | 8 | **Structure extraction at level 3 (rank 116)** | Level-2 structure computed for 6 potentials. Level 3 requires AWS. |
 
+### Completed — Neural Network Algebra (April 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **Neural algebra computation** | Gradient-product coupling V_ij = (∂L/∂w_i)(∂L/∂w_j)/2 for 3-layer linear network. Exact rank over ℚ: **[3, 6, 17, 119]**. |
+| 2 | **Gravitational comparison** | SVD gap-ratio 1.44×10¹⁴ confirms [3, 6, 17, 116]. Neural has 3 extra generators at level 3. |
+| 3 | **Extra generator identification** | Indices 125, 128, 152 — all S₃ standard rep (E), all involve H₂₃. Bracket structures: {{K₂,H₂₃},{K₃,H₂₃}}, {{K₂,K₃},H₂₃}, {{K₃,H₂₃},H₂₃}. |
+| 4 | **Universality implication** | Level-2 universality ([3, 6, 17]) extends to non-physical couplings. Level-3 dimension (116) is specific to singular pairwise potentials. |
+
 ### Completed — Algebra Structure (April 9, 2026)
 
 | # | Task | Result |
