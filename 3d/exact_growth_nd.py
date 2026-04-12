@@ -33,6 +33,12 @@ from time import time
 import sympy as sp
 from sympy import Symbol, symbols, diff, Integer, cancel, expand
 
+if tuple(int(x) for x in sp.__version__.split('.')[:3]) < (1, 13, 3):
+    raise RuntimeError(
+        f"SymPy >= 1.13.3 required (found {sp.__version__}). "
+        "Older versions produce incorrect results for unequal-mass systems."
+    )
+
 os.environ["PYTHONUNBUFFERED"] = "1"
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))

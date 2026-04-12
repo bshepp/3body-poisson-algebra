@@ -30,6 +30,12 @@ sys.setrecursionlimit(500000)
 import sympy as sp
 from sympy import symbols, diff, Integer, cancel, Rational, expand
 
+if tuple(int(x) for x in sp.__version__.split('.')[:3]) < (1, 13, 3):
+    raise RuntimeError(
+        f"SymPy >= 1.13.3 required (found {sp.__version__}). "
+        "Older versions produce incorrect results for unequal-mass systems."
+    )
+
 # Force unbuffered output
 os.environ["PYTHONUNBUFFERED"] = "1"
 
@@ -406,51 +412,6 @@ def sample_phase_space(n, seed=42, pos_range=3.0, mom_range=1.0,
 # =====================================================================
 # Lambdify a list of SymPy expressions (with CSE)
 # =====================================================================
-def _expr_to_chunked_lines(expr, target_var, indent="    ",
-                           max_terms_per_line=50):
-    """
-    Convert a SymPy expression into chunked Python lines that avoid
-    deep AST nesting.  Instead of one giant return expression, we
-    accumulate into a variable in chunks.
-    """
-    terms = sp.Add.make_args(expr)
-    if len(terms) <= max_terms_per_line:
-        return [f"{indent}{target_var} = {sp.pycode(expr)}"]
-
-    lines = [f"{indent}{target_var} = 0"]
-    for i in range(0, len(terms), max_terms_per_line):
-        chunk = terms[i:i + max_terms_per_line]
-        chunk_expr = sp.Add(*chunk)
-        lines.append(f"{indent}{target_var} += {sp.pycode(chunk_expr)}")
-    return lines
-
-
-def _make_flat_func(expr, func_name="_f"):
-    """
-    Build a flat (non-nested) numpy function for a SymPy expression.
-    Uses CSE for efficiency and chunked code generation to avoid
-    Python's compile() recursion limit on deeply nested ASTs.
-    """
-    replacements, reduced = sp.cse([expr])
-
-    var_str = ", ".join(str(v) for v in ALL_VARS)
-    lines = [f"def {func_name}({var_str}):"]
-
-    for sym, sub_expr in replacements:
-        lines.extend(_expr_to_chunked_lines(sub_expr, str(sym)))
-
-    lines.extend(_expr_to_chunked_lines(reduced[0], "_result"))
-    lines.append("    return _result")
-
-    code = "\n".join(lines)
-    namespace = {
-        "sqrt": np.sqrt,
-        "math": __import__("math"),
-    }
-    exec(compile(code, "<generated>", "exec"), namespace)
-    return namespace[func_name]
-
-
 def _expr_to_chunked_lines(expr, target_var, indent="    ",
                            max_terms_per_line=50):
     """Break large additions into chunked += lines to avoid deep AST."""

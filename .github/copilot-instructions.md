@@ -62,7 +62,10 @@ fleet orchestration. Ignore for library extraction; keep in experiment repo.
 - **Language:** Python 3.10+
 - **Dependencies:** numpy, scipy, sympy (≥1.13.3 required — 1.10.x has
   lambdify bugs), mpmath, matplotlib
-- **No build system, no test framework yet** — scripts run standalone
+- **Test suite:** `python test_regression.py` (SymPy version + dimension
+  sequence checks for all three engines)
+- **CI:** GitHub Actions (`.github/workflows/regression.yml`) — Python
+  3.10 + 3.12 matrix, runs on push/PR to main
 - **Run any script:** `python <script>.py`
 - **Heavy computation:** Atlas scans dispatch to AWS EC2 spot instances;
   local runs use `multiprocessing`

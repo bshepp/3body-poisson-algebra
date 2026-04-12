@@ -24,12 +24,17 @@ Usage:
 import os
 import sys
 import argparse
-import json
 import numpy as np
 from time import time
 
 import sympy as sp
 from sympy import symbols, diff, Integer, cancel, expand
+
+if tuple(int(x) for x in sp.__version__.split('.')[:3]) < (1, 13, 3):
+    raise RuntimeError(
+        f"SymPy >= 1.13.3 required (found {sp.__version__}). "
+        "Older versions produce incorrect results for unequal-mass systems."
+    )
 
 os.environ["PYTHONUNBUFFERED"] = "1"
 

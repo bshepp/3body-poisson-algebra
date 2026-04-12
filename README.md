@@ -256,6 +256,8 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 
 ```bash
 pip install -r requirements.txt
+# ⚠️  SymPy >= 1.13.3 is required — older versions produce incorrect
+#    results for unequal-mass systems (the 1.10.x lambdify bug).
 
 # Levels 0–3 (equal masses, ~10 min)
 python exact_growth.py
@@ -326,6 +328,22 @@ cd nbody && python run_pn_aws.py --max-level 3 --samples 500
 ```
 
 The survey is designed for AWS spot instances with S3 checkpointing, SIGTERM handling, and automatic resume. See `infra/userdata_expansion_*.sh` for bootstrap scripts.
+
+## Testing
+
+Run the regression suite locally:
+
+```bash
+python test_regression.py
+```
+
+This checks:
+- SymPy version ≥ 1.13.3 (required for correct unequal-mass results)
+- `NBodyAlgebra` (N=3, 1/r): levels 0–2 give dimensions [3, 6, 17]
+- Planar engine (`exact_growth.py`): levels 0–2 give [3, 6, 17]
+- `ThreeBodyAlgebra` (d=2): levels 0–1 give [3, 6]
+
+GitHub Actions CI runs on every push and PR to `main`, testing Python 3.10 and 3.12. See [.github/workflows/regression.yml](.github/workflows/regression.yml).
 
 ## Key insights
 

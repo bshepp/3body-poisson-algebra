@@ -32,6 +32,12 @@ import sympy as sp
 from sympy import (Symbol, symbols, diff, Integer, Rational, cancel, expand,
                    log as sp_log, exp as sp_exp)
 
+if tuple(int(x) for x in sp.__version__.split('.')[:3]) < (1, 13, 3):
+    raise RuntimeError(
+        f"SymPy >= 1.13.3 required (found {sp.__version__}). "
+        "Older versions produce incorrect results for unequal-mass systems."
+    )
+
 os.environ["PYTHONUNBUFFERED"] = "1"
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -39,6 +45,14 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 COORD_LABELS = {1: ["x"], 2: ["x", "y"], 3: ["x", "y", "z"]}
 
 VALID_POTENTIALS = ("1/r", "1/r^2", "1/r^3", "1/r^4", "log", "yukawa")
+
+def _parse_power_potential(pot_str):
+    """Parse '1/r^n' for arbitrary integer n >= 1.  Returns n or None."""
+    import re
+    m = re.fullmatch(r'1/r\^?(\d+)?', pot_str)
+    if m:
+        return int(m.group(1)) if m.group(1) else 1
+    return None
 
 
 class NBodyAlgebra:
@@ -77,10 +91,14 @@ class NBodyAlgebra:
 
         if potential_params is not None and potential not in ("yukawa", "log"):
             potential = "composite"
+        # Accept arbitrary 1/r^n potentials
+        self._general_power = _parse_power_potential(potential)
         if (potential not in ("composite", "yukawa", "log")
-                and potential not in VALID_POTENTIALS):
-            raise ValueError(f"potential must be one of {VALID_POTENTIALS} "
-                             f"or 'composite' (got {potential!r})")
+                and potential not in VALID_POTENTIALS
+                and self._general_power is None):
+            raise ValueError(f"potential must be one of {VALID_POTENTIALS}, "
+                             f"'1/r^n' for integer n, or 'composite' "
+                             f"(got {potential!r})")
         if potential == "composite" and not potential_params:
             raise ValueError("potential_params required for composite potential")
 
@@ -212,12 +230,18 @@ class NBodyAlgebra:
                     V = -mi * mj * u * sp_exp(-mu_param / u)
                 H = kinetic(bi) + kinetic(bj) + V
             elif charges is not None:
-                pot_power = {"1/r": 1, "1/r^2": 2, "1/r^3": 3, "1/r^4": 4}[self.potential]
+                _power_map = {"1/r": 1, "1/r^2": 2, "1/r^3": 3, "1/r^4": 4}
+                pot_power = _power_map.get(self.potential, self._general_power)
+                if pot_power is None:
+                    raise ValueError(f"Cannot determine power for {self.potential!r}")
                 qi = Integer(charges[bi]) if isinstance(charges[bi], int) else charges[bi]
                 qj = Integer(charges[bj]) if isinstance(charges[bj], int) else charges[bj]
                 H = kinetic(bi) + kinetic(bj) + qi * qj * u ** pot_power
             else:
-                pot_power = {"1/r": 1, "1/r^2": 2, "1/r^3": 3, "1/r^4": 4}[self.potential]
+                _power_map = {"1/r": 1, "1/r^2": 2, "1/r^3": 3, "1/r^4": 4}
+                pot_power = _power_map.get(self.potential, self._general_power)
+                if pot_power is None:
+                    raise ValueError(f"Cannot determine power for {self.potential!r}")
                 H = kinetic(bi) + kinetic(bj) - mi * mj * u ** pot_power
 
             if self.external_potential is not None:
@@ -758,6 +782,10 @@ class NBodyAlgebra:
               f"({self.n_q} positions + {self.n_p} momenta) "
               f"+ {n_pairs} auxiliary u_ij")
         print(f"  Potential: {pot_label}")
+        if self.masses is not None:
+            mass_str = ", ".join(f"m{b}={self.masses[b]}"
+                                for b in range(1, N + 1))
+            print(f"  Masses: {mass_str}")
         if self.potential == "composite":
             for coeff, power in self.potential_params:
                 print(f"    term: {coeff} * u^{power}")
@@ -1026,9 +1054,20 @@ def main():
                     help="Random seed (default: 42)")
     ap.add_argument("--resume", action="store_true",
                     help="Resume from last checkpoint")
+    ap.add_argument("--masses", type=str, default=None,
+                    help="Comma-separated masses, e.g. '1,2,3' for m1=1,m2=2,m3=3. "
+                         "Supports fractions like '1,1/2,1/3'. Default: equal unit masses.")
     ap.add_argument("--save-svd", action="store_true",
                     help="Save full SVD components (U, s, Vt, null/column space)")
     args = ap.parse_args()
+
+    # Parse masses
+    masses = None
+    if args.masses:
+        mass_vals = [sp.Rational(m.strip()) for m in args.masses.split(",")]
+        if len(mass_vals) != args.bodies:
+            raise ValueError(f"--masses expects {args.bodies} values, got {len(mass_vals)}")
+        masses = {i + 1: mass_vals[i] for i in range(args.bodies)}
 
     potential_params = None
     if args.composite:
@@ -1048,6 +1087,7 @@ def main():
         n_bodies=args.bodies,
         d_spatial=args.dim,
         potential=args.potential,
+        masses=masses,
         potential_params=potential_params,
         external_potential=external_potential,
     )
