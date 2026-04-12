@@ -5709,3 +5709,82 @@ All results synced to S3 before instance termination. Key artifacts:
 - `s3://3body-compute-290318/results/symbolic_rank/N5_d1_level3/checkpoints/generators_level3.pkl` (3.6 GB — all 1.1M brackets, reusable)
 - Local copies: `results/symbolic_rank/rank_N{3,4}_d1_1r.json`
 - All stopped EC2 instances terminated (4 instances, saving ~$32/mo EBS)
+
+---
+
+## Binary BH+NS Atlas Completion & Charge Sweep Crash (April 11, 2026, afternoon)
+
+### Charge Sensitivity Sweep — Crash Diagnosis
+
+Local process PID 21428 (`charge_sensitivity_sweep.py --phase sweep_qqn`)
+appeared frozen at `eval 20/156 [55.9s]` for over an hour.
+
+**Diagnosis (two phases):**
+1. Initial check: CPU counters showed +120s in 5 real seconds (~24 cores
+   burning). Process was alive and working hard. Print interval is 20
+   generators — with complex expressions this gap can be 30–60+ minutes.
+2. Later: PID 21428 gone. No `charge_sensitivity_completion.json` written.
+   Crash occurred during or after the `evaluate(Z_qp, Z_u)` step for the
+   (+1,+1,-1) charge configuration (2000 samples, 156 generators).
+
+**Root cause:** `lambdify_generators` in `exact_growth_nbody.py` (lines
+~456–540) lambdifies each of the 156 generators individually. Any expression
+that triggers `RecursionError` during `compile()` falls back to the
+`subs()` path — SymPy `xreplace()` evaluated at each of 2,000 sample
+points one at a time. With several generators hitting the fallback, the
+2,000-point loop can take ~hours per generator.
+
+**Checkpoint status:** `nbody/checkpoints_N3_d2_1r_q1+1_q2+1_q3-1_m11_m21_m31/`
+contains `level_0.pkl` through `level_3.pkl` (timestamps 8:17–8:21 AM).
+The symbolic algebra is fully computed and checkpointed. No `sv_spectra/`
+subdirectory exists, confirming crash was during numerical evaluation only.
+
+**Recovery plan:** Restart with `--samples 500`. The `resume=True` flag in
+`compute_growth` will skip all four symbolic levels and jump directly to
+the lambdify+SVD step. At 500 samples the subs() fallback should complete
+in minutes rather than hours.
+
+### Binary BH + Neutron Star Atlas — Completed
+
+AWS instance i-0ce5a2c0f06cf7e88 (r6i.2xlarge spot) completed successfully.
+
+**Configuration:**
+- Masses: [1.0, 1.0, 0.047] — two equal-mass black holes + neutron star
+- Potential: 1/r (gravitational)
+- Grid: 100×100 (mu ∈ [0.2, 3.0], phi ∈ [0.1, π])
+- Samples: 400 per cell
+- Label: "Binary BH + Neutron Star"
+
+**Results:**
+- Exit code: 0
+- Runtime: 26,343s (~439 min, ~7.3h)
+- Rank-116 fraction: **98.7%** (9,871/10,000 cells)
+- Unique ranks observed: {112, 113, 114, 115, 116}
+- All files synced to S3: `s3://3body-compute-290318/atlas_full/binary_bh_ns_1r_m1p0_1p0_0p047/`
+
+**Physics interpretation:**
+The 5% MS mass breaks the BH↔BH exchange symmetry, which paradoxically
+*increases* universality relative to the equal-mass baseline (98.7% vs 87.9%
+for the standard 1/r equal-mass atlas). Symmetry-break hypothesis: the
+equal-mass case has a Z₂ degeneracy trench (configurations where swapping
+BH1↔BH2 collapses the SVD gap); the NS breaks this symmetry and lifts most
+of those configurations to full rank-116. The shape-sphere triptych shows the
+baseline's prominent low-rank wedge replaced by a narrow, displaced trench
+around the near-collinear NS-BH₁-BH₂ configurations.
+
+**Rendered outputs:**
+- `aws_results/atlas_figures/atlas_binary_bh_ns_1r_m1p0_1p0_0p047.png`
+  — two-panel: heatmap + shape-sphere projection
+- `aws_results/atlas_figures/triptych_binary_bh_ns_1r_m1p0_1p0_0p047.png`
+  — three-panel: equal-mass baseline | BH+BH+NS | difference map
+
+### Full S3 → Local Sync
+
+S3 bucket total: 5,191 objects, 31.0 GiB (pre-sync). Local `aws_results/`
+had 9.65 GiB. Full sync launched:
+```powershell
+aws s3 sync s3://3body-compute-290318/ aws_results\ --no-progress | Tee-Object sync_log
+```
+Downloads include para-special partial results (π, e, φ, √2, -π, -φ
+exponents, 2–7 rows each) and partial parametric data (1r-5, 1r-2, 1r0,
+1r1p01, 1r2p01 — all terminated early).

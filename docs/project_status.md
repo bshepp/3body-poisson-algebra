@@ -122,7 +122,7 @@ Testing whether the Poisson algebra of the Dyson log-gas (the Hamiltonian system
 | 1 | ~~Quantum rank for other potentials~~ | **DONE** — r², r⁴, 1/r², 1/r³, 1/r⁴ all tested. See Universality Classification above. |
 | 3 | **Parametric exponent sweep** (1,015 values of n) | Script written and multiprocessing added (`--workers 16`). First attempt April 11 — **aborted** after cost analysis. 280s/row × 50 rows × 1,007 exponents = ~$1,493 on r6i.4xlarge. Need faster approach. para-special (π, e, φ, √2, -π, -φ) still running (~$8). Partial data (2–5 rows of first exponent each) in S3 for all 5 ranges. |
 | 4 | **Dusty plasma Yukawa atlas** | Prior run failed (exit code 1). Yukawa lambdification issue. |
-| 10 | **Binary BH + Neutron Star atlas** | Running: row ~26/100, ETA ~5.4h from ~18:30 UTC April 11. r6i.2xlarge, 100×100 grid, 400 samples. |
+| 10 | ~~**Binary BH + Neutron Star atlas**~~ | **DONE** — masses [1.0, 1.0, 0.047], 100×100 grid, 400 samples; 98.7% rank-116; unique ranks {112,113,114,115,116}; 26,343s (439 min) on r6i.2xlarge. Triptych rendered (`triptych_binary_bh_ns_1r_m1p0_1p0_0p047.png`). Physics: NS at 5% mass breaks BH↔BH exchange symmetry, paradoxically *increases* universality vs equal-mass baseline (98.7% vs 87.9%). |
 | 5 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
 | 6 | **SageMath verification** | Independent verification of dimension sequence. SageMath not yet installed. |
 | 7 | ~~N=4 body Level-3~~ | **DONE** — [6, 14, 62, 1260]. new_L3(4) = 1198. See Completed — Sweep below. |
