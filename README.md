@@ -197,6 +197,11 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 │   ├── launch_gue.py           # AWS launcher
 │   └── userdata_gue.sh         # EC2 userdata template
 ├── 3d/                         # d-dimensional engine for N=3 (Paper 3)
+├── dataset/                    # Hugging Face dataset pipeline
+│   ├── build_dataset.py        # ETL: JSON results → 9 Parquet tables
+│   ├── validate_dataset.py     # Validation suite for all splits
+│   ├── README.md               # HF dataset card (YAML frontmatter + docs)
+│   └── output/                 # Generated Parquet files + dataset_info.json
 ├── results/                    # Computation logs and result JSONs
 ├── atlas_figures/              # Atlas survey figures (76 PNGs)
 ├── potential_comparison_plots/  # Paper 2 analysis figures
@@ -259,6 +264,18 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 | `primes/gue_prime_connection.tex` | Mathematical framework: Montgomery-Odlyzko → Dyson log-gas → pairwise Hamiltonians |
 | `primes/launch_gue.py` | AWS EC2 spot launcher for GUE computation |
 | `primes/userdata_gue.sh` | EC2 userdata template with S3 sync and checkpointing |
+
+## Hugging Face Dataset
+
+The project maintains a structured dataset at [huggingface.co/datasets/bshepp/pairwise-poisson-algebras](https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras) containing 9 Parquet tables (dimension sequences, structure constants, charge sensitivity, mass invariance, level-4 convergence, spectral statistics, physical systems, Bell test, and scaling formulas). After any computation campaign, rebuild the dataset:
+
+```bash
+pip install pandas pyarrow
+python dataset/build_dataset.py      # produces dataset/output/*.parquet
+python dataset/validate_dataset.py   # runs validation suite
+```
+
+See `dataset/README.md` for full schema documentation, quick-start examples, and upload instructions.
 
 ## Reproducing results
 

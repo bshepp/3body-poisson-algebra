@@ -243,3 +243,4 @@ Mark items with status as work proceeds:
 | 4.7 | 1D structure cross-section (singularity detection) | ✅ |
 | 4.8 | Level-3 structure extraction (rank 116) | 🔄 |
 | 4.9 | Symbolic Gram determinant sweep (rationalized Bareiss) | ✅ |
+| 4.10 | Rebuild HF dataset after new results (`python dataset/build_dataset.py && python dataset/validate_dataset.py`) | 🔄 |

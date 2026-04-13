@@ -125,5 +125,9 @@ infra/backup_*/
 primes/results/live.log
 primes/results/full.log
 
+# Dataset output (generated Parquet files — rebuild via python dataset/build_dataset.py)
+dataset/output/
+
 # Temp/stale files
 tmp/
+_json_inventory_tmp.txt

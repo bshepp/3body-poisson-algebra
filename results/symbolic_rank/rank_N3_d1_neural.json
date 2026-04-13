@@ -1,0 +1,28 @@
+{
+  "N": 3,
+  "d": 1,
+  "potential": "neural",
+  "potential_label": "neural_gradient_product",
+  "max_level": 3,
+  "quantum": false,
+  "bracket_type": "Poisson",
+  "n_generators": 156,
+  "n_monomials": 6097,
+  "cumulative_rank": [
+    3,
+    6,
+    17,
+    119
+  ],
+  "new_per_level": [
+    3,
+    3,
+    11,
+    102
+  ],
+  "computation_time_seconds": 25.5,
+  "computation_method": "exact_gaussian_elimination_QQ",
+  "sympy_version": "1.14.0",
+  "stabilized": false,
+  "notes": "Linear NN gradient-product coupling V_ij = (dL/dw_i)(dL/dw_j)/2. Produces 3 extra generators vs gravitational 1/r (119 vs 116), all at level 3 in standard S3 representation."
+}

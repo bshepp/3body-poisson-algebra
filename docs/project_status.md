@@ -492,6 +492,32 @@ LCM denominators: 1/r has mu^10*(mu^2-mu+1)^6, r^4 has 1, 1/r^4
 has mu^22*(mu^2-mu+1)^11. The mu^k factor encodes collision
 singularity strength; mu^2-mu+1 has no real roots.
 
+### Hugging Face Dataset Pipeline (April 12, 2026)
+
+The project maintains a structured Hugging Face dataset built from computation results. The pipeline (`dataset/build_dataset.py`) reads JSON result files and produces 9 Parquet tables:
+
+| Split | Source file(s) | Rows | Description |
+|-------|---------------|------|-------------|
+| `dimension_sequences` | `results/symbolic_rank/rank_N*.json`, `primes/results/gue_comparison.json`, `primes/results/quantum_gue.json`, `results/energy_bound/`, `nbody/n4_potential_universality_results.json` | ~45 | Cumulative rank at each bracket level per (N, d, potential) |
+| `structure_constants` | `results/algebra_structure/*/structure_constants_exact.json` | ~9 | Exact rational C^k_ij tensors at level 2 |
+| `charge_sensitivity` | `results/charge_sensitivity/charge_sensitivity_completion.json` | ~18 | Charge-independence tests |
+| `mass_invariance` | `data/mass_ratio_sweep.json` | ~19 | Mass ratio sweep with SVD spectra |
+| `level4_convergence` | `results/level4_*/results.json` | ~19 | Level-4 lower bounds |
+| `spectral_statistics` | `atlas_figures/atlas_summary.json`, `results/atlas_full/*/summary.json` | ~14 | Rank distributions across phase space |
+| `physical_systems` | `results/expansion_dimseq/expansion_dimseq_completion.json` | ~15 | Named physical systems (helium, Sun-Earth-Moon, etc.) |
+| `bell_test` | `nbody/bell_test_results/chsh_summary.json` | 9 | CHSH Bell inequality tests |
+| `scaling_formulas` | `results/analysis/nbody_scaling_formulas.json` | 5 | Closed-form L_k(N) formulas with verification status |
+
+**After any computation campaign**, rebuild the dataset:
+
+```bash
+python dataset/build_dataset.py      # reads JSON → writes Parquet
+python dataset/validate_dataset.py   # validates structure + content
+cp dataset/README.md dataset/output/README.md  # update dataset card
+```
+
+The validation script checks row counts, schema integrity, flattened dimension column consistency, and YAML frontmatter.
+
 ### Level-3 Structure Extraction (in progress, April 9–12, 2026)
 
 Running on AWS (i-003c53042d76de01b, r6i.4xlarge): exact symbolic

@@ -788,6 +788,21 @@ commutant dimension drop (classical − 1) hold for 1/r², 1/r³, etc.?
 
 ---
 
+## Structured Data Availability
+
+All quantitative data supporting these conjectures is available in the
+Hugging Face dataset (`dataset/output/`). Key splits by conjecture:
+
+- **Universality Conjecture (§1, §4)**: `dimension_sequences`, `physical_systems`, `charge_sensitivity`, `mass_invariance`
+- **Critical Locus Conjecture (§2)**: `spectral_statistics`
+- **GUE Log-Gas Conjecture (§5)**: `dimension_sequences` (rows with `physical_system` containing "GUE" or `potential` = "log")
+- **Graph-Theoretic Decomposition (§6)**: `scaling_formulas`
+- **Bell Test / Nonlocal Correlation (§8)**: `bell_test`
+
+Rebuild the dataset after new computation results: `python dataset/build_dataset.py`.
+
+---
+
 *This document is a scratch pad. If any of these ideas survive
 contact with further computation, they'll be promoted to the
 preprint or research roadmap.*
