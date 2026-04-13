@@ -1,0 +1,524 @@
+{
+  "revalidate_lithium_ion_s500": {
+    "status": "complete",
+    "result": {
+      "label": "Li+ Ion (+3, -1, -1) (500 samples)",
+      "charges": {
+        "1": 3,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 12789,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 500,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        111
+      ],
+      "dim_l3": 111,
+      "gap_l3": null,
+      "elapsed_seconds": 177.42795181274414,
+      "matches_116": false
+    },
+    "completed_at": "2026-03-24T05:44:42Z"
+  },
+  "revalidate_lithium_ion_s1000": {
+    "status": "complete",
+    "result": {
+      "label": "Li+ Ion (+3, -1, -1) (1000 samples)",
+      "charges": {
+        "1": 3,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 12789,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 1000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 187.73223733901978,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T05:47:54Z"
+  },
+  "revalidate_lithium_ion_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "Li+ Ion (+3, -1, -1) (2000 samples)",
+      "charges": {
+        "1": 3,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 12789,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 206.16037154197693,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T05:51:25Z"
+  },
+  "revalidate_lithium_ion_s5000": {
+    "status": "complete",
+    "result": {
+      "label": "Li+ Ion (+3, -1, -1) (5000 samples)",
+      "charges": {
+        "1": 3,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 12789,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 5000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 263.02119541168213,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T05:55:53Z"
+  },
+  "revalidate_h2_plus_ion_s500": {
+    "status": "complete",
+    "result": {
+      "label": "H2+ Ion (+1, +1, -1) (500 samples)",
+      "charges": {
+        "1": 1,
+        "2": 1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1836,
+        "2": 1836,
+        "3": 1
+      },
+      "n_samples": 500,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        115
+      ],
+      "dim_l3": 115,
+      "gap_l3": null,
+      "elapsed_seconds": 180.0376603603363,
+      "matches_116": false
+    },
+    "completed_at": "2026-03-24T05:58:57Z"
+  },
+  "revalidate_h2_plus_ion_s1000": {
+    "status": "complete",
+    "result": {
+      "label": "H2+ Ion (+1, +1, -1) (1000 samples)",
+      "charges": {
+        "1": 1,
+        "2": 1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1836,
+        "2": 1836,
+        "3": 1
+      },
+      "n_samples": 1000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 189.46509718894958,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T06:02:11Z"
+  },
+  "revalidate_h2_plus_ion_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "H2+ Ion (+1, +1, -1) (2000 samples)",
+      "charges": {
+        "1": 1,
+        "2": 1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1836,
+        "2": 1836,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 208.060405254364,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T06:05:44Z"
+  },
+  "revalidate_h2_plus_ion_s5000": {
+    "status": "complete",
+    "result": {
+      "label": "H2+ Ion (+1, +1, -1) (5000 samples)",
+      "charges": {
+        "1": 1,
+        "2": 1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1836,
+        "2": 1836,
+        "3": 1
+      },
+      "n_samples": 5000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 262.4215090274811,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T06:10:11Z"
+  },
+  "sweep_qnn_q1_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, -1, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 208.328684091568,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T06:13:44Z"
+  },
+  "sweep_qnn_q2_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "(+2, -1, -1) unit masses",
+      "charges": {
+        "1": 2,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 208.27067112922668,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T06:17:17Z"
+  },
+  "sweep_qnn_q3_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "(+3, -1, -1) unit masses",
+      "charges": {
+        "1": 3,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 208.068505525589,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T06:20:50Z"
+  },
+  "sweep_qnn_q4_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "(+4, -1, -1) unit masses",
+      "charges": {
+        "1": 4,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 709.614381313324,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T06:32:46Z"
+  },
+  "sweep_qnn_q5_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "(+5, -1, -1) unit masses",
+      "charges": {
+        "1": 5,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 709.5906355381012,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T06:44:41Z"
+  },
+  "sweep_qnn_q6_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "(+6, -1, -1) unit masses",
+      "charges": {
+        "1": 6,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 715.925511598587,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T06:56:44Z"
+  },
+  "sweep_qnn_q8_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "(+8, -1, -1) unit masses",
+      "charges": {
+        "1": 8,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 712.4067661762238,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T07:08:43Z"
+  },
+  "sweep_qnn_q10_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "(+10, -1, -1) unit masses",
+      "charges": {
+        "1": 10,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 714.4140915870667,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T07:20:45Z"
+  },
+  "sweep_qnn_q15_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "(+15, -1, -1) unit masses",
+      "charges": {
+        "1": 15,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 717.510591506958,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T07:32:51Z"
+  },
+  "sweep_qnn_q20_s2000": {
+    "status": "complete",
+    "result": {
+      "label": "(+20, -1, -1) unit masses",
+      "charges": {
+        "1": 20,
+        "2": -1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 2000,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 714.4885349273682,
+      "matches_116": true
+    },
+    "completed_at": "2026-03-24T07:44:53Z"
+  }
+}

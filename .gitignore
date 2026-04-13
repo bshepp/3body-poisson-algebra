@@ -103,5 +103,27 @@ docs/email_draft.md
 # Computation logs (large, regeneratable)
 results/symbolic_rank/*.log
 
+# AWS lifecycle and heartbeat markers (ephemeral)
+**/heartbeat.json
+**/instance_heartbeat.json
+**/aws_completion.json
+
+# Computation logs in results/ (large, regeneratable from S3)
+results/**/live.log
+results/**/full.log
+results/sc_*.log
+results/targeted_*.log
+results/targeted_*heartbeat.json
+
+# Infra computation logs (large, ephemeral N=5/energy-bound iteration logs)
+infra/*.log
+
+# Infra backups (ephemeral instance data, synced from S3)
+infra/backup_*/
+
+# Primes computation logs (regeneratable from S3)
+primes/results/live.log
+primes/results/full.log
+
 # Temp/stale files
 tmp/

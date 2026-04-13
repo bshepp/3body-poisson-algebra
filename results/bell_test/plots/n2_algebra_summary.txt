@@ -1,0 +1,6 @@
+N=2 Poisson Algebra Baseline
+============================
+For N=2 (one pairwise interaction H12), the Poisson bracket
+{H12, H12} = 0 trivially. The algebra closes at dimension 1.
+All algebraic structure beyond the Hamiltonian is intrinsic to N >= 3.
+This is expected: the 2-body Kepler problem is integrable.

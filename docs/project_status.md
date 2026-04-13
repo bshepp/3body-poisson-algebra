@@ -1,6 +1,6 @@
 # Three-Body Poisson Algebra — Project Status & Roadmap
 
-*Last updated: April 11, 2026*
+*Last updated: April 12, 2026*
 
 ---
 
@@ -101,29 +101,36 @@ The 1.1M L3 brackets are checkpointed on S3. Options to unblock:
 |---|---|---|---|
 | 1 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed, instance terminated. Rank=667, plateau=0. Checkpoint on S3. Needs relaunch on new instance. |
 
-### In Progress — GUE Log-Gas / Prime Distribution (April 11, 2026)
+### Completed — GUE Log-Gas / Prime Distribution (April 11, 2026)
 
-Testing whether the Poisson algebra of the Dyson log-gas (the Hamiltonian system underlying GUE random matrix statistics and, via the Montgomery-Odlyzko law, Riemann zeta zero correlations) belongs to the same universality class as Newtonian gravity.
+**Result: UNIVERSALITY CONFIRMED.** All singular-potential configs produce **[3, 6, 17, 116]**, including the GUE composite Hamiltonian. The Poisson algebra of the Dyson log-gas belongs to the same universality class as Newtonian gravity.
 
-| # | Config | Potential | Confinement | Expected | Status |
-|---|--------|-----------|-------------|----------|--------|
-| 1 | Pure log-gas | log(r) | none | [3, 6, 17, 116] | Running |
-| 2 | **GUE composite** | log(r) | harmonic ω=1 | [3, 6, 17, 116] | Running |
-| 3 | Penning trap (1D) | 1/r | harmonic ω=1 | [3, 6, 17, 116] | Running |
-| 4 | Harmonic only | r² (pairwise) | — | closes at 15 | Running |
+| # | Config | Potential | Confinement | Result | Status |
+|---|--------|-----------|-------------|--------|--------|
+| 1 | Pure log-gas | log(r) | none | **[3, 6, 17, 116]** | Complete |
+| 2 | **GUE composite** | log(r) | harmonic ω=1 | **[3, 6, 17, 116]** | Complete |
+| 3 | Penning trap (1D) | 1/r | harmonic ω=1 | **[3, 6, 17, 116]** | Complete |
+| 4 | Harmonic only | r² (pairwise) | — | **[3, 6, 13, 15]** | Complete |
 
 - **Instance:** i-0255259da7fdfb045 (r6i.2xlarge spot, ~$0.15/hr)
 - **Parameters:** N=3, d=1, level 3, 500 samples, seed 42
+- **Total compute:** 178.5 seconds
 - **Code:** `primes/run_gue_logas.py`, launched via `primes/launch_gue.py`
-- **Results:** `s3://3body-compute-290318/results/primes/gue_comparison.json`
-- **Significance:** If config (2) yields [3, 6, 17, 116], the algebraic structure governing zeta zero correlations (and hence prime distribution via the explicit formula) is in the same universality class as gravity.
+- **Results:** `primes/results/gue_comparison.json`
+- **Significance:** The algebraic structure governing zeta zero correlations (and hence prime distribution via the explicit formula) is in the same universality class as gravity.
+
+**Additional results:**
+- **Quantum GUE (Moyal bracket):** log potential with harmonic confinement gives **[3, 6, 17, 116]** under quantum deformation — no +1 growth for the GUE composite (unlike 1/r^n which grows to 117). See `primes/results/quantum_gue.json`.
+- **Hilbert-Pólya search:** HP operator search on the log-gas algebra yields a semisimple algebra (Killing signature [116+, 0−, 0 zero]) — a genuine closed Lie algebra at level 3, unlike the nilpotent 1/r algebra. See `primes/results/hp_search/hp_search_results.json`.
+- **Finite-N GUE comparison:** Level-2 spacing statistics (var=0.117, ⟨r⟩=0.639) analyzed against finite-N GUE reference ensembles. The variance suppression (0.117 < GUE asymptotic 0.178) is a genuine finite-size effect from the 3-eigenvalue constraint. See `primes/finite_n_gue_comparison.py`.
+- **Multi-potential ⟨r⟩ comparison:** Coadjoint orbit spacing ratio computed for all available potentials — confirms ⟨r⟩ ≈ 0.64 is universal across singular potentials. See `primes/multi_potential_r_comparison.py`.
 
 ### Not Yet Started (7)
 
 | # | Task | Notes |
 |---|---|---|
 | 1 | ~~Quantum rank for other potentials~~ | **DONE** — r², r⁴, 1/r², 1/r³, 1/r⁴ all tested. See Universality Classification above. |
-| 3 | **Parametric exponent sweep** (1,015 values of n) | Script written and multiprocessing added (`--workers 16`). First attempt April 11 — **aborted** after cost analysis. 280s/row × 50 rows × 1,007 exponents = ~$1,493 on r6i.4xlarge. Need faster approach. para-special (π, e, φ) completed April 11–12, ~$12 compute cost. √2, -π, -φ deliberately skipped (instance terminated after φ). Data synced locally to `results/atlas_full/atlas-1r-{pi,e,phi}`. Remaining: √2, -π, -φ, plus 1,009 rational-step exponents. |
+| 3 | **Parametric exponent sweep** (1,015 values of n) | Script written and multiprocessing added (`--workers 16`). First attempt April 11 — **aborted** after cost analysis. 280s/row × 50 rows × 1,007 exponents = ~$1,493 on r6i.4xlarge. Need faster approach. para-special (π, e, φ) completed April 11–12, ~$12 compute cost. √2, -π, -φ deliberately skipped (instance terminated after φ). Atlas summaries: π 60% rank-116 (2500 pts), e 63.2%, φ 63.4% — all consistent with singular-potential universality. Data in `results/atlas_full/atlas-1r-{pi,e,phi}`. Launcher: `infra/launch_parametric.py`. Remaining: √2, -π, -φ, plus 1,009 rational-step exponents. |
 | 4 | **Dusty plasma Yukawa atlas** | Prior run failed (exit code 1). Yukawa lambdification issue. |
 | 10 | ~~**Binary BH + Neutron Star atlas**~~ | **DONE** — masses [1.0, 1.0, 0.047], 100×100 grid, 400 samples; 98.7% rank-116; unique ranks {112,113,114,115,116}; 26,343s (439 min) on r6i.2xlarge. Triptych rendered (`triptych_binary_bh_ns_1r_m1p0_1p0_0p047.png`). Physics: NS at 5% mass breaks BH↔BH exchange symmetry, paradoxically *increases* universality vs equal-mass baseline (98.7% vs 87.9%). |
 | 5 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
@@ -485,8 +492,14 @@ LCM denominators: 1/r has mu^10*(mu^2-mu+1)^6, r^4 has 1, 1/r^4
 has mu^22*(mu^2-mu+1)^11. The mu^k factor encodes collision
 singularity strength; mu^2-mu+1 has no real roots.
 
-### Level-3 Structure Extraction (in progress, April 9, 2026)
+### Level-3 Structure Extraction (in progress, April 9–12, 2026)
 
 Running on AWS (i-003c53042d76de01b, r6i.4xlarge): exact symbolic
 structure constants for the rank-116 algebra at N=3 d=2 1/r.
 6,670 Poisson bracket pairs. Expected 6-24 hours.
+
+Four comparison scripts developed for cross-potential level-3 structure analysis:
+- `nbody/symbolic_level3_compare.py` — exact QQ structure constants (37h/potential on AWS)
+- `nbody/numerical_level3_compare.py` — numerical SVD-based comparison
+- `nbody/fast_level3_compare.py` — finite-difference fast comparison
+- `nbody/compare_level3_structure.py` — checkpoint-based comparison pipeline

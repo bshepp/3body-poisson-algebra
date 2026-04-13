@@ -229,7 +229,7 @@ Mark items with status as work proceeds:
 | 2.5 | S₄ tier decomposition | ⬜ |
 | 2.6 | Harmonic dim=15 derivation | ⬜ |
 | 2.7 | H₃⁺ and ozone | ⬜ |
-| 3.1 | Parametric exponent sweep | ⬜ |
+| 3.1 | Parametric exponent sweep | 🔄 (π, e, φ done; full sweep pending cost optimization) |
 | 3.2 | Yukawa debugging + run | ❌ |
 | 3.3 | Re-run 7 retracted gravitational configs | ⬜ |
 | 3.4 | Complete interrupted atlases | ✅ |

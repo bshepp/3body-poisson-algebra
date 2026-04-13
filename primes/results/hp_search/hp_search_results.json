@@ -1,0 +1,43 @@
+{
+  "N": 3,
+  "d": 1,
+  "potential": "log",
+  "external_potential": {
+    "omega": 1.0
+  },
+  "max_level": 3,
+  "n_generators": 156,
+  "rank": 116,
+  "dimension_sequence": [
+    3,
+    6,
+    17,
+    116
+  ],
+  "killing_signature": [
+    116,
+    0,
+    0
+  ],
+  "killing_trace": 8862264867807.723,
+  "is_semisimple": true,
+  "derived_series": [
+    116,
+    116
+  ],
+  "is_solvable": false,
+  "solvability_length": null,
+  "lower_central_series": [
+    116,
+    116
+  ],
+  "is_nilpotent": false,
+  "nilpotency_class": null,
+  "center_dimension": 0,
+  "levi_semisimple_dim": 116,
+  "levi_radical_dim": 0,
+  "max_residual": 0.7353663737806446,
+  "mean_residual": 0.3341779933255638,
+  "hp_candidates": {},
+  "computation_time_seconds": 588.7
+}

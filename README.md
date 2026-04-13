@@ -45,13 +45,13 @@ A 3-layer linear network `f(x) = w₃·w₂·w₁·x` trained with SGD+momentum 
 
 The 3 extra generators all transform in the standard (2D) representation of S₃ and prominently involve H₂₃ at the outermost bracket level. The gradient-product potential has polynomial degree 10 (vs degree 1 for gravitational −u_ij), enabling richer bracket structure. Compare: quantum ℏ-deformation adds 1 generator (117 vs 116). See [`neural/`](neural/) for scripts and detailed characterization.
 
-### GUE log-gas and prime number distribution (April 2026, in progress)
+### GUE log-gas and prime number distribution (April 2026, confirmed)
 
 The Montgomery-Odlyzko law states that nontrivial zeros of the Riemann zeta function have pair correlations matching GUE random matrix eigenvalues. The GUE joint density P(t₁,...,tₙ) ∝ ∏|tᵢ−tⱼ|² · exp(−½Σtᵢ²) is a Boltzmann weight whose energy decomposes into pairwise Hamiltonians H_ij = −2 log|tᵢ−tⱼ| + harmonic confinement — exactly the 1D N-body problem with logarithmic potential and harmonic trap.
 
-This maps directly to `NBodyAlgebra(N=3, d=1, potential="log", external_potential={"omega": 1})`. The universality conjecture predicts the dimension sequence **[3, 6, 17, 116]** — the same as Newtonian gravity. If confirmed, this establishes that the algebraic structure governing correlations between zeta zeros (and hence prime distributions via the explicit formula) belongs to the same universality class.
+This maps directly to `NBodyAlgebra(N=3, d=1, potential="log", external_potential={"omega": 1})`. The universality conjecture predicts the dimension sequence **[3, 6, 17, 116]** — the same as Newtonian gravity.
 
-**Status:** AWS computation launched April 11, 2026 (instance i-0255259da7fdfb045). Four configs: pure log-gas, GUE composite, Penning trap reference, harmonic-only reference. All confirmed **[3, 6, 17, 116]** — universality holds for the GUE Hamiltonian. See [`primes/`](primes/) for details.
+**Result:** All four configs confirmed on AWS (April 11, 2026, 178.5s total compute): pure log-gas **[3, 6, 17, 116]**, GUE composite **[3, 6, 17, 116]**, Penning trap **[3, 6, 17, 116]**, harmonic-only [3, 6, 13, 15]. The algebraic structure governing correlations between zeta zeros (and hence prime distributions via the explicit formula) belongs to the same universality class as Newtonian gravity. Quantum Moyal bracket on the GUE composite also gives [3, 6, 17, 116] (no +1 growth, unlike 1/r^n → 117). See [`primes/`](primes/) for details.
 
 ### Level-2 spectral analysis: BGS conjecture in algebraic structure (April 2026)
 
@@ -251,6 +251,8 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 | `primes/run_gue_logas.py` | Dyson log-gas computation — 4 configs comparing GUE composite, pure log, Penning trap, harmonic |
 | `primes/run_quantum_gue.py` | Quantum Moyal bracket computation — confirms ℏ-deformation preserves [3, 6, 17, 116] |
 | `primes/level2_spectral_analysis.py` | **Kirillov coadjoint orbit spectral analysis** — BGS conjecture in algebraic structure |
+| `primes/finite_n_gue_comparison.py` | Finite-N GUE comparison — tests spacing statistics against GUE(N) ensembles |
+| `primes/multi_potential_r_comparison.py` | Multi-potential coadjoint orbit ⟨r⟩ comparison across all singular potentials |
 | `primes/hilbert_polya_search.py` | Hilbert-Pólya operator search (superseded by infinite-dimensionality discovery) |
 | `primes/diagnose_brackets.py` | 4-test diagnostic validating bracket computation pipeline |
 | `primes/check_1r_closure.py` | Closure test proving algebra is infinite-dimensional (116 → 306) |

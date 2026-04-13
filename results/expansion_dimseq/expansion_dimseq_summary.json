@@ -1,0 +1,52 @@
+{
+  "status": "complete",
+  "verdict": "UNIVERSALITY_BROKEN",
+  "scenarios_completed": 7,
+  "scenarios_skipped": 0,
+  "results": {
+    "sun_earth_moon": [
+      3,
+      6,
+      17,
+      89
+    ],
+    "sun_jupiter_asteroid": [
+      3,
+      6,
+      16,
+      87
+    ],
+    "three_cluster_stars": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "binary_star_planet": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "three_galaxies": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "triple_bh_lisa": [
+      3,
+      6,
+      17,
+      106
+    ],
+    "binary_bh_ns": [
+      3,
+      6,
+      17,
+      116
+    ]
+  },
+  "total_seconds": 4990.604390382767,
+  "completed_at": "2026-03-24T09:33:04Z"
+}

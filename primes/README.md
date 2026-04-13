@@ -115,13 +115,15 @@ information that a hypothetical Hilbert-Pólya operator would encode.
 | `run_gue_logas.py` | Computation script (runs all four configs) |
 | `run_quantum_gue.py` | Quantum Moyal bracket computation (ℏ-deformation) |
 | `level2_spectral_analysis.py` | **Spectral analysis of level-2 bracket tensor** — Kirillov orbits, adjoint SVD, level spacing statistics |
+| `finite_n_gue_comparison.py` | **Finite-N GUE comparison** — tests whether var=0.117 is a finite-size artifact via GUE(N) ensembles (N=3..100) |
+| `multi_potential_r_comparison.py` | **Multi-potential ⟨r⟩ comparison** — coadjoint orbit spacing ratio across all singular potentials |
 | `hilbert_polya_search.py` | Hilbert-Pólya operator search (results superseded by closure discovery) |
 | `diagnose_brackets.py` | Diagnostic: 4-test validation of bracket computation |
 | `check_1r_closure.py` | Closure test: confirms algebra is infinite-dimensional |
 | `closure_check.py` | Wrapper for compute_growth closure verification |
 | `launch_gue.py` | AWS launcher (dispatches to EC2 spot instance) |
 | `userdata_gue.sh` | EC2 userdata template |
-| `figures/` | Spectral analysis figures (6 PNGs) |
+| `figures/` | Spectral analysis figures (11 PNGs) |
 | `results/` | Output directory (populated by computation) |
 
 ### Figures
@@ -134,6 +136,11 @@ information that a hypothetical Hilbert-Pólya operator would encode.
 | `figures/adjoint_sv_spacings.png` | Singular value spacing distributions |
 | `figures/orbit_frequency_density.png` | Frequency density histograms across random covectors |
 | `figures/adjoint_sv_by_index.png` | Singular value distributions by generator index |
+| `figures/finite_n_gue_scaling.png` | Finite-N GUE scaling: variance and ⟨r⟩ convergence vs N |
+| `figures/finite_n_ratio_overlay.png` | Spacing ratio ⟨r⟩ for 1/r algebra overlaid on GUE(N) convergence |
+| `figures/finite_n_spacing_overlay.png` | Spacing variance for 1/r algebra overlaid on GUE(N) convergence |
+| `figures/multi_potential_r_comparison.png` | Coadjoint orbit ⟨r⟩ comparison across all singular potentials |
+| `figures/singular_potential_spacing_overlay.png` | Spacing statistics for all singular potentials vs GUE/GSE |
 
 ## Running
 

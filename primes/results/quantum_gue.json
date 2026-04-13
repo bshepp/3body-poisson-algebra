@@ -1,0 +1,18 @@
+{
+  "potential": "log",
+  "external_potential": {
+    "omega": 1
+  },
+  "n_bodies": 3,
+  "d_spatial": 1,
+  "bracket_type": "moyal",
+  "hbar_value": 1,
+  "dimension_sequence": [
+    3,
+    6,
+    17,
+    116
+  ],
+  "elapsed_seconds": 64.64070796966553,
+  "sympy_version": "1.14.0"
+}

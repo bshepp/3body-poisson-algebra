@@ -413,13 +413,27 @@ belongs to the same universality class as gravity.
 - It tests whether the *Poisson algebra* (not just the spectrum or correlation
   functions) of the GUE Hamiltonian matches gravity.
 
-### Status
+### Status — CONFIRMED (April 11, 2026)
 
-Computation launched April 11, 2026 on AWS (instance i-0255259da7fdfb045).
-Four configs being tested: pure log-gas, GUE composite (the key one),
-Penning trap reference, and harmonic-only reference.
+All four configs completed on AWS (instance i-0255259da7fdfb045, 178.5s total):
 
-Code: `primes/run_gue_logas.py`. Full mathematical framework:
+| Config | Result | Match |
+|--------|--------|-------|
+| Pure log-gas | **[3, 6, 17, 116]** | YES |
+| **GUE composite** | **[3, 6, 17, 116]** | **YES** |
+| Penning trap (1D) | **[3, 6, 17, 116]** | YES |
+| Harmonic only | [3, 6, 13, 15] | N/A (integrable reference) |
+
+The GUE composite Hamiltonian — the exact classical Hamiltonian underlying
+Riemann zeta zero correlations — produces the same Poisson algebra dimension
+sequence as Newtonian gravity. Universality holds.
+
+Additional result: quantum Moyal bracket on the log+harmonic GUE composite gives
+**[3, 6, 17, 116]** (no +1 growth), unlike 1/r^n potentials which grow to 117.
+The log-gas quantum algebra does not acquire an extra generator.
+
+Code: `primes/run_gue_logas.py`. Results: `primes/results/gue_comparison.json`,
+`primes/results/quantum_gue.json`. Full mathematical framework:
 `primes/gue_prime_connection.tex`.
 
 ### Further directions (if confirmed)
