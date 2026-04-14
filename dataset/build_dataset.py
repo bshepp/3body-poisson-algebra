@@ -204,6 +204,27 @@ def build_dimension_sequences() -> pd.DataFrame:
                 "source_file": str(n4_fp.relative_to(ROOT)),
             })
 
+    # Deduplicate symbolic_rank rows: keep highest max_level per (N, d, potential, bracket_type)
+    seen = {}
+    deduped = []
+    for r in rows:
+        if r["computation_method"] in ("symbolic_QQ",) and r["physical_system"] is None and r["masses"] is None:
+            key = (r["N"], r["d"], r["potential"], r["bracket_type"])
+            if key in seen:
+                prev_idx, prev_level = seen[key]
+                if (r["max_level"] or 0) > (prev_level or 0):
+                    deduped[prev_idx] = None
+                    seen[key] = (len(deduped), r["max_level"])
+                    deduped.append(r)
+                else:
+                    deduped.append(None)
+            else:
+                seen[key] = (len(deduped), r["max_level"])
+                deduped.append(r)
+        else:
+            deduped.append(r)
+    rows = [r for r in deduped if r is not None]
+
     df = pd.DataFrame(rows)
 
     # Flatten dimension_sequence into individual level columns for HF Viewer

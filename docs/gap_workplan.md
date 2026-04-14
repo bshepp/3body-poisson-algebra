@@ -244,3 +244,5 @@ Mark items with status as work proceeds:
 | 4.8 | Level-3 structure extraction (rank 116) | 🔄 |
 | 4.9 | Symbolic Gram determinant sweep (rationalized Bareiss) | ✅ |
 | 4.10 | Rebuild HF dataset after new results (`python dataset/build_dataset.py && python dataset/validate_dataset.py`) | 🔄 |
+| 4.11 | Extended dimension sequences: N=9 L2, N=11-26 L1, N=11-50 L0 (Apr 14, 2026) | ✅ |
+| 4.12 | N=10 L2 (needs 64+ GB RAM or sparse DomainMatrix) | ⬜ |

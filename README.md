@@ -31,7 +31,7 @@ The N=3 sequence is:
 - **Mass-invariant** — proved symbolically over ℚ(m₁,m₂,m₃); true for all mass ratios simultaneously (also confirmed numerically 0.001–10⁶)
 - **Charge-magnitude-sensitive at level 3** — integer charge magnitudes q=1..20 all give [3,6,17,116]; however mixed-sign geometries Li⁺ (+3,−1,−1) → 111 and H₂⁺ (+1,+1,−1) → 115 are confirmed departures (levels 0–2 remain universal)
 
-The N=4 sequence is mass-invariant and potential-invariant: 1/r², 1/r³, and log(r) all give [6, 14, 62, 1,260] (L3 exact, Apr 11, 2026), and d-independent (d = 1, 2, 3). The old L2 scaling formula (13N³−42N²+83N−120)/6 is **falsified** at N=7, 8; the corrected formula is **L2(N) = N(4N²−9N+3)/2** (N≥4, equivalent to new_L2 = 12·C(N,3)).
+The N=4 sequence is mass-invariant and potential-invariant: 1/r², 1/r³, and log(r) all give [6, 14, 62, 1,260] (L3 exact, Apr 11, 2026), and d-independent (d = 1, 2, 3). The old L2 scaling formula (13N³−42N²+83N−120)/6 is **falsified** at N=7, 8; the corrected formula is **L2(N) = N(4N²−9N+3)/2** (N≥4, equivalent to new_L2 = 12·C(N,3)). N=9 confirms all three formulas: L0=36, L1=99, L2=1107 (Apr 14, 2026). The L1 formula **dim(L1) = N(3N−5)/2** is now verified for N=3 through N=26 (23 exact data points). L0 = N(N−1)/2 confirmed through N=50.
 
 The harmonic potential (r²) produces a finite-dimensional algebra closing at dimension 15 (standard construction) or 13 (composite pairwise formulation V = −u^(−2)).
 

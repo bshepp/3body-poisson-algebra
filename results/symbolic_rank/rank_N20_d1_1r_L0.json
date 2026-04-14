@@ -1,0 +1,21 @@
+{
+  "N": 20,
+  "d": 1,
+  "potential": "1/r",
+  "potential_label": "1/r",
+  "max_level": 0,
+  "quantum": false,
+  "bracket_type": "Poisson",
+  "n_generators": 190,
+  "n_monomials": 210,
+  "cumulative_rank": [
+    190
+  ],
+  "new_per_level": [
+    190
+  ],
+  "matrix_density": 0.014285714285714285,
+  "computation_time_seconds": 1.8,
+  "sympy_version": "1.14.0",
+  "stabilized": false
+}

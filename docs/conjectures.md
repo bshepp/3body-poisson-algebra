@@ -41,7 +41,11 @@ See revised statement in Section 4 below.
 | N=4 mass invariance | **Proved** (3 configs: equal, 100:10:1:1, 3:7:11:2) | — |
 | N=7 dimension sequence | **[21, 56, 476]** (Apr 2026) | L1 formula confirmed; old L2 cubic off by 1 (predicts 477). Resolves L2 formula — see below. |
 | N=8 dimension sequence | **[28, 76, 748]** (Apr 2026). Cross-verified: SymPy 1.12 (local) and 1.14.0 (AWS) both agree. | L1 formula confirmed; old L2 cubic off by 4 (predicts 752) |
-| Dependence on N | Tested at N=3, 4, 5, 6, 7, 8 | Complete through L2 |
+| N=9 dimension sequence | **[36, 99, 1107]** (Apr 14, 2026). Exact QQ rank, local computation (~107 min). | All three scaling formulas confirmed: L0=36, L1=99, L2=1107 |
+| N=11–26 L0+L1 | All match formulas exactly (Apr 14, 2026). L1 verified through N=26 (23 data points). | Extends L1 formula verification from 6 to 23 points |
+| N=11–50 L0 | All confirm N(N-1)/2 (Apr 14, 2026). | Extends L0 formula verification to 47 points |
+| N=10 L2 | **BLOCKED** — `MemoryError` at 38 GB. Dense DomainMatrix 535K x 13K over QQ exceeds local RAM. | Needs 64+ GB or sparse rank algorithm |
+| Dependence on N | Tested at N=3–9, 11–26 (L1), 11–50 (L0) | L2 complete through N=9 |
 | Dependence on spatial dim | **Independent of d** for N=3 AND N=4 | d=1,2,3 identical |
 | 1/r, 1/r^2, 1/r^3, log(r) give same sequence | **Proved** for N=3 through L3 | Could diverge at L4 |
 | Charge-sign invariance (1/r) | **Proved** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
@@ -306,11 +310,11 @@ degree — the true L2(N) IS cubic — but in the specific cubic. The
 original fit was corrupted by a boundary effect at N=3.
 
 The resolution comes from analyzing new_L2 = L2 − L1:
-- new_L2 = 12·C(N,3) for all N ≥ 4 (verified N=4,5,6,7,8)
+- new_L2 = 12·C(N,3) for all N ≥ 4 (verified N=4,5,6,7,8,9)
 - new_L2(3) = 11 = 12·C(3,3) − 1 (boundary correction)
 
 This gives **L2(N) = N(4N²−9N+3)/2** for N ≥ 4, which matches all
-five data points exactly. At N=3, the formula gives 18 vs actual 17
+six data points exactly (N=4 through N=9). At N=3, the formula gives 18 vs actual 17
 (the −1 boundary correction).
 
 The original cubic and the correct cubic differ because the N=3 anomaly

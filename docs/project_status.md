@@ -492,13 +492,13 @@ LCM denominators: 1/r has mu^10*(mu^2-mu+1)^6, r^4 has 1, 1/r^4
 has mu^22*(mu^2-mu+1)^11. The mu^k factor encodes collision
 singularity strength; mu^2-mu+1 has no real roots.
 
-### Hugging Face Dataset Pipeline (April 12, 2026)
+### Hugging Face Dataset Pipeline (April 14, 2026)
 
-The project maintains a structured Hugging Face dataset built from computation results. The pipeline (`dataset/build_dataset.py`) reads JSON result files and produces 9 Parquet tables:
+The project maintains a structured Hugging Face dataset built from computation results. The pipeline (`dataset/build_dataset.py`) reads JSON result files and produces 9 Parquet tables. The builder deduplicates symbolic rank entries, keeping only the highest `max_level` for each (N, d, potential, bracket_type).
 
 | Split | Source file(s) | Rows | Description |
 |-------|---------------|------|-------------|
-| `dimension_sequences` | `results/symbolic_rank/rank_N*.json`, `primes/results/gue_comparison.json`, `primes/results/quantum_gue.json`, `results/energy_bound/`, `nbody/n4_potential_universality_results.json` | ~45 | Cumulative rank at each bracket level per (N, d, potential) |
+| `dimension_sequences` | `results/symbolic_rank/rank_N*.json` (incl. `_L0`, `_L1` suffixed files), `primes/results/gue_comparison.json`, `primes/results/quantum_gue.json`, `results/energy_bound/`, `nbody/n4_potential_universality_results.json` | ~85 | Cumulative rank at each bracket level per (N, d, potential) |
 | `structure_constants` | `results/algebra_structure/*/structure_constants_exact.json` | ~9 | Exact rational C^k_ij tensors at level 2 |
 | `charge_sensitivity` | `results/charge_sensitivity/charge_sensitivity_completion.json` | ~18 | Charge-independence tests |
 | `mass_invariance` | `data/mass_ratio_sweep.json` | ~19 | Mass ratio sweep with SVD spectra |
@@ -517,6 +517,41 @@ cp dataset/README.md dataset/output/README.md  # update dataset card
 ```
 
 The validation script checks row counts, schema integrity, flattened dimension column consistency, and YAML frontmatter.
+
+### Extended Dimension Sequence Campaign (April 14, 2026)
+
+Computed exact symbolic rank (over QQ) for the 1/r potential, d=1, across a wide range of N values:
+
+| N range | Levels computed | File pattern | Time per run |
+|---------|----------------|-------------|--------------|
+| 3–9 | L0, L1, L2 | `rank_N{N}_d1_1r.json` | seconds–106 min |
+| 11–26 | L0, L1 | `rank_N{N}_d1_1r_L1.json` | 11s–28 min |
+| 27–50 | L0 | `rank_N{N}_d1_1r_L0.json` | <1s–8 min |
+
+**N=10 L2 failed** with `MemoryError` — the DomainMatrix construction requires ~56 GB (535K generators x 13K monomials, dense over QQ). Would need 64+ GB free RAM or a sparse rank algorithm.
+
+Key L1 sequence (new_per_level at L1 = dim(L1) - dim(L0)):
+
+| N | L0 | L1 | new@L1 |
+|---|----|----|--------|
+| 3 | 3 | 6 | 3 |
+| 4 | 6 | 14 | 8 |
+| 5 | 10 | 25 | 15 |
+| 6 | 15 | 39 | 24 |
+| 7 | 21 | 56 | 35 |
+| 8 | 28 | 76 | 48 |
+| 9 | 36 | 99 | 63 |
+| 11 | 55 | 154 | 99 |
+| 15 | 105 | 300 | 195 |
+| 20 | 190 | 550 | 360 |
+| 26 | 325 | 949 | 624 |
+
+**Verified scaling formulas:**
+- L0: dim(L0) = N(N-1)/2 — confirmed for all N=3..50
+- L1: dim(L1) = N(3N-5)/2 — **newly discovered**, verified for all N=3..26 (23 data points, exact match)
+- L1 new: new@L1 = N(N-2)
+
+N=10 L2 failed with `MemoryError` during DomainMatrix construction (535K generators x 13K monomials, dense over QQ, requires ~56 GB).
 
 ### Level-3 Structure Extraction (in progress, April 9–12, 2026)
 
