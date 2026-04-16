@@ -43,6 +43,12 @@ configs:
     data_files: bell_test.parquet
   - config_name: scaling_formulas
     data_files: scaling_formulas.parquet
+  - config_name: tier_decomposition
+    data_files: tier_decomposition.parquet
+  - config_name: contextuality
+    data_files: contextuality.parquet
+  - config_name: convergence_trajectories
+    data_files: convergence_trajectories.parquet
 ---
 
 # Pairwise Poisson Algebras of the N-Body Problem
@@ -53,14 +59,19 @@ This dataset contains the first systematic computation of **pairwise Poisson bra
 
 The dataset spans:
 - **N = 3 through 50** with exact dimension sequences (L0 through N=50, L1 through N=26, L2 through N=9)
-- **9 distinct potentials** with full 17x17x17 exact rational structure constant tensors
-- **15 named physical systems** from helium atoms to triple black holes
-- **18 charge configurations** testing charge-independence of the algebra
-- **19 mass ratios** spanning 6 orders of magnitude with full singular value spectra
+- **576+ exponent sweep values** mapping the continuous algebraic landscape for 1/r^n and r^n families (500 at L2 + 76 extended at L3)
+- **6 Yukawa (screened Coulomb) mu-sweep values** confirming universality for exponentially screened potentials
+- **16 distinct potentials** with full exact rational structure constant tensors (all 12 non-harmonic L2 algebras proven isomorphic)
+- **20 named physical systems** from helium atoms to triple black holes, including H₃⁺, ozone, and Yukawa nuclear/plasma systems
+- **38 charge configurations** testing charge-independence of the algebra (incl. (+1,+q,−1) sweep q=1..20)
+- **33 mass ratios** spanning 10 orders of magnitude (1 to 10^10) with full singular value spectra
 - **19 level-4 convergence samples** across different phase-space regions
-- **14 atlas configurations** with rank distribution statistics across phase space
+- **17 atlas configurations** with rank distribution statistics across phase space (including 3 N=4 1D slices — first four-body atlas data)
 - **9 CHSH Bell test strata** probing quantum-information structure
 - **5 scaling formulas** with conjecture-falsification-resolution narrative
+- **40 tier decomposition rows** with S_3 and S_4 representation-theoretic analysis
+- **16 contextuality tests** showing all algebras are maximally non-commutative (zero commuting pairs)
+- **77 convergence trajectories** tracking SVD rank convergence across sample counts
 
 No comparable dataset exists on Hugging Face or elsewhere. This is the first machine-readable repository of Lie/Poisson algebra structure constants, bracket dimension sequences, and associated spectral statistics.
 
@@ -110,31 +121,35 @@ This algebra is graded by bracket depth (level): level 0 contains the generators
 
 ### Key Results in This Dataset
 
-1. **Potential universality**: For N=3 with 1/r, 1/r^2, 1/r^3, log, and composite potentials, the dimension sequence is universally [3, 6, 17, 116]. Only harmonic (r^2) differs: [3, 6, 13, 15, 15] (stabilizes -- integrable system).
+1. **Potential universality**: For N=3 with 1/r, 1/r^2, 1/r^3, 1/r^4, log, composite, and polynomial r^n (n≥4) potentials, the dimension sequence is universally [3, 6, 17, 116]. Three exceptional potentials: r^1 → [3,4,5,5] (finite), r^2 → [3,6,13,15] (finite), r^3 → [3,6,17,109] (7 extra relations). Universality extends to fractional exponents (21 tested for 1/r^n, 12 for r^n). At the Lie algebra level, 13 non-harmonic potentials share identical L2 algebraic invariants (Killing signature, derived/lower central series, center dimension). The r^3 algebra matches at L2 but at L3 is not nilpotent, with an oscillating lower central series.
 
 2. **N-body scaling**: L_0(N) = N(N-1)/2, L_1(N) = N(3N-5)/2, L_2(N) = N(4N^2-9N+3)/2 for N >= 4.
 
 3. **Charge independence**: The dimension sequence [3, 6, 17, 116] is invariant under arbitrary charge assignments q_i in {-20, ..., +20}.
 
-4. **Mass invariance**: The dimension sequence is independent of mass ratios across 6 orders of magnitude (m_3/m_1 from 1 to 10^6).
+4. **Mass invariance**: The dimension sequence is independent of mass ratios across 10 orders of magnitude (m_3/m_1 from 1 to 10^10). At extreme astrophysical ratios (>10^5), numerical conditioning degrades but the algebraic structure persists.
 
-5. **Quantum deformation**: Replacing the Poisson bracket with the Moyal bracket (quantum commutator) yields [3, 6, 17, 117] -- exactly one extra generator at level 3.
+5. **Quantum deformation**: Replacing the Poisson bracket with the Moyal bracket (quantum commutator) yields [3, 6, 17, 117] for singular potentials (1/r^n, log, composites) -- exactly one extra generator at level 3. Polynomial potentials (r^n) and the three exceptional potentials show no quantum growth. 12 quantum rows total.
 
 6. **GUE universality**: The log-gas potential (Dyson's GUE eigenvalue dynamics) produces the same algebra [3, 6, 17, 116] as Newtonian gravity, confirming a deep connection to random matrix theory.
 
 7. **Classical Bell bound**: CHSH-type tests on the algebra show max abs(S) = 1.77, strictly below the classical bound of 2.0 -- the Poisson algebra respects classical locality.
 
+8. **Maximal non-commutativity**: All 16 tested algebras (dimensions 5 to 109) have ZERO commuting pairs. Every pair of generators has a non-zero Poisson bracket, making KS contextuality tests vacuously non-contextual.
+
+9. **S_4 representation decomposition**: The N=4 pairwise algebra candidates decompose under S_4 as 941 triv + 976 sign + 2893 std + 2932 sign_std + 1917 hook = 23226 generators. Only 1260 are independent (94.6% syzygies vs 25.6% for N=3).
+
 ## Dataset Splits
 
-### `dimension_sequences` (45 rows)
+### `dimension_sequences` (~602 rows)
 
-The headline table. One row per (N, d, potential, bracket_type) configuration. Includes flattened `dim_L0`..`dim_L4` integer columns for easy filtering in the HF Dataset Viewer, plus the full JSON `dimension_sequence`.
+The headline table. One row per (N, d, potential, bracket_type) configuration. Includes flattened `dim_L0`..`dim_L4` integer columns for easy filtering in the HF Dataset Viewer, plus the full JSON `dimension_sequence`. Includes 12 quantum (Moyal bracket) rows covering the complete quantum classification.
 
 | Column | Type | Description |
 |--------|------|-------------|
 | `N` | int | Number of bodies (3--8) |
 | `d` | int | Spatial dimensions (1--2) |
-| `potential` | str | Interaction potential: "1/r", "1/r^2", "1/r^3", "1/r^4", "r^2", "r^4", "log", "composite(...)", "neural" |
+| `potential` | str | Interaction potential: "1/r", "1/r^2", "1/r^3", "1/r^4", "r^1"--"r^10", "log", "composite(...)", "neural" |
 | `bracket_type` | str | "poisson" (classical) or "moyal" (quantum) |
 | `masses` | str/null | JSON-encoded mass list, e.g. '["1","2","3"]' or '"symbolic"' |
 | `charges` | str/null | JSON-encoded charge list, e.g. '[2,-1,-1]' |
@@ -150,9 +165,9 @@ The headline table. One row per (N, d, potential, bracket_type) configuration. I
 | `physical_system` | str/null | Physical interpretation, e.g. "GUE_quantum_log_gas" |
 | `source_file` | str | Path to originating JSON in the repository |
 
-### `structure_constants` (9 rows)
+### `structure_constants` (16 rows)
 
-Exact rational structure constants C^k_ij for the level-2 bracket algebra (N=3, d=2). The 17x17x17 tensor satisfies [e_i, e_j] = sum_k C^k_ij e_k.
+Exact rational structure constants C^k_ij for the bracket algebra (N=3). Most at level 2 (d=1 or d=2), with one level-3 entry (r^3). The tensor satisfies [e_i, e_j] = sum_k C^k_ij e_k. Covers 15 potentials: 1/r through 1/r^4, r^1 through r^10, log, and 3 composites.
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -169,7 +184,7 @@ Exact rational structure constants C^k_ij for the level-2 bracket algebra (N=3, 
 | `derived_series` | str | JSON-encoded derived series dimensions |
 | `lower_central_series` | str | JSON-encoded lower central series dimensions |
 
-### `charge_sensitivity` (18 rows)
+### `charge_sensitivity` (38 rows)
 
 Tests whether the algebra dimension depends on particle charges q_i. Includes flattened `dim_L0`..`dim_L3` for easy filtering.
 
@@ -186,9 +201,9 @@ Tests whether the algebra dimension depends on particle charges q_i. Includes fl
 | `physical_system` | str | Physical system label |
 | `computation_time_s` | float | Computation time in seconds |
 
-### `mass_invariance` (19 rows)
+### `mass_invariance` (33 rows)
 
-Sweep of the third mass m_3 from 1 to 10^6 (with m_1 = m_2 = 1), showing dimension invariance.
+Sweep of the third mass m_3 from 1 to 10^10 (with m_1 = m_2 = 1), showing dimension invariance through moderate ratios and conditioning degradation at astrophysical extremes.
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -234,7 +249,7 @@ Rank distributions across phase space from atlas scans.
 | `n_points` | int | Total phase-space points |
 | `pct_116` | float | Percentage of points achieving rank 116 |
 
-### `physical_systems` (15 rows)
+### `physical_systems` (17 rows)
 
 Named physical systems with their computed dimension sequences, spanning astrophysical (Sun-Earth-Moon, triple black holes) to atomic (helium, lithium ion) to exotic (Penning traps, 2D vortices).
 
@@ -284,6 +299,55 @@ Closed-form scaling formulas for algebra dimension as a function of N bodies. Do
 | `data_points` | str/null | JSON-encoded known data points |
 | `notes` | str/null | Context, caveats, and conjectures |
 
+### `tier_decomposition` (40 rows)
+
+Clebsch-Gordan decomposition of the candidate generator spaces under S_3 (N=3) and S_4 (N=4) symmetry. Tracks how each irreducible representation contributes at each bracket level, and compares candidate counts to observed independent generators.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `N` | int | Number of bodies |
+| `symmetry_group` | str | "S3" or "S4" |
+| `level` | int | Bracket level (-1 for total) |
+| `total_candidates` | int | Number of candidate generators at this level |
+| `observed_rank` | int | Observed independent rank |
+| `irrep_name` | str | Irreducible representation name |
+| `irrep_dim` | int | Dimension of the irrep |
+| `multiplicity` | int | Number of copies of this irrep |
+| `contribution` | int | Total generators from this irrep (multiplicity x dim) |
+
+### `contextuality` (16 rows)
+
+Kochen-Specker contextuality tests on all available structure constant algebras. Tests whether the orthogonality graph (edges between Poisson-commuting pairs) permits KS-uncolorable configurations.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `N` | int | Number of bodies |
+| `d` | int | Spatial dimensions |
+| `potential` | str | Interaction potential |
+| `algebra_dim` | int | Algebra dimension |
+| `n_commuting_pairs` | int | Number of Poisson-commuting generator pairs (always 0) |
+| `total_pairs` | int | Total generator pairs tested |
+| `commutativity_fraction` | float | Fraction of commuting pairs (always 0.0) |
+| `ks_colorable` | bool | Whether KS coloring exists (always True) |
+| `contextual` | bool | Whether algebra is contextual (always False) |
+| `pm_constructible` | bool | Whether Peres-Mermin square can be built (always False) |
+
+### `convergence_trajectories` (77 rows)
+
+SVD rank convergence as a function of sample count, for multiple (N, d, potential, level) configurations. Shows how many phase-space samples are needed for reliable numerical rank determination.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `N` | int | Number of bodies |
+| `d` | int | Spatial dimensions |
+| `potential` | str | Interaction potential |
+| `level` | int | Bracket level |
+| `n_samples` | int | Number of phase-space samples |
+| `n_candidates` | int | Number of candidate generators |
+| `rank` | int | Numerical rank determined by SVD gap |
+| `gap_ratio` | float | Best SVD gap ratio |
+| `elapsed_s` | float | Computation time in seconds |
+
 ## Reproduction
 
 All data was generated from the code at [github.com/bshepp/3body](https://github.com/bshepp/3body).
@@ -305,7 +369,7 @@ python dataset/build_dataset.py
 python dataset/validate_dataset.py  # optional: run validation suite
 ```
 
-The script reads all JSON result files and produces 9 Parquet tables in `dataset/output/`.
+The script reads all JSON result files and produces 12 Parquet tables in `dataset/output/`.
 
 ### Reproducing Individual Results
 

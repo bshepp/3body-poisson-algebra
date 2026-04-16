@@ -148,5 +148,25 @@
       116
     ],
     "completed_at": "2026-03-22T19:05:19Z"
+  },
+  "h3_plus": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "completed_at": "2026-04-14T23:40:31Z"
+  },
+  "ozone_nuclei": {
+    "status": "complete",
+    "result": [
+      3,
+      6,
+      17,
+      116
+    ],
+    "completed_at": "2026-04-14T23:41:18Z"
   }
 }

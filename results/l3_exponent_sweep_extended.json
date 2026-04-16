@@ -1,0 +1,1366 @@
+{
+  "title": "Extended Level-3 exponent sweep (1/r^n and r^n families)",
+  "description": "Densified L3 coverage for publication-quality dim_L3(n) vs exponent plot. Merges original fractional_exponent_sweep.json and rn_exponent_sweep.json with new intermediate exponents.",
+  "date": "2026-04-15",
+  "N": 3,
+  "d": 1,
+  "max_level": 3,
+  "n_samples": 2000,
+  "n_results": 87,
+  "results": [
+    {
+      "exponent": 1e-05,
+      "potential_label": "1/r^0.00001",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        113
+      ],
+      "matches_universal": false,
+      "note": "L3=113 instead of 116. Confirmed with 2000 samples. SVD shows sv(114-116) ~ 1e-11 (noise level) vs sv(113) ~ 4e-7. At n~0, the potential u^n approaches constant, causing 3 L3 generators to lose functional independence (sv suppressed ~100,000x vs n=0.0001). The true algebraic dimension is likely 116 for all n>0, but the SVD correctly reports 113 because the 3 marginal generators are indistinguishable from noise at this extreme exponent.",
+      "computation_time_s": null,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 0.0001,
+      "potential_label": "1/r^0.0001",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "note": "Gap at index 116 is 1.48e+05x \u00e2\u20ac\u201d definitive. sv(114-116) ~ 3-6e-06, well above noise.",
+      "method": "numerical_svd",
+      "n_samples": 2000,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 0.001,
+      "potential_label": "1/r^0.001",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 0.005,
+      "potential_label": "1/r^0.005",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 30.9,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 0.01,
+      "potential_label": "1/r^0.01",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 0.02,
+      "potential_label": "1/r^0.02",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 127.2,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 0.05,
+      "potential_label": "1/r^0.05",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 123.9,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 0.1,
+      "potential_label": "1/r^0.1",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 0.2,
+      "potential_label": "1/r^0.2",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 178.4,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 0.3,
+      "potential_label": "1/r^0.3",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 189.4,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 0.4,
+      "potential_label": "1/r^0.4",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 193.1,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 0.5,
+      "potential_label": "1/r^0.5",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 0.6,
+      "potential_label": "1/r^0.6",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 194.0,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 0.7,
+      "potential_label": "1/r^0.7",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 188.1,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 0.8,
+      "potential_label": "1/r^0.8",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 169.9,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 0.9,
+      "potential_label": "1/r^0.9",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 133.1,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 0.99,
+      "potential_label": "1/r^0.99",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 0.999,
+      "potential_label": "1/r^0.999",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 0.99999,
+      "potential_label": "1/r^0.99999",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 1.00001,
+      "potential_label": "1/r^1.00001",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 1.001,
+      "potential_label": "1/r^1.001",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 1.01,
+      "potential_label": "1/r^1.01",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 1.1,
+      "potential_label": "1/r^1.1",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 131.9,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 1.2,
+      "potential_label": "1/r^1.2",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 142.5,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 1.3,
+      "potential_label": "1/r^1.3",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 115.2,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 1.4,
+      "potential_label": "1/r^1.4",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 112.1,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 1.5,
+      "potential_label": "1/r^1.5",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 1.6,
+      "potential_label": "1/r^1.6",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 114.8,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 1.7,
+      "potential_label": "1/r^1.7",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 120.2,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 1.8,
+      "potential_label": "1/r^1.8",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 116.3,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 1.99,
+      "potential_label": "1/r^1.99",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 1.999,
+      "potential_label": "1/r^1.999",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 1.99999,
+      "potential_label": "1/r^1.99999",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 2.00001,
+      "potential_label": "1/r^2.00001",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 2.001,
+      "potential_label": "1/r^2.001",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "exponent": 2.01,
+      "potential_label": "1/r^2.01",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 2.1,
+      "potential_label": "1/r^2.1",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 117.5,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 2.2,
+      "potential_label": "1/r^2.2",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 113.5,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 2.3,
+      "potential_label": "1/r^2.3",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 111.1,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 2.4,
+      "potential_label": "1/r^2.4",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 115.5,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 2.5,
+      "potential_label": "1/r^2.5",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 3.0,
+      "potential_label": "1/r^3.0",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 112.1,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 3.5,
+      "potential_label": "1/r^3.5",
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "family": "1/r^n"
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 4.0,
+      "potential_label": "1/r^4.0",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 112.2,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 4.5,
+      "potential_label": "1/r^4.5",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 114.3,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "1/r^n",
+      "exponent": 5.0,
+      "potential_label": "1/r^5.0",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 114.9,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 0.1,
+      "potential_label": "r^0.1",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 115.7,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 0.2,
+      "potential_label": "r^0.2",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 114.5,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 0.3,
+      "potential_label": "r^0.3",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 113.4,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 0.5,
+      "potential_label": "r^0.5",
+      "u_power": -0.5,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 119.1,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "family": "r^n",
+      "exponent": 0.7,
+      "potential_label": "r^0.7",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 129.2,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 0.8,
+      "potential_label": "r^0.8",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 148.5,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 0.9,
+      "potential_label": "r^0.9",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 189.6,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 1.0,
+      "potential_label": "r^1.0",
+      "u_power": -1.0,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        15,
+        148
+      ],
+      "computation_time_s": 60.9,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "family": "r^n",
+      "exponent": 1.1,
+      "potential_label": "r^1.1",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 213.5,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 1.2,
+      "potential_label": "r^1.2",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 209.8,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 1.3,
+      "potential_label": "r^1.3",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 154.6,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 1.4,
+      "potential_label": "r^1.4",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 148.1,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 1.5,
+      "potential_label": "r^1.5",
+      "u_power": -1.5,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 79.2,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "family": "r^n",
+      "exponent": 1.6,
+      "potential_label": "r^1.6",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 151.5,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 1.7,
+      "potential_label": "r^1.7",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 147.9,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 1.8,
+      "potential_label": "r^1.8",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 147.2,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 1.99,
+      "potential_label": "r^1.99",
+      "u_power": -1.99,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 78.5,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "exponent": 1.999,
+      "potential_label": "r^1.999",
+      "u_power": -1.999,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        108
+      ],
+      "computation_time_s": 79.9,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "exponent": 1.99999,
+      "potential_label": "r^1.99999",
+      "u_power": -1.99999,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        87
+      ],
+      "computation_time_s": 81.5,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "exponent": 2.00001,
+      "potential_label": "r^2.00001",
+      "u_power": -2.00001,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        87
+      ],
+      "computation_time_s": 128.5,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "exponent": 2.001,
+      "potential_label": "r^2.001",
+      "u_power": -2.001,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        108
+      ],
+      "computation_time_s": 129.6,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "exponent": 2.01,
+      "potential_label": "r^2.01",
+      "u_power": -2.01,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 115.2,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "family": "r^n",
+      "exponent": 2.1,
+      "potential_label": "r^2.1",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 213.2,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 2.2,
+      "potential_label": "r^2.2",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 221.7,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "family": "r^n",
+      "exponent": 2.3,
+      "potential_label": "r^2.3",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 206.7,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 2.5,
+      "potential_label": "r^2.5",
+      "u_power": -2.5,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 109.4,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "family": "r^n",
+      "exponent": 2.7,
+      "potential_label": "r^2.7",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 200.6,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 3.0,
+      "potential_label": "r^3.0",
+      "u_power": -3.0,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 106.3,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "family": "r^n",
+      "exponent": 3.3,
+      "potential_label": "r^3.3",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 211.1,
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 3.5,
+      "potential_label": "r^3.5",
+      "u_power": -3.5,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 113.0,
+      "method": "numerical_svd",
+      "n_samples": 1000,
+      "family": "r^n"
+    },
+    {
+      "exponent": 3.99,
+      "potential_label": "r^3.99",
+      "u_power": -3.99,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 122.4,
+      "family": "r^n"
+    },
+    {
+      "exponent": 3.999,
+      "potential_label": "r^3.999",
+      "u_power": -3.999,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 121.5,
+      "family": "r^n"
+    },
+    {
+      "exponent": 3.99999,
+      "potential_label": "r^3.99999",
+      "u_power": -3.99999,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 119.9,
+      "family": "r^n"
+    },
+    {
+      "exponent": 4.00001,
+      "potential_label": "r^4.00001",
+      "u_power": -4.00001,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 122.2,
+      "family": "r^n"
+    },
+    {
+      "exponent": 4.001,
+      "potential_label": "r^4.001",
+      "u_power": -4.001,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 132.7,
+      "family": "r^n"
+    },
+    {
+      "exponent": 4.01,
+      "potential_label": "r^4.01",
+      "u_power": -4.01,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 126.5,
+      "family": "r^n"
+    },
+    {
+      "exponent": 4.5,
+      "potential_label": "r^4.5",
+      "u_power": -4.5,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 118.7,
+      "family": "r^n"
+    },
+    {
+      "exponent": 5.0,
+      "potential_label": "r^5.0",
+      "u_power": -5.0,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 116.6,
+      "family": "r^n"
+    },
+    {
+      "family": "r^n",
+      "exponent": 5.5,
+      "potential_label": "r^5.5",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "error": "SVD did not converge",
+      "computation_time_s": 176.4
+    },
+    {
+      "family": "r^n",
+      "exponent": 6.0,
+      "potential_label": "r^6.0",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "error": "SVD did not converge",
+      "computation_time_s": 175.7
+    },
+    {
+      "family": "r^n",
+      "exponent": 7.0,
+      "potential_label": "r^7.0",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "error": "SVD did not converge",
+      "computation_time_s": 175.8
+    }
+  ]
+}

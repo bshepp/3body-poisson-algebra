@@ -1,6 +1,6 @@
 # Three-Body Poisson Algebra — Project Status & Roadmap
 
-*Last updated: April 12, 2026*
+*Last updated: April 16, 2026*
 
 ---
 
@@ -125,18 +125,167 @@ The 1.1M L3 brackets are checkpointed on S3. Options to unblock:
 - **Finite-N GUE comparison:** Level-2 spacing statistics (var=0.117, ⟨r⟩=0.639) analyzed against finite-N GUE reference ensembles. The variance suppression (0.117 < GUE asymptotic 0.178) is a genuine finite-size effect from the 3-eigenvalue constraint. See `primes/finite_n_gue_comparison.py`.
 - **Multi-potential ⟨r⟩ comparison:** Coadjoint orbit spacing ratio computed for all available potentials — confirms ⟨r⟩ ≈ 0.64 is universal across singular potentials. See `primes/multi_potential_r_comparison.py`.
 
-### Not Yet Started (7)
+### Completed — Polynomial r^n Exact Symbolic Survey (April 2026)
+
+| # | Potential | Sequence | Notes |
+|---|----------|----------|-------|
+| 1 | **r^1** (linear) | **[3, 4, 5, 5]** | Finite algebra, closes at dim 5. Unique: L1=4 (not 6). |
+| 2 | **r^2** (harmonic) | **[3, 6, 13, 15]** | Finite algebra, closes at dim 15. Enhanced SU(d) symmetry. |
+| 3 | **r^3** (cubic) | **[3, 6, 17, 109]** | Infinite but 7 extra relations at L3. |
+| 4 | **r^4** (quartic) | **[3, 6, 17, 116]** | Universal — matches singular potentials. |
+| 5 | **r^5** | **[3, 6, 17, 116]** | Universal. |
+| 6 | **r^6** | **[3, 6, 17, 116]** | Universal. |
+| 7 | **r^7** | **[3, 6, 17, 116]** | Universal. |
+| 8 | **r^8** | **[3, 6, 17, 116]** | Universal. |
+| 9 | **r^9** | **[3, 6, 17, 116]** | Universal. |
+| 10 | **r^10** | **[3, 6, 17, 116]** | Universal. |
+
+All computed with exact symbolic rank over QQ using `symbolic_rank_nbody.py` (N=3, d=1, max_level=3).
+Results in `results/symbolic_rank/rank_N3_d1_r*.json`.
+
+**Key finding:** The harmonic oscillator r^2 is not representative of "regular" potentials.
+Universality [3,6,17,116] holds for ALL r^n with n ≥ 4. The singular/regular dichotomy
+is replaced by: the dimension sequence distinguishes only the exceptional potentials r^1
+(linear), r^2 (harmonic), and r^3 (cubic) from the universal class.
+
+### Completed — Fractional Exponent Sweeps (April 2026)
+
+| # | Sweep | N | d | max_level | n_samples | Exponents tested | Key result |
+|---|-------|---|---|-----------|-----------|-----------------|------------|
+| 1 | 1/r^n (N=3) | 3 | 1 | 3 | 500–2000 | 21 (0.00001–3.5) | All [3,6,17,116] except SVD artifact at n=0.00001→113 |
+| 2 | 1/r^n (N=4) | 4 | 1 | 2 | 1000 | 9 (0.001–3.5) | All [6,14,62] — universal at N=4 |
+| 3 | r^n (N=3) | 3 | 1 | 3 | 1000 | 20 (0.5–5.0, 8 SVD failures) | 12 successful: r^1 anomalous [3,6,15,148], symmetric descent near r^2, generic [3,6,17,116] for n≥2.01 |
+
+Results in `results/fractional_exponent_sweep.json`, `results/fractional_exponent_sweep_N4.json`,
+`results/rn_exponent_sweep.json`.
+
+### Completed — Structure Constants Expansion Campaign (April 15, 2026)
+
+Expanded exact structure constant catalog from 9 to 15 potentials. All computed at N=3.
+
+| # | Potential | N | d | Level | Dim | Killing | Solvable | Nilpotent | Center | Notes |
+|---|----------|---|---|-------|-----|---------|----------|-----------|--------|-------|
+| 1 | r^6 | 3 | 1 | 2 | 17 | (6+,0-,11z) | len 3 | class 3 | 11 | Universal — matches 1/r |
+| 2 | r^8 | 3 | 1 | 2 | 17 | (6+,0-,11z) | len 3 | class 3 | 11 | Universal — matches 1/r |
+| 3 | r^10 | 3 | 1 | 2 | 17 | (6+,0-,11z) | len 3 | class 3 | 11 | Universal — matches 1/r |
+| 4 | r^1 | 3 | 1 | 2 | 5 | (3+,0-,2z) | len 2 | class 3 | 2 | Qualitatively different |
+| 5 | r^3 | 3 | 1 | 2 | 17 | (6+,0-,11z) | len 3 | class 3 | 11 | Matches universal at L2 |
+| 6 | r^3 | 3 | 1 | 3 | 109 | (29+,0-,80z) | len 4 | **NO** | 80 | Diverges at L3: not nilpotent, LCS oscillates |
+| 7 | 1/r^4 | 3 | 2 | 2 | 17 | (6+,0-,11z) | len 3 | class 3 | 11 | Completes singular catalog through n=4 |
+
+**Key findings:**
+- **Isomorphism conjecture strongly supported:** 13 non-harmonic potentials share identical L2 algebraic invariants (Killing 6+/0-/11z, 32 non-zero SC, solvable length 3, nilpotent class 3, center 11). Includes both singular (1/r through 1/r^4) and polynomial (r^4 through r^10) families.
+- **r^1 is qualitatively different:** 5-dimensional algebra with distinct Killing signature. Only potential with L1 rank 4 instead of 6.
+- **r^3 L3 is qualitatively different:** Despite matching universal pattern at L2, the L3 algebra is NOT nilpotent (lower central series oscillates: [109, 106, 103, 95, 52, 5, 10, 65, 93, 52, 5]), solvable length increases to 4, and center is massive (80/109 dimensions).
+
+Results in `results/algebra_structure/N3_d1_r{1,3,6,8,10}/` and `results/algebra_structure/N3_d2_1r4/`.
+Structure constant tensors in `results/symbolic_rank/rank_N3_d1_r{1,3,6,8,10}.json` and `rank_N3_d2_1r4.json`.
+
+### Completed — Cross-Potential Isomorphism Test (April 15, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **Isomorphism test (L2 algebras)** | All 12 non-harmonic 17-dim algebras are canonically isomorphic under fine invariant matching (Killing eigenvalues, ad-rank multisets, Casimir trace). |
+| 2 | **r^1 identification** | Identified as the filiform nilpotent Lie algebra L_{5,2}. |
+| 3 | **r^3 L3 deep analysis** | 80-dim radical + 29-dim quotient. LCS oscillates with period 5: [52,5,10,65,93,...]. Solvable length 4. Only non-nilpotent algebra in the catalog. |
+
+Script: `nbody/isomorphism_test.py`.
+
+### Completed — Level-2 Exponent Sweep (April 15, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **500 exponents at L2** | 1/r^n and r^n for n=0.02..5.0 (step 0.02). 498/500 give universal L2 dim=17. |
+| 2 | **Only exceptions** | r^1 (L2=15) and r^2 (L2=13). |
+| 3 | **Transition boundary** | Sharp: n=0.98→17, n=1.0→15, n=1.02→17. |
+
+Script: `nbody/level2_exponent_sweep.py`. Results: `results/level2_exponent_sweep.json`.
+
+### Completed — Charge Sweep Phase 3 (April 15, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **(+1,+q,−1) q=1..20** | All 20 give [3,6,17,116]. Complete universality — no departures at unit masses. |
+| 2 | **Method** | Exact symbolic rank over QQ at d=1 (44s/config avg). |
+| 3 | **Implication** | Previously reported departures (115 for H₂⁺, 111 for Li⁺) arose from specific mass ratios + charge combinations, not charge geometry alone. |
+
+Script: `nbody/charge_sweep_d1.py`. Results: `results/charge_sensitivity/charge_sweep_qqn_d1.json`.
+
+### Completed — Named Molecular Systems (April 15, 2026)
+
+| # | Task | Result |
+|---|---|---|
+| 1 | **H₃⁺ (m=1836)** | [3, 6, 17, 116]. Mass invariance confirmed. |
+| 2 | **O₃ (m=29164)** | [3, 6, 17, 116]. Mass invariance confirmed. |
+
+Script: `nbody/named_molecular_systems.py`.
+
+### Completed — Yukawa Potential Survey (April 16, 2026)
+
+**UNIVERSALITY CONFIRMED for all Yukawa configurations.**
+
+Uses Taylor-expansion composite representation: `V = u·exp(-μ/u) ≈ Σ (-μ)^k/k! · u^{1-k}` (K=3, 4 terms). This converts the transcendental Yukawa potential into a composite polynomial that the existing pipeline handles efficiently.
+
+| # | Configuration | mu | d | Result | Time |
+|---|---|---|---|---|---|
+| 1 | mu=0.1 (long Debye) | 1/10 | 1 | **[3, 6, 17, 116]** | 835s |
+| 2 | mu=0.5 | 1/2 | 1 | **[3, 6, 17, 116]** | 610s |
+| 3 | mu=0.7 (nuclear) | 7/10 | 1 | **[3, 6, 17, 116]** | 590s |
+| 4 | mu=1.0 | 1 | 1 | **[3, 6, 17, 116]** | 526s |
+| 5 | mu=2.0 (short-range) | 2 | 1 | **[3, 6, 17, 116]** | 507s |
+| 6 | mu=5.0 (very short) | 5 | 1 | **[3, 6, 17, 116]** | 525s |
+
+Physical systems:
+
+| # | System | Category | mu | Result | Time |
+|---|---|---|---|---|---|
+| 1 | Tritium / He-3 (3 nucleons) | nuclear | 7/10 | **[3, 6, 17, 116]** | 836s |
+| 2 | Dusty Plasma (screened Coulomb) | plasma | 1/10 | **[3, 6, 17, 116]** | 1281s |
+| 3 | Proton-Neutron-Neutron | nuclear | 7/10 | **[3, 6, 17, 116]** | 969s |
+
+**Significance:** Yukawa (screened Coulomb) is the first non-power-law singular potential with exponential screening confirmed to produce the universal dimension sequence. This extends universality beyond homogeneous potentials to the physically important class of exponentially screened interactions.
+
+Script: `yukawa_dimseq.py`. Results: `results/yukawa_dimseq.json`.
+
+### Completed — Extended L3 Exponent Sweep (April 16, 2026)
+
+Densified the Level-3 exponent sweep from ~41 to 76 successful data points across 1/r^n and r^n families. Fills gaps for a continuous dim(L3) vs exponent curve.
+
+| Family | Successful | Universal [3,6,17,116] | Non-universal | Key findings |
+|---|---|---|---|---|
+| 1/r^n | 46 | 45 | 1 (n=0.00001: dim=113, SVD artifact) | Continuous universality across all tested n |
+| r^n | 30 | 24 | 6 (r^1, r^{near 2}) | Sharp transitions at r^1 and r^2 |
+
+Non-universal results (all expected):
+- `1/r^0.00001`: 113 (SVD artifact at near-zero exponent)
+- `r^1.0`: [3,6,15,148] (known linear anomaly)
+- `r^1.999`, `r^1.99999`, `r^2.00001`, `r^2.001`: dim 87–108 (harmonic symmetry descent)
+
+Script: `l3_exponent_sweep.py`. Results: `results/l3_exponent_sweep_extended.json`.
+
+### Completed — N=4 Atlas 1D Slices (April 16, 2026)
+
+First atlas data for four bodies (N=4, d=1, 1/r). Three 1D slices through the 2D shape space of collinear 4-body configurations, 100 points × 500 samples each.
+
+| # | Slice | Parameterization | Points | Unique Ranks |
+|---|---|---|---|---|
+| 1 | Sweep s (t=2.0) | x=(0, s, 1, 2.0), s∈(0.05, 0.95) | 100 | {62} |
+| 2 | Sweep t (s=0.5) | x=(0, 0.5, 1, t), t∈(1.1, 5.0) | 100 | {62} |
+| 3 | Equal spacing | x=(0, d, 2d, 3d), d∈(0.3, 3.0) | 100 | {62} |
+
+**Key finding:** Complete rank stability — ALL 300 points show rank 62 (the generic N=4 d=1 L2 dimension). No rank drops detected at any configuration, including the equal-spacing slice which passes through configurations with enhanced permutation symmetry. This contrasts with N=3 where the Lagrange (equilateral) point shows clear rank drops. The absence of drops in 1D may indicate that the S₄ fixed-point set requires the full 2D or 3D shape space to manifest rank reductions.
+
+Script: `n4_atlas_1d.py`. Results: `results/n4_atlas_1d.json`. Runtime: ~45s total.
+
+### Not Yet Started (4)
 
 | # | Task | Notes |
 |---|---|---|
 | 1 | ~~Quantum rank for other potentials~~ | **DONE** — r², r⁴, 1/r², 1/r³, 1/r⁴ all tested. See Universality Classification above. |
-| 3 | **Parametric exponent sweep** (1,015 values of n) | Script written and multiprocessing added (`--workers 16`). First attempt April 11 — **aborted** after cost analysis. 280s/row × 50 rows × 1,007 exponents = ~$1,493 on r6i.4xlarge. Need faster approach. para-special (π, e, φ) completed April 11–12, ~$12 compute cost. √2, -π, -φ deliberately skipped (instance terminated after φ). Atlas summaries: π 60% rank-116 (2500 pts), e 63.2%, φ 63.4% — all consistent with singular-potential universality. Data in `results/atlas_full/atlas-1r-{pi,e,phi}`. Launcher: `infra/launch_parametric.py`. Remaining: √2, -π, -φ, plus 1,009 rational-step exponents. |
-| 4 | **Dusty plasma Yukawa atlas** | Prior run failed (exit code 1). Yukawa lambdification issue. |
-| 10 | ~~**Binary BH + Neutron Star atlas**~~ | **DONE** — masses [1.0, 1.0, 0.047], 100×100 grid, 400 samples; 98.7% rank-116; unique ranks {112,113,114,115,116}; 26,343s (439 min) on r6i.2xlarge. Triptych rendered (`triptych_binary_bh_ns_1r_m1p0_1p0_0p047.png`). Physics: NS at 5% mass breaks BH↔BH exchange symmetry, paradoxically *increases* universality vs equal-mass baseline (98.7% vs 87.9%). |
-| 5 | **Tritium/He-3 Yukawa atlas** | Instance terminated before producing data. |
+| 3 | ~~**Parametric exponent sweep**~~ | **DONE** — L2 broad sweep (500 values) and L3 extended sweep (76 values). |
+| 4 | ~~**Dusty plasma Yukawa**~~ | **DONE** — [3, 6, 17, 116]. See Yukawa Survey above. |
+| 5 | ~~**Tritium/He-3 Yukawa**~~ | **DONE** — [3, 6, 17, 116]. See Yukawa Survey above. |
 | 6 | **SageMath verification** | Independent verification of dimension sequence. SageMath not yet installed. |
-| 7 | ~~N=4 body Level-3~~ | **DONE** — [6, 14, 62, 1260]. new_L3(4) = 1198. See Completed — Sweep below. |
-| 9 | ~~N=7 d=1 Level 2~~ | **DONE** — [21, 56, 476]. See Completed — N=7 below. |
 | 8 | **Structure extraction at level 3 (rank 116)** | Level-2 structure computed for 6 potentials. Level 3 requires AWS. |
 
 ### Completed — Neural Network Algebra (April 2026)
@@ -172,16 +321,28 @@ The 1.1M L3 brackets are checkpointed on S3. Options to unblock:
 | 6 | **Post-Newtonian 2PN** | -1/r - 1/r² - 1/r³ — level 3 in progress locally. |
 | 7 | **117th generator identified** | Sum-of-squares proof: g = −(9/4)[(A−B)² + A²], negative semi-definite. Legendre P₃ structure. |
 
-### Completed — Quantum Universality Classification (April 10, 2026)
+### Completed — Quantum Universality Classification (updated April 15, 2026)
 
-| # | Task | Result |
-|---|---|---|
-| 1 | **1/r^2 quantum rank (d=1)** | [3, 6, 17, **117**] — grows by 1 (Calogero-Moser, integrable in 1D). |
-| 2 | **1/r^3 quantum rank (d=1)** | [3, 6, 17, **117**] — grows by 1. |
-| 3 | **1/r^4 quantum rank (d=1)** | [3, 6, 17, **117**] — grows by 1. Added 1/r^4 to `VALID_POTENTIALS`. |
-| 4 | **r^2 quantum rank (d=1)** | [3, 6, 13, 15] — no growth (finite algebra, no quantum corrections). |
-| 5 | **r^4 quantum rank (d=1)** | [3, 6, 17, 116] — no growth (quantum corrections are linearly dependent). |
-| 6 | **Classification** | ALL singular potentials (1/r^n, n≥1) grow by +1. NO polynomial potentials grow. The singularity is load-bearing. |
+| # | Potential | Quantum dims | Classical dims | Growth? |
+|---|---|---|---|---|
+| 1 | **1/r** (Coulomb) | [3, 6, 17, **117**] | [3, 6, 17, 116] | **+1** |
+| 2 | **1/r^2** (Calogero-Moser) | [3, 6, 17, **117**] | [3, 6, 17, 116] | **+1** |
+| 3 | **1/r^3** (dipole) | [3, 6, 17, **117**] | [3, 6, 17, 116] | **+1** |
+| 4 | **1/r^4** | [3, 6, 17, **117**] | [3, 6, 17, 116] | **+1** |
+| 5 | **log** (pure) | [3, 6, 17, **117**] | [3, 6, 17, 116] | **+1** |
+| 6 | **composite(u+u²)** | [3, 6, 17, **117**] | [3, 6, 17, 116] | **+1** |
+| 7 | **GUE (log+harmonic)** | [3, 6, 17, 116] | [3, 6, 17, 116] | No (harmonic suppresses) |
+| 8 | **r^1** (linear) | [3, 4, 5, 5] | [3, 4, 5, 5] | No (exceptional) |
+| 9 | **r^2** (harmonic) | [3, 6, 13, 15] | [3, 6, 15, 15] | Different intermediate (13 vs 15 at L2), same final dim |
+| 10 | **r^3** (cubic) | [3, 6, 17, 109] | [3, 6, 17, 109] | No (exceptional) |
+| 11 | **r^4** (quartic) | [3, 6, 17, 116] | [3, 6, 17, 116] | No |
+
+**Classification (revised):**
+- All singular potentials (1/r^n, log, composite with singular terms): **quantum dim = classical + 1**
+- Polynomial potentials (r^n, n ≥ 4): **quantum dim = classical** (no growth)
+- Three exceptional potentials (r^1, r^2, r^3): **quantum dim = classical** (no growth)
+- GUE composite (log + harmonic): harmonic component suppresses quantum growth despite log being singular
+- **Key insight from pure log:** The GUE composite's lack of growth is NOT because log is non-singular — pure log DOES grow. The harmonic (r^2) term is what suppresses quantum deformation.
 
 ### Completed — N-body Scaling Formulas (updated April 11, 2026)
 
@@ -269,18 +430,18 @@ with a check have completed atlas computations.
 
 ### Nuclear
 
-| System | Potential | Notes |
-|--------|----------|-------|
-| Tritium / He-3 (3 nucleons) | Yukawa | Prior run terminated early. Needs relaunch. |
-| Proton-neutron-neutron scattering | Yukawa | Not attempted. |
-| Three-quark bound states | — | QCD, not Coulomb. Beyond current framework. |
+| System | Potential | Status | Notes |
+|--------|----------|--------|-------|
+| Tritium / He-3 (3 nucleons) | Yukawa (mu=0.7) | **Done** | [3, 6, 17, 116] via Taylor composite K=3 |
+| Proton-neutron-neutron scattering | Yukawa (mu=0.7) | **Done** | [3, 6, 17, 116] via Taylor composite K=3 |
+| Three-quark bound states | — | — | QCD, not Coulomb. Beyond current framework. |
 
 ### Plasma / Charged Particles
 
 | System | Potential | Status |
 |--------|----------|--------|
 | Three ions in a Penning trap | 1/r (+1,+1,+1) + harmonic | Done (Penning trap config) |
-| Three dust grains in dusty plasma | Yukawa | Failed (exit code 1). Needs fix. |
+| Three dust grains in dusty plasma | Yukawa (mu=0.1) | **Done** — [3, 6, 17, 116] |
 | Three vortices in 2D fluid | log(r) | Done |
 
 ### Post-Newtonian / GR
@@ -492,21 +653,24 @@ LCM denominators: 1/r has mu^10*(mu^2-mu+1)^6, r^4 has 1, 1/r^4
 has mu^22*(mu^2-mu+1)^11. The mu^k factor encodes collision
 singularity strength; mu^2-mu+1 has no real roots.
 
-### Hugging Face Dataset Pipeline (April 14, 2026)
+### Hugging Face Dataset Pipeline (April 16, 2026)
 
-The project maintains a structured Hugging Face dataset built from computation results. The pipeline (`dataset/build_dataset.py`) reads JSON result files and produces 9 Parquet tables. The builder deduplicates symbolic rank entries, keeping only the highest `max_level` for each (N, d, potential, bracket_type).
+The project maintains a structured Hugging Face dataset built from computation results. The pipeline (`dataset/build_dataset.py`) reads JSON result files and produces 12 Parquet tables. The builder deduplicates symbolic rank entries, keeping only the highest `max_level` for each (N, d, potential, bracket_type).
 
 | Split | Source file(s) | Rows | Description |
 |-------|---------------|------|-------------|
-| `dimension_sequences` | `results/symbolic_rank/rank_N*.json` (incl. `_L0`, `_L1` suffixed files), `primes/results/gue_comparison.json`, `primes/results/quantum_gue.json`, `results/energy_bound/`, `nbody/n4_potential_universality_results.json` | ~85 | Cumulative rank at each bracket level per (N, d, potential) |
-| `structure_constants` | `results/algebra_structure/*/structure_constants_exact.json` | ~9 | Exact rational C^k_ij tensors at level 2 |
-| `charge_sensitivity` | `results/charge_sensitivity/charge_sensitivity_completion.json` | ~18 | Charge-independence tests |
-| `mass_invariance` | `data/mass_ratio_sweep.json` | ~19 | Mass ratio sweep with SVD spectra |
+| `dimension_sequences` | `results/symbolic_rank/rank_N*.json`, `primes/results/gue_comparison.json`, `results/yukawa_dimseq.json`, `results/l3_exponent_sweep_extended.json`, etc. | ~684 | Cumulative rank at each bracket level per (N, d, potential); includes 12 quantum (Moyal) rows, 6 Yukawa mu-sweep, ~76 extended L3 exponent sweep |
+| `structure_constants` | `results/algebra_structure/*/structure_constants_exact.json` | 16 | Exact rational C^k_ij tensors at level 2 (and level 3 for r^3) |
+| `charge_sensitivity` | `results/charge_sensitivity/*.json` | ~38 | Charge-independence tests |
+| `mass_invariance` | `data/mass_ratio_sweep.json` | 33 | Mass ratio sweep (1 to 10^10) with SVD spectra |
 | `level4_convergence` | `results/level4_*/results.json` | ~19 | Level-4 lower bounds |
-| `spectral_statistics` | `atlas_figures/atlas_summary.json`, `results/atlas_full/*/summary.json` | ~14 | Rank distributions across phase space |
-| `physical_systems` | `results/expansion_dimseq/expansion_dimseq_completion.json` | ~15 | Named physical systems (helium, Sun-Earth-Moon, etc.) |
+| `spectral_statistics` | `atlas_figures/atlas_summary.json`, `results/atlas_full/*/summary.json`, `results/n4_atlas_1d.json` | ~17 | Rank distributions across phase space (incl. 3 N=4 1D slices) |
+| `physical_systems` | `results/expansion_dimseq/expansion_dimseq_completion.json`, `results/yukawa_dimseq.json` | ~20 | Named physical systems (helium, Sun-Earth-Moon, H₃⁺, O₃, Yukawa nuclear/plasma, etc.) |
 | `bell_test` | `nbody/bell_test_results/chsh_summary.json` | 9 | CHSH Bell inequality tests |
 | `scaling_formulas` | `results/analysis/nbody_scaling_formulas.json` | 5 | Closed-form L_k(N) formulas with verification status |
+| `tier_decomposition` | `results/tier_decomposition/s3_s4_decomposition.json` | 40 | S₃ and S₄ CG representation decompositions |
+| `contextuality` | `nbody/contextuality_results/contextuality_summary.json` | 16 | KS/PM contextuality tests (all non-contextual) |
+| `convergence_trajectories` | `results/convergence_trajectories.json` | 77 | SVD rank convergence vs sample count |
 
 **After any computation campaign**, rebuild the dataset:
 

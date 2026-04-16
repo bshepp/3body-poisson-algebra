@@ -1,0 +1,27 @@
+{
+  "N": 3,
+  "d": 1,
+  "potential": "r^7",
+  "potential_label": "r^7",
+  "max_level": 3,
+  "quantum": false,
+  "bracket_type": "Poisson",
+  "n_generators": 156,
+  "n_monomials": 3783,
+  "cumulative_rank": [
+    3,
+    6,
+    17,
+    116
+  ],
+  "new_per_level": [
+    3,
+    3,
+    11,
+    99
+  ],
+  "matrix_density": 0.08089835092214157,
+  "computation_time_seconds": 47.1,
+  "sympy_version": "1.14.0",
+  "stabilized": false
+}

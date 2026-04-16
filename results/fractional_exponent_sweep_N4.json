@@ -1,0 +1,152 @@
+{
+  "title": "Fractional exponent sweep (N=4, d=1, max_level=2)",
+  "date": "2026-04-14",
+  "N": 4,
+  "d": 1,
+  "max_level": 2,
+  "n_samples": 1000,
+  "results": [
+    {
+      "exponent": 0.001,
+      "potential_label": "1/r^0.001",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "dimension_sequence": [
+        6,
+        14,
+        62
+      ],
+      "computation_time_s": 5.3,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 0.5,
+      "potential_label": "1/r^0.5",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "dimension_sequence": [
+        6,
+        14,
+        62
+      ],
+      "computation_time_s": 4.8,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 0.99999,
+      "potential_label": "1/r^0.99999",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "dimension_sequence": [
+        6,
+        14,
+        62
+      ],
+      "computation_time_s": 4.8,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 1.00001,
+      "potential_label": "1/r^1.00001",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "dimension_sequence": [
+        6,
+        14,
+        62
+      ],
+      "computation_time_s": 4.8,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 1.5,
+      "potential_label": "1/r^1.5",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "dimension_sequence": [
+        6,
+        14,
+        62
+      ],
+      "computation_time_s": 4.7,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 1.99999,
+      "potential_label": "1/r^1.99999",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "dimension_sequence": [
+        6,
+        14,
+        62
+      ],
+      "computation_time_s": 4.8,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 2.00001,
+      "potential_label": "1/r^2.00001",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "dimension_sequence": [
+        6,
+        14,
+        62
+      ],
+      "computation_time_s": 4.8,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 2.5,
+      "potential_label": "1/r^2.5",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "dimension_sequence": [
+        6,
+        14,
+        62
+      ],
+      "computation_time_s": 5.0,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 3.5,
+      "potential_label": "1/r^3.5",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "dimension_sequence": [
+        6,
+        14,
+        62
+      ],
+      "computation_time_s": 4.7,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    }
+  ],
+  "summary": {
+    "integer_1r_reference": [6, 14, 62, 1260],
+    "reference_note": "Integer 1/r exact symbolic rank from rank_N4_d1_1r.json (max_level=3). This sweep computed through max_level=2.",
+    "total_exponents_tested": 9,
+    "all_match_integer": true,
+    "conclusion": "All 9 fractional exponents (0.001 to 3.5) produce [6, 14, 62], perfectly matching the exact integer-exponent result through L2. Universality confirmed at N=4."
+  }
+}

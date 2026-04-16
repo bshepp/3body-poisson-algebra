@@ -1,0 +1,306 @@
+[
+  {
+    "algebra": "N3_d1_r1",
+    "dim": 5,
+    "total_pairs": 10,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 10,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d1_r10",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d1_r3",
+    "dim": 109,
+    "total_pairs": 5886,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 5886,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d1_r6",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d1_r8",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_1r",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_1r2",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_1r3",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_1r4",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_composite_u1_2",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_composite_u1_2_3",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_composite_u4",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_log",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_r2",
+    "dim": 15,
+    "total_pairs": 105,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 105,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_r4",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  },
+  {
+    "algebra": "N3_d2_r6",
+    "dim": 17,
+    "total_pairs": 136,
+    "n_commuting_pairs": 0,
+    "n_noncommuting_pairs": 136,
+    "commutativity_fraction": 0.0,
+    "commuting_pairs": [],
+    "orthogonality_graph": "empty",
+    "n_maximal_cliques": 0,
+    "ks_colorable": true,
+    "ks_reason": "Empty orthogonality graph \u2014 trivially non-contextual",
+    "contextual": false,
+    "peres_mermin": {
+      "constructible": false,
+      "reason": "Only 0 commuting pairs; need >= 3 for a PM row",
+      "n_commuting_pairs": 0
+    }
+  }
+]

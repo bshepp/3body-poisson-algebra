@@ -39,6 +39,18 @@ The harmonic potential (r²) produces a finite-dimensional algebra closing at di
 
 Dense numerical survey of V = −u^p for 79+ rational p-values confirms [3, 6, 17] is universal across all exponents with a single exception: p = −2 (harmonic oscillator, V = −r²) gives [3, 6, 13]. The transition is **infinitely sharp** — even p = −2 ± 0.001 gives dim = 17. The n→0⁺ degeneration test confirms the transition is topological (rank jumps discretely, never degrades continuously). See `nbody/symbolic_n_proof.py` for the survey scripts.
 
+**Inverse-power 1/r^n fractional exponents (April 2026):** Numerical SVD sweep across 21 exponents from n=0.00001 to n=3.5 confirms [3, 6, 17, 116] for all n ≥ 0.0001 (N=3, d=1, max_level=3). Confirmed at N=4 with 9 exponents (all [6, 14, 62]). Universality is continuous across real exponents.
+
+**Polynomial r^n exact symbolic survey (April 2026):** Exact symbolic rank over QQ for r^n potentials (N=3, d=1, max_level=3) reveals three exceptional integer exponents:
+- r^1 (linear confinement): [3, 4, 5, 5] — finite, closes at dim 5
+- r^2 (harmonic oscillator): [3, 6, 13, 15] — finite, closes at dim 15
+- r^3 (cubic): [3, 6, 17, 109] — infinite, 7 extra relations at L3
+- r^4 through r^10: all [3, 6, 17, 116] — universal, matching singular potentials
+
+The harmonic oscillator is special due to its enhanced dynamical symmetry (Fradkin tensor / SU(d)), not its regularity. Numerical r^n exponent sweep confirms a symmetric L3 descent (116→108→87) approaching n=2 from either side.
+
+**Structure constant expansion (April 15, 2026):** Exact structure constants computed for 15 potentials total. All 13 non-harmonic potentials (1/r through 1/r^4, r^4 through r^10, composites, log) share **identical** L2 algebraic invariants: Killing (6+, 0-, 11 zero), solvable length 3, nilpotent class 3, center dim 11, 32 non-zero structure constants. The r^1 algebra is qualitatively different (dim 5, Killing 3+/0-/2z, solvable length 2). The r^3 algebra matches universal at L2 but diverges at L3: the 109-dimensional algebra is **not nilpotent** (lower central series oscillates [109, 106, 103, 95, 52, 5, 10, 65, 93, 52, 5]), solvable length 4, center dim 80. This strongly supports the isomorphism conjecture: all non-harmonic, non-exceptional potentials generate literally the same Lie algebra at level 2.
+
 ### Neural network training dynamics (April 2026)
 
 A 3-layer linear network `f(x) = w₃·w₂·w₁·x` trained with SGD+momentum defines a Hamiltonian system on 6D phase space with gradient-product pairwise coupling `V_ij = (∂L/∂wᵢ)(∂L/∂wⱼ)/2`. The resulting Poisson algebra has dimension sequence **[3, 6, 17, 119]** (exact over ℚ) — 3 extra generators at level 3 compared to the gravitational universal [3, 6, 17, 116].

@@ -1,0 +1,305 @@
+{
+  "title": "r^n exponent sweep (polynomial-type potentials)",
+  "description": "Tests dimension sequence for V(r) = r^n potentials around n=2 (harmonic) and n=4 (quartic), using composite u^(-n) representation. Probes whether polynomial potentials also exhibit universality or have distinct behavior at integer exponents.",
+  "date": "2026-04-14",
+  "N": 3,
+  "d": 1,
+  "max_level": 3,
+  "n_samples": 1000,
+  "results": [
+    {
+      "exponent": 0.5,
+      "potential_label": "r^0.5",
+      "u_power": -0.5,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 119.1,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 1.0,
+      "potential_label": "r^1.0",
+      "u_power": -1.0,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        15,
+        148
+      ],
+      "computation_time_s": 60.9,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 1.5,
+      "potential_label": "r^1.5",
+      "u_power": -1.5,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 79.2,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 1.99,
+      "potential_label": "r^1.99",
+      "u_power": -1.99,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 78.5,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 1.999,
+      "potential_label": "r^1.999",
+      "u_power": -1.999,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        108
+      ],
+      "computation_time_s": 79.9,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 1.99999,
+      "potential_label": "r^1.99999",
+      "u_power": -1.99999,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        87
+      ],
+      "computation_time_s": 81.5,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 2.00001,
+      "potential_label": "r^2.00001",
+      "u_power": -2.00001,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        87
+      ],
+      "computation_time_s": 128.5,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 2.001,
+      "potential_label": "r^2.001",
+      "u_power": -2.001,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        108
+      ],
+      "computation_time_s": 129.6,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 2.01,
+      "potential_label": "r^2.01",
+      "u_power": -2.01,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 115.2,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 2.5,
+      "potential_label": "r^2.5",
+      "u_power": -2.5,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 109.4,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 3.0,
+      "potential_label": "r^3.0",
+      "u_power": -3.0,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 106.3,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 3.5,
+      "potential_label": "r^3.5",
+      "u_power": -3.5,
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 113.0,
+      "method": "numerical_svd",
+      "n_samples": 1000
+    },
+    {
+      "exponent": 3.99,
+      "potential_label": "r^3.99",
+      "u_power": -3.99,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 122.4
+    },
+    {
+      "exponent": 3.999,
+      "potential_label": "r^3.999",
+      "u_power": -3.999,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 121.5
+    },
+    {
+      "exponent": 3.99999,
+      "potential_label": "r^3.99999",
+      "u_power": -3.99999,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 119.9
+    },
+    {
+      "exponent": 4.00001,
+      "potential_label": "r^4.00001",
+      "u_power": -4.00001,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 122.2
+    },
+    {
+      "exponent": 4.001,
+      "potential_label": "r^4.001",
+      "u_power": -4.001,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 132.7
+    },
+    {
+      "exponent": 4.01,
+      "potential_label": "r^4.01",
+      "u_power": -4.01,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 126.5
+    },
+    {
+      "exponent": 4.5,
+      "potential_label": "r^4.5",
+      "u_power": -4.5,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 118.7
+    },
+    {
+      "exponent": 5.0,
+      "potential_label": "r^5.0",
+      "u_power": -5.0,
+      "N": 3,
+      "d": 1,
+      "error": "SVD did not converge",
+      "computation_time_s": 116.6
+    }
+  ],
+  "summary": {
+    "successful_computations": 12,
+    "failed_svd_convergence": 8,
+    "failure_note": "r^n for n >= 3.99 fails with SVD non-convergence. The u^(-n) representation creates numerically ill-conditioned expressions for large negative powers. These would need direct polynomial representation (PolyAlgebra) to resolve.",
+    "special_exponents": {
+      "r^1.0": {
+        "sequence": [3, 6, 15, 148],
+        "note": "Anomalous at both L2 and L3. The linear confinement potential V=r has distinct algebraic structure, possibly related to its lack of a natural length scale in 1D."
+      },
+      "r^2.0_neighborhood": {
+        "approach_from_below": {"1.99": 116, "1.999": 108, "1.99999": 87},
+        "approach_from_above": {"2.00001": 87, "2.001": 108, "2.01": 116},
+        "note": "Symmetric descent toward n=2. The harmonic oscillator has enhanced symmetry (Fradkin tensor / SU(d) dynamical symmetry in d dimensions) that creates additional algebraic relations among L3 generators, reducing the dimension from the generic 116 down toward the exact r^2 value. The L3 dimension likely approaches the exact harmonic value as n→2, with intermediate values 108 representing partial numerical resolution of nearly-degenerate relations."
+      }
+    },
+    "generic_sequence": [3, 6, 17, 116],
+    "conclusion": "For r^n potentials, the generic dimension sequence [3, 6, 17, 116] holds for n in {0.5, 1.5, 1.99, 2.01, 2.5, 3.0, 3.5}. Two integer exponents break universality: r^1 (linear, gives [3,6,15,148]) and r^2 (harmonic, L3 < 116). This is the OPPOSITE pattern from 1/r^n potentials, where ALL exponents (integer and fractional) give the universal sequence. The r^2 harmonic oscillator's additional symmetry demonstrably reduces the Poisson algebra dimension."
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "N": 3,
+  "d": 1,
+  "potential": "r^1",
+  "potential_label": "r^1",
+  "max_level": 2,
+  "quantum": false,
+  "bracket_type": "Poisson",
+  "n_generators": 18,
+  "n_monomials": 8,
+  "cumulative_rank": [
+    3,
+    4,
+    5
+  ],
+  "new_per_level": [
+    3,
+    1,
+    1
+  ],
+  "matrix_density": 0.10416666666666667,
+  "computation_time_seconds": 0.0,
+  "sympy_version": "1.14.0",
+  "stabilized": false,
+  "structure": {
+    "basis_indices": [
+      0,
+      1,
+      2,
+      4,
+      11
+    ],
+    "killing_signature": [
+      3,
+      0,
+      2
+    ],
+    "killing_trace": 6.0,
+    "is_semisimple": false,
+    "derived_series": [
+      5,
+      2,
+      0
+    ],
+    "is_solvable": true,
+    "solvability_length": 2,
+    "lower_central_series": [
+      5,
+      2,
+      1,
+      0
+    ],
+    "is_nilpotent": true,
+    "nilpotency_class": 3,
+    "center_dimension": 2,
+    "monomial_summary": {
+      "0": {
+        "count": 3,
+        "avg_monomials": 4.0,
+        "max_degree": 2
+      },
+      "1": {
+        "count": 3,
+        "avg_monomials": 0.3333333333333333,
+        "max_degree": 1
+      },
+      "2": {
+        "count": 12,
+        "avg_monomials": 0.16666666666666666,
+        "max_degree": 0
+      }
+    }
+  }
+}

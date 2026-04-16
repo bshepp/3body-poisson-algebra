@@ -191,10 +191,10 @@
 - **Reference:** See supplemental memo `poisson_numerical_robustness_memo.md` for discussion of the numerical robustness landscape. Note: the mpmath claims in that memo should be treated with caution; the symbolic approach supersedes them.
 
 ### 4.5 Algebra Structure Extraction (Structure Constants, Killing Form, Derived Series)
-- **Status:** ✅ COMPLETED (level 2, rank 17) — Structure constants computed exactly over Q for 1/r, 1/r⁴, r⁴, and r² (harmonic). Killing form, derived/lower central series, center all computed. See `nbody/symbolic_rank_nbody.py --structure`, results in `results/algebra_structure/`.
-- **Key result:** All non-harmonic potentials (1/r, 1/r⁴, r⁴) produce **identical** algebraic structure at level 2: Killing signature (6+, 0-, 11 zero), solvable (length 3), nilpotent (class 3), center dim 11, derived series [17, 14, 3, 0]. The harmonic r² is structurally opposite: Killing (14+, 0-, 1 zero), not solvable, not nilpotent, center dim 1, perfect algebra [L,L]=L.
-- **Next steps:** Scale to level 3 (rank 116) on AWS; compare structure constants between potentials to test isomorphism.
-- **Impact:** VERY HIGH — first classification of the Poisson algebra beyond dimension counting. Proves structure universality, not just dimensional universality.
+- **Status:** ✅ COMPLETED (15 potentials, levels 2–3) — Structure constants computed exactly over Q for 15 potentials. Expanded from 9 to 15 tensors in April 2026 campaign.
+- **Key result:** 13 non-harmonic potentials produce **identical** L2 algebraic invariants: Killing signature (6+, 0-, 11 zero), solvable (length 3), nilpotent (class 3), center dim 11, 32 non-zero SC, derived series [17, 14, 3, 0]. Covers 1/r through 1/r^4, r^4 through r^10, composites, and log. The r^1 algebra is qualitatively different (dim 5, Killing 3+/0-/2z, solvable length 2). The r^3 algebra matches at L2 but diverges dramatically at L3: dim 109, NOT nilpotent (LCS oscillates), solvable length 4, center 80.
+- **Next steps:** Scale to level 3 (rank 116) on AWS for universal-class potentials; explicit tensor comparison to test literal isomorphism (not just invariant matching).
+- **Impact:** VERY HIGH — strongest evidence yet for universal isomorphism class. r^3 L3 non-nilpotency is a novel discovery.
 
 ### 4.6 Noise Plateau Mapping
 - **Status:** NOT STARTED
@@ -246,3 +246,12 @@ Mark items with status as work proceeds:
 | 4.10 | Rebuild HF dataset after new results (`python dataset/build_dataset.py && python dataset/validate_dataset.py`) | 🔄 |
 | 4.11 | Extended dimension sequences: N=9 L2, N=11-26 L1, N=11-50 L0 (Apr 14, 2026) | ✅ |
 | 4.12 | N=10 L2 (needs 64+ GB RAM or sparse DomainMatrix) | ⬜ |
+| 4.13 | Polynomial r^n exact symbolic survey (r^1 through r^10, N=3, d=1, L3) | ✅ |
+| 4.14 | 1/r^n fractional exponent sweep (21 exponents N=3 L3 + 9 exponents N=4 L2) | ✅ |
+| 4.15 | r^n numerical exponent sweep (20 exponents, N=3, d=1, L3) | ✅ |
+| 4.16 | Generalize `symbolic_rank_nbody.py` for arbitrary integer r^n | ✅ |
+| 4.17 | Structure constants expansion: r^6, r^8, r^10 at N=3 d=1 (isomorphism test) | ✅ |
+| 4.18 | Structure constants expansion: r^1, r^3 at N=3 d=1 (exceptional algebras) | ✅ |
+| 4.19 | Structure constants expansion: 1/r^4 at N=3 d=2 (singular catalog) | ✅ |
+| 4.20 | r^3 level-3 structure constants at N=3 d=1 (dim 109, non-nilpotent) | ✅ |
+| 4.21 | Rebuild HF dataset with 15 structure constant tensors (208 total rows) | ✅ |

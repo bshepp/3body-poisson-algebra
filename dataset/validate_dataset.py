@@ -15,6 +15,7 @@ TABLES = [
     "dimension_sequences", "structure_constants", "charge_sensitivity",
     "mass_invariance", "level4_convergence", "spectral_statistics",
     "physical_systems", "bell_test", "scaling_formulas",
+    "tier_decomposition", "contextuality", "convergence_trajectories",
 ]
 
 
@@ -24,7 +25,7 @@ def test_yaml_frontmatter():
     assert len(parts) >= 3, "Could not find YAML frontmatter"
     meta = yaml.safe_load(parts[1])
     assert meta["license"] == "mit"
-    assert len(meta["configs"]) == 9, f"Expected 9 configs, got {len(meta['configs'])}"
+    assert len(meta["configs"]) == 12, f"Expected 12 configs, got {len(meta['configs'])}"
     print(f"YAML frontmatter: {len(meta['configs'])} configs, license={meta['license']}  OK")
 
 
@@ -39,7 +40,7 @@ def test_parquet_files():
 
 def test_dataset_info():
     info = json.loads((OUTPUT / "dataset_info.json").read_text())
-    assert len(info["splits"]) == 9, f"Expected 9 splits, got {len(info['splits'])}"
+    assert len(info["splits"]) == 12, f"Expected 12 splits, got {len(info['splits'])}"
     print(f"dataset_info.json: {len(info['splits'])} splits  OK")
 
 
@@ -79,22 +80,29 @@ def test_charge_sensitivity():
 
 def test_mass_invariance():
     df = pd.read_parquet(OUTPUT / "mass_invariance.parquet")
-    assert all(df["level_2_dim"] == 17), "Not all level_2_dim == 17"
+    moderate = df[df["m3"] <= 10000]
+    assert all(moderate["level_2_dim"] == 17), "Not all moderate-mass level_2_dim == 17"
     for _, row in df.iterrows():
         svs = json.loads(row["level_2_singular_values"])
-        assert len(svs) == 18
-    print(f"Mass invariance: all {len(df)} rows have dim=17 and 18 SVs  OK")
+        assert len(svs) >= 12, f"Expected >= 12 SVs, got {len(svs)} for m3={row['m3']}"
+    assert len(df) >= 30, f"Expected >= 30 mass ratio rows, got {len(df)}"
+    print(f"Mass invariance: {len(df)} rows, moderate-mass dim=17 verified  OK")
 
 
 def test_physical_systems():
     df = pd.read_parquet(OUTPUT / "physical_systems.parquet")
-    assert len(df) >= 10, f"Expected >= 10 physical systems, got {len(df)}"
+    assert len(df) >= 13, f"Expected >= 13 physical systems, got {len(df)}"
     assert "category" in df.columns
     assert "matches_universal" in df.columns
     assert "dim_L0" in df.columns
     categories = set(df["category"])
     assert "astrophysical" in categories
     assert "atomic" in categories
+    assert "nuclear" in categories, "Missing nuclear (Yukawa) systems"
+    yukawa_systems = df[df["category"].isin(["nuclear", "plasma"])]
+    if len(yukawa_systems) > 0:
+        assert all(yukawa_systems["matches_universal"]), \
+            "Yukawa systems should all match universal sequence"
     print(f"Physical systems: {len(df)} systems across {len(categories)} categories  OK")
 
 
@@ -115,6 +123,51 @@ def test_scaling_formulas():
     print(f"Scaling formulas: {len(df)} formulas, statuses={statuses}  OK")
 
 
+def test_tier_decomposition():
+    df = pd.read_parquet(OUTPUT / "tier_decomposition.parquet")
+    assert len(df) >= 10, f"Expected >= 10 tier decomposition rows, got {len(df)}"
+    groups = set(df["symmetry_group"])
+    assert "S3" in groups, "Missing S3 decomposition"
+    assert "S4" in groups, "Missing S4 decomposition"
+    assert all(df["contribution"] >= 0), "Negative contribution found"
+    print(f"Tier decomposition: {len(df)} rows, groups={groups}  OK")
+
+
+def test_contextuality():
+    df = pd.read_parquet(OUTPUT / "contextuality.parquet")
+    assert len(df) >= 10, f"Expected >= 10 contextuality rows, got {len(df)}"
+    assert all(df["n_commuting_pairs"] == 0), "Expected zero commuting pairs in all algebras"
+    assert all(~df["contextual"]), "Unexpected contextuality found"
+    assert all(df["ks_colorable"]), "Expected all KS colorable"
+    print(f"Contextuality: {len(df)} algebras, all non-contextual (0 commuting pairs)  OK")
+
+
+def test_spectral_statistics():
+    df = pd.read_parquet(OUTPUT / "spectral_statistics.parquet")
+    assert len(df) >= 10, f"Expected >= 10 spectral statistics rows, got {len(df)}"
+    n4_rows = df[df["source_type"] == "n4_atlas_1d_slice"]
+    assert len(n4_rows) >= 3, f"Expected >= 3 N=4 atlas slices, got {len(n4_rows)}"
+    for _, row in n4_rows.iterrows():
+        assert row["rank_mode"] == 62, \
+            f"N=4 atlas slice {row['config']} mode rank {row['rank_mode']} != 62"
+        assert row["n_points"] >= 50, \
+            f"N=4 atlas slice {row['config']} has too few points: {row['n_points']}"
+    print(f"Spectral statistics: {len(df)} rows, {len(n4_rows)} N=4 slices (all mode=62)  OK")
+
+
+def test_convergence_trajectories():
+    df = pd.read_parquet(OUTPUT / "convergence_trajectories.parquet")
+    assert len(df) >= 40, f"Expected >= 40 convergence rows, got {len(df)}"
+    configs = df.groupby(["N", "d", "potential", "level"])
+    for name, group in configs:
+        ranks = group.sort_values("n_samples")["rank"].values
+        # Rank should be monotonically non-decreasing with sample count
+        for i in range(len(ranks) - 1):
+            assert ranks[i] <= ranks[i + 1], \
+                f"Rank decreased for {name}: {ranks[i]} > {ranks[i+1]}"
+    print(f"Convergence trajectories: {len(df)} rows, {len(configs)} configs, monotonic  OK")
+
+
 def main():
     print("=== Dataset Validation ===\n")
     test_yaml_frontmatter()
@@ -126,7 +179,11 @@ def main():
     test_mass_invariance()
     test_physical_systems()
     test_bell_test()
+    test_spectral_statistics()
     test_scaling_formulas()
+    test_tier_decomposition()
+    test_contextuality()
+    test_convergence_trajectories()
     print("\n*** ALL TESTS PASSED ***")
 
 

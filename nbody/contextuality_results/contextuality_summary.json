@@ -1,0 +1,154 @@
+{
+  "n_algebras_tested": 16,
+  "max_dim_tested": 109,
+  "all_zero_commuting_pairs": true,
+  "all_non_contextual": true,
+  "verdict": "non-contextual",
+  "reason": "All algebras maximally non-commutative (zero commuting pairs)",
+  "algebras": [
+    {
+      "algebra": "N3_d1_r1",
+      "dim": 5,
+      "commuting_pairs": 0,
+      "total_pairs": 10,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d1_r10",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d1_r3",
+      "dim": 109,
+      "commuting_pairs": 0,
+      "total_pairs": 5886,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d1_r6",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d1_r8",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_1r",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_1r2",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_1r3",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_1r4",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_composite_u1_2",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_composite_u1_2_3",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_composite_u4",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_log",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_r2",
+      "dim": 15,
+      "commuting_pairs": 0,
+      "total_pairs": 105,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_r4",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    },
+    {
+      "algebra": "N3_d2_r6",
+      "dim": 17,
+      "commuting_pairs": 0,
+      "total_pairs": 136,
+      "ks_colorable": true,
+      "contextual": false,
+      "pm_constructible": false
+    }
+  ]
+}

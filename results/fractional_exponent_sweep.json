@@ -1,0 +1,190 @@
+{
+  "title": "Fractional exponent sweep for 1/r^n potential",
+  "description": "Tests whether dimension sequence universality extends to non-integer exponents. Each exponent n yields V(r) ~ 1/r^n via the composite potential mode with term (-1, n). Computed via numerical SVD with 500 sample points. N=3, d=1, max_level=3.",
+  "date": "2026-04-14",
+  "N": 3,
+  "d": 1,
+  "max_level": 3,
+  "n_samples": 500,
+  "universal_sequence": [3, 6, 17, 116],
+  "results": [
+    {
+      "exponent": 0.00001,
+      "potential_label": "1/r^0.00001",
+      "dimension_sequence": [3, 6, 17, 113],
+      "matches_universal": false,
+      "note": "L3=113 instead of 116. Confirmed with 2000 samples. SVD shows sv(114-116) ~ 1e-11 (noise level) vs sv(113) ~ 4e-7. At n~0, the potential u^n approaches constant, causing 3 L3 generators to lose functional independence (sv suppressed ~100,000x vs n=0.0001). The true algebraic dimension is likely 116 for all n>0, but the SVD correctly reports 113 because the 3 marginal generators are indistinguishable from noise at this extreme exponent.",
+      "computation_time_s": null,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 0.0001,
+      "potential_label": "1/r^0.0001",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "note": "Gap at index 116 is 1.48e+05x — definitive. sv(114-116) ~ 3-6e-06, well above noise.",
+      "method": "numerical_svd",
+      "n_samples": 2000
+    },
+    {
+      "exponent": 0.001,
+      "potential_label": "1/r^0.001",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 0.01,
+      "potential_label": "1/r^0.01",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 0.1,
+      "potential_label": "1/r^0.1",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 0.5,
+      "potential_label": "1/r^0.5",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 0.99,
+      "potential_label": "1/r^0.99",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 0.999,
+      "potential_label": "1/r^0.999",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 0.99999,
+      "potential_label": "1/r^0.99999",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 1.00001,
+      "potential_label": "1/r^1.00001",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 1.001,
+      "potential_label": "1/r^1.001",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 1.01,
+      "potential_label": "1/r^1.01",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 1.5,
+      "potential_label": "1/r^1.5",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 1.99,
+      "potential_label": "1/r^1.99",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 1.999,
+      "potential_label": "1/r^1.999",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 1.99999,
+      "potential_label": "1/r^1.99999",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 2.00001,
+      "potential_label": "1/r^2.00001",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 2.001,
+      "potential_label": "1/r^2.001",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 2.01,
+      "potential_label": "1/r^2.01",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 2.5,
+      "potential_label": "1/r^2.5",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    },
+    {
+      "exponent": 3.5,
+      "potential_label": "1/r^3.5",
+      "dimension_sequence": [3, 6, 17, 116],
+      "matches_universal": true,
+      "method": "numerical_svd",
+      "n_samples": 500
+    }
+  ],
+  "summary": {
+    "total_exponents_tested": 21,
+    "universal_matches": 20,
+    "deviations": 1,
+    "deviation_details": "n=0.00001 gives L3=113 (vs 116). Confirmed at both 500 and 2000 samples. SVD analysis shows sv(114-116) drop to ~1e-11 (noise floor) while sv(113) is ~4e-7. This is a numerical resolution limit as the potential approaches constant (u^0 = 1). The sharp transition from 116→113 occurs between n=0.0001 (clear gap at 116) and n=0.00001 (gap at 113). This suggests the algebraic structure is genuinely 116-dimensional for all n>0 but the functional independence of three generators degrades exponentially as n→0.",
+    "conclusion": "Potential universality extends continuously to non-integer exponents across the full range [0.0001, 3.5]. The dimension sequence [3, 6, 17, 116] is invariant to the choice of exponent — not just for integer values, but for arbitrary real exponents including 0.5, 1.5, 2.5, and values infinitesimally close to integers (e.g., 0.99999, 1.00001, 1.99999, 2.00001). The only apparent deviation at n=0.00001 is an SVD resolution artifact as the potential approaches constant."
+  }
+}

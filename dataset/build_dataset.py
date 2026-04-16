@@ -3,7 +3,7 @@
 Build Hugging Face dataset: Pairwise Poisson Algebras of the N-Body Problem.
 
 Reads ~200 JSON result files from the 3-body project and normalizes them
-into 9 Parquet tables suitable for upload to Hugging Face.
+into 12 Parquet tables suitable for upload to Hugging Face.
 
 Usage:
     pip install pandas pyarrow
@@ -19,6 +19,9 @@ Output:
     dataset/output/physical_systems.parquet
     dataset/output/bell_test.parquet
     dataset/output/scaling_formulas.parquet
+    dataset/output/tier_decomposition.parquet
+    dataset/output/contextuality.parquet
+    dataset/output/convergence_trajectories.parquet
     dataset/output/dataset_info.json
 """
 
@@ -52,6 +55,10 @@ def _potential_from_label(label: str) -> str:
         "composite_u4": "composite(u^4)",
         "quantum_1/r": "1/r", "quantum_1/r^2": "1/r^2",
         "quantum_1/r^3": "1/r^3", "quantum_1/r^4": "1/r^4",
+        "quantum_log": "log",
+        "quantum_r^1": "r^1", "quantum_r^2": "r^2",
+        "quantum_r^3": "r^3", "quantum_r^4": "r^4",
+        "quantum_composite_u1_2": "composite(u+u^2)",
         "neural_gradient_product": "neural",
     }
     return mapping.get(label, label)
@@ -204,6 +211,76 @@ def build_dimension_sequences() -> pd.DataFrame:
                 "source_file": str(n4_fp.relative_to(ROOT)),
             })
 
+    # --- Yukawa mu-sweep (Taylor-expansion composite) ---
+    yuk_fp = ROOT / "results" / "yukawa_dimseq.json"
+    if yuk_fp.exists():
+        yuk = load_json(yuk_fp)
+        for r in yuk.get("mu_sweep", []):
+            if "error" in r:
+                continue
+            rows.append({
+                "N": r.get("N", 3), "d": r.get("d", 1),
+                "potential": f"yukawa(mu={r.get('mu', '?')})",
+                "bracket_type": "poisson",
+                "masses": None, "charges": None,
+                "external_potential": None,
+                "max_level": r.get("taylor_order", 3),
+                "dimension_sequence": r.get("dimension_sequence"),
+                "new_per_level": None,
+                "is_exact": False,
+                "computation_method": "numerical_svd",
+                "sympy_version": None,
+                "computation_time_s": r.get("computation_time_s"),
+                "physical_system": None,
+                "source_file": str(yuk_fp.relative_to(ROOT)),
+            })
+
+    # --- Extended L3 exponent sweep (1/r^n and r^n families) ---
+    l3_ext_fp = ROOT / "results" / "l3_exponent_sweep_extended.json"
+    if l3_ext_fp.exists():
+        l3e = load_json(l3_ext_fp)
+        for r in l3e.get("results", []):
+            if "error" in r:
+                continue
+            rows.append({
+                "N": r.get("N", 3), "d": r.get("d", 1),
+                "potential": r.get("potential_label", ""),
+                "bracket_type": "poisson",
+                "masses": None, "charges": None,
+                "external_potential": None,
+                "max_level": r.get("max_level", 3),
+                "dimension_sequence": r.get("dimension_sequence"),
+                "new_per_level": None,
+                "is_exact": False,
+                "computation_method": r.get("method", "numerical_svd"),
+                "sympy_version": None,
+                "computation_time_s": r.get("computation_time_s"),
+                "physical_system": None,
+                "source_file": str(l3_ext_fp.relative_to(ROOT)),
+            })
+
+    # --- Level-2 exponent sweep (fine-grained 1/r^n and r^n families) ---
+    l2_fp = ROOT / "results" / "level2_exponent_sweep.json"
+    if l2_fp.exists():
+        l2 = load_json(l2_fp)
+        for r in l2.get("results", []):
+            rows.append({
+                "N": r.get("N", 3), "d": r.get("d", 1),
+                "potential": r.get("potential_label", ""),
+                "bracket_type": "poisson",
+                "masses": None, "charges": None,
+                "external_potential": None,
+                "max_level": r.get("max_level", 2),
+                "dimension_sequence": r.get("dimension_sequence"),
+                "new_per_level": None,
+                "is_exact": False,
+                "computation_method": r.get("method", "numerical_svd"),
+                "sympy_version": None,
+                "computation_time_s": r.get("computation_time_s"),
+                "physical_system": None,
+                "source_file": str(l2_fp.relative_to(ROOT)),
+            })
+
     # Deduplicate symbolic_rank rows: keep highest max_level per (N, d, potential, bracket_type)
     seen = {}
     deduped = []
@@ -300,12 +377,8 @@ def build_structure_constants() -> pd.DataFrame:
 # Split 3: charge_sensitivity
 # ---------------------------------------------------------------------------
 
-def build_charge_sensitivity() -> pd.DataFrame:
-    fp = ROOT / "results" / "charge_sensitivity" / "charge_sensitivity_completion.json"
-    if not fp.exists():
-        return pd.DataFrame()
-
-    data = load_json(fp)
+def _parse_charge_entries(data, source_path, default_method="numerical_SVD"):
+    """Parse charge sensitivity entries from a manifest file."""
     rows = []
     for key, entry in data.items():
         r = entry.get("result", entry)
@@ -329,6 +402,8 @@ def build_charge_sensitivity() -> pd.DataFrame:
             "charges": json.dumps(charges),
             "masses": json.dumps(masses),
             "n_samples": r.get("n_samples"),
+            "method": r.get("method", default_method),
+            "d_spatial": r.get("d_spatial"),
             "dimension_sequence": json.dumps(dims),
             "dim_L0": dims[0] if len(dims) > 0 else None,
             "dim_L1": dims[1] if len(dims) > 1 else None,
@@ -337,8 +412,27 @@ def build_charge_sensitivity() -> pd.DataFrame:
             "matches_116": r.get("matches_116"),
             "physical_system": r.get("label"),
             "computation_time_s": r.get("elapsed_seconds"),
-            "source_file": str(fp.relative_to(ROOT)),
+            "source_file": source_path,
         })
+    return rows
+
+
+def build_charge_sensitivity() -> pd.DataFrame:
+    rows = []
+    fp_main = ROOT / "results" / "charge_sensitivity" / "charge_sensitivity_completion.json"
+    if fp_main.exists():
+        rows.extend(_parse_charge_entries(
+            load_json(fp_main), str(fp_main.relative_to(ROOT)),
+            default_method="numerical_SVD"))
+
+    fp_d1 = ROOT / "results" / "charge_sensitivity" / "charge_sweep_qqn_d1.json"
+    if fp_d1.exists():
+        rows.extend(_parse_charge_entries(
+            load_json(fp_d1), str(fp_d1.relative_to(ROOT)),
+            default_method="exact_symbolic_QQ"))
+
+    if not rows:
+        return pd.DataFrame()
 
     df = pd.DataFrame(rows)
     for col in ["dim_L0", "dim_L1", "dim_L2", "dim_L3"]:
@@ -459,6 +553,24 @@ def build_spectral_statistics() -> pd.DataFrame:
                 "source_file": str(fp.relative_to(ROOT)),
             })
 
+    # --- N=4 atlas 1D slices ---
+    n4_atlas_fp = ROOT / "results" / "n4_atlas_1d.json"
+    if n4_atlas_fp.exists():
+        n4_data = load_json(n4_atlas_fp)
+        for sl in n4_data.get("slices", []):
+            rows.append({
+                "config": f"N4_d1_{sl['slice_name']}",
+                "label": sl["description"],
+                "source_type": "n4_atlas_1d_slice",
+                "n_regions": None,
+                "rank_min": sl.get("rank_min"),
+                "rank_max": sl.get("rank_max"),
+                "rank_mode": sl.get("mode_rank"),
+                "n_points": sl.get("n_points"),
+                "pct_116": None,
+                "source_file": str(n4_atlas_fp.relative_to(ROOT)),
+            })
+
     return pd.DataFrame(rows)
 
 
@@ -482,6 +594,11 @@ SYSTEM_CATEGORIES = {
     "h2_plus_ion": "atomic",
     "penning_trap": "ion_trap",
     "two_d_vortices": "condensed_matter",
+    "h3_plus": "molecular",
+    "ozone_nuclei": "molecular",
+    "tritium_he3": "nuclear",
+    "dusty_plasma": "plasma",
+    "p_n_n_scattering": "nuclear",
 }
 
 SYSTEM_LABELS = {
@@ -500,6 +617,11 @@ SYSTEM_LABELS = {
     "h2_plus_ion": "Hydrogen Molecular Ion (H2+)",
     "penning_trap": "Penning Trap (3 ions)",
     "two_d_vortices": "2D Point Vortices",
+    "h3_plus": "Trihydrogen Cation (H3+)",
+    "ozone_nuclei": "Ozone Nuclei (O3)",
+    "tritium_he3": "Tritium / He-3 (Yukawa)",
+    "dusty_plasma": "Dusty Plasma (Yukawa)",
+    "p_n_n_scattering": "Proton-Neutron-Neutron (Yukawa)",
 }
 
 
@@ -528,6 +650,30 @@ def build_physical_systems() -> pd.DataFrame:
             "completed_at": entry.get("completed_at"),
             "source_file": str(fp.relative_to(ROOT)),
         })
+
+    # --- Yukawa physical systems ---
+    yuk_fp = ROOT / "results" / "yukawa_dimseq.json"
+    if yuk_fp.exists():
+        yuk = load_json(yuk_fp)
+        for r in yuk.get("physical_systems", []):
+            if "error" in r:
+                continue
+            sys_name = r.get("system_name", "unknown")
+            dims = r.get("dimension_sequence", [])
+            matches = dims == [3, 6, 17, 116]
+            rows.append({
+                "system_name": sys_name,
+                "system_label": SYSTEM_LABELS.get(sys_name, r.get("system_label", sys_name)),
+                "category": SYSTEM_CATEGORIES.get(sys_name, r.get("category", "other")),
+                "dimension_sequence": json.dumps(dims),
+                "dim_L0": dims[0] if len(dims) > 0 else None,
+                "dim_L1": dims[1] if len(dims) > 1 else None,
+                "dim_L2": dims[2] if len(dims) > 2 else None,
+                "dim_L3": dims[3] if len(dims) > 3 else None,
+                "matches_universal": matches,
+                "completed_at": None,
+                "source_file": str(yuk_fp.relative_to(ROOT)),
+            })
 
     df = pd.DataFrame(rows)
     for col in ["dim_L0", "dim_L1", "dim_L2", "dim_L3"]:
@@ -627,6 +773,126 @@ def build_scaling_formulas() -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
+# Split 10: tier_decomposition
+# ---------------------------------------------------------------------------
+
+def build_tier_decomposition() -> pd.DataFrame:
+    fp = ROOT / "results" / "tier_decomposition" / "s3_s4_decomposition.json"
+    if not fp.exists():
+        return pd.DataFrame()
+
+    data = load_json(fp)
+    rows = []
+
+    for group_key, group_data in data.items():
+        N = group_data["N"]
+        sym = group_data["symmetry_group"]
+        irreps = group_data["irreps"]
+        irrep_dims = group_data["irrep_dims"]
+        observed_rank = group_data["observed_rank"]
+
+        for level_key, level_data in group_data["levels"].items():
+            level_num = int(level_key.replace("L", ""))
+            mults = level_data["mults"]
+            for i, irrep_name in enumerate(irreps):
+                rows.append({
+                    "N": N,
+                    "symmetry_group": sym,
+                    "level": level_num,
+                    "total_candidates": level_data["dim"],
+                    "observed_rank": observed_rank[level_num] if level_num < len(observed_rank) else None,
+                    "irrep_name": irrep_name,
+                    "irrep_dim": irrep_dims[i],
+                    "multiplicity": mults[i],
+                    "contribution": mults[i] * irrep_dims[i],
+                    "source_file": str(fp.relative_to(ROOT)),
+                })
+
+        # Total row
+        total = group_data["total"]
+        for i, irrep_name in enumerate(irreps):
+            rows.append({
+                "N": N,
+                "symmetry_group": sym,
+                "level": -1,
+                "total_candidates": total["dim"],
+                "observed_rank": observed_rank[-1] if observed_rank else None,
+                "irrep_name": irrep_name,
+                "irrep_dim": irrep_dims[i],
+                "multiplicity": total["mults"][i],
+                "contribution": total["mults"][i] * irrep_dims[i],
+                "source_file": str(fp.relative_to(ROOT)),
+            })
+
+    df = pd.DataFrame(rows)
+    for col in ["N", "level", "total_candidates", "observed_rank",
+                 "irrep_dim", "multiplicity", "contribution"]:
+        if col in df.columns:
+            df[col] = df[col].astype("Int64")
+    return df
+
+
+# ---------------------------------------------------------------------------
+# Split 11: contextuality
+# ---------------------------------------------------------------------------
+
+def build_contextuality() -> pd.DataFrame:
+    fp = ROOT / "nbody" / "contextuality_results" / "contextuality_summary.json"
+    if not fp.exists():
+        return pd.DataFrame()
+
+    data = load_json(fp)
+    rows = []
+    for alg in data.get("algebras", []):
+        name = alg["algebra"]
+        parts = name.split("_", 2)
+        N = int(parts[0][1:]) if len(parts) > 0 else 3
+        d = int(parts[1][1:]) if len(parts) > 1 else 2
+        pot_raw = parts[2] if len(parts) > 2 else "1r"
+        potential_map = {
+            "1r": "1/r", "1r2": "1/r^2", "1r3": "1/r^3", "1r4": "1/r^4",
+            "r1": "r^1", "r2": "r^2", "r4": "r^4", "r6": "r^6",
+            "r8": "r^8", "r10": "r^10", "r3": "r^3",
+            "log": "log",
+            "composite_u1_2": "composite(u+u^2)",
+            "composite_u1_2_3": "composite(u+u^2+u^3)",
+            "composite_u4": "composite(u^4)",
+        }
+        potential = potential_map.get(pot_raw, pot_raw)
+
+        rows.append({
+            "N": N,
+            "d": d,
+            "potential": potential,
+            "algebra_dim": alg["dim"],
+            "n_commuting_pairs": alg["commuting_pairs"],
+            "total_pairs": alg["total_pairs"],
+            "commutativity_fraction": alg["commuting_pairs"] / alg["total_pairs"] if alg["total_pairs"] > 0 else 0,
+            "ks_colorable": alg["ks_colorable"],
+            "contextual": alg["contextual"],
+            "pm_constructible": alg["pm_constructible"],
+            "source_file": str(fp.relative_to(ROOT)),
+        })
+
+    return pd.DataFrame(rows)
+
+
+# ---------------------------------------------------------------------------
+# Split 12: convergence_trajectories
+# ---------------------------------------------------------------------------
+
+def build_convergence_trajectories() -> pd.DataFrame:
+    fp = ROOT / "results" / "convergence_trajectories.json"
+    if not fp.exists():
+        return pd.DataFrame()
+
+    data = load_json(fp)
+    df = pd.DataFrame(data)
+    df["source_file"] = str(fp.relative_to(ROOT))
+    return df
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -659,6 +925,9 @@ def main():
         "physical_systems": build_physical_systems,
         "bell_test": build_bell_test,
         "scaling_formulas": build_scaling_formulas,
+        "tier_decomposition": build_tier_decomposition,
+        "contextuality": build_contextuality,
+        "convergence_trajectories": build_convergence_trajectories,
     }
 
     tables = {}

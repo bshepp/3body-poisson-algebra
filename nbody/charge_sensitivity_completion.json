@@ -1,0 +1,31 @@
+{
+  "sweep_qqn_q1_s500": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +1, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "n_samples": 500,
+      "seed": 42,
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "gap_l3": null,
+      "elapsed_seconds": 18630.64501976967,
+      "matches_116": true
+    },
+    "completed_at": "2026-04-15T05:30:03Z"
+  }
+}

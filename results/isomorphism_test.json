@@ -1,0 +1,419 @@
+{
+  "n_tensors": 15,
+  "n_dim17": 12,
+  "n_nonharmonic": 12,
+  "invariant_groups": {
+    "group_0": {
+      "members": [
+        "N3_d1_r10",
+        "N3_d1_r6",
+        "N3_d1_r8",
+        "N3_d2_1r",
+        "N3_d2_1r2",
+        "N3_d2_1r3",
+        "N3_d2_1r4",
+        "N3_d2_composite_u1_2",
+        "N3_d2_composite_u1_2_3",
+        "N3_d2_composite_u4",
+        "N3_d2_log",
+        "N3_d2_r4"
+      ],
+      "killing_signature": [
+        6,
+        0,
+        11
+      ],
+      "killing_rank": 6,
+      "ad_rank_multiset": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "5",
+        "5",
+        "5",
+        "5",
+        "5",
+        "5"
+      ],
+      "n_nonzero": 32,
+      "casimir_trace": -32.0
+    }
+  },
+  "all_nonharmonic_isomorphic": true,
+  "pairwise_results": {
+    "N3_d1_r10_vs_N3_d1_r6": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r10_vs_N3_d1_r8": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r10_vs_N3_d2_1r": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r10_vs_N3_d2_1r2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r10_vs_N3_d2_1r3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r10_vs_N3_d2_1r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r10_vs_N3_d2_composite_u1_2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r10_vs_N3_d2_composite_u1_2_3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r10_vs_N3_d2_composite_u4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r10_vs_N3_d2_log": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r10_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r6_vs_N3_d1_r8": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r6_vs_N3_d2_1r": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r6_vs_N3_d2_1r2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r6_vs_N3_d2_1r3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r6_vs_N3_d2_1r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r6_vs_N3_d2_composite_u1_2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r6_vs_N3_d2_composite_u1_2_3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r6_vs_N3_d2_composite_u4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r6_vs_N3_d2_log": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r6_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r8_vs_N3_d2_1r": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r8_vs_N3_d2_1r2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r8_vs_N3_d2_1r3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r8_vs_N3_d2_1r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r8_vs_N3_d2_composite_u1_2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r8_vs_N3_d2_composite_u1_2_3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r8_vs_N3_d2_composite_u4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r8_vs_N3_d2_log": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d1_r8_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r_vs_N3_d2_1r2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r_vs_N3_d2_1r3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r_vs_N3_d2_1r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r_vs_N3_d2_composite_u1_2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r_vs_N3_d2_composite_u1_2_3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r_vs_N3_d2_composite_u4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r_vs_N3_d2_log": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r2_vs_N3_d2_1r3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r2_vs_N3_d2_1r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r2_vs_N3_d2_composite_u1_2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r2_vs_N3_d2_composite_u1_2_3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r2_vs_N3_d2_composite_u4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r2_vs_N3_d2_log": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r2_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r3_vs_N3_d2_1r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r3_vs_N3_d2_composite_u1_2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r3_vs_N3_d2_composite_u1_2_3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r3_vs_N3_d2_composite_u4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r3_vs_N3_d2_log": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r3_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r4_vs_N3_d2_composite_u1_2": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r4_vs_N3_d2_composite_u1_2_3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r4_vs_N3_d2_composite_u4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r4_vs_N3_d2_log": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_1r4_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_composite_u1_2_vs_N3_d2_composite_u1_2_3": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_composite_u1_2_vs_N3_d2_composite_u4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_composite_u1_2_vs_N3_d2_log": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_composite_u1_2_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_composite_u1_2_3_vs_N3_d2_composite_u4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_composite_u1_2_3_vs_N3_d2_log": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_composite_u1_2_3_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_composite_u4_vs_N3_d2_log": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_composite_u4_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    },
+    "N3_d2_log_vs_N3_d2_r4": {
+      "isomorphic": true,
+      "max_diff": 0.0,
+      "method": "direct_canonical"
+    }
+  },
+  "r3_analysis": {
+    "dim": 109,
+    "levi_radical_dim": 80,
+    "levi_semisimple_dim": 29,
+    "semisimple_analysis": {
+      "dim": 29,
+      "killing_signature": [
+        21,
+        0,
+        8
+      ],
+      "cartan_subalgebra_dim": 15,
+      "candidate_type": "real_semisimple_dim29"
+    },
+    "ad_rank_distribution": {
+      "19": 2,
+      "20": 1,
+      "17": 2,
+      "16": 12,
+      "0": 80,
+      "1": 12
+    },
+    "lower_central_series": [
+      109,
+      106,
+      103,
+      95,
+      52,
+      5,
+      10,
+      65,
+      93,
+      52,
+      5
+    ]
+  }
+}

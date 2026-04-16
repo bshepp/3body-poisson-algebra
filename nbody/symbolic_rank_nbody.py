@@ -58,6 +58,7 @@ _WORKER_ENGINE = None
 _WORKER_EXPRS = None
 _WORKER_NAMES = None
 _WORKER_PHASE_VARS = None
+_WORKER_DOMAIN = 'QQ'
 _shutdown_requested = False
 
 
@@ -94,7 +95,7 @@ def _extract_one_monomial(idx):
     Returns (idx, monom_dict) where monom_dict maps monomial tuples to coefficients.
     """
     expanded = expand(_WORKER_EXPRS[idx])
-    p = Poly(expanded, *_WORKER_PHASE_VARS, domain='QQ')
+    p = Poly(expanded, *_WORKER_PHASE_VARS, domain=_WORKER_DOMAIN)
     return (idx, p.as_dict())
 
 
@@ -110,7 +111,7 @@ class NBodySymbolicRank:
         self.quantum = quantum
         self.external_potential = external_potential
 
-        if potential in ('r^4', 'r^2'):
+        if potential.startswith('r^') and potential[2:].isdigit():
             self._init_polynomial_spring(n_bodies, d_spatial, masses, potential)
             if quantum:
                 from quantum_algebra import hbar_sym
@@ -160,7 +161,15 @@ class NBodySymbolicRank:
         """
         from itertools import combinations
         labels = COORD_LABELS[d_spatial]
-        power = {'r^2': 1, 'r^4': 2}[potential]
+
+        # r^1 and r^3 use signed (q_i - q_j)^n directly (1D only)
+        n_power = int(potential[2:])
+        _use_signed_diff = (n_power % 2 == 1)
+        if _use_signed_diff and d_spatial != 1:
+            raise ValueError(f"{potential} (odd power) polynomial form only "
+                             f"supported in 1D (got d={d_spatial})")
+        _signed_power = n_power if _use_signed_diff else None
+        _rsq_power = n_power // 2 if not _use_signed_diff else None
 
         self.q_vars = []
         self.p_vars = []
@@ -195,9 +204,13 @@ class NBodySymbolicRank:
             mi, mj = masses_dict[bi], masses_dict[bj]
             KE_i = sum(p**2 for p in self.p_by_body[bi]) / (2 * mi)
             KE_j = sum(p**2 for p in self.p_by_body[bj]) / (2 * mj)
-            r_sq = sum((self.q_by_body[bi][k] - self.q_by_body[bj][k])**2
-                       for k in range(d_spatial))
-            V = r_sq ** power
+            if _use_signed_diff:
+                diff = self.q_by_body[bi][0] - self.q_by_body[bj][0]
+                V = diff ** _signed_power
+            else:
+                r_sq = sum((self.q_by_body[bi][k] - self.q_by_body[bj][k])**2
+                           for k in range(d_spatial))
+                V = r_sq ** _rsq_power
             H = KE_i + KE_j + V
             name = f"H{bi}{bj}"
             self.hamiltonian_list.append(H)
@@ -356,7 +369,7 @@ class NBodySymbolicRank:
             print(f"  Resumed from complete checkpoint: {len(all_exprs)} generators")
             return all_exprs, all_names, all_levels
 
-        if self.potential in ('r^4', 'r^2'):
+        if self.potential.startswith('r^') and self.potential[2:].isdigit():
             all_exprs = list(self.hamiltonian_list)
             all_names = list(self.hamiltonian_names)
         else:
@@ -565,9 +578,17 @@ class NBodySymbolicRank:
         n_gen = len(exprs)
         use_mp = (n_workers > 1 and n_gen > 100 and os.name != 'nt')
 
+        poly_domain = 'QQ'
+        if self.quantum and hasattr(self, 'hbar_sym'):
+            if self.hbar_sym not in self.phase_vars:
+                from sympy.polys.domains import QQ as _QQ
+                poly_domain = _QQ[self.hbar_sym]
+
         if use_mp:
+            global _WORKER_DOMAIN
             _WORKER_EXPRS = exprs
             _WORKER_PHASE_VARS = self.phase_vars
+            _WORKER_DOMAIN = poly_domain
 
             poly_list = [None] * n_gen
             chunksize = max(1, min(100, n_gen // (n_workers * 10)))
@@ -593,13 +614,14 @@ class NBodySymbolicRank:
 
             _WORKER_EXPRS = None
             _WORKER_PHASE_VARS = None
+            _WORKER_DOMAIN = 'QQ'
         else:
             poly_list = []
             for idx, expr in enumerate(exprs):
                 expanded = expand(expr)
                 if self._log_subs:
                     expanded = expanded.subs(self._log_subs)
-                p = Poly(expanded, *self.phase_vars, domain='QQ')
+                p = Poly(expanded, *self.phase_vars, domain=poly_domain)
                 monom_dict = p.as_dict()
                 poly_list.append(monom_dict)
                 all_monoms.update(monom_dict.keys())
@@ -788,10 +810,13 @@ class NBodySymbolicRank:
                 expanded = expand(bracket)
                 if self._log_subs:
                     expanded = expanded.subs(self._log_subs)
-                p = Poly(expanded, *self.phase_vars, domain='QQ')
+                sc_domain = QQ
+                if self.quantum and hasattr(self, 'hbar_sym') and self.hbar_sym not in self.phase_vars:
+                    sc_domain = QQ[self.hbar_sym]
+                p = Poly(expanded, *self.phase_vars, domain=sc_domain)
                 bracket_dict = p.as_dict()
 
-                rhs = [QQ.zero] * n_mon
+                rhs = [sc_domain.zero] * n_mon
                 for monom, coeff in bracket_dict.items():
                     if monom in monom_to_idx:
                         rhs[monom_to_idx[monom]] = QQ.convert(coeff)

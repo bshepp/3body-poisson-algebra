@@ -421,13 +421,14 @@ class NBodyAlgebra:
     def _make_flat_func(self, expr, label=""):
         """Fallback for expressions too deeply nested for compile().
 
-        Uses CSE to flatten the expression tree, then writes flat
+        Uses CSE to flatten the expression tree, then writes chunked
         assignment code to a temp file and imports it, bypassing the
-        recursive compiler entirely.
+        recursive compiler entirely. Chunking prevents any single
+        statement from exceeding Python's AST recursion limit.
         """
         import tempfile
         import importlib.util
-        from sympy import cse as _cse, pycode
+        from sympy import cse as _cse, pycode, Add
 
         replacements, (reduced,) = _cse(expr, optimizations='basic')
 
@@ -435,12 +436,26 @@ class NBodyAlgebra:
         sig = ", ".join(var_names)
         lines = [
             "import numpy as _np",
-            "from numpy import exp, log, sqrt, sin, cos, abs",
+            "from numpy import exp, log, sqrt, sin, cos, abs, power",
             f"def {label}({sig}):",
         ]
+
+        max_terms = 30
+
+        def _chunked(sub_expr, target):
+            terms = Add.make_args(sub_expr)
+            if len(terms) <= max_terms:
+                lines.append(f"    {target} = {pycode(sub_expr)}")
+            else:
+                lines.append(f"    {target} = 0")
+                for i in range(0, len(terms), max_terms):
+                    chunk = Add(*terms[i:i + max_terms])
+                    lines.append(f"    {target} += {pycode(chunk)}")
+
         for sym, sub in replacements:
-            lines.append(f"    {sym} = {pycode(sub)}")
-        lines.append(f"    return {pycode(reduced)}")
+            _chunked(sub, str(sym))
+        _chunked(reduced, "_result")
+        lines.append("    return _result")
         code = "\n".join(lines)
 
         tmp = tempfile.NamedTemporaryFile(
@@ -455,7 +470,7 @@ class NBodyAlgebra:
         try:
             spec.loader.exec_module(mod)
         except RecursionError:
-            print(f"      [{label}] CSE flat compile also failed, "
+            print(f"      [{label}] CSE+chunked flat compile also failed, "
                   f"using subs() fallback", flush=True)
             var_syms = list(self.all_vars)
 
@@ -518,11 +533,19 @@ class NBodyAlgebra:
                 funcs.append(f)
                 use_subs.append(False)
             except RecursionError:
-                funcs.append(expr)
-                use_subs.append(True)
-                if idx < 3:
-                    print(f"      [{idx}] Using subs() evaluator "
-                          f"(expression too deep)", flush=True)
+                try:
+                    f = self._make_flat_func(expr, label=f"_g{idx}")
+                    funcs.append(f)
+                    use_subs.append(False)
+                    if idx < 3:
+                        print(f"      [{idx}] Using flat-func evaluator",
+                              flush=True)
+                except Exception:
+                    funcs.append(expr)
+                    use_subs.append(True)
+                    if idx < 3:
+                        print(f"      [{idx}] Using subs() evaluator "
+                              f"(expression too deep)", flush=True)
 
         n_subs = sum(use_subs)
         if n_subs > 0:

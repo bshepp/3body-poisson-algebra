@@ -1,0 +1,562 @@
+{
+  "sweep_qqn_q3_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +3, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 3,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 44.450685024261475,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:33:01Z"
+  },
+  "sweep_qqn_q4_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +4, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 4,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 46.719080448150635,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:33:48Z"
+  },
+  "sweep_qqn_q5_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +5, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 5,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 52.37404537200928,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:34:41Z"
+  },
+  "sweep_qqn_q6_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +6, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 6,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 48.81367373466492,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:35:29Z"
+  },
+  "sweep_qqn_q7_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +7, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 7,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 47.25501036643982,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:36:17Z"
+  },
+  "sweep_qqn_q8_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +8, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 8,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 47.02967977523804,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:37:04Z"
+  },
+  "sweep_qqn_q9_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +9, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 9,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 48.72776770591736,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:37:52Z"
+  },
+  "sweep_qqn_q10_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +10, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 10,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 61.659801721572876,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:38:54Z"
+  },
+  "sweep_qqn_q11_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +11, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 11,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 56.517691135406494,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:39:51Z"
+  },
+  "sweep_qqn_q12_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +12, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 12,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 55.99975895881653,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:40:47Z"
+  },
+  "sweep_qqn_q13_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +13, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 13,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 60.454866886138916,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:41:47Z"
+  },
+  "sweep_qqn_q14_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +14, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 14,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 47.69265127182007,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:42:35Z"
+  },
+  "sweep_qqn_q15_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +15, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 15,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 44.8372437953949,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:43:20Z"
+  },
+  "sweep_qqn_q16_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +16, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 16,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 46.08755707740784,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:44:06Z"
+  },
+  "sweep_qqn_q17_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +17, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 17,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 45.4113655090332,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:44:51Z"
+  },
+  "sweep_qqn_q18_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +18, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 18,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 45.83474826812744,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:45:37Z"
+  },
+  "sweep_qqn_q19_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +19, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 19,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 45.62810826301575,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:46:23Z"
+  },
+  "sweep_qqn_q20_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +20, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 20,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 46.05836057662964,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:47:09Z"
+  },
+  "sweep_qqn_q1_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +1, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 1,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 36.86203694343567,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:48:06Z"
+  },
+  "sweep_qqn_q2_exact": {
+    "status": "complete",
+    "result": {
+      "label": "(+1, +2, -1) unit masses",
+      "charges": {
+        "1": 1,
+        "2": 2,
+        "3": -1
+      },
+      "masses": {
+        "1": 1,
+        "2": 1,
+        "3": 1
+      },
+      "dims": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dim_l3": 116,
+      "elapsed_seconds": 38.26123309135437,
+      "matches_116": true,
+      "method": "exact_symbolic_QQ",
+      "d_spatial": 1
+    },
+    "completed_at": "2026-04-15T00:48:44Z"
+  }
+}

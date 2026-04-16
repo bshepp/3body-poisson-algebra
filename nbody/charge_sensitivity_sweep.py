@@ -49,7 +49,7 @@ DEFAULT_SEED = 42
 MAX_LEVEL = 3
 
 SWEEP_QNN = [1, 2, 3, 4, 5, 6, 8, 10, 15, 20]
-SWEEP_QQN = [1, 2, 3, 5, 10]
+SWEEP_QQN = list(range(1, 21))
 
 
 def _sigterm_handler(signum, frame):
