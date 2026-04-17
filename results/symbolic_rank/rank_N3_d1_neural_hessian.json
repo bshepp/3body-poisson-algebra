@@ -1,0 +1,27 @@
+{
+  "N": 3,
+  "d": 1,
+  "potential": "neural_hessian",
+  "potential_label": "neural_hessian_coupling",
+  "max_level": 3,
+  "quantum": false,
+  "bracket_type": "Poisson",
+  "n_generators": 156,
+  "cumulative_rank": [
+    3,
+    5,
+    11,
+    47
+  ],
+  "new_per_level": [
+    3,
+    2,
+    6,
+    36
+  ],
+  "computation_time_seconds": 19.7,
+  "computation_method": "numerical_SVD",
+  "sympy_version": "1.14.0",
+  "stabilized": false,
+  "notes": "Linear NN Hessian coupling: V_ij = (d^2L/dw_i dw_j) w_i w_j / 2. Gives same [3,5,11,47] as symmetric partition, but differs from gradient-product [3,6,17,119]. Hessian and symmetric share an algebraic universality class."
+}

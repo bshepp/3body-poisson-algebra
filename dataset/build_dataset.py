@@ -893,6 +893,70 @@ def build_convergence_trajectories() -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
+# Split 13: neural_algebras
+# ---------------------------------------------------------------------------
+
+def build_neural_algebras() -> pd.DataFrame:
+    nn_dir = ROOT / "results" / "neural_algebras"
+    if not nn_dir.exists():
+        return pd.DataFrame()
+
+    # Known universality classes at L=3 (assigned by dimension sequence)
+    UNIV_CLASSES_L3 = {
+        (3, 6, 17, 119): "A_119_gradient",
+        (3, 6, 17, 115): "B_115_directional",
+        (3, 6, 17, 111): "C_111_gradient_sum",
+        (3, 6, 17, 104): "D_104_gradient_cubic",
+        (3, 6, 17, 87):  "E_87_natural_gradient",
+        (3, 6, 17, 62):  "F_62_cross_entropy",
+        (3, 5, 11, 47):  "G_47_hessian",
+    }
+
+    rows = []
+    for fp in sorted(nn_dir.glob("nn_*.json")):
+        data = load_json(fp)
+        dims = data.get("dimension_sequence", [])
+
+        matches_physical = False
+        if len(dims) >= 4:
+            matches_physical = dims[3] == 116
+
+        class_label = None
+        if data.get("n_layers") == 3 and len(dims) >= 4:
+            class_label = UNIV_CLASSES_L3.get(tuple(dims))
+
+        rows.append({
+            "n_layers": data.get("n_layers"),
+            "width": data.get("width"),
+            "activation": data.get("activation"),
+            "loss_function": data.get("loss_function"),
+            "coupling_type": data.get("coupling_type"),
+            "max_level": data.get("max_level"),
+            "dimension_sequence": json.dumps(dims),
+            "new_per_level": json.dumps(data.get("new_per_level")),
+            "dim_L0": dims[0] if len(dims) > 0 else None,
+            "dim_L1": dims[1] if len(dims) > 1 else None,
+            "dim_L2": dims[2] if len(dims) > 2 else None,
+            "dim_L3": dims[3] if len(dims) > 3 else None,
+            "matches_physical_116": matches_physical,
+            "universality_class_L3": class_label,
+            "n_generators": data.get("n_generators"),
+            "stabilized": data.get("stabilized"),
+            "is_exact": data.get("computation_method") == "exact_gaussian_elimination_QQ",
+            "computation_method": data.get("computation_method"),
+            "computation_time_s": data.get("computation_time_seconds"),
+            "source_file": str(fp.relative_to(ROOT)),
+        })
+
+    df = pd.DataFrame(rows)
+    for col in ["n_layers", "width", "max_level", "dim_L0",
+                 "dim_L1", "dim_L2", "dim_L3", "n_generators"]:
+        if col in df.columns:
+            df[col] = df[col].astype("Int64")
+    return df
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -928,6 +992,7 @@ def main():
         "tier_decomposition": build_tier_decomposition,
         "contextuality": build_contextuality,
         "convergence_trajectories": build_convergence_trajectories,
+        "neural_algebras": build_neural_algebras,
     }
 
     tables = {}

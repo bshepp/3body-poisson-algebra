@@ -210,7 +210,7 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 │   └── userdata_gue.sh         # EC2 userdata template
 ├── 3d/                         # d-dimensional engine for N=3 (Paper 3)
 ├── dataset/                    # Hugging Face dataset pipeline
-│   ├── build_dataset.py        # ETL: JSON results → 9 Parquet tables
+│   ├── build_dataset.py        # ETL: JSON results → 13 Parquet tables
 │   ├── validate_dataset.py     # Validation suite for all splits
 │   ├── README.md               # HF dataset card (YAML frontmatter + docs)
 │   └── output/                 # Generated Parquet files + dataset_info.json
@@ -279,7 +279,7 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 
 ## Hugging Face Dataset
 
-The project maintains a structured dataset at [huggingface.co/datasets/bshepp/pairwise-poisson-algebras](https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras) containing 9 Parquet tables (dimension sequences, structure constants, charge sensitivity, mass invariance, level-4 convergence, spectral statistics, physical systems, Bell test, and scaling formulas). After any computation campaign, rebuild the dataset:
+The project maintains a structured dataset at [huggingface.co/datasets/bshepp/pairwise-poisson-algebras](https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras) containing **993 rows across 13 Parquet tables**: `neural_algebras` (Poisson algebras of linear neural networks across 12 coupling types — 7 universality classes at L=3), `dimension_sequences`, `structure_constants`, `charge_sensitivity`, `mass_invariance`, `level4_convergence`, `spectral_statistics`, `physical_systems`, `bell_test`, `scaling_formulas`, `tier_decomposition`, `contextuality`, and `convergence_trajectories`. After any computation campaign, rebuild the dataset:
 
 ```bash
 pip install pandas pyarrow

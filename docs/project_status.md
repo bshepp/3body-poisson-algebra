@@ -653,19 +653,20 @@ LCM denominators: 1/r has mu^10*(mu^2-mu+1)^6, r^4 has 1, 1/r^4
 has mu^22*(mu^2-mu+1)^11. The mu^k factor encodes collision
 singularity strength; mu^2-mu+1 has no real roots.
 
-### Hugging Face Dataset Pipeline (April 16, 2026)
+### Hugging Face Dataset Pipeline (April 17, 2026)
 
-The project maintains a structured Hugging Face dataset built from computation results. The pipeline (`dataset/build_dataset.py`) reads JSON result files and produces 12 Parquet tables. The builder deduplicates symbolic rank entries, keeping only the highest `max_level` for each (N, d, potential, bracket_type).
+The project maintains a structured Hugging Face dataset built from computation results. The pipeline (`dataset/build_dataset.py`) reads JSON result files and produces **13 Parquet tables (993 rows total)**. The builder deduplicates symbolic rank entries, keeping only the highest `max_level` for each (N, d, potential, bracket_type). The `neural_algebras` split (added April 17) covers Poisson algebras of linear neural network training dynamics across 12 coupling types and 7 universality classes at L=3.
 
 | Split | Source file(s) | Rows | Description |
 |-------|---------------|------|-------------|
-| `dimension_sequences` | `results/symbolic_rank/rank_N*.json`, `primes/results/gue_comparison.json`, `results/yukawa_dimseq.json`, `results/l3_exponent_sweep_extended.json`, etc. | ~684 | Cumulative rank at each bracket level per (N, d, potential); includes 12 quantum (Moyal) rows, 6 Yukawa mu-sweep, ~76 extended L3 exponent sweep |
+| `neural_algebras` | `results/neural_algebras/*.json` | 21 | Poisson algebras of linear neural networks across 12 coupling types, depth L=2..5, width k=1..3, 3 losses, 2 activations; includes `universality_class_L3` label (7 classes: A_119_gradient, B_115_directional, C_111_gradient_sum, D_104_gradient_cubic, E_87_natural_gradient, F_62_cross_entropy, G_47_hessian) |
+| `dimension_sequences` | `results/symbolic_rank/rank_N*.json`, `primes/results/gue_comparison.json`, `results/yukawa_dimseq.json`, `results/l3_exponent_sweep_extended.json`, etc. | ~685 | Cumulative rank at each bracket level per (N, d, potential); includes 12 quantum (Moyal) rows, 6 Yukawa mu-sweep, ~76 extended L3 exponent sweep |
 | `structure_constants` | `results/algebra_structure/*/structure_constants_exact.json` | 16 | Exact rational C^k_ij tensors at level 2 (and level 3 for r^3) |
 | `charge_sensitivity` | `results/charge_sensitivity/*.json` | ~38 | Charge-independence tests |
 | `mass_invariance` | `data/mass_ratio_sweep.json` | 33 | Mass ratio sweep (1 to 10^10) with SVD spectra |
 | `level4_convergence` | `results/level4_*/results.json` | ~19 | Level-4 lower bounds |
 | `spectral_statistics` | `atlas_figures/atlas_summary.json`, `results/atlas_full/*/summary.json`, `results/n4_atlas_1d.json` | ~17 | Rank distributions across phase space (incl. 3 N=4 1D slices) |
-| `physical_systems` | `results/expansion_dimseq/expansion_dimseq_completion.json`, `results/yukawa_dimseq.json` | ~20 | Named physical systems (helium, Sun-Earth-Moon, H₃⁺, O₃, Yukawa nuclear/plasma, etc.) |
+| `physical_systems` | `results/expansion_dimseq/expansion_dimseq_completion.json`, `results/yukawa_dimseq.json` | 17 | Named physical systems (helium, Sun-Earth-Moon, H₃⁺, O₃, Yukawa nuclear/plasma, etc.) |
 | `bell_test` | `nbody/bell_test_results/chsh_summary.json` | 9 | CHSH Bell inequality tests |
 | `scaling_formulas` | `results/analysis/nbody_scaling_formulas.json` | 5 | Closed-form L_k(N) formulas with verification status |
 | `tier_decomposition` | `results/tier_decomposition/s3_s4_decomposition.json` | 40 | S₃ and S₄ CG representation decompositions |

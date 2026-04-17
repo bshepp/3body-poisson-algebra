@@ -36,20 +36,66 @@ All prominently involve H₂₃ at the outermost bracket level. The gradient-pro
 potential has polynomial degree 10 (vs degree 1 for gravitational −u_ij),
 allowing richer bracket structure at level 3.
 
+## Seven Universality Classes (April 2026 expansion)
+
+Sweeping **12 coupling types** through `nn_algebra.py` reveals that the L=3
+neural Poisson algebra is not single-class but stratified into **seven** distinct
+universality classes:
+
+| Class | L=3 sequence | Coupling members |
+|-------|--------------|------------------|
+| **A** | [3, 6, 17, **119**] | gradient-product, fisher (refined), gradient_abs, hessian_plain, L1-loss |
+| **B** | [3, 6, 17, **115**] | directional |
+| **C** | [3, 6, 17, **111**] | gradient_sum |
+| **D** | [3, 6, 17, **104**] | gradient_cubic |
+| **E** | [3, 6, 17, **87**]  | natural_gradient |
+| **F** | [3, 6, 17, **62**]  | gradient + cross-entropy loss |
+| **G** | [3, 5, 11, **47**]  | hessian, symmetric, hessian_full, loss_power |
+
+Within Class A:
+- **Width invariance** holds at level 3 (k=1, 2, 3 all give 119).
+- **Loss invariance** is *partial*: MSE and L1 give 119, but cross-entropy
+  drops to 62 (Class F).
+
+The L=3 match with the physical sequence at levels 0–2 ([3, 6, 17]) is
+**accidental**. For L≥4 the neural algebra diverges from physics already at
+level 1, with extras given exactly by
+
+\\[ \\text{extras}_{L,1} \\;=\\; \\binom{L}{2}\\,(L-3) \\quad\\Rightarrow\\quad 0,\\,6,\\,20,\\,\\ldots \\text{ for } L = 3, 4, 5, \\ldots \\]
+
+All 21 configurations are published in the `neural_algebras` split of
+[bshepp/pairwise-poisson-algebras](https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras),
+with a `universality_class_L3` label for direct querying.
+
 ## Scripts
 
 | File | Purpose |
 |------|---------|
 | `nn_poisson.py` | Phase A+B algebra computation, confirms [3, 6, 17, 119] |
-| `nn_extra_generators.py` | Identifies and characterizes the 3 extra generators |
+| `nn_extra_generators.py` | Identifies and characterizes the 3 extra generators (vs gravitational 116) |
+| `nn_algebra.py` | Generalized engine: 12 coupling types, depth L=2..5, width k=1..3, 3 losses, 2 activations — produces the `neural_algebras` dataset split |
+| `physics_vs_neural.py` | Direct degree-stratified comparison of neural [3,6,17,119] vs physical [3,6,17,116] in the same 6D phase space |
+| `identify_extra_generators.py` | Polynomial-degree analysis of where the 3 extras live |
+| `summarize_results.py` | Tabulates all `results/neural_algebras/*.json` and groups by L=3 universality class |
 | `nn_results.txt` | Machine-readable results summary |
 
 ## Usage
 
 ```bash
-# Full algebra computation
+# Full algebra computation (original [3, 6, 17, 119] result)
 python neural/nn_poisson.py
 
 # Extra generator identification (~8.5 min)
 python neural/nn_extra_generators.py
+
+# Generalized sweep (any coupling, depth, width, loss, activation)
+python neural/nn_algebra.py --coupling gradient --max-level 3 --n-layers 3
+python neural/nn_algebra.py --coupling natural_gradient --max-level 3
+python neural/nn_algebra.py --coupling gradient --loss cross_entropy --max-level 3
+
+# Compare neural vs physical at level 3 with degree stratification
+python neural/physics_vs_neural.py
+
+# Summarize all saved neural results
+python neural/summarize_results.py
 ```

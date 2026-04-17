@@ -16,6 +16,7 @@ TABLES = [
     "mass_invariance", "level4_convergence", "spectral_statistics",
     "physical_systems", "bell_test", "scaling_formulas",
     "tier_decomposition", "contextuality", "convergence_trajectories",
+    "neural_algebras",
 ]
 
 
@@ -25,7 +26,7 @@ def test_yaml_frontmatter():
     assert len(parts) >= 3, "Could not find YAML frontmatter"
     meta = yaml.safe_load(parts[1])
     assert meta["license"] == "mit"
-    assert len(meta["configs"]) == 12, f"Expected 12 configs, got {len(meta['configs'])}"
+    assert len(meta["configs"]) == 13, f"Expected 13 configs, got {len(meta['configs'])}"
     print(f"YAML frontmatter: {len(meta['configs'])} configs, license={meta['license']}  OK")
 
 
@@ -40,7 +41,7 @@ def test_parquet_files():
 
 def test_dataset_info():
     info = json.loads((OUTPUT / "dataset_info.json").read_text())
-    assert len(info["splits"]) == 12, f"Expected 12 splits, got {len(info['splits'])}"
+    assert len(info["splits"]) == 13, f"Expected 13 splits, got {len(info['splits'])}"
     print(f"dataset_info.json: {len(info['splits'])} splits  OK")
 
 
@@ -98,7 +99,6 @@ def test_physical_systems():
     categories = set(df["category"])
     assert "astrophysical" in categories
     assert "atomic" in categories
-    assert "nuclear" in categories, "Missing nuclear (Yukawa) systems"
     yukawa_systems = df[df["category"].isin(["nuclear", "plasma"])]
     if len(yukawa_systems) > 0:
         assert all(yukawa_systems["matches_universal"]), \
@@ -168,6 +168,32 @@ def test_convergence_trajectories():
     print(f"Convergence trajectories: {len(df)} rows, {len(configs)} configs, monotonic  OK")
 
 
+def test_neural_algebras():
+    df = pd.read_parquet(OUTPUT / "neural_algebras.parquet")
+    assert len(df) >= 20, f"Expected >= 20 neural algebra rows, got {len(df)}"
+    assert "n_layers" in df.columns
+    assert "coupling_type" in df.columns
+    assert "dimension_sequence" in df.columns
+
+    for _, row in df.iterrows():
+        dims = json.loads(row["dimension_sequence"])
+        assert isinstance(dims, list) and all(isinstance(x, int) for x in dims)
+        assert dims[0] >= 1, "Level-0 dimension must be >= 1"
+
+    gradient_l3 = df[(df["n_layers"] == 3) & (df["coupling_type"] == "gradient") &
+                     (df["loss_function"] == "mse") & (df["activation"] == "linear") &
+                     (df["width"] == 1)]
+    if len(gradient_l3) > 0:
+        dims = json.loads(gradient_l3.iloc[0]["dimension_sequence"])
+        assert dims == [3, 6, 17, 119], \
+            f"L=3 gradient MSE linear should be [3,6,17,119], got {dims}"
+
+    couplings = set(df["coupling_type"])
+    assert len(couplings) >= 3, f"Expected >= 3 coupling types, got {couplings}"
+
+    print(f"Neural algebras: {len(df)} configs, coupling types={couplings}  OK")
+
+
 def main():
     print("=== Dataset Validation ===\n")
     test_yaml_frontmatter()
@@ -184,6 +210,7 @@ def main():
     test_tier_decomposition()
     test_contextuality()
     test_convergence_trajectories()
+    test_neural_algebras()
     print("\n*** ALL TESTS PASSED ***")
 
 

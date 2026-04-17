@@ -1,0 +1,24 @@
+{
+  "n_layers": 3,
+  "width": 2,
+  "coupling_type": "gradient",
+  "loss_function": "mse",
+  "activation": "linear",
+  "max_level": 3,
+  "dimension_sequence": [
+    3,
+    6,
+    17,
+    119
+  ],
+  "new_per_level": [
+    3,
+    3,
+    11,
+    102
+  ],
+  "n_generators": 156,
+  "stabilized": false,
+  "computation_time_seconds": 197.0,
+  "computation_method": "numerical_SVD"
+}

@@ -1,0 +1,27 @@
+{
+  "N": 3,
+  "d": 1,
+  "potential": "neural_symmetric",
+  "potential_label": "neural_symmetric_L3_partition",
+  "max_level": 3,
+  "quantum": false,
+  "bracket_type": "Poisson",
+  "n_generators": 156,
+  "cumulative_rank": [
+    3,
+    5,
+    11,
+    47
+  ],
+  "new_per_level": [
+    3,
+    2,
+    6,
+    36
+  ],
+  "computation_time_seconds": 21.2,
+  "computation_method": "numerical_SVD",
+  "sympy_version": "1.14.0",
+  "stabilized": false,
+  "notes": "Linear NN symmetric L/3 partition: H_ij = T_i + T_j + L/3. Dimension [3,5,11,47] differs from gradient-product [3,6,17,119]. Coupling type breaks universality within neural architectures."
+}

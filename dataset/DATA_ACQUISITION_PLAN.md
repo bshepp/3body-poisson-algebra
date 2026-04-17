@@ -2,7 +2,7 @@
 
 *April 16, 2026*
 
-This document outlines natural directions for expanding the dataset, organized by which split they feed, how much effort they require, and what scientific value they add. The current dataset has **974 rows across 12 tables**. Each direction below lists the target split, estimated new rows, compute cost, and whether it requires new code or just running existing scripts.
+This document outlines natural directions for expanding the dataset, organized by which split they feed, how much effort they require, and what scientific value they add. The current dataset has **993 rows across 13 tables** (including the new `neural_algebras` split). Each direction below lists the target split, estimated new rows, compute cost, and whether it requires new code or just running existing scripts.
 
 ---
 
@@ -290,7 +290,7 @@ These use existing scripts with new parameters. Rebuild the dataset afterward wi
 
 ## What Would Make the Biggest Splash on Hugging Face
 
-*Re-evaluated April 16, 2026, after completing N=4 atlas 1D slices (3.4), Yukawa survey (3.2), L3 exponent sweep (3.3), and all previous items. The dataset now has 974 rows across 12 tables.*
+*Re-evaluated April 17, 2026, after completing N=4 atlas 1D slices (3.4), Yukawa survey (3.2), L3 exponent sweep (3.3), the neural-network expansion (12 coupling types, 7 universality classes at L=3), and all previous items. The dataset now has 993 rows across 13 tables (including the new `neural_algebras` split).*
 
 Ranked by likely community interest — remaining open items:
 
