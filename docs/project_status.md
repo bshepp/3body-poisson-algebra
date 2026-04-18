@@ -1,6 +1,6 @@
 # Three-Body Poisson Algebra — Project Status & Roadmap
 
-*Last updated: April 16, 2026*
+*Last updated: April 18, 2026*
 
 ---
 
@@ -729,3 +729,26 @@ Four comparison scripts developed for cross-potential level-3 structure analysis
 - `nbody/numerical_level3_compare.py` — numerical SVD-based comparison
 - `nbody/fast_level3_compare.py` — finite-difference fast comparison
 - `nbody/compare_level3_structure.py` — checkpoint-based comparison pipeline
+
+### Website Rebuild Milestone (April 18, 2026)
+
+Three new artifacts; `explorer.html` retired:
+
+| Artifact | Replaces / extends | Notes |
+|---|---|---|
+| `website/datasets.html` | (new) | Browser for the 13 Parquet tables (993 rows). Three sections × 13 tables × per-table chart × cross-table filter. Built from `dataset/output/*.parquet` via `website/build_dataset_json.py`. |
+| `website/figures.html` | `website/explorer.html` (deleted) | 309 canonical figures across 17 systems / 5 analyses + 10 curated comparisons. Three browse modes (System / Analysis / Comparisons), facet rail with multi-select, lightbox with comparison-group navigation, deep links into datasets.html. |
+| `docs/atlas_compute_workorder.md` | (new) | 502-line worksheet listing every atlas scan to relaunch (6 partial parametric + Triple BH custom invocation), 1 small-mu refinement, 4 tiers of suggested new atlases (Yukawa/Penning/composite/polynomial r^n; quantum Moyal; neural coupling slice; N=4 sphere; charge continuity; large-area Lagrange zoom). Each entry has the exact CLI, instance type, runtime, and post-completion sync/render commands. |
+
+Underlying figure pipeline rebuilt from scratch:
+
+- `scripts/archive_legacy_figures.py` archived 999 legacy PNGs into `legacy_figures_archive/` (gitignored, recoverable).
+- `website/figures_render.py` walks `aws_results/atlas_full/`, `atlas_output_hires/`, `atlas_targeted/` and emits one canonical heatmap + sphere + triptych + SV-spectrum per config into `figures_v2/`. Resumable, fixed colormaps, honest no-data masking.
+- `website/figures_compare.py` produces 10 curated comparison panels with shared color scales (singular_vs_harmonic, irrational_exponents, exponent_continuity, mass_ratio_extremes, charge_departure, quantum_plus_one, neural_classes, tier_decomposition, gue_overlay, knee_landscape_set).
+- `website/build_figures_manifest.py` writes `website/data/figures/manifest.json` (309 figures, 17 systems, 5 analyses, 10 groups, ~100 KB).
+
+Topbar updated across all 6 pages: `Data Explorer` → `Figures`, plus a new `Datasets` entry.
+
+About-page rewrite: tier names changed from "For Everyone / High School / Undergraduate / Graduate" to neutral "Overview / Concepts / Methods / Formalism". Tier-4 N=4 result updated to current `[6, 14, 62, 1260]` exact-L3 plus the closed-form L0/L1/L2 formulas; stale Dirac-constraints bullet replaced with the BGS spectral-statistics result; quantum/neural/GUE one-liners added. See `docs/session_log.md` Phase 11 for the full rendering-bug iteration log (gap_score_map vs gap_map mismatch, validity masking, axis aspect ratios, and 5 other root-cause fixes).
+
+Deployment status: the local `main` branch is **ahead of production**. The live site at `https://nbody.briansheppard.com` (S3 + CloudFront `E3AHN5BEM2KUCH`, bucket `nbody-briansheppard-com`) still has the old `index.html`, `tracker.html`, and `explorer.html`; Datasets and Figures pages don't exist on S3 yet, and `figures_v2/` hasn't been synced. Deploy is held back pending review.

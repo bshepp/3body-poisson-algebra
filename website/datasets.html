@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datasets — Three-Body Poisson Algebra</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.35.0.min.js"></script>
+<style>
+:root {
+  --bg-deep: #0a0c10;
+  --bg-panel: #0f1218;
+  --bg-card: #141820;
+  --bg-card-hover: #1a1f2a;
+  --border: #1e2430;
+  --border-bright: #2a3040;
+  --text-primary: #c8ccd4;
+  --text-secondary: #7a8090;
+  --text-dim: #4a5060;
+  --phosphor: #3ddc84;
+  --phosphor-dim: #1a6e3a;
+  --phosphor-glow: rgba(61, 220, 132, 0.15);
+  --amber: #f0a030;
+  --amber-dim: #7a5018;
+  --red: #e05555;
+  --cyan: #4ac8e8;
+  --cyan-dim: #1a5a6e;
+  --violet: #a07ae0;
+  --violet-dim: rgba(160, 122, 224, 0.15);
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'Source Serif 4', Georgia, serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 14px; scroll-behavior: smooth; }
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--mono);
+  font-weight: 400;
+  line-height: 1.55;
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none; z-index: 9999;
+}
+
+/* ─── Topbar ─── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 2rem; background: var(--bg-panel);
+  border-bottom: 1px solid var(--border); font-size: 0.72rem;
+}
+.topbar-left { display: flex; align-items: center; gap: 1.5rem; }
+.topbar-left a {
+  color: var(--text-secondary); text-decoration: none;
+  text-transform: uppercase; letter-spacing: 0.08em; transition: color 0.2s;
+}
+.topbar-left a:hover { color: var(--phosphor); }
+.topbar-left a.active { color: var(--phosphor); border-bottom: 1px solid var(--phosphor); }
+.topbar-right { color: var(--text-dim); display: flex; align-items: center; gap: 0.8rem; }
+.topbar-right a { color: var(--text-dim); transition: color 0.2s; }
+.topbar-right a:hover { color: var(--phosphor); }
+.topbar-right .gh-icon { width: 16px; height: 16px; fill: currentColor; vertical-align: middle; }
+
+/* ─── Header ─── */
+.page-header {
+  padding: 1.6rem 2rem 1rem;
+  border-bottom: 1px solid var(--border);
+  max-width: 1600px; margin: 0 auto;
+}
+.page-header h1 {
+  font-family: var(--serif); font-size: 1.55rem; font-weight: 600;
+  color: var(--text-primary); margin-bottom: 0.25rem;
+}
+.page-header h1 .dim { color: var(--text-secondary); font-weight: 300; }
+.page-header .subtitle { color: var(--text-secondary); font-size: 0.78rem; max-width: 900px; }
+.stat-strip {
+  display: flex; gap: 1rem; margin-top: 0.9rem; flex-wrap: wrap;
+}
+.stat-strip .stat {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  background: var(--bg-card);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+.stat-strip .stat strong { color: var(--phosphor); font-weight: 600; }
+
+/* ─── Layout ─── */
+.page-content {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 1.2rem 2rem 3rem;
+}
+
+/* ─── Left rail ─── */
+.rail {
+  position: sticky; top: 1.2rem;
+  align-self: start;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}
+.rail-section { margin-bottom: 1.2rem; }
+.rail-section .label {
+  font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-dim); margin-bottom: 0.4rem; padding-left: 0.3rem;
+}
+.rail-table {
+  display: block; padding: 0.55rem 0.7rem; margin-bottom: 0.3rem;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 4px; cursor: pointer; transition: all 0.15s;
+}
+.rail-table:hover { border-color: var(--border-bright); background: var(--bg-card-hover); }
+.rail-table.active { border-color: var(--phosphor-dim); background: var(--bg-card-hover); }
+.rail-table.active .rail-name { color: var(--phosphor); }
+.rail-table .row1 { display: flex; align-items: baseline; justify-content: space-between; gap: 0.4rem; }
+.rail-name { font-size: 0.82rem; font-weight: 600; color: var(--text-primary); }
+.rail-rows { font-size: 0.66rem; color: var(--text-dim); }
+.rail-summary { font-size: 0.68rem; color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.45; }
+
+/* ─── Main panel ─── */
+.main { min-width: 0; }
+.panel-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 6px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem;
+}
+.panel-card h2 {
+  font-family: var(--serif); font-size: 1.25rem; font-weight: 600;
+  color: var(--text-primary); margin-bottom: 0.3rem;
+}
+.panel-card .panel-summary {
+  font-size: 0.82rem; color: var(--text-secondary);
+  margin-bottom: 0.8rem; line-height: 1.55;
+}
+.panel-meta {
+  display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center;
+  font-size: 0.7rem; color: var(--text-dim);
+}
+.panel-meta .chip {
+  background: var(--bg-panel); padding: 0.18rem 0.55rem;
+  border: 1px solid var(--border); border-radius: 3px;
+}
+.panel-meta a, .panel-meta button {
+  font: inherit; color: var(--phosphor);
+  background: transparent; border: 1px solid var(--phosphor-dim);
+  padding: 0.18rem 0.55rem; border-radius: 3px;
+  text-decoration: none; cursor: pointer;
+  transition: background 0.15s;
+}
+.panel-meta a:hover, .panel-meta button:hover { background: var(--phosphor-glow); }
+
+/* ─── Schema ─── */
+.schema-toggle {
+  font-size: 0.7rem; color: var(--cyan); cursor: pointer;
+  user-select: none; margin-top: 0.6rem;
+  display: inline-block;
+}
+.schema-toggle:hover { color: var(--phosphor); }
+.schema-grid {
+  display: none;
+  margin-top: 0.6rem;
+  border: 1px solid var(--border); border-radius: 4px;
+  overflow: hidden;
+  font-size: 0.72rem;
+}
+.schema-grid.open { display: block; }
+.schema-grid .sch-row {
+  display: grid;
+  grid-template-columns: 200px 110px 1fr;
+  gap: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+}
+.schema-grid .sch-row:last-child { border-bottom: none; }
+.schema-grid .sch-row.head {
+  background: var(--bg-panel);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.66rem;
+}
+.schema-grid .sch-name { color: var(--text-primary); font-weight: 600; }
+.schema-grid .sch-type { color: var(--cyan); }
+.schema-grid .sch-sample {
+  color: var(--text-dim);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ─── Table ─── */
+.table-controls {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem;
+  margin-bottom: 0.7rem;
+}
+.table-controls input[type=text] {
+  flex: 1; min-width: 200px;
+  background: var(--bg-panel); border: 1px solid var(--border);
+  color: var(--text-primary); padding: 0.45rem 0.7rem;
+  border-radius: 3px; font: inherit;
+}
+.table-controls input[type=text]:focus { border-color: var(--phosphor-dim); outline: none; }
+.table-controls select {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  color: var(--text-primary); padding: 0.45rem 0.5rem;
+  border-radius: 3px; font: inherit;
+}
+.table-controls .ctrl-label { font-size: 0.7rem; color: var(--text-dim); }
+.table-wrap {
+  border: 1px solid var(--border); border-radius: 4px; overflow: auto;
+  max-height: 60vh;
+}
+table.data {
+  width: 100%; border-collapse: collapse; font-size: 0.74rem;
+}
+table.data th, table.data td {
+  padding: 0.45rem 0.7rem;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  text-align: left;
+  vertical-align: top;
+}
+table.data th {
+  position: sticky; top: 0;
+  background: var(--bg-panel);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  user-select: none;
+  z-index: 1;
+}
+table.data th:hover { color: var(--phosphor); }
+table.data th .sort-arrow { color: var(--phosphor); margin-left: 0.3rem; }
+table.data tr:hover td { background: rgba(255,255,255,0.02); }
+table.data td.num { font-variant-numeric: tabular-nums; color: var(--cyan); }
+table.data td.bool-true { color: var(--phosphor); }
+table.data td.bool-false { color: var(--red); }
+table.data td.json { color: var(--violet); max-width: 360px; overflow: hidden; text-overflow: ellipsis; }
+table.data td.null { color: var(--text-dim); font-style: italic; }
+.pagination {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 0.7rem; font-size: 0.72rem; color: var(--text-secondary);
+}
+.pagination .pager { display: flex; gap: 0.3rem; }
+.pagination button {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  color: var(--text-secondary); padding: 0.3rem 0.65rem;
+  border-radius: 3px; cursor: pointer; font: inherit;
+}
+.pagination button:hover:not(:disabled) { border-color: var(--phosphor-dim); color: var(--phosphor); }
+.pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ─── Chart panel ─── */
+.chart-block { min-height: 320px; }
+.chart-tip {
+  font-size: 0.72rem; color: var(--text-dim);
+  margin-bottom: 0.6rem;
+}
+
+/* ─── Cross-table panel ─── */
+.cross-panel summary {
+  cursor: pointer; user-select: none;
+  font-family: var(--serif); font-size: 1rem; color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+.cross-panel summary::marker { color: var(--phosphor); }
+.cross-panel .cross-controls {
+  display: grid; grid-template-columns: repeat(4, 1fr) auto;
+  gap: 0.5rem; margin-top: 0.6rem;
+}
+.cross-panel select, .cross-panel input {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  color: var(--text-primary); padding: 0.4rem 0.5rem;
+  border-radius: 3px; font: inherit; font-size: 0.72rem;
+}
+.cross-panel button {
+  background: var(--phosphor-glow); border: 1px solid var(--phosphor-dim);
+  color: var(--phosphor); padding: 0.4rem 0.9rem;
+  border-radius: 3px; font: inherit; font-size: 0.72rem;
+  cursor: pointer;
+}
+.cross-panel button:hover { background: var(--phosphor-dim); color: var(--bg-deep); }
+.cross-result {
+  margin-top: 0.8rem; padding: 0.7rem 0.9rem;
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: 4px; font-size: 0.74rem; color: var(--text-secondary);
+}
+.cross-result strong { color: var(--phosphor); }
+
+.loader {
+  text-align: center; padding: 2rem; color: var(--text-dim); font-size: 0.8rem;
+}
+.error-msg {
+  border-left: 3px solid var(--red);
+  background: var(--bg-card);
+  padding: 0.8rem 1rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+@media (max-width: 1000px) {
+  .page-content { grid-template-columns: 1fr; }
+  .rail { position: static; max-height: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ TOPBAR ═══ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="index.html">Dashboard</a>
+    <a href="tracker.html">Research Tracker</a>
+    <a href="figures.html">Figures</a>
+    <a href="datasets.html" class="active">Datasets</a>
+    <a href="interactive.html">Interactive Atlas</a>
+    <a href="about.html">About</a>
+  </div>
+  <div class="topbar-right">
+    Three-Body Poisson Algebra
+    <a href="https://github.com/bshepp/3body-poisson-algebra" target="_blank" rel="noopener" title="GitHub Repository"><svg class="gh-icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+  </div>
+</div>
+
+<!-- ═══ HEADER ═══ -->
+<div class="page-header">
+  <h1>Datasets <span class="dim">— Curated Tabular Records of the Algebra</span></h1>
+  <div class="subtitle">
+    Thirteen Parquet tables (993 rows total) covering dimension sequences across N, d, potentials, masses, and charges; algebra structure (structure constants, Killing forms, irrep decomposition); convergence statistics; and quantum/contextuality probes. Sourced from <a href="https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras" style="color:var(--cyan)">bshepp/pairwise-poisson-algebras</a> on Hugging Face.
+  </div>
+  <div class="stat-strip" id="statStrip"></div>
+</div>
+
+<!-- ═══ PAGE BODY ═══ -->
+<div class="page-content">
+
+  <!-- Left rail -->
+  <nav class="rail" id="rail"></nav>
+
+  <!-- Main panel -->
+  <div class="main">
+
+    <!-- Cross-table query -->
+    <details class="panel-card cross-panel">
+      <summary>Cross-table filter</summary>
+      <div class="chart-tip">Pick a table, a column, and a value or range. Useful for slicing without leaving the page.</div>
+      <div class="cross-controls">
+        <select id="xTable"></select>
+        <select id="xCol"></select>
+        <select id="xOp">
+          <option value="eq">=</option>
+          <option value="neq">≠</option>
+          <option value="gt">&gt;</option>
+          <option value="gte">≥</option>
+          <option value="lt">&lt;</option>
+          <option value="lte">≤</option>
+          <option value="contains">contains</option>
+        </select>
+        <input id="xVal" type="text" placeholder="value">
+        <button onclick="runCross()">Run</button>
+      </div>
+      <div id="xResult" class="cross-result" style="display:none;"></div>
+    </details>
+
+    <!-- Active table -->
+    <div class="panel-card" id="tableCard">
+      <h2 id="tableTitle">Loading…</h2>
+      <div class="panel-summary" id="tableSummary"></div>
+      <div class="panel-meta" id="tableMeta"></div>
+
+      <span class="schema-toggle" onclick="toggleSchema()">▶ Show schema</span>
+      <div class="schema-grid" id="schemaGrid"></div>
+
+      <div class="table-controls" style="margin-top:1rem;">
+        <input type="text" id="search" placeholder="Filter rows (any column substring)…" oninput="renderTable()">
+        <span class="ctrl-label">Page size</span>
+        <select id="pageSize" onchange="renderTable()">
+          <option>10</option><option selected>25</option><option>50</option><option>100</option><option value="-1">All</option>
+        </select>
+        <span class="ctrl-label" id="rowCount"></span>
+      </div>
+
+      <div class="table-wrap"><table class="data" id="dataTable"><thead></thead><tbody></tbody></table></div>
+
+      <div class="pagination">
+        <span id="pageInfo"></span>
+        <span class="pager">
+          <button id="firstBtn" onclick="goPage(0)">⏮</button>
+          <button id="prevBtn" onclick="goPage(state.page-1)">‹ Prev</button>
+          <button id="nextBtn" onclick="goPage(state.page+1)">Next ›</button>
+          <button id="lastBtn" onclick="goPage(state.lastPage)">⏭</button>
+        </span>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="panel-card">
+      <h2 style="font-size:1.05rem;">Visualization</h2>
+      <div class="chart-tip" id="chartTip"></div>
+      <div class="chart-block" id="chart"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// Datasets explorer — vanilla JS over a static manifest
+// ═══════════════════════════════════════════════════════════════
+
+const MANIFEST_URL = "data/datasets/manifest.json";
+
+const state = {
+  manifest: null,
+  cache: {},          // table_id -> rows[]
+  active: null,       // table_id
+  filtered: [],       // after search
+  sortCol: null,
+  sortDir: 1,
+  page: 0,
+  pageSize: 25,
+  lastPage: 0,
+};
+
+// ───── URL parsing (deep links from figures.html etc.) ─────
+function parseQuery() {
+  const out = {};
+  const q = location.search.replace(/^\?/, "");
+  if (!q) return out;
+  for (const pair of q.split("&")) {
+    if (!pair) continue;
+    const [k, v] = pair.split("=").map(decodeURIComponent);
+    out[k] = v ?? "";
+  }
+  return out;
+}
+
+// ───── Boot ─────
+fetch(MANIFEST_URL)
+  .then(r => r.json())
+  .then(m => {
+    state.manifest = m;
+    renderHeader();
+    renderRail();
+    populateCrossTable();
+    const params = parseQuery();
+    const initial = params.table || location.hash.replace("#", "") ||
+                    (m.tables[0] && m.tables[0].id);
+    if (initial) selectTable(initial, params.filter || "");
+  })
+  .catch(err => {
+    document.getElementById("tableCard").innerHTML =
+      `<div class="error-msg">Failed to load <code>${MANIFEST_URL}</code>. Run <code>python website/build_dataset_json.py</code> first.<br><br>${err}</div>`;
+  });
+
+window.addEventListener("hashchange", () => {
+  const id = location.hash.replace("#", "");
+  if (id && state.manifest && id !== state.active) selectTable(id, "");
+});
+
+function renderHeader() {
+  const m = state.manifest;
+  const strip = document.getElementById("statStrip");
+  strip.innerHTML = [
+    `<div class="stat"><strong>${m.total_rows}</strong> total rows</div>`,
+    `<div class="stat"><strong>${m.total_tables}</strong> tables</div>`,
+    `<div class="stat">version <strong>${m.version}</strong></div>`,
+  ].join("");
+}
+
+function renderRail() {
+  const m = state.manifest;
+  const rail = document.getElementById("rail");
+  const byId = Object.fromEntries(m.tables.map(t => [t.id, t]));
+  rail.innerHTML = m.sections.map(sec => `
+    <div class="rail-section">
+      <div class="label">${sec.label}</div>
+      ${sec.tables.map(tid => {
+        const t = byId[tid];
+        return `
+          <a class="rail-table" href="#${tid}" data-id="${tid}">
+            <div class="row1"><span class="rail-name">${t.label}</span><span class="rail-rows">${t.n_rows}×${t.n_columns}</span></div>
+            <div class="rail-summary">${t.summary}</div>
+          </a>`;
+      }).join("")}
+    </div>
+  `).join("");
+}
+
+// ───── Selection / loading ─────
+function selectTable(id, initialFilter) {
+  const t = state.manifest.tables.find(x => x.id === id);
+  if (!t) return;
+  state.active = id;
+  state.sortCol = null;
+  state.sortDir = 1;
+  state.page = 0;
+  // Apply deep-link filter when provided. The filter syntax is either a
+  // simple substring (applied to the search box, which already filters across
+  // all columns) or a key=value pair which we lower to a substring match.
+  if (initialFilter !== undefined && initialFilter !== null) {
+    const sb = document.getElementById("search");
+    if (sb) sb.value = String(initialFilter).replace(/^.*=/, "");
+  }
+  document.querySelectorAll(".rail-table").forEach(el =>
+    el.classList.toggle("active", el.dataset.id === id)
+  );
+  if (location.hash.replace("#", "") !== id) history.replaceState(null, "", `#${id}`);
+
+  document.getElementById("tableTitle").textContent = t.label;
+  document.getElementById("tableSummary").textContent = t.summary;
+  document.getElementById("tableMeta").innerHTML = [
+    `<span class="chip">${t.n_rows} rows</span>`,
+    `<span class="chip">${t.n_columns} columns</span>`,
+    `<span class="chip">${t.size_kb} KB JSON</span>`,
+    `<a href="${t.json}" download>Download JSON</a>`,
+    `<a href="${t.parquet_url}" target="_blank" rel="noopener">Parquet (Hugging Face)</a>`,
+  ].join("");
+  renderSchema(t);
+
+  // Load + render data
+  const cached = state.cache[id];
+  const promise = cached ? Promise.resolve(cached) :
+    fetch(t.json).then(r => r.json()).then(rows => (state.cache[id] = rows));
+  document.querySelector("#dataTable tbody").innerHTML = `<tr><td class="loader" colspan="99">Loading ${t.json}…</td></tr>`;
+  promise.then(rows => {
+    renderTable();
+    renderChart(t, rows);
+  }).catch(err => {
+    document.querySelector("#dataTable tbody").innerHTML = `<tr><td class="error-msg" colspan="99">Failed to load ${t.json}: ${err}</td></tr>`;
+  });
+}
+
+function renderSchema(t) {
+  const grid = document.getElementById("schemaGrid");
+  grid.innerHTML =
+    `<div class="sch-row head"><div>Column</div><div>Type</div><div>Sample</div></div>` +
+    t.columns.map(c => `
+      <div class="sch-row">
+        <div class="sch-name">${escapeHtml(c.name)}</div>
+        <div class="sch-type">${escapeHtml(c.dtype)}</div>
+        <div class="sch-sample">${c.sample == null ? "<span class='null'>null</span>" : escapeHtml(c.sample)}</div>
+      </div>
+    `).join("");
+}
+
+function toggleSchema() {
+  const grid = document.getElementById("schemaGrid");
+  grid.classList.toggle("open");
+  const tog = document.querySelector(".schema-toggle");
+  tog.textContent = (grid.classList.contains("open") ? "▼ Hide" : "▶ Show") + " schema";
+}
+
+// ───── Table rendering ─────
+function renderTable() {
+  const t = state.manifest.tables.find(x => x.id === state.active);
+  if (!t) return;
+  const rows = state.cache[state.active] || [];
+  if (rows.length === 0) return;
+  const cols = t.columns.map(c => c.name);
+
+  const q = (document.getElementById("search").value || "").toLowerCase().trim();
+  let view = rows;
+  if (q) {
+    view = rows.filter(r =>
+      cols.some(c => {
+        const v = r[c];
+        if (v == null) return false;
+        return JSON.stringify(v).toLowerCase().includes(q);
+      })
+    );
+  }
+  if (state.sortCol) {
+    const col = state.sortCol, dir = state.sortDir;
+    view = view.slice().sort((a, b) => {
+      const va = a[col], vb = b[col];
+      if (va == null && vb == null) return 0;
+      if (va == null) return 1;
+      if (vb == null) return -1;
+      const na = typeof va === "number" ? va : parseFloat(va);
+      const nb = typeof vb === "number" ? vb : parseFloat(vb);
+      if (!isNaN(na) && !isNaN(nb) && typeof va !== "string" && typeof vb !== "string") {
+        return (na - nb) * dir;
+      }
+      const sa = String(va), sb = String(vb);
+      return sa.localeCompare(sb) * dir;
+    });
+  }
+  state.filtered = view;
+
+  const ps = parseInt(document.getElementById("pageSize").value, 10);
+  state.pageSize = ps;
+  state.lastPage = ps < 0 ? 0 : Math.max(0, Math.ceil(view.length / ps) - 1);
+  if (state.page > state.lastPage) state.page = state.lastPage;
+  const start = ps < 0 ? 0 : state.page * ps;
+  const end = ps < 0 ? view.length : start + ps;
+  const pageRows = view.slice(start, end);
+
+  const thead = document.querySelector("#dataTable thead");
+  const tbody = document.querySelector("#dataTable tbody");
+  thead.innerHTML = `<tr>${cols.map(c => {
+    const arrow = state.sortCol === c ? `<span class="sort-arrow">${state.sortDir > 0 ? "▲" : "▼"}</span>` : "";
+    return `<th onclick="sortBy('${escapeAttr(c)}')">${escapeHtml(c)}${arrow}</th>`;
+  }).join("")}</tr>`;
+  tbody.innerHTML = pageRows.map(r => `<tr>${cols.map(c => formatCell(r[c])).join("")}</tr>`).join("");
+  document.getElementById("rowCount").textContent =
+    `${view.length} / ${rows.length} rows${q ? " (filtered)" : ""}`;
+  document.getElementById("pageInfo").textContent =
+    ps < 0 ? `showing all ${view.length}` : `page ${state.page + 1} of ${state.lastPage + 1}`;
+  document.getElementById("firstBtn").disabled = state.page === 0;
+  document.getElementById("prevBtn").disabled = state.page === 0;
+  document.getElementById("nextBtn").disabled = state.page >= state.lastPage;
+  document.getElementById("lastBtn").disabled = state.page >= state.lastPage;
+}
+
+function sortBy(col) {
+  if (state.sortCol === col) state.sortDir = -state.sortDir;
+  else { state.sortCol = col; state.sortDir = 1; }
+  renderTable();
+}
+function goPage(p) {
+  if (p < 0 || p > state.lastPage) return;
+  state.page = p;
+  renderTable();
+}
+
+function formatCell(v) {
+  if (v == null) return `<td class="null">—</td>`;
+  if (typeof v === "number") return `<td class="num">${formatNum(v)}</td>`;
+  if (typeof v === "boolean") return `<td class="${v ? "bool-true" : "bool-false"}">${v}</td>`;
+  if (typeof v === "object") {
+    const s = JSON.stringify(v);
+    const short = s.length > 90 ? s.slice(0, 87) + "…" : s;
+    return `<td class="json" title="${escapeAttr(s)}">${escapeHtml(short)}</td>`;
+  }
+  const s = String(v);
+  if (s.length > 90) return `<td title="${escapeAttr(s)}">${escapeHtml(s.slice(0, 87))}…</td>`;
+  return `<td>${escapeHtml(s)}</td>`;
+}
+
+function formatNum(n) {
+  if (Number.isInteger(n)) return n.toLocaleString();
+  if (Math.abs(n) > 0 && (Math.abs(n) < 1e-3 || Math.abs(n) >= 1e6)) return n.toExponential(3);
+  return Number(n.toPrecision(6)).toString();
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+// ───── Charts (per-table) ─────
+function renderChart(t, rows) {
+  const el = document.getElementById("chart");
+  const tip = document.getElementById("chartTip");
+  el.innerHTML = "";
+  tip.textContent = "";
+
+  const dark = {
+    paper_bgcolor: "#0f1218",
+    plot_bgcolor: "#0a0c10",
+    font: { color: "#c8ccd4", family: "JetBrains Mono, monospace", size: 11 },
+    margin: { l: 60, r: 30, t: 40, b: 60 },
+    xaxis: { gridcolor: "#1e2430", zerolinecolor: "#1e2430" },
+    yaxis: { gridcolor: "#1e2430", zerolinecolor: "#1e2430" },
+    legend: { bgcolor: "rgba(0,0,0,0)", font: { size: 10 } },
+  };
+  const config = { displayModeBar: false, responsive: true };
+
+  const fn = CHARTS[t.id];
+  if (!fn) {
+    tip.textContent = "No bespoke chart for this table — explore via the table above.";
+    el.style.display = "none";
+    return;
+  }
+  el.style.display = "";
+  fn(rows, el, dark, config, tip);
+}
+
+// Plotly chart definitions per table
+const CHARTS = {
+  dimension_sequences(rows, el, dark, cfg, tip) {
+    tip.textContent = "Cumulative L3 dimension vs N, colored by potential family. Most points cluster on 116 (universal sequence).";
+    // Bin potentials into families for color
+    const fam = (p) => {
+      if (!p) return "other";
+      if (p === "1/r") return "1/r";
+      if (/^1\/r\^?\d+$/.test(p)) return "1/r^k";
+      if (/^r\^?\d+$/.test(p)) return "r^k (poly)";
+      if (p === "log") return "log";
+      if (p.startsWith("composite")) return "composite";
+      if (p === "neural") return "neural";
+      return "other";
+    };
+    const groups = {};
+    rows.forEach(r => {
+      if (r.dim_L3 == null || r.N == null) return;
+      const f = fam(r.potential);
+      (groups[f] = groups[f] || []).push(r);
+    });
+    const traces = Object.entries(groups).map(([f, list]) => ({
+      type: "scatter", mode: "markers", name: f,
+      x: list.map(r => r.N + (Math.random() - 0.5) * 0.25),
+      y: list.map(r => r.dim_L3),
+      text: list.map(r => `${r.potential} d=${r.d} bracket=${r.bracket_type}`),
+      hovertemplate: "N=%{x:.0f}, dim_L3=%{y}<br>%{text}<extra></extra>",
+      marker: { size: 7, opacity: 0.75 },
+    }));
+    Plotly.newPlot(el, traces, {
+      ...dark,
+      title: { text: "Level-3 dimension vs N", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, title: "N (bodies)" },
+      yaxis: { ...dark.yaxis, title: "dim_L3", type: "log" },
+      shapes: [{ type: "line", x0: 2.5, x1: 8.5, y0: 116, y1: 116,
+                 line: { color: "#3ddc84", dash: "dot", width: 1 } }],
+      annotations: [{ x: 8.5, y: 116, text: "universal 116", showarrow: false,
+                      xanchor: "right", yanchor: "bottom",
+                      font: { color: "#3ddc84", size: 10 } }],
+    }, cfg);
+  },
+
+  physical_systems(rows, el, dark, cfg, tip) {
+    tip.textContent = "L3 dimension per named physical system; reference line at the universal 116.";
+    const sorted = rows.slice().sort((a, b) => (a.dim_L3 || 0) - (b.dim_L3 || 0));
+    Plotly.newPlot(el, [{
+      type: "bar", orientation: "h",
+      x: sorted.map(r => r.dim_L3),
+      y: sorted.map(r => r.system_label),
+      text: sorted.map(r => r.category),
+      hovertemplate: "%{y}<br>dim_L3=%{x}<br>%{text}<extra></extra>",
+      marker: { color: sorted.map(r => r.matches_universal ? "#3ddc84" : "#f0a030") },
+    }], {
+      ...dark,
+      title: { text: "Physical systems — dim L3", font: { size: 13 } },
+      height: Math.max(400, 24 * sorted.length + 80),
+      margin: { ...dark.margin, l: 220 },
+      xaxis: { ...dark.xaxis, title: "dim_L3" },
+      yaxis: { ...dark.yaxis, automargin: true },
+      shapes: [{ type: "line", y0: -0.5, y1: sorted.length - 0.5, x0: 116, x1: 116,
+                 line: { color: "#3ddc84", dash: "dot", width: 1 } }],
+    }, cfg);
+  },
+
+  neural_algebras(rows, el, dark, cfg, tip) {
+    tip.textContent = "Level-3 dimension per coupling type; physics reference line at 116. Each color is a universality class at L=3.";
+    const grouped = {};
+    rows.forEach(r => {
+      if (r.dim_L3 == null) return;
+      const cls = r.universality_class_L3 || "?";
+      (grouped[cls] = grouped[cls] || []).push(r);
+    });
+    const traces = Object.entries(grouped).map(([cls, list]) => ({
+      type: "bar",
+      name: `Class ${cls}`,
+      x: list.map(r => `${r.coupling_type}\nL=${r.n_layers},k=${r.width}`),
+      y: list.map(r => r.dim_L3),
+      hovertemplate: "%{x}<br>dim_L3=%{y}<extra></extra>",
+    }));
+    Plotly.newPlot(el, traces, {
+      ...dark,
+      barmode: "group",
+      title: { text: "Neural algebras — dim L3 per coupling", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, tickangle: -45, title: "" },
+      yaxis: { ...dark.yaxis, title: "dim_L3" },
+      shapes: [{ type: "line", x0: -0.5, x1: rows.length - 0.5, y0: 116, y1: 116,
+                 line: { color: "#3ddc84", dash: "dot", width: 1 } }],
+    }, cfg);
+  },
+
+  mass_invariance(rows, el, dark, cfg, tip) {
+    tip.textContent = "Level-2 dimension (left axis) and SV gap ratio (right axis) as a function of m3 in log10. Universal 17 holds across 10 orders of magnitude.";
+    const sorted = rows.slice().sort((a, b) => (a.m3_log10 || 0) - (b.m3_log10 || 0));
+    Plotly.newPlot(el, [
+      { type: "scatter", mode: "lines+markers", name: "dim_L2",
+        x: sorted.map(r => r.m3_log10), y: sorted.map(r => r.level_2_dim),
+        line: { color: "#3ddc84" }, yaxis: "y" },
+      { type: "scatter", mode: "lines+markers", name: "L2 gap ratio",
+        x: sorted.map(r => r.m3_log10),
+        y: sorted.map(r => r.level_2_gap_ratio),
+        line: { color: "#f0a030" }, yaxis: "y2" },
+    ], {
+      ...dark,
+      title: { text: "Mass invariance", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, title: "log10(m3)" },
+      yaxis: { ...dark.yaxis, title: "dim_L2", side: "left", range: [0, 20] },
+      yaxis2: { title: "gap ratio", overlaying: "y", side: "right", type: "log",
+                gridcolor: "#1e2430" },
+    }, cfg);
+  },
+
+  charge_sensitivity(rows, el, dark, cfg, tip) {
+    tip.textContent = "L3 dimension per charge configuration; deviations from 116 highlight mixed-sign departures.";
+    const sorted = rows.slice().sort((a, b) => (a.dim_L3 || 0) - (b.dim_L3 || 0));
+    Plotly.newPlot(el, [{
+      type: "bar", orientation: "h",
+      x: sorted.map(r => r.dim_L3),
+      y: sorted.map(r => r.label || r.experiment_key),
+      text: sorted.map(r => r.charges),
+      hovertemplate: "%{y}<br>dim_L3=%{x}<br>charges %{text}<extra></extra>",
+      marker: { color: sorted.map(r => r.matches_116 ? "#3ddc84" : "#e05555") },
+    }], {
+      ...dark,
+      height: Math.max(420, 18 * sorted.length + 80),
+      margin: { ...dark.margin, l: 220 },
+      title: { text: "Charge sensitivity — dim L3", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, title: "dim_L3" },
+      yaxis: { ...dark.yaxis, automargin: true },
+      shapes: [{ type: "line", y0: -0.5, y1: sorted.length - 0.5, x0: 116, x1: 116,
+                 line: { color: "#3ddc84", dash: "dot", width: 1 } }],
+    }, cfg);
+  },
+
+  level4_convergence(rows, el, dark, cfg, tip) {
+    tip.textContent = "Level-4 lower bound vs sample count, grouped by phase-space configuration.";
+    const groups = {};
+    rows.forEach(r => {
+      const c = r.config || "?";
+      (groups[c] = groups[c] || []).push(r);
+    });
+    const traces = Object.entries(groups).map(([c, list]) => {
+      const sorted = list.slice().sort((a, b) => (a.n_samples || 0) - (b.n_samples || 0));
+      return {
+        type: "scatter", mode: "lines+markers", name: c,
+        x: sorted.map(r => r.n_samples),
+        y: sorted.map(r => r.d4_lower_bound),
+      };
+    });
+    Plotly.newPlot(el, traces, {
+      ...dark,
+      title: { text: "Level-4 convergence", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, title: "n_samples", type: "log" },
+      yaxis: { ...dark.yaxis, title: "d4 lower bound" },
+    }, cfg);
+  },
+
+  convergence_trajectories(rows, el, dark, cfg, tip) {
+    tip.textContent = "Detected rank vs n_samples per (N, d, potential, level).";
+    const groups = {};
+    rows.forEach(r => {
+      const key = `N${r.N} d${r.d} ${r.potential} L${r.level}`;
+      (groups[key] = groups[key] || []).push(r);
+    });
+    const traces = Object.entries(groups).map(([k, list]) => {
+      const sorted = list.slice().sort((a, b) => (a.n_samples || 0) - (b.n_samples || 0));
+      return {
+        type: "scatter", mode: "lines+markers", name: k,
+        x: sorted.map(r => r.n_samples),
+        y: sorted.map(r => r.rank),
+      };
+    });
+    Plotly.newPlot(el, traces, {
+      ...dark,
+      title: { text: "Rank convergence", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, title: "n_samples", type: "log" },
+      yaxis: { ...dark.yaxis, title: "rank" },
+    }, cfg);
+  },
+
+  tier_decomposition(rows, el, dark, cfg, tip) {
+    tip.textContent = "Stacked irrep contributions per (N, level). Each color is one S3/S4 irrep.";
+    const keys = Array.from(new Set(rows.map(r => `N=${r.N} L${r.level}`)));
+    const irreps = Array.from(new Set(rows.map(r => r.irrep_name)));
+    const traces = irreps.map(irr => ({
+      type: "bar", name: irr,
+      x: keys,
+      y: keys.map(k => {
+        const [Npart, Lpart] = k.split(" ");
+        const N = parseInt(Npart.slice(2), 10);
+        const L = parseInt(Lpart.slice(1), 10);
+        const m = rows.find(r => r.N === N && r.level === L && r.irrep_name === irr);
+        return m ? m.contribution : 0;
+      }),
+    }));
+    Plotly.newPlot(el, traces, {
+      ...dark, barmode: "stack",
+      title: { text: "Irrep contributions per (N, level)", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, title: "" },
+      yaxis: { ...dark.yaxis, title: "contribution" },
+    }, cfg);
+  },
+
+  bell_test(rows, el, dark, cfg, tip) {
+    tip.textContent = "Maximum |S| per (stratum, variant) with classical bound (2.0) and Tsirelson bound (2√2) reference lines.";
+    Plotly.newPlot(el, [{
+      type: "bar",
+      x: rows.map(r => `${r.stratum}/${r.variant}`),
+      y: rows.map(r => r.max_abs_S),
+      error_y: {
+        type: "data",
+        array: rows.map(r => Math.max(0, (r.ci_95_upper || r.max_abs_S) - r.max_abs_S)),
+        arrayminus: rows.map(r => Math.max(0, r.max_abs_S - (r.ci_95_lower || r.max_abs_S))),
+        color: "#7a8090",
+      },
+      marker: { color: "#4ac8e8" },
+    }], {
+      ...dark,
+      title: { text: "CHSH max |S|", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, tickangle: -25 },
+      yaxis: { ...dark.yaxis, title: "max |S|", range: [0, 3] },
+      shapes: [
+        { type: "line", x0: -0.5, x1: rows.length - 0.5, y0: 2.0, y1: 2.0,
+          line: { color: "#f0a030", dash: "dot", width: 1 } },
+        { type: "line", x0: -0.5, x1: rows.length - 0.5, y0: 2 * Math.SQRT2, y1: 2 * Math.SQRT2,
+          line: { color: "#a07ae0", dash: "dot", width: 1 } },
+      ],
+      annotations: [
+        { x: rows.length - 1, y: 2.0, text: "classical bound", xanchor: "right",
+          yanchor: "bottom", showarrow: false, font: { color: "#f0a030", size: 10 } },
+        { x: rows.length - 1, y: 2 * Math.SQRT2, text: "Tsirelson", xanchor: "right",
+          yanchor: "bottom", showarrow: false, font: { color: "#a07ae0", size: 10 } },
+      ],
+    }, cfg);
+  },
+
+  contextuality(rows, el, dark, cfg, tip) {
+    tip.textContent = "Commutativity fraction per (N, d, potential).";
+    Plotly.newPlot(el, [{
+      type: "bar",
+      x: rows.map(r => `${r.potential} N=${r.N} d=${r.d}`),
+      y: rows.map(r => r.commutativity_fraction),
+      marker: { color: "#a07ae0" },
+      hovertemplate: "%{x}<br>commutativity=%{y:.4f}<br>algebra_dim=%{customdata}<extra></extra>",
+      customdata: rows.map(r => r.algebra_dim),
+    }], {
+      ...dark,
+      title: { text: "Commutativity fraction", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, tickangle: -45 },
+      yaxis: { ...dark.yaxis, title: "fraction" },
+    }, cfg);
+  },
+
+  spectral_statistics(rows, el, dark, cfg, tip) {
+    tip.textContent = "Percent of phase-space points achieving rank 116 per atlas configuration.";
+    const sorted = rows.slice().sort((a, b) => (a.pct_116 || 0) - (b.pct_116 || 0));
+    Plotly.newPlot(el, [{
+      type: "bar", orientation: "h",
+      x: sorted.map(r => r.pct_116),
+      y: sorted.map(r => r.label || r.config),
+      marker: { color: "#3ddc84" },
+    }], {
+      ...dark,
+      height: Math.max(360, 24 * sorted.length + 80),
+      margin: { ...dark.margin, l: 240 },
+      title: { text: "Pct of points reaching rank 116", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, title: "% rank-116" },
+      yaxis: { ...dark.yaxis, automargin: true },
+    }, cfg);
+  },
+
+  scaling_formulas(rows, el, dark, cfg, tip) {
+    tip.textContent = "How many N values each scaling formula has been verified or falsified at.";
+    Plotly.newPlot(el, [
+      { type: "bar", name: "verified", marker: { color: "#3ddc84" },
+        x: rows.map(r => `L${r.level}`),
+        y: rows.map(r => safeJson(r.verified_N_values).length) },
+      { type: "bar", name: "failed", marker: { color: "#e05555" },
+        x: rows.map(r => `L${r.level}`),
+        y: rows.map(r => safeJson(r.failed_N_values).length) },
+    ], {
+      ...dark, barmode: "stack",
+      title: { text: "Scaling formula verification", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, title: "level" },
+      yaxis: { ...dark.yaxis, title: "# N-values" },
+    }, cfg);
+  },
+
+  structure_constants(rows, el, dark, cfg, tip) {
+    tip.textContent = "Sparsity of the structure-constant tensor per potential: number of nonzero C^k_ij entries vs algebra dimension.";
+    Plotly.newPlot(el, [{
+      type: "scatter", mode: "markers+text",
+      x: rows.map(r => r.algebra_dim),
+      y: rows.map(r => (r.structure_constants && r.structure_constants.nonzero_count) || 0),
+      text: rows.map(r => r.potential),
+      textposition: "top center",
+      textfont: { size: 9, color: "#7a8090" },
+      hovertemplate: "%{text}<br>dim=%{x}<br>nonzero=%{y}<extra></extra>",
+      marker: { size: 11, color: rows.map(r => r.is_nilpotent ? "#3ddc84" : (r.is_solvable ? "#4ac8e8" : "#f0a030")) },
+    }], {
+      ...dark,
+      title: { text: "Structure constant sparsity (color: green=nilpotent, cyan=solvable, amber=other)", font: { size: 13 } },
+      xaxis: { ...dark.xaxis, title: "algebra dim" },
+      yaxis: { ...dark.yaxis, title: "# nonzero C^k_ij entries" },
+    }, cfg);
+  },
+};
+
+function safeJson(s) {
+  if (s == null) return [];
+  if (Array.isArray(s)) return s;
+  try { const v = JSON.parse(s); return Array.isArray(v) ? v : []; }
+  catch { return []; }
+}
+
+// ───── Cross-table panel ─────
+function populateCrossTable() {
+  const sel = document.getElementById("xTable");
+  sel.innerHTML = state.manifest.tables
+    .map(t => `<option value="${t.id}">${t.label}</option>`).join("");
+  sel.onchange = updateCrossCols;
+  updateCrossCols();
+}
+function updateCrossCols() {
+  const tid = document.getElementById("xTable").value;
+  const t = state.manifest.tables.find(x => x.id === tid);
+  const sel = document.getElementById("xCol");
+  sel.innerHTML = t.columns.map(c => `<option value="${c.name}">${c.name} <span style="color:#7a8090">(${c.dtype})</span></option>`).join("");
+}
+function runCross() {
+  const tid = document.getElementById("xTable").value;
+  const col = document.getElementById("xCol").value;
+  const op = document.getElementById("xOp").value;
+  const raw = document.getElementById("xVal").value;
+  const t = state.manifest.tables.find(x => x.id === tid);
+  const out = document.getElementById("xResult");
+  out.style.display = "block";
+
+  const promise = state.cache[tid] ? Promise.resolve(state.cache[tid]) :
+    fetch(t.json).then(r => r.json()).then(rows => (state.cache[tid] = rows));
+  promise.then(rows => {
+    const num = parseFloat(raw);
+    const isNum = !isNaN(num) && raw.trim() !== "";
+    const cmp = (v) => {
+      if (v == null) return false;
+      if (op === "contains") return String(v).toLowerCase().includes(raw.toLowerCase());
+      if (isNum && typeof v === "number") {
+        if (op === "eq") return v === num;
+        if (op === "neq") return v !== num;
+        if (op === "gt") return v > num;
+        if (op === "gte") return v >= num;
+        if (op === "lt") return v < num;
+        if (op === "lte") return v <= num;
+      }
+      if (op === "eq") return String(v) === raw;
+      if (op === "neq") return String(v) !== raw;
+      return false;
+    };
+    const matches = rows.filter(r => cmp(r[col]));
+    const sample = matches.slice(0, 5).map(r => {
+      const keys = Object.keys(r).slice(0, 5);
+      return keys.map(k => `${k}=${shortVal(r[k])}`).join(", ");
+    }).join("<br>");
+    out.innerHTML =
+      `<strong>${matches.length}</strong> of ${rows.length} rows in <code>${t.label}</code> match ` +
+      `<code>${col} ${prettyOp(op)} ${escapeHtml(raw)}</code>` +
+      (matches.length ? `<div style="margin-top:0.5rem; color:var(--text-dim);">${sample}</div>` : "") +
+      `<div style="margin-top:0.5rem;"><a href="#${tid}" style="color:var(--cyan);">Open ${t.label} →</a></div>`;
+  });
+}
+function shortVal(v) {
+  if (v == null) return "—";
+  const s = typeof v === "object" ? JSON.stringify(v) : String(v);
+  return escapeHtml(s.length > 40 ? s.slice(0, 37) + "…" : s);
+}
+function prettyOp(op) {
+  return { eq: "=", neq: "≠", gt: ">", gte: "≥", lt: "<", lte: "≤", contains: "contains" }[op] || op;
+}
+</script>
+</body>
+</html>

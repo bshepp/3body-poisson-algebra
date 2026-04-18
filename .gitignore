@@ -132,3 +132,9 @@ dataset/output/
 # Temp/stale files
 tmp/
 _json_inventory_tmp.txt
+
+# Archived legacy PNGs (moved aside by scripts/archive_legacy_figures.py)
+legacy_figures_archive/
+
+# New canonical rendered figures (regenerate via website/figures_render.py)
+figures_v2/

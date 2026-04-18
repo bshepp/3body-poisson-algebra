@@ -35,6 +35,8 @@ by estimated value per compute-hour.
 | **Paper 2 (paper2_s3_filtration.tex)** | S₃ tier decomposition, jet filtration, syzygies (Mar 2026) |
 | **Paper 3 (paper3_universality.tex)** | N=4 sequence, d-independence, 1/r³, charge-sign, universality conjecture (Mar 2026) |
 | **Neural network algebra** | Gradient-product coupling gives [3, 6, 17, **119**] — 3 extra generators vs gravitational 116. First non-physical coupling to break level-3 universality (Apr 2026) |
+| **Website rebuild** | New `website/datasets.html` (13-table browser) + new `website/figures.html` (309 canonical PNGs, 10 curated comparisons) + reproducible figure pipeline (`website/figures_render.py` + `figures_compare.py` + `build_figures_manifest.py`). Legacy `explorer.html` retired; 999 pre-rebuild PNGs archived to `legacy_figures_archive/` (Apr 18, 2026). |
+| **Atlas Compute Work Order** | `docs/atlas_compute_workorder.md` — worksheet listing every atlas scan worth running (6 partial parametric re-runs + Triple BH custom + 1 small-mu refinement + 4 tiers of new atlases) with exact CLI invocations, runtimes, and post-completion sync/render commands (Apr 18, 2026). |
 
 ---
 

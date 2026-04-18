@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figures — Three-Body Poisson Algebra</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a0c10;
+  --bg-panel: #0f1218;
+  --bg-card: #141820;
+  --bg-card-hover: #1a1f2a;
+  --border: #1e2430;
+  --border-bright: #2a3040;
+  --text-primary: #c8ccd4;
+  --text-secondary: #7a8090;
+  --text-dim: #4a5060;
+  --phosphor: #3ddc84;
+  --phosphor-dim: #1a6e3a;
+  --phosphor-glow: rgba(61, 220, 132, 0.15);
+  --amber: #f0a030;
+  --amber-dim: #7a5018;
+  --cyan: #4ac8e8;
+  --cyan-dim: #1a5a6e;
+  --violet: #a07ae0;
+  --violet-dim: rgba(160, 122, 224, 0.15);
+  --red: #e05555;
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'Source Serif 4', Georgia, serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 14px; scroll-behavior: smooth; }
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--mono);
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none; z-index: 9999;
+}
+
+/* ─── Topbar ─── */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 2rem; background: var(--bg-panel);
+  border-bottom: 1px solid var(--border); font-size: 0.72rem;
+  position: sticky; top: 0; z-index: 100;
+}
+.topbar-left { display: flex; align-items: center; gap: 1.5rem; }
+.topbar-left a { color: var(--text-secondary); text-decoration: none; text-transform: uppercase; letter-spacing: 0.08em; transition: color 0.2s; }
+.topbar-left a:hover { color: var(--phosphor); }
+.topbar-left a.active { color: var(--phosphor); border-bottom: 1px solid var(--phosphor); }
+.topbar-right { color: var(--text-dim); display: flex; align-items: center; gap: 0.8rem; }
+.topbar-right a { color: var(--text-dim); transition: color 0.2s; }
+.topbar-right a:hover { color: var(--phosphor); }
+.topbar-right .gh-icon { width: 16px; height: 16px; fill: currentColor; vertical-align: middle; }
+
+/* ─── Header ─── */
+.header {
+  padding: 1.4rem 2rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--bg-panel), var(--bg-deep));
+  position: relative;
+}
+.header::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--phosphor-dim), transparent);
+}
+.header h1 { font-family: var(--serif); font-size: 1.4rem; font-weight: 600; margin-bottom: 0.3rem; }
+.header h1 span { color: var(--text-secondary); font-weight: 300; }
+.header .subtitle { color: var(--text-secondary); font-size: 0.78rem; max-width: 980px; }
+
+/* ─── Mode tabs + controls ─── */
+.controls-bar {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.7rem 2rem;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  position: sticky; top: 36px; z-index: 99;
+}
+.mode-tabs { display: flex; gap: 0.3rem; }
+.mode-tab {
+  background: var(--bg-card); border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 0.4rem 0.9rem; font-family: var(--mono); font-size: 0.72rem;
+  border-radius: 3px; cursor: pointer;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  transition: all 0.15s;
+}
+.mode-tab:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+.mode-tab.active {
+  background: var(--phosphor-glow); border-color: var(--phosphor-dim);
+  color: var(--phosphor);
+}
+.search-box {
+  flex: 1; min-width: 180px; max-width: 360px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 3px; padding: 0.4rem 0.7rem;
+  color: var(--text-primary); font-family: var(--mono); font-size: 0.78rem;
+}
+.search-box::placeholder { color: var(--text-dim); }
+.search-box:focus { outline: none; border-color: var(--phosphor-dim); }
+.count-display { font-size: 0.7rem; color: var(--text-dim); margin-left: auto; }
+.view-toggle { display: flex; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+.view-toggle button {
+  background: var(--bg-card); border: none; border-right: 1px solid var(--border);
+  padding: 0.34rem 0.6rem; color: var(--text-secondary);
+  font-family: var(--mono); font-size: 0.7rem; cursor: pointer;
+}
+.view-toggle button:last-child { border-right: none; }
+.view-toggle button.active { background: var(--phosphor-dim); color: var(--phosphor); }
+
+/* ─── Layout ─── */
+.page-content {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.2rem;
+  max-width: 1700px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+}
+.rail {
+  position: sticky; top: 4.7rem;
+  align-self: start;
+  max-height: calc(100vh - 6rem);
+  overflow-y: auto;
+  padding-right: 0.4rem;
+}
+.rail-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.7rem 0.7rem 0.5rem;
+  margin-bottom: 0.8rem;
+}
+.rail-section .label {
+  font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-dim); margin-bottom: 0.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.rail-section .label a {
+  color: var(--cyan); text-decoration: none; font-size: 0.62rem;
+  text-transform: none; letter-spacing: 0.04em;
+}
+.rail-section .label a:hover { color: var(--phosphor); }
+.facet-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; gap: 0.4rem;
+  padding: 0.32rem 0.5rem; margin-bottom: 0.18rem;
+  background: var(--bg-panel); border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-family: var(--mono); font-size: 0.72rem;
+  border-radius: 3px; cursor: pointer; text-align: left;
+}
+.facet-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); border-color: var(--border-bright); }
+.facet-btn.active {
+  background: var(--phosphor-glow); border-color: var(--phosphor-dim);
+  color: var(--phosphor);
+}
+.facet-btn .fcount { color: var(--text-dim); font-size: 0.65rem; }
+.facet-btn.active .fcount { color: var(--phosphor); }
+
+/* ─── Main grid ─── */
+.main { min-width: 0; }
+
+/* Comparison cards (Comparisons mode) */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 1.2rem;
+}
+.comparison-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 6px; overflow: hidden; cursor: pointer;
+  transition: all 0.2s;
+}
+.comparison-card:hover { border-color: var(--phosphor-dim); transform: translateY(-2px); }
+.comparison-card .ccard-thumb {
+  width: 100%; aspect-ratio: 16/9;
+  object-fit: cover;
+  display: block; background: var(--bg-deep);
+}
+.comparison-card .ccard-body { padding: 0.9rem 1rem 1rem; }
+.comparison-card .ccard-title {
+  font-family: var(--serif); font-size: 1rem; color: var(--phosphor);
+  margin-bottom: 0.3rem;
+}
+.comparison-card .ccard-summary {
+  font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5;
+}
+.comparison-card .ccard-meta {
+  display: flex; gap: 0.4rem; flex-wrap: wrap;
+  margin-top: 0.6rem; font-size: 0.66rem; color: var(--text-dim);
+}
+.comparison-card .ccard-meta .chip {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: 2px; padding: 0.1rem 0.4rem;
+}
+
+/* Standard figure grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.8rem;
+}
+.gallery-list { display: grid; grid-template-columns: 1fr; gap: 2px; }
+.fig-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 4px; overflow: hidden;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; flex-direction: column;
+}
+.fig-card:hover { border-color: var(--border-bright); transform: translateY(-1px); }
+.fig-thumb {
+  width: 100%; aspect-ratio: 16/10;
+  object-fit: cover;
+  background: var(--bg-deep); display: block;
+}
+.fig-card.broken .fig-thumb {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--red); font-size: 0.7rem;
+}
+.fig-info { padding: 0.5rem 0.7rem; }
+.fig-name {
+  font-size: 0.74rem; font-weight: 500; color: var(--text-primary);
+  line-height: 1.35; margin-bottom: 0.2rem;
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.fig-caption {
+  font-size: 0.66rem; color: var(--text-dim);
+  line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+.fig-tags {
+  display: flex; flex-wrap: wrap; gap: 0.25rem;
+  padding: 0 0.7rem 0.6rem;
+}
+.fig-tag {
+  font-size: 0.58rem; padding: 0.08rem 0.4rem;
+  border-radius: 2px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  background: rgba(255,255,255,0.04); color: var(--text-secondary);
+}
+.fig-tag.system { background: var(--phosphor-dim); color: var(--phosphor); }
+.fig-tag.analysis { background: var(--cyan-dim); color: var(--cyan); }
+.fig-tag.group { background: var(--violet-dim); color: var(--violet); }
+
+/* List view variant */
+.gallery-list .fig-card { display: grid; grid-template-columns: 140px 1fr; }
+.gallery-list .fig-thumb { width: 140px; aspect-ratio: 16/10; }
+.gallery-list .fig-info { padding: 0.6rem 0.8rem 0.4rem; }
+.gallery-list .fig-tags { padding: 0 0.8rem 0.6rem; }
+
+/* ─── Lightbox ─── */
+.lightbox {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.93); z-index: 10000;
+  align-items: center; justify-content: center; flex-direction: column;
+  padding: 1.5rem;
+}
+.lightbox.open { display: flex; }
+.lightbox-close {
+  position: absolute; top: 0.8rem; right: 1.2rem;
+  background: none; border: none;
+  color: var(--text-secondary); font-size: 1.7rem;
+  cursor: pointer; font-family: var(--mono);
+}
+.lightbox-close:hover { color: var(--text-primary); }
+.lightbox img {
+  max-width: 92vw; max-height: 75vh;
+  object-fit: contain;
+  border: 1px solid var(--border); border-radius: 4px;
+  background: var(--bg-deep);
+}
+.lightbox-caption {
+  margin-top: 0.8rem; text-align: center; max-width: 88vw;
+  display: flex; flex-direction: column; gap: 0.3rem; align-items: center;
+}
+.lightbox-title {
+  font-family: var(--serif);
+  font-size: 1.05rem; font-weight: 600; color: var(--text-primary);
+}
+.lightbox-meta {
+  font-size: 0.72rem; color: var(--text-dim);
+  display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;
+}
+.lightbox-meta a { color: var(--cyan); text-decoration: none; }
+.lightbox-meta a:hover { color: var(--phosphor); }
+.lightbox-caption-text {
+  font-size: 0.78rem; color: var(--text-secondary); max-width: 700px;
+  line-height: 1.5;
+}
+.lightbox-data-links {
+  display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: center;
+  margin-top: 0.3rem;
+}
+.lightbox-data-links a {
+  font-size: 0.7rem; color: var(--phosphor);
+  background: var(--phosphor-glow); border: 1px solid var(--phosphor-dim);
+  padding: 0.2rem 0.6rem; border-radius: 3px;
+  text-decoration: none;
+}
+.lightbox-data-links a:hover { background: var(--phosphor-dim); color: var(--bg-deep); }
+.lightbox-nav { display: flex; gap: 0.5rem; margin-top: 0.6rem; }
+.lightbox-nav button {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 3px; padding: 0.35rem 0.9rem;
+  color: var(--text-secondary); font-family: var(--mono); font-size: 0.74rem;
+  cursor: pointer;
+}
+.lightbox-nav button:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+.lightbox-nav .group-nav { background: var(--violet-dim); color: var(--violet); border-color: #503a80; }
+.lightbox-nav .group-nav:hover { background: #503a80; color: white; }
+
+.empty-msg, .error-msg {
+  padding: 2rem; text-align: center;
+  color: var(--text-dim); font-size: 0.85rem;
+}
+.error-msg { color: var(--red); border-left: 3px solid var(--red); background: var(--bg-card); text-align: left; }
+
+@media (max-width: 1000px) {
+  .page-content { grid-template-columns: 1fr; }
+  .rail { position: static; max-height: none; }
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="index.html">Dashboard</a>
+    <a href="tracker.html">Research Tracker</a>
+    <a href="figures.html" class="active">Figures</a>
+    <a href="datasets.html">Datasets</a>
+    <a href="interactive.html">Interactive Atlas</a>
+    <a href="about.html">About</a>
+  </div>
+  <div class="topbar-right">
+    Three-Body Poisson Algebra
+    <a href="https://github.com/bshepp/3body-poisson-algebra" target="_blank" rel="noopener" title="GitHub Repository"><svg class="gh-icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+  </div>
+</div>
+
+<!-- Header -->
+<div class="header">
+  <h1>Figures <span>— Atlas heatmaps, spheres, spectra, and curated comparisons</span></h1>
+  <div class="subtitle" id="subtitle"></div>
+</div>
+
+<!-- Controls -->
+<div class="controls-bar">
+  <div class="mode-tabs">
+    <button class="mode-tab" data-mode="system" onclick="setMode('system')">By system</button>
+    <button class="mode-tab" data-mode="analysis" onclick="setMode('analysis')">By analysis</button>
+    <button class="mode-tab active" data-mode="comparisons" onclick="setMode('comparisons')">Comparisons</button>
+  </div>
+  <input type="text" class="search-box" id="searchBox" placeholder="Search figures (name, system, caption)...">
+  <div class="view-toggle" id="viewToggle">
+    <button data-view="grid" class="active" onclick="setView('grid')">Grid</button>
+    <button data-view="list" onclick="setView('list')">List</button>
+  </div>
+  <span class="count-display" id="countDisplay"></span>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="onLightboxClick(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-caption">
+    <div class="lightbox-title" id="lbTitle"></div>
+    <div class="lightbox-caption-text" id="lbCap"></div>
+    <div class="lightbox-meta" id="lbMeta"></div>
+    <div class="lightbox-data-links" id="lbData"></div>
+  </div>
+  <div class="lightbox-nav" id="lbNav"></div>
+</div>
+
+<!-- Page content -->
+<div class="page-content">
+  <nav class="rail" id="rail"></nav>
+  <div class="main" id="main"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// Figures Explorer — three browse modes over a static manifest
+// ═══════════════════════════════════════════════════════════════
+
+const MANIFEST_URL = "data/figures/manifest.json";
+const ASSET_PREFIX = "";   // manifest paths are already "../figures_v2/..."
+
+const state = {
+  manifest: null,
+  mode: "comparisons",            // system | analysis | comparisons
+  facetSel: new Set(),            // selected facet ids in current mode
+  search: "",
+  view: "grid",                   // grid | list
+  lightboxList: [],               // current sequence of figure objects
+  lightboxIdx: 0,
+  groupContext: null,             // group object when navigating a group
+};
+
+// ───── Boot ─────
+fetch(MANIFEST_URL)
+  .then(r => r.json())
+  .then(m => {
+    state.manifest = m;
+    document.getElementById("subtitle").textContent =
+      `${m.n_figures} figures across ${m.n_systems} physical systems and ${m.n_analyses} analysis types — plus ${m.n_groups} curated comparisons.`;
+    // Honor URL hash
+    const h = location.hash.replace("#", "");
+    if (h && ["system", "analysis", "comparisons"].includes(h)) {
+      state.mode = h;
+    }
+    document.querySelectorAll(".mode-tab").forEach(b =>
+      b.classList.toggle("active", b.dataset.mode === state.mode));
+    rerender();
+  })
+  .catch(err => {
+    document.getElementById("main").innerHTML =
+      `<div class="error-msg">Failed to load <code>${MANIFEST_URL}</code>. Run <code>python website/build_figures_manifest.py</code> first.<br><br>${err}</div>`;
+  });
+
+document.getElementById("searchBox").addEventListener("input", e => {
+  state.search = e.target.value.toLowerCase().trim();
+  rerender();
+});
+document.addEventListener("keydown", e => {
+  if (!document.getElementById("lightbox").classList.contains("open")) return;
+  if (e.key === "Escape") closeLightbox();
+  else if (e.key === "ArrowLeft") navLightbox(-1);
+  else if (e.key === "ArrowRight") navLightbox(1);
+});
+
+// ───── Mode + facet handling ─────
+function setMode(m) {
+  state.mode = m;
+  state.facetSel.clear();
+  history.replaceState(null, "", `#${m}`);
+  document.querySelectorAll(".mode-tab").forEach(b =>
+    b.classList.toggle("active", b.dataset.mode === m));
+  rerender();
+}
+
+function setView(v) {
+  state.view = v;
+  document.querySelectorAll(".view-toggle button").forEach(b =>
+    b.classList.toggle("active", b.dataset.view === v));
+  renderMain();
+}
+
+function toggleFacet(id) {
+  if (state.facetSel.has(id)) state.facetSel.delete(id);
+  else state.facetSel.add(id);
+  renderRail();
+  renderMain();
+}
+
+function clearFacets() {
+  state.facetSel.clear();
+  renderRail();
+  renderMain();
+}
+
+// ───── Rendering ─────
+function rerender() {
+  renderRail();
+  renderMain();
+  // View toggle hidden in comparisons mode
+  document.getElementById("viewToggle").style.display =
+    state.mode === "comparisons" ? "none" : "";
+}
+
+function renderRail() {
+  const rail = document.getElementById("rail");
+  const m = state.manifest;
+  if (state.mode === "system") {
+    rail.innerHTML = facetSection("Systems", m.systems);
+  } else if (state.mode === "analysis") {
+    rail.innerHTML = facetSection("Analysis types", m.analyses);
+  } else {
+    // Comparisons mode: rail lists groups; click jumps to that group's card
+    rail.innerHTML =
+      `<div class="rail-section">
+         <div class="label"><span>Groups</span></div>` +
+      m.groups.map(g => `
+         <button class="facet-btn" onclick="jumpToGroup('${esc(g.id)}')">
+           <span>${esc(g.label)}</span>
+           <span class="fcount">${g.members.length}</span>
+         </button>`).join("") +
+      `</div>`;
+  }
+}
+
+function facetSection(label, items) {
+  const totalSelected = state.facetSel.size;
+  const clearLink = totalSelected
+    ? `<a href="#" onclick="clearFacets();return false;">clear (${totalSelected})</a>`
+    : "";
+  return `<div class="rail-section">
+    <div class="label"><span>${label}</span>${clearLink}</div>
+    ${items.map(item => `
+      <button class="facet-btn ${state.facetSel.has(item.id) ? "active" : ""}"
+              onclick="toggleFacet('${esc(item.id)}')" title="${esc(item.summary || '')}">
+        <span>${esc(item.label)}</span>
+        <span class="fcount">${item.count}</span>
+      </button>`).join("")}
+  </div>`;
+}
+
+function renderMain() {
+  if (state.mode === "comparisons") {
+    renderComparisons();
+  } else {
+    renderGallery();
+  }
+}
+
+function renderComparisons() {
+  const m = state.manifest;
+  const main = document.getElementById("main");
+  const fbyId = Object.fromEntries(m.figures.map(f => [f.id, f]));
+  const matches = (g) => {
+    if (!state.search) return true;
+    const hay = (g.label + " " + g.summary + " " + g.id).toLowerCase();
+    return hay.includes(state.search);
+  };
+  const groups = m.groups.filter(matches);
+  document.getElementById("countDisplay").textContent =
+    `${groups.length} comparison${groups.length === 1 ? "" : "s"}`;
+  if (groups.length === 0) {
+    main.innerHTML = `<div class="empty-msg">No comparisons match the search.</div>`;
+    return;
+  }
+  main.innerHTML = `<div class="comparison-grid">${
+    groups.map(g => {
+      const primary = fbyId[g.primary_figure];
+      const thumb = primary
+        ? `<img class="ccard-thumb" src="${esc(primary.path)}" alt="${esc(g.label)}" loading="lazy"
+                  onerror="this.parentElement.classList.add('broken'); this.style.display='none'">`
+        : `<div class="ccard-thumb"></div>`;
+      return `
+        <div class="comparison-card" id="group-${esc(g.id)}" onclick="openGroup('${esc(g.id)}')">
+          ${thumb}
+          <div class="ccard-body">
+            <div class="ccard-title">${esc(g.label)}</div>
+            <div class="ccard-summary">${esc(g.summary)}</div>
+            <div class="ccard-meta">
+              <span class="chip">${g.members.length} figures</span>
+              ${primary ? `<span class="chip">${esc(primary.system)}</span>` : ""}
+            </div>
+          </div>
+        </div>`;
+    }).join("")
+  }</div>`;
+}
+
+function renderGallery() {
+  const m = state.manifest;
+  const main = document.getElementById("main");
+  const figs = filteredFigures();
+  document.getElementById("countDisplay").textContent =
+    `${figs.length} / ${m.n_figures} figure${figs.length === 1 ? "" : "s"}`;
+  if (figs.length === 0) {
+    main.innerHTML = `<div class="empty-msg">No figures match the current filters.</div>`;
+    return;
+  }
+  const cls = state.view === "list" ? "gallery-list" : "gallery-grid";
+  main.innerHTML = `<div class="${cls}">${
+    figs.map((f, i) => figureCardHtml(f, i, figs)).join("")
+  }</div>`;
+}
+
+function filteredFigures() {
+  const m = state.manifest;
+  const sel = state.facetSel;
+  return m.figures.filter(f => {
+    if (state.mode === "system" && sel.size > 0 && !sel.has(f.system)) return false;
+    if (state.mode === "analysis" && sel.size > 0 && !sel.has(f.analysis)) return false;
+    if (state.search) {
+      const hay = (f.name + " " + f.system + " " + f.analysis + " " +
+                   (f.caption || "") + " " + (f.groups || []).join(" ")).toLowerCase();
+      if (!hay.includes(state.search)) return false;
+    }
+    return true;
+  });
+}
+
+function figureCardHtml(f, idx, list) {
+  const sysLabel = lookupLabel("systems", f.system);
+  const anaLabel = lookupLabel("analyses", f.analysis);
+  const groupChips = (f.groups || []).map(g =>
+    `<span class="fig-tag group">${esc(g.replace(/_/g, ' '))}</span>`).join("");
+  return `
+    <div class="fig-card" onclick="openFigure(${idx})" data-key="${esc(f.id)}">
+      <img class="fig-thumb" loading="lazy" src="${esc(f.path)}" alt="${esc(f.name)}"
+           onerror="this.parentElement.classList.add('broken'); this.replaceWith(Object.assign(document.createElement('div'),{className:'fig-thumb',textContent:'image missing'}));">
+      <div class="fig-info">
+        <div class="fig-name" title="${esc(f.name)}">${esc(f.name)}</div>
+        <div class="fig-caption">${esc(f.caption || '')}</div>
+      </div>
+      <div class="fig-tags">
+        <span class="fig-tag system">${esc(sysLabel)}</span>
+        <span class="fig-tag analysis">${esc(anaLabel)}</span>
+        ${groupChips}
+      </div>
+    </div>`;
+  // openFigure receives the card index; we capture the current list separately below.
+}
+
+function lookupLabel(kind, id) {
+  const arr = state.manifest[kind] || [];
+  for (const x of arr) if (x.id === id) return x.label;
+  return id;
+}
+
+// ───── Lightbox ─────
+function openFigure(idx) {
+  state.lightboxList = filteredFigures();
+  state.lightboxIdx = idx;
+  state.groupContext = null;
+  showLightbox();
+}
+
+function openGroup(gid) {
+  const g = state.manifest.groups.find(x => x.id === gid);
+  if (!g) return;
+  const fbyId = Object.fromEntries(state.manifest.figures.map(f => [f.id, f]));
+  const list = (g.members || []).map(id => fbyId[id]).filter(Boolean);
+  if (!list.length) return;
+  state.lightboxList = list;
+  state.lightboxIdx = 0;
+  state.groupContext = g;
+  showLightbox();
+}
+
+function jumpToGroup(gid) {
+  const card = document.getElementById("group-" + gid);
+  if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function showLightbox() {
+  const f = state.lightboxList[state.lightboxIdx];
+  if (!f) return;
+  document.getElementById("lightboxImg").src = f.path;
+  document.getElementById("lightboxImg").alt = f.name;
+  document.getElementById("lbTitle").textContent = f.name;
+  document.getElementById("lbCap").textContent = f.caption || "";
+  const sysLabel = lookupLabel("systems", f.system);
+  const anaLabel = lookupLabel("analyses", f.analysis);
+  const meta = [
+    `<span>${esc(sysLabel)}</span>`,
+    `<span>${esc(anaLabel)}</span>`,
+    f.n != null ? `<span>N=${f.n}</span>` : "",
+    f.d != null ? `<span>d=${f.d}</span>` : "",
+    `<a href="${esc(f.path)}" target="_blank" rel="noopener">Open original</a>`,
+    state.groupContext
+      ? `<span>group: ${esc(state.groupContext.label)} (${state.lightboxIdx + 1}/${state.lightboxList.length})</span>`
+      : `<span>${state.lightboxIdx + 1} / ${state.lightboxList.length}</span>`,
+  ].filter(Boolean).join("");
+  document.getElementById("lbMeta").innerHTML = meta;
+  const links = (f.data_links || []).map(l => {
+    const href = `datasets.html?table=${encodeURIComponent(l.table)}` +
+      (l.filter ? `&filter=${encodeURIComponent(l.filter)}` : "");
+    return `<a href="${href}">${esc(l.label || l.table)} →</a>`;
+  });
+  // Add group entry-point if figure is part of a group and we're not already in a group
+  if (!state.groupContext) {
+    for (const gid of (f.groups || [])) {
+      const g = state.manifest.groups.find(x => x.id === gid);
+      if (g) {
+        links.push(`<a href="javascript:void(0)" onclick="event.stopPropagation();openGroup('${esc(gid)}')">View comparison: ${esc(g.label)} →</a>`);
+      }
+    }
+  }
+  document.getElementById("lbData").innerHTML = links.join("");
+  // Nav buttons
+  const navBits = [
+    `<button onclick="navLightbox(-1)">&#9664; Prev</button>`,
+    `<button onclick="navLightbox(1)">Next &#9654;</button>`,
+  ];
+  if (state.groupContext) {
+    navBits.push(`<button class="group-nav" onclick="exitGroup()">Exit comparison</button>`);
+  }
+  document.getElementById("lbNav").innerHTML = navBits.join("");
+  document.getElementById("lightbox").classList.add("open");
+}
+
+function navLightbox(d) {
+  state.lightboxIdx = (state.lightboxIdx + d + state.lightboxList.length) % state.lightboxList.length;
+  showLightbox();
+}
+
+function exitGroup() {
+  // Exit group view but keep the lightbox open on the current image's
+  // position within the full filtered list (if any).
+  const f = state.lightboxList[state.lightboxIdx];
+  state.groupContext = null;
+  state.lightboxList = filteredFigures();
+  const ix = state.lightboxList.findIndex(x => x.id === f.id);
+  state.lightboxIdx = ix >= 0 ? ix : 0;
+  if (!state.lightboxList.length) closeLightbox();
+  else showLightbox();
+}
+
+function onLightboxClick(e) {
+  // Click on the dimmed background closes; clicks on inner elements bubble normally
+  if (e.target.id === "lightbox") closeLightbox();
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").classList.remove("open");
+}
+
+// ───── Helpers ─────
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+</script>
+</body>
+</html>

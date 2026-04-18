@@ -255,3 +255,7 @@ Mark items with status as work proceeds:
 | 4.19 | Structure constants expansion: 1/r^4 at N=3 d=2 (singular catalog) | ✅ |
 | 4.20 | r^3 level-3 structure constants at N=3 d=1 (dim 109, non-nilpotent) | ✅ |
 | 4.21 | Rebuild HF dataset with 15 structure constant tensors (208 total rows) | ✅ |
+| 5.1  | Website rebuild: new datasets.html + figures.html, reproducible figure pipeline (figures_render / figures_compare / build_figures_manifest), 309 canonical figures + 10 comparisons (Apr 18, 2026) | ✅ |
+| 5.2  | Atlas Compute Work Order — `docs/atlas_compute_workorder.md` worksheet listing every scan to relaunch + 4-tier roadmap of new atlases (Apr 18, 2026) | ✅ |
+| 5.3  | Execute Section 1 re-runs from the work order: 6 partial parametric scans (`launch_parametric.py`) + Triple BH custom invocation | ⬜ |
+| 5.4  | Execute Section 4 Tier-1 new atlases: Yukawa nuclear (tritium, dusty plasma), Penning trap, composite potentials, polynomial r^3/r^4/r^6 | ⬜ |

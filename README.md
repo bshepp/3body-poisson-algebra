@@ -173,25 +173,38 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 │   ├── conjectures.md          # Conjecture formulations and evidence
 │   ├── project_status.md       # Current status overview
 │   └── ...                     # Strategy docs, findings, brainstorms
-├── figures/                    # Generated figure PNGs
-│   ├── fig_atlas_teaser.png    # Triptych: 1/r vs helium Coulomb gap landscape
-│   ├── fig_lagrange_targeted.png # Adaptive scan of Lagrange neighborhood
-│   ├── shape_sphere_*.png      # Shape sphere visualizations
-│   └── level4_analysis*.png    # Level 4 convergence plots
+├── figures_v2/                 # Canonical rendered figures (gitignored; rebuild via website/figures_render.py)
+│   ├── heatmaps/               # μ/φ gap-ratio heatmaps per config
+│   ├── spheres/                # 3D shape sphere renderings
+│   ├── triptychs/              # 1/r baseline | this | difference
+│   ├── spectra/                # Mean SV spectrum per scan
+│   └── comparisons/            # 10 curated cross-system panels
+├── legacy_figures_archive/     # Pre-rebuild PNG archive (gitignored; recoverable)
 ├── data/                       # JSON metadata and sweep results
 │   ├── mass_ratio_sweep.json   # Full mass ratio sweep data
 │   ├── data_inventory.json     # Atlas data inventory
+│   ├── image_inventory.json    # Pre-rebuild figure catalog (1202 entries)
 │   └── ...                     # Completion markers, small result sets
 ├── infra/                      # AWS infrastructure (launch scripts, userdata)
-│   ├── launch_atlas_instances.py  # EC2 spot fleet orchestration
+│   ├── launch_atlas_instances.py  # EC2 spot fleet orchestration (named systems)
+│   ├── launch_parametric.py    # 1/r^k exponent sweep launcher
 │   ├── launch_nbody_scaling.py    # N-body scaling fleet launch
 │   └── userdata_*.sh           # EC2 bootstrap scripts (gitignored)
+├── scripts/                    # Maintenance helpers
+│   └── archive_legacy_figures.py  # Moves legacy PNGs into legacy_figures_archive/
 ├── website/                    # Research website (deployed to nbody.briansheppard.com)
 │   ├── index.html              # Dashboard: stats, work plan, conjectures
 │   ├── tracker.html            # Per-experiment status tracker
-│   ├── explorer.html           # Static PNG/video data browser
+│   ├── figures.html            # Curated figures explorer (309 PNGs, 17 systems, 10 comparisons)
+│   ├── datasets.html           # Browser for the 13 Parquet tables (993 rows)
 │   ├── interactive.html        # Plotly.js interactive atlas explorer
-│   ├── preprocess_atlas_data.py # Converts .npy → web JSON/binary
+│   ├── about.html              # Four-tier explainer (Overview/Concepts/Methods/Formalism)
+│   ├── data/                   # Generated JSON manifests (gitignored; rebuild via build_*.py)
+│   ├── build_dataset_json.py   # Parquet → per-table JSON for datasets.html
+│   ├── build_figures_manifest.py # figures_v2/ tree → manifest.json for figures.html
+│   ├── figures_render.py       # Walks aws_results/ + atlas_output_hires/ + atlas_targeted/ → figures_v2/
+│   ├── figures_compare.py      # 10 curated comparison panels with shared color scales
+│   ├── preprocess_atlas_data.py # Converts .npy → web JSON/binary for interactive.html
 │   └── render_knee_index.py    # Spectral decay knee index renderer
 ├── nbody/                      # N-body engine and extensions (Paper 3)
 │   ├── exact_growth_nbody.py   # NBodyAlgebra class — arbitrary N, d, potential
@@ -257,10 +270,32 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 |------|-------------|
 | `website/index.html` | Dashboard: overview stats, work plan, conjectures, papers |
 | `website/tracker.html` | Per-experiment status tracker (42 atlas configurations) |
-| `website/explorer.html` | Static PNG/video data browser (~197 images) |
+| `website/figures.html` | Curated figures explorer with three browse modes (System / Analysis / Comparisons), facet filtering, lightbox with comparison-group navigation, deep links into datasets.html |
+| `website/datasets.html` | Browser for the 13 Parquet tables (993 rows): sortable + filterable + paginated table view, schema block, per-table Plotly chart, JSON download + Hugging Face Parquet deep-link, cross-table filter panel |
+| `website/about.html` | Four-tier explainer: Overview / Concepts / Methods / Formalism |
 | `website/interactive.html` | Plotly.js interactive atlas explorer with SV spectrum inspector |
-| `website/preprocess_atlas_data.py` | Converts raw `.npy` atlas data to web-friendly JSON + Float32 binary |
+| `website/build_figures_manifest.py` | Walks `figures_v2/` and writes the figures manifest |
+| `website/build_dataset_json.py` | Converts `dataset/output/*.parquet` into per-table JSON for datasets.html |
+| `website/figures_render.py` | Renders heatmaps + spheres + triptychs + spectra from atlas NPYs into `figures_v2/` |
+| `website/figures_compare.py` | Renders 10 curated cross-system comparison panels |
+| `website/preprocess_atlas_data.py` | Converts raw `.npy` atlas data to web-friendly JSON + Float32 binary (for interactive.html) |
 | `website/render_knee_index.py` | Spectral decay knee index renderer for dashboard |
+
+After any new atlas data lands locally, the Figures page is rebuilt with three commands:
+
+```bash
+python website/figures_render.py          # adds new heatmaps/spheres/triptychs to figures_v2/
+python website/figures_compare.py --force # refreshes the 10 comparison panels
+python website/build_figures_manifest.py  # rewrites website/data/figures/manifest.json
+```
+
+The Datasets page is rebuilt after a `dataset/build_dataset.py` run with one command:
+
+```bash
+python website/build_dataset_json.py      # Parquet → per-table JSON in website/data/datasets/
+```
+
+See `docs/atlas_compute_workorder.md` for the full sync/render/deploy cycle including S3 + CloudFront commands.
 
 ### GUE log-gas / prime distribution
 | File | Description |

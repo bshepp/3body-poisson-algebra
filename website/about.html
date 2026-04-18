@@ -188,7 +188,8 @@ body {
   <div class="topbar-left">
     <a href="index.html">Dashboard</a>
     <a href="tracker.html">Research Tracker</a>
-    <a href="explorer.html">Data Explorer</a>
+    <a href="figures.html">Figures</a>
+    <a href="datasets.html">Datasets</a>
     <a href="interactive.html">Interactive Atlas</a>
     <a href="about.html" class="active">About</a>
   </div>
@@ -200,54 +201,55 @@ body {
 
 <!-- ═══════════ HEADER ═══════════ -->
 <div class="page-header">
-  <h1>About This Research</h1>
-  <div class="subtitle">A hidden algebraic structure in the three-body problem — explained at four levels</div>
+  <h1>About</h1>
+  <div class="subtitle">The pairwise Poisson algebra of the N-body problem, at four levels of depth.</div>
 </div>
 
 <!-- ═══════════ CONTENT ═══════════ -->
 <div class="page-content">
 
-  <!-- ── Tier 1: For Everyone ── -->
+  <!-- ── Tier 1: Overview ── -->
   <div class="tier tier-1 open" onclick="toggleTier(this)">
     <div class="tier-header">
       <div class="tier-icon"></div>
-      <div class="tier-title">For Everyone</div>
-      <div class="tier-audience">No prerequisites</div>
+      <div class="tier-title">Overview</div>
+      <div class="tier-audience">What we found</div>
       <div class="tier-chevron">▶</div>
     </div>
     <div class="tier-body">
-      <p>Imagine three stars pulling on each other through gravity. Predicting their paths is one of the oldest unsolved problems in physics — even Newton struggled with it. There is no simple formula; the motion is famously chaotic.</p>
-      <p>We discovered a <strong>hidden pattern</strong> in the mathematics of this system. When you write down all the ways the stars' positions and momenta can interact through their gravitational forces, those interactions generate a kind of "algebraic language." The words in this language combine to form new words, and the number of independent words at each level of complexity follows a specific sequence:</p>
+      <p>Imagine three stars pulling on each other through gravity. Predicting their paths is one of the oldest unsolved problems in physics; even Newton struggled with it. There is no simple formula, and the motion is famously chaotic.</p>
+      <p>We identified a <strong>hidden pattern</strong> in the mathematics of this system. When you write down all the ways the stars' positions and momenta can interact through their gravitational forces, those interactions generate a kind of "algebraic language." The words in this language combine to form new words, and the number of independent words at each level of complexity follows a specific sequence:</p>
       <p class="seq"><strong>3 → 6 → 17 → 116</strong></p>
-      <p>What makes this remarkable is its <strong>universality</strong>. Whether you use Newton's gravity, an inverse-square force, or an entirely different force law — the same numbers appear. Whether the stars live in 1D, 2D, or 3D — the same numbers. Whether the masses are equal or wildly different — still the same numbers.</p>
+      <p>What makes this remarkable is its <strong>universality</strong>. Whether you use Newton's gravity, an inverse-square force, or an entirely different force law: the same numbers appear. Whether the stars live in 1D, 2D, or 3D: the same numbers. Whether the masses are equal or wildly different: still the same numbers.</p>
+      <p>There is one striking exception: a <strong>spring-like</strong> force (the simple harmonic oscillator) gives a different, much smaller sequence (<em>3 → 6 → 13 → 15</em>) that stops growing. Every other force we tested produces the universal pattern. This singular-vs-regular dichotomy is itself part of the discovery.</p>
       <p>This suggests there is a deep structural fingerprint of the three-body problem that nobody knew about before.</p>
     </div>
   </div>
 
-  <!-- ── Tier 2: High School ── -->
+  <!-- ── Tier 2: Concepts ── -->
   <div class="tier tier-2" onclick="toggleTier(this)">
     <div class="tier-header">
       <div class="tier-icon"></div>
-      <div class="tier-title">High School Level</div>
-      <div class="tier-audience">Algebra &amp; basic physics</div>
+      <div class="tier-title">Concepts</div>
+      <div class="tier-audience">What the bracket actually does</div>
       <div class="tier-chevron">▶</div>
     </div>
     <div class="tier-body">
-      <p>In physics, a <strong>force</strong> between two objects depends on the distance between them. For gravity, the force goes as <code>1/r²</code>, where <code>r</code> is the distance. The <strong>potential energy</strong> tells you how much stored energy the pair has — for gravity it is proportional to <code>1/r</code>.</p>
-      <p>With three bodies, there are three pairs, so three pairwise potentials: <code>H₁₂</code>, <code>H₁₃</code>, and <code>H₂₃</code>. These are our starting "words" — <strong>3 of them</strong>.</p>
+      <p>In physics, a <strong>force</strong> between two objects depends on the distance between them. For gravity, the force goes as <code>1/r²</code>, where <code>r</code> is the distance. The <strong>potential energy</strong> tells you how much stored energy the pair has; for gravity it is proportional to <code>1/r</code>.</p>
+      <p>With three bodies, there are three pairs, so three pairwise potentials: <code>H₁₂</code>, <code>H₁₃</code>, and <code>H₂₃</code>. These are our starting "words" (<strong>3 of them</strong>).</p>
       <p>There is an operation in physics called the <strong>Poisson bracket</strong>. It's like a rule for combining two quantities to get a new one. When you apply this rule to every pair of our 3 starting words, you get new expressions. After simplifying and removing duplicates, you end up with <strong>6 independent words</strong> at level 1.</p>
-      <p>Keep going — bracket the level-1 words with the originals — and you get <strong>17</strong> at level 2, then <strong>116</strong> at level 3. The number of truly independent expressions at each level is what we call the <strong>dimension sequence</strong>:</p>
+      <p>Bracket the level-1 words with the originals and you get <strong>17</strong> at level 2; bracket again and you get <strong>116</strong> at level 3. The number of truly independent expressions at each level is what we call the <strong>dimension sequence</strong>:</p>
       <p class="seq">dim = [3, 6, 17, 116]</p>
-      <p>We checked this by representing each expression as a vector of numbers, then using a technique from linear algebra (the <strong>SVD</strong> — singular value decomposition) to count how many vectors are linearly independent. The gap between the "real" singular values and the numerical noise is enormous — ratios above 10¹⁰ — so the count is rock solid.</p>
+      <p>We checked this by representing each expression as a vector of numbers, then using a technique from linear algebra (the <strong>SVD</strong>, or singular value decomposition) to count how many vectors are linearly independent. The gap between the "real" singular values and the numerical noise is enormous (ratios above 10¹⁰), so the count is rock solid.</p>
     </div>
   </div>
 
-  <!-- ── Tier 3: Undergraduate ── -->
+  <!-- ── Tier 3: Methods ── -->
   <div class="tier tier-3" onclick="toggleTier(this)">
     <div class="tier-header">
       <div class="tier-icon"></div>
-      <div class="tier-title">Undergraduate Level</div>
-      <div class="tier-audience">Mechanics &amp; linear algebra</div>
+      <div class="tier-title">Methods</div>
+      <div class="tier-audience">How it's computed</div>
       <div class="tier-chevron">▶</div>
     </div>
     <div class="tier-body">
@@ -262,18 +264,18 @@ body {
         <li>Level 2: brackets of level-1 with level-0 — dimension 17</li>
         <li>Level 3: next bracket layer — dimension 116</li>
       </ul>
-      <p>The dimension is computed numerically. We <strong>substitute random phase-space points</strong> into the symbolic expressions, building a matrix where each row is a generator evaluated at a sample point. The <strong>SVD</strong> of this matrix reveals the numerical rank: singular values above 10⁻⁶ count as "real," and the gap ratio σₖ/σₖ₊₁ exceeds 10¹⁰ at the transition — an unambiguous rank determination.</p>
+      <p>The dimension is computed numerically. We <strong>substitute random phase-space points</strong> into the symbolic expressions, building a matrix where each row is a generator evaluated at a sample point. The <strong>SVD</strong> of this matrix reveals the numerical rank: singular values above 10⁻⁶ count as "real," and the gap ratio σₖ/σₖ₊₁ exceeds 10¹⁰ at the transition, giving an unambiguous rank determination.</p>
       <p>A key technical trick: we introduce auxiliary variables <code>uᵢⱼ = 1/rᵢⱼ</code> so that Poisson brackets of potentials like 1/r produce <strong>polynomial</strong> expressions (via chain rule), avoiding messy radicals.</p>
-      <p>The universality result — same [3, 6, 17, 116] for 1/r, 1/r², 1/r³, log(r), all masses, all dimensions d = 1, 2, 3 — is checked by running the computation across thousands of parameter configurations in the <strong>Interactive Atlas</strong> on this site.</p>
+      <p>The universality result — the same [3, 6, 17, 116] for 1/r, 1/r², 1/r³, log(r), all masses, and all dimensions d = 1, 2, 3 — is checked by running the computation across thousands of parameter configurations in the <strong>Interactive Atlas</strong> on this site.</p>
     </div>
   </div>
 
-  <!-- ── Tier 4: Graduate / Researcher ── -->
+  <!-- ── Tier 4: Formalism ── -->
   <div class="tier tier-4" onclick="toggleTier(this)">
     <div class="tier-header">
       <div class="tier-icon"></div>
-      <div class="tier-title">Graduate / Researcher Level</div>
-      <div class="tier-audience">Symplectic geometry &amp; Lie theory</div>
+      <div class="tier-title">Formalism</div>
+      <div class="tier-audience">Symplectic / Lie-theoretic statement</div>
       <div class="tier-chevron">▶</div>
     </div>
     <div class="tier-body">
@@ -285,10 +287,11 @@ body {
       <ul>
         <li><strong>Universality:</strong> The sequence is independent of the potential V(r) (for non-degenerate potentials), the spatial dimension d, mass ratios, and charge configurations. This suggests a purely combinatorial or representation-theoretic origin tied to the S₃ symmetry of the pair graph.</li>
         <li><strong>Degenerate case:</strong> The harmonic potential V(r) = r² causes the algebra to <strong>close</strong> at dimension 15. This is the only known closure and corresponds to the well-known superintegrability of the harmonic oscillator.</li>
-        <li><strong>N-body scaling:</strong> For N = 4 bodies, the sequence begins [6, 14, 62, …]. The growth rate appears super-exponential but the pattern is not yet identified.</li>
+        <li><strong>N-body scaling:</strong> For N = 4 bodies the sequence is now exact through level 3: <code>[6, 14, 62, 1260]</code> (Apr 2026). Closed-form formulas are known for the lower levels: <code>L₀(N) = N(N−1)/2</code> (verified through N = 50), <code>L₁(N) = N(3N−5)/2</code> (verified through N = 26), and <code>L₂(N) = N(4N²−9N+3)/2</code> for N ≥ 4 (the original cubic conjecture was falsified at N = 7 and superseded). Level-3 growth remains super-exponential and lacks a closed form.</li>
         <li><strong>S₃ filtration:</strong> The generators at each level decompose into irreducible representations of S₃ (permutation of body labels). This decomposition is detailed in Paper 2.</li>
-        <li><strong>Dirac constraints:</strong> In regions of configuration space where the rank drops (visible as color changes in the atlas heatmaps), certain generators become functionally dependent — these may correspond to emergent <strong>Dirac constraints</strong> signaling hidden integrability or symmetry enhancement at special mass ratios.</li>
-        <li><strong>Calogero-Moser connection:</strong> The 1/r² (Calogero-Moser) potential produces the same sequence but has additional algebraic structure related to the known integrability of the CM system. Paper 4 explores whether the Poisson algebra "knows" about integrability.</li>
+        <li><strong>Bracket-tensor spectral statistics:</strong> Eigenvalues of the level-2 structure-constant tensor follow <strong>GUE-to-GSE</strong> level repulsion for the 1/r algebra and <strong>Poisson</strong> statistics for the harmonic r² algebra: the Bohigas–Giannoni–Schmit conjecture manifested in the algebra itself. The Jacobi identity also fails on the truncated 1/r structure constants, confirming the algebra is genuinely infinite-dimensional.</li>
+        <li><strong>Calogero–Moser connection:</strong> The 1/r² (Calogero–Moser) potential is exactly integrable yet produces the same sequence as Newtonian gravity. The dimension sequence is therefore <em>not</em> a non-integrability certificate; it is an algebraic invariant of the singularity class. Paper 4 develops this.</li>
+        <li><strong>Quantum and machine-learning extensions:</strong> Replacing the Poisson bracket with the Moyal bracket adds exactly <em>one</em> generator at level 3 for every singular potential, giving <code>[3, 6, 17, 117]</code>. SGD-with-momentum on a 3-layer linear network defines a Hamiltonian whose pairwise gradient-product algebra gives <code>[3, 6, 17, 119]</code>; varying the coupling produces seven distinct universality classes. The GUE log-gas (Dyson model for Riemann-zeta-zero spacings) lands on the universal <code>[3, 6, 17, 116]</code>.</li>
       </ul>
       <p>The computational pipeline uses SymPy for symbolic Poisson brackets, auxiliary variable substitution <code>uᵢⱼ = 1/rᵢⱼ</code> for polynomiality, NumPy/SciPy for high-precision SVD, and mpmath for extended-precision verification. All code is open source in the linked GitHub repository.</p>
     </div>

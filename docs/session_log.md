@@ -5970,3 +5970,154 @@ all of them plus 3 additional independent directions. This shows that:
 
 - `neural/nn_poisson.py` -- algebra computation (Phase A + B)
 - `neural/nn_extra_generators.py` -- extra generator identification
+
+---
+
+## Phase 11: Website Rebuild -- Datasets, Figures, and Atlas Work Order (April 18, 2026)
+
+### Motivation
+
+Three accumulated needs at once:
+1. The Datasets page (`bshepp/pairwise-poisson-algebras` Hugging Face dataset --
+   993 rows across 13 Parquet tables) had no in-site browser.
+2. The legacy `explorer.html` was a hand-curated dump of ~840 lines of
+   embedded image references with redundancy across category labels and
+   the very first low-resolution shape spheres mixed in with the canonical
+   ones.
+3. Atlas data sitting unrendered: 12 `aws_results/atlas_full/` configs had
+   raw NPYs but never produced PNGs (irrational exponents, harmonic, log,
+   Sun-Earth-Moon, triple BH, dark matter).
+
+### What was built
+
+**Datasets page (`website/datasets.html`)** -- vanilla JS over a static manifest.
+Three-mode browse (System / Analysis / Comparisons), sortable + filterable
++ paginated tables, schema block, JSON download + Hugging Face Parquet
+deep-link, per-table Plotly chart, and a top-of-page cross-table filter
+panel. 13 tables, 993 rows total. Build script: `website/build_dataset_json.py`
+converts the curated Parquet output into per-table JSON in
+`website/data/datasets/`.
+
+**Figures page (`website/figures.html`)** -- replaces `explorer.html` (deleted).
+Three browse modes (System | Analysis | Comparisons), facet rail with
+multi-select + counts, lightbox with prev/next + group-comparison
+navigation, deep links into `datasets.html`. 309 canonical figures across
+17 systems, 5 analysis types, and 10 curated comparison groups. Drove a
+complete rebuild of the figure pipeline:
+
+- `scripts/archive_legacy_figures.py` -- moved 999 legacy PNGs into
+  `legacy_figures_archive/` (gitignored). Recoverable via `--restore`.
+- `website/figures_render.py` -- canonical heatmap + sphere + triptych +
+  SV-spectrum renderer for every NPY in `aws_results/atlas_full/`,
+  `atlas_output_hires/`, and `atlas_targeted/`. Resumable, deterministic,
+  fixed colormaps. Total: 296 single-config figures.
+- `website/figures_compare.py` -- 10 curated comparison panels with
+  shared color scales: singular_vs_harmonic, irrational_exponents,
+  exponent_continuity, mass_ratio_extremes, charge_departure,
+  quantum_plus_one, neural_classes, tier_decomposition, gue_overlay,
+  knee_landscape_set.
+- `website/build_figures_manifest.py` -- walks `figures_v2/` and writes
+  `website/data/figures/manifest.json` with per-figure system / analysis /
+  caption / data_links / groups classification.
+
+**Topbar relabeling** -- `Data Explorer` -> `Figures` (href
+`figures.html`) plus a new `Datasets` entry between Figures and
+Interactive Atlas, applied to all 6 pages (`index.html`, `tracker.html`,
+`figures.html`, `datasets.html`, `interactive.html`, `about.html`).
+
+**About page rewrite** -- renamed the four reader tiers from
+"For Everyone / High School / Undergraduate / Graduate" to neutral
+content-depth labels: **Overview / Concepts / Methods / Formalism**.
+Updated the Tier-4 N=4 result to current `[6, 14, 62, 1260]` exact-L3
+plus the closed-form L0/L1/L2 formulas, replaced the stale Dirac-
+constraints bullet with the BGS spectral-statistics result, and added
+quantum (Moyal +1) + neural (7 classes) + GUE log-gas one-liners.
+Em-dashes replaced with commas/colons throughout per editorial pass.
+
+### Iterations: rendering bugs caught and fixed
+
+The first rendering pass had multiple problems caught in visual review.
+Each was fixed with a precise root-cause patch in `figures_render.py` or
+`figures_compare.py`:
+
+| Bug | Root cause | Fix |
+|---|---|---|
+| Partial scans (r^2, r^5, log, 1/r^1.01, 1/r^2.01, 1/r^phi) drawn as solid dark | `np.clip(gap, 1, None)` floored sub-decade gap values to log10(0); `rank == -1` cells were drawn in the lowest color of the inferno colormap rather than masked | Added `_validity_mask()` flagging `rank == -1` / `gap == 0` / non-finite cells; mask through `np.ma.masked_invalid` rendered in `#2a3040` gray; title now appends "(N of M cells unmeasured)" |
+| Triple BH (LISA) drawn as uniform color | All 10000 cells genuinely failed conditioning (`valid_points: 0`) | New `_render_na_card()` produces a placeholder with system label + "No valid samples" message |
+| Spectral knee panel collapsed to two-tone yellow/purple | Shared color scale across panels with very different knee indices (~115 for singular, ~13 for harmonic) plus harmonic algebra closes at dim 15 so SVs 16-156 are zero-padded -- argmax landed on padding | Per-panel color scale; mask SV values below 1e-10 before computing log-drops |
+| Hires `coulomb_1_r2_+2_-1_-1` "dark spray" | Real signal showing rank-conditioning threshold; previously crushed to vmin by the bad clip | Same masking + percentile-clip logic; minimum spread of 0.5 dex prevents colorbar collapse |
+| Targeted scans solid pink | `load_targeted_region` was reading `gap_score_map.npy` (a normalized log-tier classifier in range 16-19) instead of `gap_map.npy` (raw ratios up to 1e8) | Always read `gap_map.npy`; `gap_score_map` is categorical, not magnitude |
+| Targeted scans elongated on Y | `set_aspect()` with grid aspect ratios collapsed the data axis; `min_h=4.5"` was over-padding canvas height for 10-row grids | Removed `set_aspect`; sized figure proportionally to grid shape via `cell_inch * n_cells`; `min_h=2.6"` so thin grids don't get extra vertical real estate |
+| Targeted small_mu region apparent "scan artifact" | Real gap-ratio discontinuity at mu ~ 0.255 (verified via row stats: 900/900 cells valid, 0 failures, gap jumps 0.5 dex between mu=0.255 and mu=0.262) | Documented in atlas_compute_workorder.md as a candidate for finer-mu re-scan, not a render bug |
+
+After all fixes: 309 canonical figures across the three sources plus 10
+comparison panels, all rendered consistently with proper aspect ratios
+and honest no-data masking.
+
+### Atlas Compute Work Order
+
+`docs/atlas_compute_workorder.md` (502 lines) catalogs every atlas scan
+worth running, with exact CLI invocations, runtimes, S3 paths, and
+post-completion sync/render commands:
+
+- **Section 1**: 6 partial parametric scans (single bundled launcher
+  invocation) plus the Triple BH (LISA) custom invocation requiring
+  `--samples 1600 --adaptive` on `r6i.8xlarge`.
+- **Section 2**: One finer-grid `coulomb_+1_+1_+1 small_mu_fine` refinement
+  (mu in [0.18, 0.32], grid 60x30) to characterize the mu ~ 0.255 step;
+  five render-only verification items.
+- **Section 3**: Note explaining the hires `coulomb_1_r2_+2_-1_-1` "noise"
+  is real signal at the rank-conditioning threshold.
+- **Section 4**: Tier 1-4 new atlases. Tier 1 (low cost, ~$30): Yukawa
+  nuclear, Penning trap, composite potentials, polynomial r^3/r^4/r^6.
+  Tier 2 (~$80-150): Moyal-bracket quantum atlases, neural-coupling
+  slice, N=4 1D atlas. Tier 3 (~1-2 weeks): N=4 shape sphere,
+  charge-magnitude continuity, mass-ratio sweep, high-resolution Lagrange
+  zoom. Tier 4 (low priority): resolution upgrades for sub-100x100 grids.
+- **Section 5**: Post-run pipeline showing
+  S3 sync -> figures_render -> figures_compare -> build_figures_manifest
+  -> S3 deploy + CloudFront invalidation.
+
+### Deployment context
+
+The website is currently live at `https://nbody.briansheppard.com` (S3
++ CloudFront, `nbody-briansheppard-com` bucket, distribution
+`E3AHN5BEM2KUCH`). The current local `main` branch is **ahead of
+production**: `index.html` and `tracker.html` have updates from April
+12, the Datasets and Figures pages don't exist on S3 yet, and the
+`figures_v2/` asset tree hasn't been synced. Deploy is held back
+pending review.
+
+When deploying:
+- `aws s3 sync website/ s3://nbody-briansheppard-com/`
+- `aws s3 sync figures_v2/ s3://nbody-briansheppard-com/figures_v2/`
+- `aws cloudfront create-invalidation --distribution-id E3AHN5BEM2KUCH --paths "/*"`
+
+### Files added / changed
+
+- `website/datasets.html` (new, 1056 lines)
+- `website/figures.html` (new, 478 lines, replaces explorer.html)
+- `website/build_dataset_json.py` (new)
+- `website/build_figures_manifest.py` (new)
+- `website/figures_render.py` (new)
+- `website/figures_compare.py` (new)
+- `scripts/archive_legacy_figures.py` (new)
+- `docs/atlas_compute_workorder.md` (new, 502 lines)
+- `website/index.html`, `tracker.html`, `interactive.html`, `about.html`,
+  topbar relabeling
+- `website/about.html` content rewrite (tier names + Tier-4 refresh)
+- `website/explorer.html` (deleted)
+- `.gitignore` (+`legacy_figures_archive/`, +`figures_v2/`)
+- 999 legacy PNGs archived (visible in git as deletions of previously
+  tracked figures under `figures/`, `potential_comparison_plots/`,
+  `primes/figures/`)
+
+### Key insight
+
+The figures pipeline is now fully reproducible: any new atlas data
+landing under `aws_results/atlas_full/`, `atlas_output_hires/`, or
+`atlas_targeted/` is picked up automatically by `figures_render.py`
+without manual curation. The manifest build is one Python invocation.
+The end-to-end loop from "AWS instance terminates" to "Figures page
+reflects the new scan" is four commands documented in Section 5 of the
+work order.
