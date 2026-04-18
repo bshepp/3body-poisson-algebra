@@ -455,11 +455,11 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
     <div class="controls-bar" id="controls-primary">
       <div class="control-group">
         <span class="control-label">Potential</span>
-        <select id="pot-select" onchange="onPotentialChange('primary')"></select>
+        <select id="pot-select" onchange="onPotentialChange('primary')" title="Select potential" aria-label="Select potential"></select>
       </div>
       <div class="control-group">
         <span class="control-label">Epsilon (ε)</span>
-        <select id="eps-select" onchange="onEpsilonChange('primary')"></select>
+        <select id="eps-select" onchange="onEpsilonChange('primary')" title="Select epsilon value" aria-label="Select epsilon value"></select>
       </div>
       <div class="control-group">
         <span class="control-label">Observable</span>

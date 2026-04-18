@@ -160,7 +160,7 @@ body::before {
 /* ─── Schema ─── */
 .schema-toggle {
   font-size: 0.7rem; color: var(--cyan); cursor: pointer;
-  user-select: none; margin-top: 0.6rem;
+  -webkit-user-select: none; user-select: none; margin-top: 0.6rem;
   display: inline-block;
 }
 .schema-toggle:hover { color: var(--phosphor); }
@@ -234,7 +234,7 @@ table.data th {
   font-size: 0.66rem;
   letter-spacing: 0.06em;
   cursor: pointer;
-  user-select: none;
+  -webkit-user-select: none; user-select: none;
   z-index: 1;
 }
 table.data th:hover { color: var(--phosphor); }
@@ -267,7 +267,7 @@ table.data td.null { color: var(--text-dim); font-style: italic; }
 
 /* ─── Cross-table panel ─── */
 .cross-panel summary {
-  cursor: pointer; user-select: none;
+  cursor: pointer; -webkit-user-select: none; user-select: none;
   font-family: var(--serif); font-size: 1rem; color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
@@ -388,7 +388,7 @@ table.data td.null { color: var(--text-dim); font-style: italic; }
       <div class="table-controls" style="margin-top:1rem;">
         <input type="text" id="search" placeholder="Filter rows (any column substring)…" oninput="renderTable()">
         <span class="ctrl-label">Page size</span>
-        <select id="pageSize" onchange="renderTable()">
+        <select id="pageSize" onchange="renderTable()" title="Rows per page" aria-label="Rows per page">
           <option>10</option><option selected>25</option><option>50</option><option>100</option><option value="-1">All</option>
         </select>
         <span class="ctrl-label" id="rowCount"></span>
