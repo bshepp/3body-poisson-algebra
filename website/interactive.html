@@ -162,12 +162,22 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
 .heatmap-panel .panel-title .scan-label {
   color: var(--text-secondary);
 }
-.heatmap-div { width: 100%; height: calc(100vh - 220px); min-height: 380px; max-height: 900px; }
+/* Heatmap canvas: leave width to the column and use viewport-relative
+   height so the chart has reasonable vertical room. The actual *data box*
+   is forced square inside this canvas by the Plotly layout (equal x/y
+   domain fractions), independent of canvas aspect. */
+.heatmap-div { width: 100%; height: calc(100vh - 240px); min-height: 460px; max-height: 900px; }
+/* Plotly inserts its own .js-plotly-plot wrapper that defaults to width/height
+   styles from JS measurement. Force it to fill the parent. */
+.heatmap-div .js-plotly-plot,
+.heatmap-div .plot-container,
+.heatmap-div .plot-container .svg-container,
+.heatmap-div .main-svg { width: 100% !important; height: 100% !important; }
 
-/* Loading overlay */
+/* Loading overlay -- covers the chart area only, not the panel title */
 .loading-overlay {
-  position: absolute; inset: 0; display: flex;
-  align-items: center; justify-content: center;
+  position: absolute; top: 2.2rem; left: 0.8rem; right: 0.8rem; bottom: 0.8rem;
+  display: flex; align-items: center; justify-content: center;
   background: rgba(10, 12, 16, 0.85); border-radius: 4px;
   font-size: 0.8rem; color: var(--phosphor); z-index: 10;
   pointer-events: none; opacity: 0; transition: opacity 0.2s;
@@ -178,7 +188,7 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
 .inspector {
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: 4px; padding: 1rem 1.2rem;
-  opacity: 0.4; transition: opacity 0.2s;
+  opacity: 0.7; transition: opacity 0.2s;
 }
 .inspector.active { opacity: 1; }
 .inspector-header {
@@ -249,6 +259,8 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
 .scan-badge .val { color: var(--text-primary); }
 
 /* ═══════════ ANIMATION CONTROLS ═══════════ */
+.seq-group { display: flex; gap: 0.35rem; align-items: stretch; }
+.seq-group select { min-width: 110px; }
 .anim-trigger {
   padding: 0.35rem 0.9rem; background: var(--bg-panel);
   color: var(--text-secondary); border: 1px solid var(--border);
@@ -334,7 +346,7 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
   background: var(--cyan-dim); color: var(--cyan); border-color: var(--cyan);
 }
 .overlay-menu {
-  display: none; position: absolute; top: 100%; left: 0; z-index: 100;
+  display: none; position: absolute; top: 100%; right: 0; z-index: 100;
   min-width: 260px; margin-top: 4px;
   background: var(--bg-card); border: 1px solid var(--border-bright);
   border-radius: 4px; padding: 0.5rem 0;
@@ -469,8 +481,16 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
         </div>
       </div>
       <div class="control-group">
-        <span class="control-label">&nbsp;</span>
-        <button class="anim-trigger" id="anim-trigger" onclick="toggleAnimation()">▶ Animate ε</button>
+        <span class="control-label">Sequence</span>
+        <div class="seq-group">
+          <select id="seq-axis" onchange="onSeqAxisChange()" title="Cycle axis" aria-label="Cycle axis">
+            <option value="epsilon" selected>Epsilon (ε)</option>
+            <option value="potential">Potential</option>
+            <option value="charges">Charges</option>
+            <option value="all">All scans</option>
+          </select>
+          <button class="anim-trigger" id="anim-trigger" onclick="toggleAnimation()">▶ Play</button>
+        </div>
       </div>
       <div class="control-group">
         <span class="control-label">&nbsp;</span>
@@ -617,7 +637,7 @@ const S = {
   primary: { scanId: null, data: null, svBuf: null, scan: null, obs: 'gap' },
   compare: { scanId: null, data: null, svBuf: null, scan: null, obs: 'gap' },
   comparing: false,
-  anim: { timer: null, frames: null, configKey: null, idx: 0, speed: 800 },
+  anim: { timer: null, frames: null, framesKey: null, axis: 'epsilon', idx: 0, speed: 800 },
   suppLoaded: { massRatio: false, nbody: false },
   contours: false,
   overlays: new Set(),
@@ -745,7 +765,34 @@ async function init() {
     document.getElementById('label-primary').textContent = 'Error loading manifest.json — run preprocess_atlas_data.py first';
     return;
   }
-  S.scans = S.manifest.scans;
+  // Helium is excluded from the interactive UI for now: its (mu, phi) range
+  // (mu in [0.05, 5.0]) doesn't match the canonical 27 hires scans, and its
+  // many failed cells don't read well in this view. The helium NPYs are
+  // still on disk in nbody/atlas_helium_d2/.
+  S.scans = S.manifest.scans.filter(s => s.source !== 'helium' && !/helium/i.test(s.id));
+
+  // Compute global axis range as the INTERSECTION of all scans' mu_range
+  // and phi_range. We use intersection (not union) so the canonical 27
+  // hires scans (mu in [0.2, 3.0], phi in [0.1, pi]) fill the panel
+  // without an empty band on the right; scans with broader coverage
+  // (e.g. helium d2 with mu in [0.05, 5]) get clipped on display, which
+  // is preferable to leaving most scans rendering in only ~60% of the
+  // available space. The full data is still in the manifest for any
+  // downloaded plot.
+  S.globalRange = {
+    mu: [
+      Math.max(...S.scans.map(s => (s.mu_range && s.mu_range[0]) ?? 0.2)),
+      Math.min(...S.scans.map(s => (s.mu_range && s.mu_range[1]) ?? 3.0)),
+    ],
+    phi: [
+      Math.max(...S.scans.map(s => (s.phi_range && s.phi_range[0]) ?? 0.1)),
+      Math.min(...S.scans.map(s => (s.phi_range && s.phi_range[1]) ?? Math.PI)),
+    ],
+  };
+  // Sanity: if intersection collapsed (shouldn't happen with our data),
+  // fall back to the canonical hires range.
+  if (S.globalRange.mu[0] >= S.globalRange.mu[1]) S.globalRange.mu = [0.2, 3.0];
+  if (S.globalRange.phi[0] >= S.globalRange.phi[1]) S.globalRange.phi = [0.1, Math.PI];
 
   // Build unique config groups
   const seen = new Set();
@@ -767,6 +814,20 @@ async function init() {
   }
 
   window.addEventListener('hashchange', () => restoreFromHash());
+
+  // Re-square the heatmap panels on viewport resize so aspect-ratio stays
+  // consistent with what Plotly drew. We debounce so it only fires once
+  // when the user finishes resizing.
+  let _resizeTimer = null;
+  window.addEventListener('resize', () => {
+    if (_resizeTimer) clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(() => {
+      ['heatmap-primary', 'heatmap-compare', 'heatmap-diff'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el && el.data) { try { Plotly.Plots.resize(id); } catch (e) {} }
+      });
+    }, 150);
+  });
 
   // Load supplementary data
   loadMassRatio();
@@ -900,12 +961,18 @@ function updateEpsDropdown(view) {
    EVENT HANDLERS
    ═══════════════════════════════════════════════════════════════════════ */
 function onPotentialChange(view) {
-  if (view === 'primary') stopAnimation();
+  if (view === 'primary') {
+    stopAnimation();
+    S.anim.frames = null; S.anim.framesKey = null;  // anchor changed
+  }
   updateEpsDropdown(view);
   onEpsilonChange(view);
 }
 
 async function onEpsilonChange(view) {
+  if (view === 'primary') {
+    S.anim.frames = null; S.anim.framesKey = null;  // anchor changed
+  }
   const epsSel = document.getElementById(view === 'primary' ? 'eps-select' : 'eps-select-2');
   const scanId = epsSel.value;
   if (scanId) await loadScan(view, scanId);
@@ -999,40 +1066,55 @@ function renderHeatmap(view) {
   if (!data) return;
 
   const isGap = obs === 'gap';
-  let z, colorscale, cbTitle, hoverTpl;
-
-  if (isGap) {
-    // Log-transform gap ratios for better visualization
-    z = transpose(data.gap.map(row => row.map(v => v > 0 ? Math.log10(Math.max(v, 1e-16)) : -16)));
-    colorscale = CS_GAP;
-    cbTitle = 'log₁₀(gap)';
-    hoverTpl = 'μ=%{x:.3f}<br>φ=%{y:.3f}<br>log₁₀(gap)=%{z:.1f}<extra></extra>';
-  } else {
-    z = transpose(data.rank);
-    colorscale = CS_RANK;
-    cbTitle = 'Rank';
-    hoverTpl = 'μ=%{x:.3f}<br>φ=%{y:.3f}<br>Rank=%{z}<extra></extra>';
-  }
+  const colorscale = isGap ? CS_GAP : CS_RANK;
+  const cbTitle = isGap ? 'log₁₀(gap)' : 'Rank';
 
   const divId = 'heatmap-' + view;
+  const gr = S.globalRange || { mu: [data.mu[0], data.mu[data.mu.length-1]],
+                                  phi: [data.phi[0], data.phi[data.phi.length-1]] };
+  // Axis convention matches figures_v2/heatmaps: phi (degrees) on x, mu on y.
+  // We display phi in degrees but internally store the data in radians.
+  const phiDeg = data.phi.map(p => p * 180 / Math.PI);
+  const phiRangeDeg = [gr.phi[0] * 180 / Math.PI, gr.phi[1] * 180 / Math.PI];
+  // Force the data box to render SQUARE in screen pixels regardless of canvas
+  // shape: yaxis.scaleanchor: 'x' enforces a fixed pixel-per-unit ratio.
+  // scaleratio = (x extent in degrees) / (y extent in mu) so 1 mu unit takes
+  // the same screen distance as the full phi extent / mu extent.
+  const muExtent = gr.mu[1] - gr.mu[0];
+  const phiExtentDeg = phiRangeDeg[1] - phiRangeDeg[0];
+  const sr = (muExtent > 0) ? (phiExtentDeg / muExtent) : 1;
   const layout = Object.assign({}, LAYOUT_BASE, {
-    xaxis: { title: 'μ  (mass ratio parameter)', gridcolor: '#1e2430', zeroline: false, constrain: 'domain' },
-    yaxis: { title: 'φ  (angle parameter)', gridcolor: '#1e2430', zeroline: false, scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
+    xaxis: { title: 'φ  (degrees)', gridcolor: '#1e2430', zeroline: false,
+             range: phiRangeDeg, autorange: false, constrain: 'domain' },
+    yaxis: { title: 'μ  (mass ratio parameter)', gridcolor: '#1e2430', zeroline: false,
+             range: gr.mu, autorange: false, constrain: 'domain',
+             scaleanchor: 'x', scaleratio: sr },
     margin: { l: 65, r: 80, t: 30, b: 55 },
   });
 
+  // z was previously transposed for x=mu, y=phi. Now we want x=phi, y=mu,
+  // so use the original (untransposed) shape: data.gap is [mu_idx][phi_idx],
+  // which Plotly reads as z[y_idx][x_idx] = z[mu_idx][phi_idx].
+  const zHeat = isGap
+    ? data.gap.map(row => row.map(v => (v != null && isFinite(v) && v > 0) ? Math.log10(v) : null))
+    : data.rank;
   const traces = [{
-    z: z, x: data.mu, y: data.phi,
+    z: zHeat, x: phiDeg, y: data.mu,
     type: 'heatmap',
     colorscale: colorscale,
     colorbar: { title: { text: cbTitle, side: 'right' }, thickness: 15, len: 0.9 },
-    hovertemplate: hoverTpl,
+    hovertemplate: isGap
+      ? 'φ=%{x:.2f}°<br>μ=%{y:.3f}<br>log₁₀(gap)=%{z:.1f}<extra></extra>'
+      : 'φ=%{x:.2f}°<br>μ=%{y:.3f}<br>Rank=%{z}<extra></extra>',
   }];
-  if (S.contours) traces.push(...getContourTraces(z, data.mu, data.phi, obs === 'rank'));
+  if (S.contours) traces.push(...getContourTraces(zHeat, phiDeg, data.mu, obs === 'rank'));
   if (S.overlays.size > 0) traces.push(...getOverlayTraces(data));
   traces.push(...getLineCutTraces(data));
 
   Plotly.react(divId, traces, layout, { responsive: true });
+  // Force a resize on the next animation frame so the inner SVG matches
+  // the square parent (CSS aspect-ratio runs after Plotly's first draw).
+  requestAnimationFrame(() => { try { Plotly.Plots.resize(divId); } catch (e) {} });
 
   // Attach click handler
   const el = document.getElementById(divId);
@@ -1045,28 +1127,33 @@ function renderHeatmap(view) {
    ═══════════════════════════════════════════════════════════════════════ */
 async function onHeatmapClick(data, view) {
   const pt = data.points[0];
+  // pt.x is phi in DEGREES (axis convention); pt.y is mu.
+  const phiRad = pt.x * Math.PI / 180;
+  const muVal = pt.y;
 
-  // Line-cut mode intercept
+  // Line-cut mode intercept (passes mu, phi in radians per the storage convention)
   if (S.lineCut.active && view === 'primary') {
-    setLineCutPoint(pt.x, pt.y);
+    setLineCutPoint(muVal, phiRad);
     return;
   }
 
   const { data: atlas, scan } = S[view];
   if (!atlas) return;
 
-  const j = nearestIdx(atlas.mu, pt.x);   // mu index
-  const i = nearestIdx(atlas.phi, pt.y);   // phi index
+  const muIdx = nearestIdx(atlas.mu, muVal);
+  const phiIdx = nearestIdx(atlas.phi, phiRad);
 
-  const rank = atlas.rank[j][i];  // data stored as [mu_idx][phi_idx]
-  const gap = atlas.gap[j][i];
+  // Data stored as [mu_idx][phi_idx]
+  const rank = atlas.rank[muIdx][phiIdx];
+  const gap = atlas.gap[muIdx][phiIdx];
+  const j = muIdx, i = phiIdx;  // local aliases used by the SV spectrum block below
 
   // Update info display
   document.getElementById('inspector-info').innerHTML =
-    `<span class="info-item">μ = <b>${atlas.mu[j].toFixed(4)}</b></span> ` +
-    `<span class="info-item">φ = <b>${atlas.phi[i].toFixed(4)}</b></span> ` +
+    `<span class="info-item">μ = <b>${atlas.mu[muIdx].toFixed(4)}</b></span> ` +
+    `<span class="info-item">φ = <b>${atlas.phi[phiIdx].toFixed(4)}</b></span> ` +
     `<span class="info-item">Rank = <b>${rank}</b></span> ` +
-    `<span class="info-item">Gap ratio = <b class="amber">${gap.toExponential(2)}</b></span>`;
+    `<span class="info-item">Gap ratio = <b class="amber">${(gap == null || !isFinite(gap)) ? '—' : gap.toExponential(2)}</b></span>`;
 
   document.getElementById('inspector').classList.add('active');
 
@@ -1256,82 +1343,186 @@ function renderDistribution() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   ε-SWEEP ANIMATION
+   SEQUENCE ANIMATION
+   Iterates through a list of scans selected by the active "axis":
+     epsilon   - all eps values within the current potential
+     potential - all potentials at the current eps (closest match if needed)
+     charges   - all charge variants at the current (potential, eps)
+     all       - every scan, sorted by potential -> charges -> eps
    ═══════════════════════════════════════════════════════════════════════ */
+
+// Build the ordered list of scans for a given axis, anchored on the
+// currently-loaded primary scan when the axis is "fixed-coordinate".
+function buildSequence(axis, anchorScan) {
+  const all = S.scans.filter(s => s.json);
+  const eps = (s) => typeof s.epsilon === 'number' ? s.epsilon : Infinity;
+  if (axis === 'all') {
+    return all.slice().sort((a, b) => {
+      if (a.potential !== b.potential) return a.potential.localeCompare(b.potential);
+      const ca = JSON.stringify(a.charges || ''), cb = JSON.stringify(b.charges || '');
+      if (ca !== cb) return ca.localeCompare(cb);
+      return eps(a) - eps(b);
+    });
+  }
+  if (!anchorScan) return [];
+  if (axis === 'epsilon') {
+    return all.filter(s => configKey(s) === configKey(anchorScan))
+              .sort((a, b) => eps(a) - eps(b));
+  }
+  if (axis === 'potential') {
+    // One scan per (potential, charges combo) at eps closest to anchor's eps.
+    const e0 = eps(anchorScan);
+    const buckets = {};
+    all.forEach(s => {
+      const k = s.potential + '|' + JSON.stringify(s.charges || '');
+      if (!buckets[k]) buckets[k] = [];
+      buckets[k].push(s);
+    });
+    const picked = Object.values(buckets).map(group =>
+      group.slice().sort((a, b) => Math.abs(eps(a) - e0) - Math.abs(eps(b) - e0))[0]
+    );
+    return picked.sort((a, b) => a.potential.localeCompare(b.potential));
+  }
+  if (axis === 'charges') {
+    // All charge variants at the same (potential, eps) as the anchor.
+    return all.filter(s => s.potential === anchorScan.potential && eps(s) === eps(anchorScan))
+              .sort((a, b) => JSON.stringify(a.charges || '').localeCompare(JSON.stringify(b.charges || '')));
+  }
+  return [];
+}
+
+// Per-frame label text -- depends on axis so each frame reads as the thing
+// that's actually changing
+function frameLabel(axis, scan) {
+  const ck = configKey(scan);
+  const lbl = configLabel(ck);
+  if (axis === 'epsilon') return lbl + '  \u03b5=' + epsLabel(scan.epsilon);
+  if (axis === 'potential') return lbl;
+  if (axis === 'charges') {
+    const c = scan.charges;
+    if (!c) return lbl + '  (no charges)';
+    if (Array.isArray(c)) return lbl + '  q=[' + c.join(',') + ']';
+    return lbl + '  charges';
+  }
+  return lbl + '  \u03b5=' + epsLabel(scan.epsilon);
+}
+
+function frameTickLabel(axis, scan) {
+  if (axis === 'epsilon') return '\u03b5 = ' + epsLabel(scan.epsilon);
+  if (axis === 'potential') return configLabel(configKey(scan));
+  if (axis === 'charges') {
+    const c = scan.charges;
+    if (!c) return 'no charges';
+    if (Array.isArray(c)) return 'q=[' + c.join(',') + ']';
+    return 'charged';
+  }
+  return configLabel(configKey(scan)) + '  \u03b5=' + epsLabel(scan.epsilon);
+}
+
+function onSeqAxisChange() {
+  const axis = document.getElementById('seq-axis').value;
+  S.anim.axis = axis;
+  // Stopping invalidates the cached frames; rebuild on next play.
+  if (S.anim.timer) stopAnimation();
+  S.anim.frames = null;
+  S.anim.framesKey = null;
+  S.anim.idx = 0;
+  document.getElementById('anim-bar').classList.remove('visible');
+}
+
 async function toggleAnimation() {
   if (S.anim.timer) {
     clearInterval(S.anim.timer);
     S.anim.timer = null;
-    document.getElementById('anim-play').textContent = '▶';
+    document.getElementById('anim-play').textContent = '\u25B6';
+    document.getElementById('anim-trigger').textContent = '\u25B6 Play';
+    document.getElementById('anim-trigger').classList.remove('active');
     return;
   }
 
-  const potSel = document.getElementById('pot-select');
-  const ck = potSel.value;
+  const axis = (document.getElementById('seq-axis') || { value: 'epsilon' }).value;
+  S.anim.axis = axis;
+  const anchor = S.primary.scan;
+  const seq = buildSequence(axis, anchor);
+  // Memoization key: which frames are valid?
+  const fk = axis + ':' + (axis === 'all' ? 'global' :
+              axis === 'potential' ? ('eps=' + (anchor && anchor.epsilon)) :
+              axis === 'charges'   ? configKey(anchor) + '|eps=' + (anchor && anchor.epsilon) :
+              configKey(anchor));
 
-  if (!S.anim.frames || S.anim.configKey !== ck) {
-    const matching = S.scans.filter(s => configKey(s) === ck);
-    matching.sort((a, b) => {
-      const ea = typeof a.epsilon === 'number' ? a.epsilon : 999;
-      const eb = typeof b.epsilon === 'number' ? b.epsilon : 999;
-      return ea - eb;
-    });
-    if (matching.length < 2) return;
-
+  if (!S.anim.frames || S.anim.framesKey !== fk) {
+    if (seq.length < 2) return;
     document.getElementById('anim-bar').classList.add('visible');
-    document.getElementById('anim-play').textContent = '⏳';
+    document.getElementById('anim-play').textContent = '\u23F3';
+    document.getElementById('anim-trigger').textContent = '\u23F3 Loading';
 
     const frames = [];
-    for (const scan of matching) {
-      if (!scan.json) continue;
+    for (const scan of seq) {
       try {
         const resp = await fetch(scan.json);
         const data = await resp.json();
-        frames.push({ scanId: scan.id, data, scan, epsilon: scan.epsilon });
+        frames.push({ scanId: scan.id, data, scan });
       } catch (e) { console.error('Failed to preload', scan.id, e); }
     }
-
     S.anim.frames = frames;
-    S.anim.configKey = ck;
-    S.anim.idx = 0;
+    S.anim.framesKey = fk;
+    // Start at the anchor scan's index, if present
+    let startIdx = 0;
+    if (anchor) {
+      const ix = frames.findIndex(f => f.scanId === anchor.scanId || f.scanId === anchor.id);
+      if (ix >= 0) startIdx = ix;
+    }
+    S.anim.idx = startIdx;
     const slider = document.getElementById('anim-slider');
     slider.max = frames.length - 1;
-    slider.value = 0;
+    slider.value = startIdx;
   }
 
   if (!S.anim.frames || S.anim.frames.length < 2) return;
 
   document.getElementById('anim-bar').classList.add('visible');
-  document.getElementById('anim-play').textContent = '⏸';
+  document.getElementById('anim-play').textContent = '\u23F8';
+  document.getElementById('anim-trigger').textContent = '\u23F8 Pause';
   document.getElementById('anim-trigger').classList.add('active');
-  document.getElementById('eps-select').disabled = true;
+  // Disable the eps and pot dropdowns only on axes that drive them
+  document.getElementById('eps-select').disabled = (S.anim.axis !== 'potential');
+  document.getElementById('pot-select').disabled = (S.anim.axis === 'potential' || S.anim.axis === 'all' || S.anim.axis === 'charges');
 
   animStep();
   S.anim.timer = setInterval(animStep, S.anim.speed);
 }
 
-function animStep() {
-  if (!S.anim.frames) return;
-  const frame = S.anim.frames[S.anim.idx];
-  if (!frame) return;
-
+function applyFrame(frame) {
   S.primary.data = frame.data;
   S.primary.scanId = frame.scanId;
   S.primary.scan = frame.scan;
   S.primary.svBuf = null;
 
-  const lbl = document.getElementById('label-primary');
-  lbl.textContent = configLabel(S.anim.configKey) + '  ε=' + epsLabel(frame.epsilon);
+  document.getElementById('label-primary').textContent = frameLabel(S.anim.axis, frame.scan);
 
-  document.getElementById('eps-select').value = frame.scanId;
+  // Sync dropdowns to match the active frame
+  const potSel = document.getElementById('pot-select');
+  const epsSel = document.getElementById('eps-select');
+  const ck = configKey(frame.scan);
+  if (potSel.value !== ck) {
+    potSel.value = ck;
+    updateEpsDropdown('primary');
+  }
+  if (epsSel) epsSel.value = frame.scanId;
 
   renderHeatmap('primary');
   renderDistribution();
   renderDiff();
 
   document.getElementById('anim-slider').value = S.anim.idx;
-  document.getElementById('anim-label').textContent = 'ε = ' + epsLabel(frame.epsilon);
+  document.getElementById('anim-label').textContent = frameTickLabel(S.anim.axis, frame.scan);
+}
 
+function animStep() {
+  if (!S.anim.frames || !S.anim.frames.length) return;
+  const frame = S.anim.frames[S.anim.idx];
+  if (!frame) return;
+  applyFrame(frame);
   S.anim.idx = (S.anim.idx + 1) % S.anim.frames.length;
 }
 
@@ -1340,10 +1531,12 @@ function stopAnimation() {
     clearInterval(S.anim.timer);
     S.anim.timer = null;
   }
-  document.getElementById('anim-play').textContent = '▶';
+  document.getElementById('anim-play').textContent = '\u25B6';
+  document.getElementById('anim-trigger').textContent = '\u25B6 Play';
   document.getElementById('anim-bar').classList.remove('visible');
   document.getElementById('anim-trigger').classList.remove('active');
   document.getElementById('eps-select').disabled = false;
+  document.getElementById('pot-select').disabled = false;
 }
 
 function onAnimSliderChange(val) {
@@ -1351,17 +1544,7 @@ function onAnimSliderChange(val) {
   if (!S.anim.frames || idx >= S.anim.frames.length) return;
   S.anim.idx = idx;
   if (!S.anim.timer) {
-    const frame = S.anim.frames[idx];
-    S.primary.data = frame.data;
-    S.primary.scanId = frame.scanId;
-    S.primary.scan = frame.scan;
-    S.primary.svBuf = null;
-    document.getElementById('label-primary').textContent = configLabel(S.anim.configKey) + '  ε=' + epsLabel(frame.epsilon);
-    document.getElementById('eps-select').value = frame.scanId;
-    renderHeatmap('primary');
-    renderDistribution();
-    renderDiff();
-    document.getElementById('anim-label').textContent = 'ε = ' + epsLabel(frame.epsilon);
+    applyFrame(S.anim.frames[idx]);
   }
 }
 
@@ -1397,22 +1580,26 @@ function renderDiff() {
   const b = S.compare.data;
 
   const useGap = S.primary.obs === 'gap' && S.compare.obs === 'gap';
-  let z, cbTitle, hoverTpl;
 
+  let zDiff, cbTitle, hoverTpl;
   if (useGap) {
-    z = transpose(a.gap.map((row, i) => row.map((v, j) => {
-      const va = v > 0 ? Math.log10(Math.max(v, 1e-16)) : -16;
-      const vb = b.gap[i] && b.gap[i][j] > 0 ? Math.log10(Math.max(b.gap[i][j], 1e-16)) : -16;
-      return va - vb;
-    })));
+    // z[mu_idx][phi_idx] = log10(gap_a) - log10(gap_b); null where either is invalid
+    zDiff = a.gap.map((row, i) => row.map((v, j) => {
+      const bv = b.gap[i] && b.gap[i][j];
+      if (!(v != null && isFinite(v) && v > 0)) return null;
+      if (!(bv != null && isFinite(bv) && bv > 0)) return null;
+      return Math.log10(v) - Math.log10(bv);
+    }));
     cbTitle = 'Δ log₁₀(gap)';
-    hoverTpl = 'μ=%{x:.3f}<br>φ=%{y:.3f}<br>Δlog₁₀(gap)=%{z:.2f}<extra></extra>';
+    hoverTpl = 'φ=%{x:.2f}°<br>μ=%{y:.3f}<br>Δlog₁₀(gap)=%{z:.2f}<extra></extra>';
   } else {
-    z = transpose(a.rank.map((row, i) => row.map((v, j) => {
-      return v - (b.rank[i] ? b.rank[i][j] : 0);
-    })));
+    zDiff = a.rank.map((row, i) => row.map((v, j) => {
+      const bv = b.rank[i] && b.rank[i][j];
+      if (v == null || bv == null || v < 0 || bv < 0) return null;
+      return v - bv;
+    }));
     cbTitle = 'Δ Rank';
-    hoverTpl = 'μ=%{x:.3f}<br>φ=%{y:.3f}<br>ΔRank=%{z}<extra></extra>';
+    hoverTpl = 'φ=%{x:.2f}°<br>μ=%{y:.3f}<br>ΔRank=%{z}<extra></extra>';
   }
 
   const scanA = S.primary.scan, scanB = S.compare.scan;
@@ -1420,21 +1607,31 @@ function renderDiff() {
     (scanA ? epsLabel(scanA.epsilon) : '?') + ' − ' +
     (scanB ? epsLabel(scanB.epsilon) : '?');
 
+  const grD = S.globalRange || { mu: [a.mu[0], a.mu[a.mu.length-1]],
+                                   phi: [a.phi[0], a.phi[a.phi.length-1]] };
+  const phiDegD = a.phi.map(p => p * 180 / Math.PI);
+  const phiRangeDegD = [grD.phi[0] * 180 / Math.PI, grD.phi[1] * 180 / Math.PI];
+  const muExtentD = grD.mu[1] - grD.mu[0];
+  const phiExtentDegD = phiRangeDegD[1] - phiRangeDegD[0];
+  const srD = (muExtentD > 0) ? (phiExtentDegD / muExtentD) : 1;
   const layout = Object.assign({}, LAYOUT_BASE, {
-    xaxis: { title: 'μ  (mass ratio parameter)', gridcolor: '#1e2430', zeroline: false, constrain: 'domain' },
-    yaxis: { title: 'φ  (angle parameter)', gridcolor: '#1e2430', zeroline: false, scaleanchor: 'x', scaleratio: 1, constrain: 'domain' },
+    xaxis: { title: 'φ  (degrees)', gridcolor: '#1e2430', zeroline: false,
+             range: phiRangeDegD, autorange: false, constrain: 'domain' },
+    yaxis: { title: 'μ  (mass ratio parameter)', gridcolor: '#1e2430', zeroline: false,
+             range: grD.mu, autorange: false, constrain: 'domain',
+             scaleanchor: 'x', scaleratio: srD },
     margin: { l: 65, r: 80, t: 30, b: 55 },
   });
 
   const diffTraces = [{
-    z: z, x: a.mu, y: a.phi,
+    z: zDiff, x: phiDegD, y: a.mu,
     type: 'heatmap',
     colorscale: CS_DIFF,
     zmid: 0,
     colorbar: { title: { text: cbTitle, side: 'right' }, thickness: 15, len: 0.9 },
     hovertemplate: hoverTpl,
   }];
-  if (S.contours) diffTraces.push(...getContourTraces(z, a.mu, a.phi, !useGap));
+  if (S.contours) diffTraces.push(...getContourTraces(zDiff, phiDegD, a.mu, !useGap));
   if (S.overlays.size > 0) diffTraces.push(...getOverlayTraces(a));
 
   Plotly.react('heatmap-diff', diffTraces, layout, { responsive: true });
@@ -1445,11 +1642,13 @@ function renderDiff() {
 /* ═══════════════════════════════════════════════════════════════════════
    CONTOUR OVERLAY
    ═══════════════════════════════════════════════════════════════════════ */
-function getContourTraces(z, mu, phi, discrete) {
+// z is shaped [mu_idx][phi_idx]; xPhiDeg is the phi-axis vector in degrees;
+// yMu is the mu-axis vector. Plotly heatmap/contour interpret
+// z[y_idx][x_idx], so this matches our new (x=phi, y=mu) orientation.
+function getContourTraces(z, xPhiDeg, yMu, discrete) {
   if (!discrete) {
-    // Plotly contour for continuous data (gap / diff)
     return [{
-      z: z, x: mu, y: phi,
+      z: z, x: xPhiDeg, y: yMu,
       type: 'contour',
       contours: { coloring: 'none', showlabels: true,
                   labelfont: { size: 9, color: 'rgba(255,255,255,0.7)' } },
@@ -1459,22 +1658,25 @@ function getContourTraces(z, mu, phi, discrete) {
       hoverinfo: 'skip',
     }];
   }
-  // Boundary detection for discrete rank data
-  const nR = z.length, nC = z[0].length;
+  // Boundary detection for discrete rank data. z[i][j] = rank at (mu_i, phi_j).
+  // i indexes mu (y), j indexes phi (x).
+  const nMu = z.length, nPhi = z[0].length;
   const sx = [], sy = [];
-  for (let i = 0; i < nR; i++) {
-    for (let j = 0; j < nC; j++) {
-      if (j + 1 < nC && z[i][j] !== z[i][j+1]) {
-        const mx = (mu[j] + mu[j+1]) / 2;
-        const y0 = i > 0 ? (phi[i-1] + phi[i]) / 2 : phi[0] - (phi[1] - phi[0]) / 2;
-        const y1 = i + 1 < nR ? (phi[i] + phi[i+1]) / 2 : phi[nR-1] + (phi[nR-1] - phi[nR-2]) / 2;
-        sx.push(mx, mx, null); sy.push(y0, y1, null);
+  for (let i = 0; i < nMu; i++) {
+    for (let j = 0; j < nPhi; j++) {
+      // Vertical boundary between (i,j) and (i,j+1) -> at phi = midpoint
+      if (j + 1 < nPhi && z[i][j] !== z[i][j+1]) {
+        const xMid = (xPhiDeg[j] + xPhiDeg[j+1]) / 2;
+        const y0 = i > 0 ? (yMu[i-1] + yMu[i]) / 2 : yMu[0] - (yMu[1] - yMu[0]) / 2;
+        const y1 = i + 1 < nMu ? (yMu[i] + yMu[i+1]) / 2 : yMu[nMu-1] + (yMu[nMu-1] - yMu[nMu-2]) / 2;
+        sx.push(xMid, xMid, null); sy.push(y0, y1, null);
       }
-      if (i + 1 < nR && z[i][j] !== z[i+1][j]) {
-        const my = (phi[i] + phi[i+1]) / 2;
-        const x0 = j > 0 ? (mu[j-1] + mu[j]) / 2 : mu[0] - (mu[1] - mu[0]) / 2;
-        const x1 = j + 1 < nC ? (mu[j] + mu[j+1]) / 2 : mu[nC-1] + (mu[nC-1] - mu[nC-2]) / 2;
-        sx.push(x0, x1, null); sy.push(my, my, null);
+      // Horizontal boundary between (i,j) and (i+1,j) -> at mu = midpoint
+      if (i + 1 < nMu && z[i][j] !== z[i+1][j]) {
+        const yMid = (yMu[i] + yMu[i+1]) / 2;
+        const x0 = j > 0 ? (xPhiDeg[j-1] + xPhiDeg[j]) / 2 : xPhiDeg[0] - (xPhiDeg[1] - xPhiDeg[0]) / 2;
+        const x1 = j + 1 < nPhi ? (xPhiDeg[j] + xPhiDeg[j+1]) / 2 : xPhiDeg[nPhi-1] + (xPhiDeg[nPhi-1] - xPhiDeg[nPhi-2]) / 2;
+        sx.push(x0, x1, null); sy.push(yMid, yMid, null);
       }
     }
   }
@@ -1563,30 +1765,63 @@ function clearAllOverlays() {
   pushHash();
 }
 
+// Sample a parametric overlay curve over the global phi range, inserting
+// null-breaks for points whose mu falls outside the global mu range so
+// Plotly stops drawing instead of trailing off into empty space.
+//
+// KNOWN_OVERLAYS curveFn returns { x: mu_array, y: phi_radians_array }.
+// We re-emit as { x: phi_DEG, y: mu } to match the new axis convention.
+function sampleCurve(curveFn) {
+  const N = 240;
+  const gr = S.globalRange || { mu: [0.2, 3.0], phi: [0.1, Math.PI] };
+  const [phiMin, phiMax] = gr.phi;
+  const [muMin, muMax] = gr.mu;
+  const phi = new Array(N);
+  for (let i = 0; i < N; i++) phi[i] = phiMin + (phiMax - phiMin) * i / (N - 1);
+  const out = curveFn(phi);
+  // out.x = mu values, out.y = phi (radians). New convention: emit
+  // x_out = phi-degrees, y_out = mu.
+  const xOut = [], yOut = [];
+  for (let i = 0; i < out.x.length; i++) {
+    const muVal = out.x[i], phiVal = out.y[i];
+    const inMu = (muVal != null && isFinite(muVal) && muVal >= muMin && muVal <= muMax);
+    const inPhi = (phiVal != null && isFinite(phiVal) && phiVal >= phiMin && phiVal <= phiMax);
+    if (inMu && inPhi) {
+      xOut.push(phiVal * 180 / Math.PI);
+      yOut.push(muVal);
+    } else if (xOut.length && xOut[xOut.length - 1] !== null) {
+      xOut.push(null); yOut.push(null);
+    }
+  }
+  return { x: xOut, y: yOut };
+}
+
 function getOverlayTraces(data) {
   if (!data || S.overlays.size === 0) return [];
   const traces = [];
   KNOWN_OVERLAYS.forEach(ov => {
     if (!S.overlays.has(ov.id)) return;
     if (ov.type === 'point') {
+      // Point overlays: convert (mu, phi_radians) -> (phi_degrees, mu)
       traces.push({
-        x: [ov.mu], y: [ov.phi],
+        x: [ov.phi * 180 / Math.PI], y: [ov.mu],
         type: 'scatter', mode: 'markers+text',
         marker: { size: 12, color: ov.color, symbol: ov.symbol,
                   line: { color: '#fff', width: 1.5 } },
         text: [ov.label], textposition: 'top center',
         textfont: { color: ov.color, size: 10 },
-        hovertemplate: ov.label + '<br>\u03bc=%{x:.3f}<br>\u03c6=%{y:.3f}<extra></extra>',
+        hovertemplate: ov.label + '<br>\u03c6=%{x:.2f}\u00B0<br>\u03bc=%{y:.3f}<extra></extra>',
         showlegend: false,
       });
     } else {
-      const { x, y } = ov.trace(data.phi);
+      const { x, y } = sampleCurve(ov.trace);
       if (x.length > 0) {
         traces.push({
           x, y, type: 'scatter', mode: 'lines',
           line: { color: ov.color, width: 2, dash: 'dash' },
-          hovertemplate: ov.label + '<br>\u03bc=%{x:.3f}<br>\u03c6=%{y:.3f}<extra></extra>',
+          hovertemplate: ov.label + '<br>\u03c6=%{x:.2f}\u00B0<br>\u03bc=%{y:.3f}<extra></extra>',
           showlegend: false,
+          connectgaps: false,
         });
       }
     }
@@ -1691,9 +1926,11 @@ function getLineCutTraces(data) {
   if (!S.lineCut.active || !data) return [];
   const traces = [];
   const pts = [S.lineCut.p1, S.lineCut.p2].filter(Boolean);
+  // Axes are now (x = phi-degrees, y = mu); convert each stored phi (radians) on the way out.
+  const toDeg = (p) => p.phi * 180 / Math.PI;
   if (pts.length > 0) {
     traces.push({
-      x: pts.map(p => p.mu), y: pts.map(p => p.phi),
+      x: pts.map(toDeg), y: pts.map(p => p.mu),
       type: 'scatter', mode: 'markers',
       marker: { size: 10, color: '#e05555', symbol: 'x',
                 line: { color: '#fff', width: 2 } },
@@ -1702,7 +1939,7 @@ function getLineCutTraces(data) {
   }
   if (pts.length === 2) {
     traces.push({
-      x: [pts[0].mu, pts[1].mu], y: [pts[0].phi, pts[1].phi],
+      x: [toDeg(pts[0]), toDeg(pts[1])], y: [pts[0].mu, pts[1].mu],
       type: 'scatter', mode: 'lines',
       line: { color: '#e05555', width: 2, dash: 'dot' },
       hoverinfo: 'skip', showlegend: false,
