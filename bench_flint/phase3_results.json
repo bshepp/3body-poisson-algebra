@@ -1,0 +1,62 @@
+{
+  "phase": 3,
+  "label": "Phase 3 - Schwarzschild composite L<=3 production",
+  "case": "schwarz_l3",
+  "expected_seq": [
+    3,
+    6,
+    17,
+    116
+  ],
+  "started_at": "2026-04-19T19:26:32",
+  "elapsed_s": 5403.352396400005,
+  "runs": [
+    {
+      "strategy": "cancel",
+      "case": "schwarz_l3",
+      "watchdog": {
+        "status": "ram_cap_exceeded",
+        "elapsed_s": 5402.279590500002,
+        "peak_rss_gb": 16.14690399169922,
+        "rss_gb": 16.14690399169922
+      },
+      "worker": null
+    },
+    {
+      "strategy": "together",
+      "case": "schwarz_l3",
+      "watchdog": {
+        "status": "done",
+        "exit_code": 3,
+        "elapsed_s": 85.14093219999631,
+        "peak_rss_gb": 0.12541961669921875
+      },
+      "worker": {
+        "strategy": "together",
+        "case": "schwarz_l3",
+        "max_level": 3,
+        "n_samples": 100,
+        "expected": [
+          3,
+          6,
+          17,
+          116
+        ],
+        "started_at": "2026-04-19T19:36:41",
+        "elapsed_s": 80.06995179999649,
+        "completed_at": "2026-04-19T19:38:01",
+        "status": "done",
+        "sequence": [
+          3,
+          6,
+          17,
+          84
+        ],
+        "match": false
+      }
+    }
+  ],
+  "aborted": true,
+  "abort_reason": "ram_cap_exceeded",
+  "passed": false
+}

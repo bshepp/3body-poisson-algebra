@@ -1,0 +1,23 @@
+{
+  "strategy": "together",
+  "case": "schwarz_l3",
+  "max_level": 3,
+  "n_samples": 100,
+  "expected": [
+    3,
+    6,
+    17,
+    116
+  ],
+  "started_at": "2026-04-19T19:36:41",
+  "elapsed_s": 80.06995179999649,
+  "completed_at": "2026-04-19T19:38:01",
+  "status": "done",
+  "sequence": [
+    3,
+    6,
+    17,
+    84
+  ],
+  "match": false
+}

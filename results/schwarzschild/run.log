@@ -1,0 +1,220 @@
+[2026-04-18T23:00:30] ======================================================================
+[2026-04-18T23:00:30] Schwarzschild dimseq sweep: 3 points, d=2, level<=2, samples=100, seed=42, smoke=True
+[2026-04-18T23:00:30] Grid = [('1', '1'), ('1', '4'), ('1/2', '2')]
+[2026-04-18T23:00:30] ======================================================================
+[2026-04-18T23:00:30] START  Schwarzschild M=1, L=1, d=2, level<=2
+[2026-04-18T23:00:35] DONE   Schwarzschild M=1, L=1, d=2, level<=2  ->  [3, 6, 17]   (4.6s)
+[2026-04-18T23:00:35] START  Schwarzschild M=1, L=4, d=2, level<=2
+[2026-04-18T23:00:39] DONE   Schwarzschild M=1, L=4, d=2, level<=2  ->  [3, 6, 17]   (3.8s)
+[2026-04-18T23:00:39] START  Schwarzschild M=1/2, L=2, d=2, level<=2
+[2026-04-18T23:00:43] DONE   Schwarzschild M=1/2, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-18T23:00:43] ======================================================================
+[2026-04-18T23:00:43] Sweep complete: 3 runs, 0 failures.
+[2026-04-18T23:00:43] Distinct dimension sequences observed: 1
+[2026-04-18T23:00:43]   [3, 6, 17]  x  3
+[2026-04-19T01:04:56] ======================================================================
+[2026-04-19T01:04:56] ======================================================================
+[2026-04-19T01:06:23] ======================================================================
+[2026-04-19T01:06:40] ======================================================================
+[2026-04-19T01:06:40] Schwarzschild dimseq sweep: mode=smoke, 3 points, d=2, level<=2, samples=100, seed=42 -> results\schwarzschild\dimseq_smoke2.json
+[2026-04-19T01:06:40] Grid = [('1', '1'), ('1', '4'), ('1/2', '2')]
+[2026-04-19T01:06:40] ======================================================================
+[2026-04-19T01:06:40] START  Schwarzschild M=1, L=1, d=2, level<=2
+[2026-04-19T01:06:52] DONE   Schwarzschild M=1, L=1, d=2, level<=2  ->  [3, 6, 17]   (12.1s)
+[2026-04-19T01:06:52] START  Schwarzschild M=1, L=4, d=2, level<=2
+[2026-04-19T01:06:56] DONE   Schwarzschild M=1, L=4, d=2, level<=2  ->  [3, 6, 17]   (3.8s)
+[2026-04-19T01:06:56] START  Schwarzschild M=1/2, L=2, d=2, level<=2
+[2026-04-19T01:07:00] DONE   Schwarzschild M=1/2, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:07:00] ======================================================================
+[2026-04-19T01:07:00] Sweep complete: 3 runs, 0 failures.
+[2026-04-19T01:07:00] Distinct dimension sequences observed: 1
+[2026-04-19T01:07:00]   [3, 6, 17]  x  3
+[2026-04-19T01:07:12] ======================================================================
+[2026-04-19T01:07:12] Schwarzschild dimseq sweep: mode=key, 4 points, d=2, level<=3, samples=500, seed=42 -> results\schwarzschild\dimseq_l3_key.json
+[2026-04-19T01:07:12] Grid = [('1', '1'), ('1', '2'), ('1', '4'), ('2', '1')]
+[2026-04-19T01:07:12] ======================================================================
+[2026-04-19T01:07:12] START  Schwarzschild M=1, L=1, d=2, level<=3
+[2026-04-19T01:07:13] ======================================================================
+[2026-04-19T01:07:13] Schwarzschild dimseq sweep: mode=full, 30 points, d=2, level<=2, samples=200, seed=42 -> results\schwarzschild\dimseq_l2_full.json
+[2026-04-19T01:07:13] Grid = [('1/4', '1/2'), ('1/4', '1'), ('1/4', '2'), ('1/4', '4'), ('1/4', '8'), ('1/4', '16'), ('1/2', '1/2'), ('1/2', '1'), ('1/2', '2'), ('1/2', '4'), ('1/2', '8'), ('1/2', '16'), ('1', '1/2'), ('1', '1'), ('1', '2'), ('1', '4'), ('1', '8'), ('1', '16'), ('2', '1/2'), ('2', '1'), ('2', '2'), ('2', '4'), ('2', '8'), ('2', '16'), ('4', '1/2'), ('4', '1'), ('4', '2'), ('4', '4'), ('4', '8'), ('4', '16')]
+[2026-04-19T01:07:13] ======================================================================
+[2026-04-19T01:07:13] START  Schwarzschild M=1/4, L=1/2, d=2, level<=2
+[2026-04-19T01:07:20] DONE   Schwarzschild M=1/4, L=1/2, d=2, level<=2  ->  [3, 6, 17]   (7.2s)
+[2026-04-19T01:07:20] START  Schwarzschild M=1/4, L=1, d=2, level<=2
+[2026-04-19T01:07:24] DONE   Schwarzschild M=1/4, L=1, d=2, level<=2  ->  [3, 6, 17]   (4.4s)
+[2026-04-19T01:07:24] START  Schwarzschild M=1/4, L=2, d=2, level<=2
+[2026-04-19T01:07:28] DONE   Schwarzschild M=1/4, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:07:28] START  Schwarzschild M=1/4, L=4, d=2, level<=2
+[2026-04-19T01:07:33] DONE   Schwarzschild M=1/4, L=4, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:07:33] START  Schwarzschild M=1/4, L=8, d=2, level<=2
+[2026-04-19T01:07:37] DONE   Schwarzschild M=1/4, L=8, d=2, level<=2  ->  [3, 6, 17]   (4.0s)
+[2026-04-19T01:07:37] START  Schwarzschild M=1/4, L=16, d=2, level<=2
+[2026-04-19T01:07:41] DONE   Schwarzschild M=1/4, L=16, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:07:41] START  Schwarzschild M=1/2, L=1/2, d=2, level<=2
+[2026-04-19T01:07:45] DONE   Schwarzschild M=1/2, L=1/2, d=2, level<=2  ->  [3, 6, 17]   (4.4s)
+[2026-04-19T01:07:45] START  Schwarzschild M=1/2, L=1, d=2, level<=2
+[2026-04-19T01:07:49] DONE   Schwarzschild M=1/2, L=1, d=2, level<=2  ->  [3, 6, 17]   (4.3s)
+[2026-04-19T01:07:49] START  Schwarzschild M=1/2, L=2, d=2, level<=2
+[2026-04-19T01:07:54] DONE   Schwarzschild M=1/2, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:07:54] START  Schwarzschild M=1/2, L=4, d=2, level<=2
+[2026-04-19T01:07:58] DONE   Schwarzschild M=1/2, L=4, d=2, level<=2  ->  [3, 6, 17]   (4.0s)
+[2026-04-19T01:07:58] START  Schwarzschild M=1/2, L=8, d=2, level<=2
+[2026-04-19T01:08:02] DONE   Schwarzschild M=1/2, L=8, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:08:02] START  Schwarzschild M=1/2, L=16, d=2, level<=2
+[2026-04-19T01:08:06] DONE   Schwarzschild M=1/2, L=16, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:08:06] START  Schwarzschild M=1, L=1/2, d=2, level<=2
+[2026-04-19T01:08:10] DONE   Schwarzschild M=1, L=1/2, d=2, level<=2  ->  [3, 6, 17]   (4.4s)
+[2026-04-19T01:08:10] START  Schwarzschild M=1, L=1, d=2, level<=2
+[2026-04-19T01:08:14] DONE   Schwarzschild M=1, L=1, d=2, level<=2  ->  [3, 6, 17]   (3.7s)
+[2026-04-19T01:08:14] START  Schwarzschild M=1, L=2, d=2, level<=2
+[2026-04-19T01:08:18] DONE   Schwarzschild M=1, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.0s)
+[2026-04-19T01:08:18] START  Schwarzschild M=1, L=4, d=2, level<=2
+[2026-04-19T01:08:22] DONE   Schwarzschild M=1, L=4, d=2, level<=2  ->  [3, 6, 17]   (4.0s)
+[2026-04-19T01:08:22] START  Schwarzschild M=1, L=8, d=2, level<=2
+[2026-04-19T01:08:27] DONE   Schwarzschild M=1, L=8, d=2, level<=2  ->  [3, 6, 17]   (4.5s)
+[2026-04-19T01:08:27] START  Schwarzschild M=1, L=16, d=2, level<=2
+[2026-04-19T01:08:30] DONE   Schwarzschild M=1, L=16, d=2, level<=2  ->  [3, 6, 17]   (3.9s)
+[2026-04-19T01:08:30] START  Schwarzschild M=2, L=1/2, d=2, level<=2
+[2026-04-19T01:08:35] DONE   Schwarzschild M=2, L=1/2, d=2, level<=2  ->  [3, 6, 17]   (4.4s)
+[2026-04-19T01:08:35] START  Schwarzschild M=2, L=1, d=2, level<=2
+[2026-04-19T01:08:39] DONE   Schwarzschild M=2, L=1, d=2, level<=2  ->  [3, 6, 17]   (4.0s)
+[2026-04-19T01:08:39] START  Schwarzschild M=2, L=2, d=2, level<=2
+[2026-04-19T01:08:43] DONE   Schwarzschild M=2, L=2, d=2, level<=2  ->  [3, 6, 17]   (3.9s)
+[2026-04-19T01:08:43] START  Schwarzschild M=2, L=4, d=2, level<=2
+[2026-04-19T01:08:47] DONE   Schwarzschild M=2, L=4, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:08:47] START  Schwarzschild M=2, L=8, d=2, level<=2
+[2026-04-19T01:08:51] DONE   Schwarzschild M=2, L=8, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:08:51] START  Schwarzschild M=2, L=16, d=2, level<=2
+[2026-04-19T01:08:55] DONE   Schwarzschild M=2, L=16, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:08:55] START  Schwarzschild M=4, L=1/2, d=2, level<=2
+[2026-04-19T01:08:59] DONE   Schwarzschild M=4, L=1/2, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:08:59] START  Schwarzschild M=4, L=1, d=2, level<=2
+[2026-04-19T01:09:03] DONE   Schwarzschild M=4, L=1, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:09:03] START  Schwarzschild M=4, L=2, d=2, level<=2
+[2026-04-19T01:09:07] DONE   Schwarzschild M=4, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:09:07] START  Schwarzschild M=4, L=4, d=2, level<=2
+[2026-04-19T01:09:11] DONE   Schwarzschild M=4, L=4, d=2, level<=2  ->  [3, 6, 17]   (3.9s)
+[2026-04-19T01:09:11] START  Schwarzschild M=4, L=8, d=2, level<=2
+[2026-04-19T01:09:15] DONE   Schwarzschild M=4, L=8, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:09:15] START  Schwarzschild M=4, L=16, d=2, level<=2
+[2026-04-19T01:09:20] DONE   Schwarzschild M=4, L=16, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:09:20] ======================================================================
+[2026-04-19T01:09:20] Sweep complete: 30 runs, 0 failures.
+[2026-04-19T01:09:20] Distinct dimension sequences observed: 1
+[2026-04-19T01:09:20]   [3, 6, 17]  x  30
+[2026-04-19T01:09:53] ======================================================================
+[2026-04-19T01:09:53] Schwarzschild dimseq sweep: mode=smoke, 3 points, d=2, level<=2, samples=100, seed=42 -> results\schwarzschild\dimseq_smoke3.json
+[2026-04-19T01:09:53] Grid = [('1', '1'), ('1', '4'), ('1/2', '2')]
+[2026-04-19T01:09:53] ======================================================================
+[2026-04-19T01:09:53] START  Schwarzschild M=1, L=1, d=2, level<=2
+[2026-04-19T01:09:59] DONE   Schwarzschild M=1, L=1, d=2, level<=2  ->  [3, 6, 17]   (5.9s)
+[2026-04-19T01:09:59] START  Schwarzschild M=1, L=4, d=2, level<=2
+[2026-04-19T01:10:03] DONE   Schwarzschild M=1, L=4, d=2, level<=2  ->  [3, 6, 17]   (3.9s)
+[2026-04-19T01:10:03] START  Schwarzschild M=1/2, L=2, d=2, level<=2
+[2026-04-19T01:10:08] DONE   Schwarzschild M=1/2, L=2, d=2, level<=2  ->  [3, 6, 17]   (5.0s)
+[2026-04-19T01:10:08] ======================================================================
+[2026-04-19T01:10:08] Sweep complete: 3 runs, 0 failures.
+[2026-04-19T01:10:08] Distinct dimension sequences observed: 1
+[2026-04-19T01:10:08]   [3, 6, 17]  x  3
+[2026-04-19T01:10:28] ======================================================================
+[2026-04-19T01:10:28] Schwarzschild dimseq sweep: mode=full, 30 points, d=2, level<=2, samples=200, seed=42 -> results\schwarzschild\dimseq_l2_full.json
+[2026-04-19T01:10:28] Grid = [('1/4', '1/2'), ('1/4', '1'), ('1/4', '2'), ('1/4', '4'), ('1/4', '8'), ('1/4', '16'), ('1/2', '1/2'), ('1/2', '1'), ('1/2', '2'), ('1/2', '4'), ('1/2', '8'), ('1/2', '16'), ('1', '1/2'), ('1', '1'), ('1', '2'), ('1', '4'), ('1', '8'), ('1', '16'), ('2', '1/2'), ('2', '1'), ('2', '2'), ('2', '4'), ('2', '8'), ('2', '16'), ('4', '1/2'), ('4', '1'), ('4', '2'), ('4', '4'), ('4', '8'), ('4', '16')]
+[2026-04-19T01:10:28] ======================================================================
+[2026-04-19T01:10:28] START  Schwarzschild M=1/4, L=1/2, d=2, level<=2
+[2026-04-19T01:10:28] ======================================================================
+[2026-04-19T01:10:28] Schwarzschild dimseq sweep: mode=key, 4 points, d=2, level<=3, samples=500, seed=42 -> results\schwarzschild\dimseq_l3_key.json
+[2026-04-19T01:10:28] Grid = [('1', '1'), ('1', '2'), ('1', '4'), ('2', '1')]
+[2026-04-19T01:10:28] ======================================================================
+[2026-04-19T01:10:28] START  Schwarzschild M=1, L=1, d=2, level<=3
+[2026-04-19T01:10:33] DONE   Schwarzschild M=1/4, L=1/2, d=2, level<=2  ->  [3, 6, 17]   (5.0s)
+[2026-04-19T01:10:33] START  Schwarzschild M=1/4, L=1, d=2, level<=2
+[2026-04-19T01:10:37] DONE   Schwarzschild M=1/4, L=1, d=2, level<=2  ->  [3, 6, 17]   (4.3s)
+[2026-04-19T01:10:37] START  Schwarzschild M=1/4, L=2, d=2, level<=2
+[2026-04-19T01:10:41] DONE   Schwarzschild M=1/4, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:10:41] START  Schwarzschild M=1/4, L=4, d=2, level<=2
+[2026-04-19T01:10:45] DONE   Schwarzschild M=1/4, L=4, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:10:45] START  Schwarzschild M=1/4, L=8, d=2, level<=2
+[2026-04-19T01:10:50] DONE   Schwarzschild M=1/4, L=8, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:10:50] START  Schwarzschild M=1/4, L=16, d=2, level<=2
+[2026-04-19T01:10:54] DONE   Schwarzschild M=1/4, L=16, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:10:54] START  Schwarzschild M=1/2, L=1/2, d=2, level<=2
+[2026-04-19T01:10:58] DONE   Schwarzschild M=1/2, L=1/2, d=2, level<=2  ->  [3, 6, 17]   (4.5s)
+[2026-04-19T01:10:58] START  Schwarzschild M=1/2, L=1, d=2, level<=2
+[2026-04-19T01:11:03] DONE   Schwarzschild M=1/2, L=1, d=2, level<=2  ->  [3, 6, 17]   (4.4s)
+[2026-04-19T01:11:03] START  Schwarzschild M=1/2, L=2, d=2, level<=2
+[2026-04-19T01:11:07] DONE   Schwarzschild M=1/2, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:11:07] START  Schwarzschild M=1/2, L=4, d=2, level<=2
+[2026-04-19T01:11:11] DONE   Schwarzschild M=1/2, L=4, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:11:11] START  Schwarzschild M=1/2, L=8, d=2, level<=2
+[2026-04-19T01:11:15] DONE   Schwarzschild M=1/2, L=8, d=2, level<=2  ->  [3, 6, 17]   (4.4s)
+[2026-04-19T01:11:15] START  Schwarzschild M=1/2, L=16, d=2, level<=2
+[2026-04-19T01:11:20] DONE   Schwarzschild M=1/2, L=16, d=2, level<=2  ->  [3, 6, 17]   (4.3s)
+[2026-04-19T01:11:20] START  Schwarzschild M=1, L=1/2, d=2, level<=2
+[2026-04-19T01:11:24] DONE   Schwarzschild M=1, L=1/2, d=2, level<=2  ->  [3, 6, 17]   (4.6s)
+[2026-04-19T01:11:24] START  Schwarzschild M=1, L=1, d=2, level<=2
+[2026-04-19T01:11:28] DONE   Schwarzschild M=1, L=1, d=2, level<=2  ->  [3, 6, 17]   (3.9s)
+[2026-04-19T01:11:28] START  Schwarzschild M=1, L=2, d=2, level<=2
+[2026-04-19T01:11:32] DONE   Schwarzschild M=1, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.0s)
+[2026-04-19T01:11:32] START  Schwarzschild M=1, L=4, d=2, level<=2
+[2026-04-19T01:11:36] DONE   Schwarzschild M=1, L=4, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:11:36] START  Schwarzschild M=1, L=8, d=2, level<=2
+[2026-04-19T01:11:40] DONE   Schwarzschild M=1, L=8, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:11:40] START  Schwarzschild M=1, L=16, d=2, level<=2
+[2026-04-19T01:11:44] DONE   Schwarzschild M=1, L=16, d=2, level<=2  ->  [3, 6, 17]   (3.9s)
+[2026-04-19T01:11:44] START  Schwarzschild M=2, L=1/2, d=2, level<=2
+[2026-04-19T01:11:49] DONE   Schwarzschild M=2, L=1/2, d=2, level<=2  ->  [3, 6, 17]   (4.5s)
+[2026-04-19T01:11:49] START  Schwarzschild M=2, L=1, d=2, level<=2
+[2026-04-19T01:11:53] DONE   Schwarzschild M=2, L=1, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:11:53] START  Schwarzschild M=2, L=2, d=2, level<=2
+[2026-04-19T01:11:57] DONE   Schwarzschild M=2, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.0s)
+[2026-04-19T01:11:57] START  Schwarzschild M=2, L=4, d=2, level<=2
+[2026-04-19T01:12:01] DONE   Schwarzschild M=2, L=4, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:12:01] START  Schwarzschild M=2, L=8, d=2, level<=2
+[2026-04-19T01:12:05] DONE   Schwarzschild M=2, L=8, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:12:05] START  Schwarzschild M=2, L=16, d=2, level<=2
+[2026-04-19T01:12:09] DONE   Schwarzschild M=2, L=16, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:12:09] START  Schwarzschild M=4, L=1/2, d=2, level<=2
+[2026-04-19T01:12:13] DONE   Schwarzschild M=4, L=1/2, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:12:13] START  Schwarzschild M=4, L=1, d=2, level<=2
+[2026-04-19T01:12:18] DONE   Schwarzschild M=4, L=1, d=2, level<=2  ->  [3, 6, 17]   (4.1s)
+[2026-04-19T01:12:18] START  Schwarzschild M=4, L=2, d=2, level<=2
+[2026-04-19T01:12:22] DONE   Schwarzschild M=4, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.2s)
+[2026-04-19T01:12:22] START  Schwarzschild M=4, L=4, d=2, level<=2
+[2026-04-19T01:12:26] DONE   Schwarzschild M=4, L=4, d=2, level<=2  ->  [3, 6, 17]   (4.0s)
+[2026-04-19T01:12:26] START  Schwarzschild M=4, L=8, d=2, level<=2
+[2026-04-19T01:12:30] DONE   Schwarzschild M=4, L=8, d=2, level<=2  ->  [3, 6, 17]   (4.3s)
+[2026-04-19T01:12:30] START  Schwarzschild M=4, L=16, d=2, level<=2
+[2026-04-19T01:12:34] DONE   Schwarzschild M=4, L=16, d=2, level<=2  ->  [3, 6, 17]   (4.3s)
+[2026-04-19T01:12:34] ======================================================================
+[2026-04-19T01:12:34] Sweep complete: 30 runs, 0 failures.
+[2026-04-19T01:12:34] Distinct dimension sequences observed: 1
+[2026-04-19T01:12:34]   [3, 6, 17]  x  30
+[2026-04-19T09:00:30] ======================================================================
+[2026-04-19T09:00:30] Schwarzschild dimseq sweep: mode=smoke, 3 points, d=2, level<=2, samples=100, seed=42 -> results\schwarzschild\dimseq_smoke4.json
+[2026-04-19T09:00:30] Grid = [('1', '1'), ('1', '4'), ('1/2', '2')]
+[2026-04-19T09:00:30] ======================================================================
+[2026-04-19T09:00:30] START  Schwarzschild M=1, L=1, d=2, level<=2
+[2026-04-19T09:00:34] DONE   Schwarzschild M=1, L=1, d=2, level<=2  ->  [3, 6, 17]   (4.5s)
+[2026-04-19T09:00:34] START  Schwarzschild M=1, L=4, d=2, level<=2
+[2026-04-19T09:00:38] DONE   Schwarzschild M=1, L=4, d=2, level<=2  ->  [3, 6, 17]   (4.0s)
+[2026-04-19T09:00:38] START  Schwarzschild M=1/2, L=2, d=2, level<=2
+[2026-04-19T09:00:43] DONE   Schwarzschild M=1/2, L=2, d=2, level<=2  ->  [3, 6, 17]   (4.6s)
+[2026-04-19T09:00:43] ======================================================================
+[2026-04-19T09:00:43] Sweep complete: 3 runs, 0 failures.
+[2026-04-19T09:00:43] Distinct dimension sequences observed: 1
+[2026-04-19T09:00:43]   [3, 6, 17]  x  3
+[2026-04-19T09:00:53] ======================================================================
+[2026-04-19T09:00:53] Schwarzschild dimseq sweep: mode=key, 4 points, d=2, level<=3, samples=100, seed=42 -> results\schwarzschild\dimseq_resumetest.json
+[2026-04-19T09:00:53] Grid = [('1', '1'), ('1', '2'), ('1', '4'), ('2', '1')]
+[2026-04-19T09:00:53] ======================================================================
+[2026-04-19T09:00:53] START  Schwarzschild M=1, L=1, d=2, level<=3
+[2026-04-19T09:03:37] ======================================================================
+[2026-04-19T09:03:37] Schwarzschild dimseq sweep: mode=key, 4 points, d=2, level<=3, samples=100, seed=42 -> results\schwarzschild\dimseq_resumetest.json
+[2026-04-19T09:03:37] Grid = [('1', '1'), ('1', '2'), ('1', '4'), ('2', '1')]
+[2026-04-19T09:03:37] ======================================================================
+[2026-04-19T09:03:37] START  Schwarzschild M=1, L=1, d=2, level<=3
+[2026-04-19T11:08:04] ======================================================================
+[2026-04-19T11:08:04] Schwarzschild dimseq sweep: mode=key, 4 points, d=2, level<=3, samples=500, seed=42 -> results\schwarzschild\dimseq_l3_key.json
+[2026-04-19T11:08:04] Grid = [('1', '1'), ('1', '2'), ('1', '4'), ('2', '1')]
+[2026-04-19T11:08:04] ======================================================================
+[2026-04-19T11:08:04] START  Schwarzschild M=1, L=1, d=2, level<=3

@@ -1,0 +1,110 @@
+{
+  "phase": 1,
+  "label": "Phase 1 - Schwarzschild composite L<=2 sanity gate",
+  "case": "schwarz_l2",
+  "expected_seq": [
+    3,
+    6,
+    17
+  ],
+  "started_at": "2026-04-19T15:33:48",
+  "elapsed_s": 20.0659863999972,
+  "runs": [
+    {
+      "strategy": "cancel",
+      "case": "schwarz_l2",
+      "watchdog": {
+        "status": "done",
+        "exit_code": 0,
+        "elapsed_s": 10.01687729999685,
+        "peak_rss_gb": 0.10088729858398438
+      },
+      "worker": {
+        "strategy": "cancel",
+        "case": "schwarz_l2",
+        "max_level": 2,
+        "n_samples": 50,
+        "expected": [
+          3,
+          6,
+          17
+        ],
+        "started_at": "2026-04-19T15:33:29",
+        "elapsed_s": 4.913747500002501,
+        "completed_at": "2026-04-19T15:33:34",
+        "status": "done",
+        "sequence": [
+          3,
+          6,
+          17
+        ],
+        "match": true
+      }
+    },
+    {
+      "strategy": "together",
+      "case": "schwarz_l2",
+      "watchdog": {
+        "status": "done",
+        "exit_code": 0,
+        "elapsed_s": 5.009949300001608,
+        "peak_rss_gb": 0.001842498779296875
+      },
+      "worker": {
+        "strategy": "together",
+        "case": "schwarz_l2",
+        "max_level": 2,
+        "n_samples": 50,
+        "expected": [
+          3,
+          6,
+          17
+        ],
+        "started_at": "2026-04-19T15:33:39",
+        "elapsed_s": 2.0424179999972694,
+        "completed_at": "2026-04-19T15:33:41",
+        "status": "done",
+        "sequence": [
+          3,
+          6,
+          17
+        ],
+        "match": true
+      }
+    },
+    {
+      "strategy": "identity",
+      "case": "schwarz_l2",
+      "watchdog": {
+        "status": "done",
+        "exit_code": 0,
+        "elapsed_s": 5.010106900001119,
+        "peak_rss_gb": 0.001842498779296875
+      },
+      "worker": {
+        "strategy": "identity",
+        "case": "schwarz_l2",
+        "max_level": 2,
+        "n_samples": 50,
+        "expected": [
+          3,
+          6,
+          17
+        ],
+        "started_at": "2026-04-19T15:33:44",
+        "elapsed_s": 1.6643433000062942,
+        "completed_at": "2026-04-19T15:33:45",
+        "status": "done",
+        "sequence": [
+          3,
+          6,
+          17
+        ],
+        "match": true
+      }
+    }
+  ],
+  "aborted": false,
+  "abort_reason": null,
+  "passed": true
+}

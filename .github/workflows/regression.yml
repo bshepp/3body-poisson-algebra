@@ -9,6 +9,8 @@ on:
       - "3d/exact_growth_nd.py"
       - "requirements.txt"
       - "test_regression.py"
+      - "registry/**"
+      - "scripts/registry_*.py"
       - ".github/workflows/**"
   pull_request:
     branches: [main]
@@ -34,3 +36,20 @@ jobs:
 
       - name: Run regression tests
         run: python test_regression.py
+
+  registry-lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install registry dependencies
+        run: pip install pyyaml jsonschema
+
+      - name: Validate registry/experiments.yaml
+        run: python -m registry.loader --check

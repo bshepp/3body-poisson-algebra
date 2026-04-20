@@ -1,0 +1,1034 @@
+{
+  "crosschecks": [
+    {
+      "case_id": "s1_schwarz_l2",
+      "potential": "composite",
+      "N": 3,
+      "d": 2,
+      "max_level": 2,
+      "our_sequence": [
+        3,
+        6,
+        17
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17
+      ],
+      "dataset_match": "no_dataset_entry",
+      "note": "Dataset has no row for this (N, d, potential). Common for composite potentials."
+    },
+    {
+      "case_id": "s2_composite_three_term",
+      "potential": "composite",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_match": "no_dataset_entry",
+      "note": "Dataset has no row for this (N, d, potential). Common for composite potentials."
+    },
+    {
+      "case_id": "s2_composite_two_term",
+      "potential": "composite",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_match": "no_dataset_entry",
+      "note": "Dataset has no row for this (N, d, potential). Common for composite potentials."
+    },
+    {
+      "case_id": "s2_inv_r",
+      "potential": "1/r",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 2,
+      "dataset_mismatch_rows": 1,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            115
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": false,
+          "common_len": 4
+        }
+      ],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s2_inv_r2",
+      "potential": "1/r^2",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 1,
+      "dataset_mismatch_rows": 0,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s2_inv_r3",
+      "potential": "1/r^3",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 1,
+      "dataset_mismatch_rows": 0,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s2_inv_r4",
+      "potential": "1/r^4",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 1,
+      "dataset_mismatch_rows": 0,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s2_log",
+      "potential": "log",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 1,
+      "dataset_mismatch_rows": 0,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s2_schwarzschild",
+      "potential": "composite",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_match": "no_dataset_entry",
+      "note": "Dataset has no row for this (N, d, potential). Common for composite potentials."
+    },
+    {
+      "case_id": "s3_d1",
+      "potential": "1/r",
+      "N": 3,
+      "d": 1,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 7,
+      "dataset_mismatch_rows": 1,
+      "matched_examples": [
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            116
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 4
+        },
+        {
+          "ds_max_level": 4,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            116
+          ],
+          "ds_charges": null,
+          "ds_masses": "\"symbolic\"",
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 4
+        },
+        {
+          "ds_max_level": 4,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            116
+          ],
+          "ds_charges": null,
+          "ds_masses": "[\"1\", \"1\", \"1\"]",
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 4
+        }
+      ],
+      "mismatch_examples": [
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            117
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": false,
+          "common_len": 4
+        }
+      ],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s3_d2",
+      "potential": "1/r",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 2,
+      "dataset_mismatch_rows": 1,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            115
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": false,
+          "common_len": 4
+        }
+      ],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s3_d3",
+      "potential": "1/r",
+      "N": 3,
+      "d": 3,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_match": "no_dataset_entry",
+      "note": "Dataset has no row for this (N, d, potential). Common for composite potentials."
+    },
+    {
+      "case_id": "s4_equal_masses",
+      "potential": "1/r",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 2,
+      "dataset_mismatch_rows": 1,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            115
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": false,
+          "common_len": 4
+        }
+      ],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s4_extreme_small_m3",
+      "potential": "1/r",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 2,
+      "dataset_mismatch_rows": 1,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            115
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": false,
+          "common_len": 4
+        }
+      ],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s4_helium_masses",
+      "potential": "1/r",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        114
+      ],
+      "match_canonical": false,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 2,
+      "dataset_mismatch_rows": 1,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            115
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": false,
+          "common_len": 4
+        }
+      ],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s5_equal_mass_charged",
+      "potential": "1/r",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "match_canonical": true,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 2,
+      "dataset_mismatch_rows": 1,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            115
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": false,
+          "common_len": 4
+        }
+      ],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s5_h_minus",
+      "potential": "1/r",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        115
+      ],
+      "match_canonical": false,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 3,
+      "dataset_mismatch_rows": 0,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            115
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 4
+        }
+      ],
+      "mismatch_examples": [],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s5_helium",
+      "potential": "1/r",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        115
+      ],
+      "match_canonical": false,
+      "expected": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "dataset_matched_rows": 3,
+      "dataset_mismatch_rows": 0,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            115
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 4
+        }
+      ],
+      "mismatch_examples": [],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s5_li_plus",
+      "potential": "1/r",
+      "N": 3,
+      "d": 2,
+      "max_level": 3,
+      "our_sequence": [
+        3,
+        6,
+        17,
+        115
+      ],
+      "match_canonical": false,
+      "expected": [
+        3,
+        6,
+        17,
+        111
+      ],
+      "dataset_matched_rows": 3,
+      "dataset_mismatch_rows": 0,
+      "matched_examples": [
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 2,
+          "ds_sequence": [
+            3,
+            6,
+            17
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        },
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            3,
+            6,
+            17,
+            115
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 4
+        }
+      ],
+      "mismatch_examples": [],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s6_n4_l2",
+      "potential": "1/r",
+      "N": 4,
+      "d": 1,
+      "max_level": 2,
+      "our_sequence": [
+        6,
+        14,
+        62
+      ],
+      "match_canonical": true,
+      "expected": [
+        6,
+        14,
+        62
+      ],
+      "dataset_matched_rows": 1,
+      "dataset_mismatch_rows": 0,
+      "matched_examples": [
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            6,
+            14,
+            62,
+            1260
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": true,
+          "common_len": 3
+        }
+      ],
+      "mismatch_examples": [],
+      "dataset_match": "consistent"
+    },
+    {
+      "case_id": "s6_n4_l3",
+      "potential": "1/r",
+      "N": 4,
+      "d": 1,
+      "max_level": 3,
+      "our_sequence": [
+        6,
+        14,
+        62,
+        300
+      ],
+      "match_canonical": false,
+      "expected": [
+        6,
+        14,
+        62,
+        1260
+      ],
+      "dataset_matched_rows": 0,
+      "dataset_mismatch_rows": 1,
+      "matched_examples": [],
+      "mismatch_examples": [
+        {
+          "ds_max_level": 3,
+          "ds_sequence": [
+            6,
+            14,
+            62,
+            1260
+          ],
+          "ds_charges": null,
+          "ds_masses": null,
+          "is_exact": true,
+          "common_prefix_match": false,
+          "common_len": 4
+        }
+      ],
+      "dataset_match": "all_mismatch"
+    }
+  ],
+  "summary": {
+    "no_dataset_entry": 5,
+    "consistent": 15,
+    "all_mismatch": 1
+  }
+}

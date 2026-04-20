@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Experiment registry entry",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "path", "category", "status", "description"],
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9_]*$",
+        "description": "Stable lowercase identifier; used for cross-references."
+      },
+      "path": {
+        "type": "string",
+        "description": "Repo-relative path to the script (or directory for grouped entries)."
+      },
+      "category": {
+        "type": "string",
+        "enum": [
+          "dimseq",
+          "atlas",
+          "structure",
+          "quantum",
+          "spectral",
+          "infra",
+          "analysis",
+          "viz",
+          "dataset",
+          "test",
+          "diagnostic",
+          "engine",
+          "website",
+          "docs"
+        ]
+      },
+      "scope": {
+        "type": ["string", "null"],
+        "description": "Which engine + system class, e.g. nbody/N3, primes, neural."
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "planned",
+          "wip",
+          "complete",
+          "broken",
+          "superseded",
+          "archived",
+          "needs_review"
+        ]
+      },
+      "superseded_by": {
+        "type": ["string", "null"],
+        "description": "id of replacement entry, if any."
+      },
+      "description": {
+        "type": "string",
+        "minLength": 1
+      },
+      "inputs": {
+        "type": "array",
+        "items": {"type": "string"},
+        "default": []
+      },
+      "outputs": {
+        "type": "array",
+        "items": {"type": "string"},
+        "default": []
+      },
+      "latest_result": {
+        "type": ["object", "null"],
+        "additionalProperties": true,
+        "properties": {
+          "date": {"type": "string"},
+          "summary": {"type": "string"},
+          "sequence": {
+            "type": "array",
+            "items": {"type": "integer"}
+          }
+        }
+      },
+      "runtime": {"type": ["string", "null"]},
+      "cost_usd": {"type": ["number", "null"]},
+      "run_command": {"type": ["string", "null"]},
+      "related_docs": {
+        "type": "array",
+        "items": {"type": "string"},
+        "default": []
+      },
+      "related_supplemental": {
+        "type": "array",
+        "items": {"type": "string"},
+        "default": []
+      },
+      "tags": {
+        "type": "array",
+        "items": {"type": "string"},
+        "default": []
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "strategy": "together",
+  "case": "schwarz_l2",
+  "max_level": 2,
+  "n_samples": 50,
+  "expected": [
+    3,
+    6,
+    17
+  ],
+  "started_at": "2026-04-19T15:33:39",
+  "elapsed_s": 2.0424179999972694,
+  "completed_at": "2026-04-19T15:33:41",
+  "status": "done",
+  "sequence": [
+    3,
+    6,
+    17
+  ],
+  "match": true
+}

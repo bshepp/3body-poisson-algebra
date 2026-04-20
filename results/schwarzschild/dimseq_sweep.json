@@ -1,0 +1,103 @@
+{
+  "runs": [
+    {
+      "id": "M1_L1",
+      "M": "1",
+      "L": "1",
+      "d_spatial": 2,
+      "max_level": 2,
+      "n_samples": 100,
+      "seed": 42,
+      "potential_params": [
+        [
+          "-1",
+          1
+        ],
+        [
+          "1/2",
+          2
+        ],
+        [
+          "-1",
+          3
+        ]
+      ],
+      "sequence": [
+        3,
+        6,
+        17
+      ],
+      "elapsed_s": 4.601440191268921,
+      "completed_at": "2026-04-18T23:00:35"
+    },
+    {
+      "id": "M1_L4",
+      "M": "1",
+      "L": "4",
+      "d_spatial": 2,
+      "max_level": 2,
+      "n_samples": 100,
+      "seed": 42,
+      "potential_params": [
+        [
+          "-1",
+          1
+        ],
+        [
+          "8",
+          2
+        ],
+        [
+          "-16",
+          3
+        ]
+      ],
+      "sequence": [
+        3,
+        6,
+        17
+      ],
+      "elapsed_s": 3.7860496044158936,
+      "completed_at": "2026-04-18T23:00:39"
+    },
+    {
+      "id": "M1over2_L2",
+      "M": "1/2",
+      "L": "2",
+      "d_spatial": 2,
+      "max_level": 2,
+      "n_samples": 100,
+      "seed": 42,
+      "potential_params": [
+        [
+          "-1/2",
+          1
+        ],
+        [
+          "2",
+          2
+        ],
+        [
+          "-2",
+          3
+        ]
+      ],
+      "sequence": [
+        3,
+        6,
+        17
+      ],
+      "elapsed_s": 4.093351125717163,
+      "completed_at": "2026-04-18T23:00:43"
+    }
+  ],
+  "failures": [],
+  "config": {
+    "max_level": 2,
+    "n_samples": 100,
+    "seed": 42,
+    "d_spatial": 2,
+    "smoke": true,
+    "grid_size": 3
+  }
+}

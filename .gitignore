@@ -138,3 +138,27 @@ legacy_figures_archive/
 
 # New canonical rendered figures (regenerate via website/figures_render.py)
 figures_v2/
+
+# Benchmark working dir: per-case caches, the python-flint test venv,
+# and ad-hoc throwaway scripts / intermediate logs from iterating on the
+# experiment. Canonical artifacts (writeups, results JSONs, the orchestrator,
+# the worker, the watchdog) are committed; everything else regenerates by
+# re-running the orchestrator.
+bench_flint/_*
+bench_flint/venv/
+bench_flint/p1_*.log
+bench_flint/p2_*.log
+bench_flint/p3_*.log
+bench_flint/probe_*.log
+bench_flint/simp2_*.log
+bench_flint/simplify_exp_*.log
+bench_flint/simplify_phases_orchestrator.log
+bench_flint/validation_orchestrator.log
+bench_flint/simplify_experiment.py
+bench_flint/simplify_experiment2.py
+bench_flint/simplify_experiment2_results.json
+bench_flint/simplify_experiment2_results.txt
+bench_flint/results.jsonl
+
+# Per-(M,L) checkpoints from nbody/run_schwarzschild.py (regeneratable)
+nbody/checkpoints_schwarzschild/

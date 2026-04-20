@@ -1,0 +1,112 @@
+{
+  "started_at": "2026-04-20T06:52:37",
+  "patched_simplify_source": "def simplify_generator(self, expr):\n        # Patched 2026-04-19: was `cancel(expr)`. `together(expr)` produces\n        # mathematically equivalent output (1-12 summands vs 100k+ for cancel)\n        # in dramatically less time and RAM. See bench_flint/simplify_phases_summary.md\n        # for the full validation: Schwarzschild composite L<=3 went from\n        # \">5 hours, killed at 16 GB RAM\" to \"90 seconds, <0.2 GB RAM\" with the\n        # canonical [3, 6, 17, 116] dim sequence. cancel still imported because\n        # it's used in verify_jacobi_symbolic (one-shot, not the hot loop).\n        return together(expr)",
+  "stages": {
+    "6": {
+      "label": "N=4 d=1 1/r",
+      "cases": [
+        {
+          "case_id": "s6_n4_l2",
+          "spec": {
+            "case_id": "s6_n4_l2",
+            "potential": "1/r",
+            "n_bodies": 4,
+            "d_spatial": 1,
+            "max_level": 2,
+            "n_samples": 200,
+            "seed": 42,
+            "expected": [
+              6,
+              14,
+              62
+            ]
+          },
+          "watchdog": {
+            "status": "done",
+            "exit_code": 0,
+            "elapsed_s": 5.013473099999828,
+            "peak_rss_gb": 0.00206756591796875
+          },
+          "worker": {
+            "case_id": "s6_n4_l2",
+            "potential": "1/r",
+            "n_bodies": 4,
+            "d_spatial": 1,
+            "max_level": 2,
+            "n_samples": 200,
+            "seed": 42,
+            "expected": [
+              6,
+              14,
+              62
+            ],
+            "started_at": "2026-04-20T06:52:37",
+            "elapsed_s": 2.1169210000080056,
+            "completed_at": "2026-04-20T06:52:39",
+            "status": "done",
+            "sequence": [
+              6,
+              14,
+              62
+            ],
+            "match": true
+          },
+          "best_effort": false
+        },
+        {
+          "case_id": "s6_n4_l3",
+          "spec": {
+            "case_id": "s6_n4_l3",
+            "potential": "1/r",
+            "n_bodies": 4,
+            "d_spatial": 1,
+            "max_level": 3,
+            "n_samples": 300,
+            "seed": 42,
+            "expected": [
+              6,
+              14,
+              62,
+              1260
+            ]
+          },
+          "watchdog": {
+            "status": "done",
+            "exit_code": 3,
+            "elapsed_s": 435.68922170001315,
+            "peak_rss_gb": 0.5656929016113281
+          },
+          "worker": {
+            "case_id": "s6_n4_l3",
+            "potential": "1/r",
+            "n_bodies": 4,
+            "d_spatial": 1,
+            "max_level": 3,
+            "n_samples": 300,
+            "seed": 42,
+            "expected": [
+              6,
+              14,
+              62,
+              1260
+            ],
+            "started_at": "2026-04-20T06:52:42",
+            "elapsed_s": 433.32431010001164,
+            "completed_at": "2026-04-20T06:59:55",
+            "status": "done",
+            "sequence": [
+              6,
+              14,
+              62,
+              300
+            ],
+            "match": false
+          },
+          "best_effort": true
+        }
+      ]
+    }
+  },
+  "completed_at": "2026-04-20T06:59:57",
+  "overall_passed": true
+}

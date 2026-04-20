@@ -1,0 +1,19 @@
+{
+  "strategy": "together",
+  "case": "schwarz_l3",
+  "n_samples": 500,
+  "elapsed_s": 90.0329195000013,
+  "sequence": [
+    3,
+    6,
+    17,
+    116
+  ],
+  "expected": [
+    3,
+    6,
+    17,
+    116
+  ],
+  "match": true
+}

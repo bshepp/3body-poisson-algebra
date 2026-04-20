@@ -30,7 +30,7 @@ from itertools import combinations
 
 import sympy as sp
 from sympy import (Symbol, symbols, diff, Integer, Rational, cancel, expand,
-                   log as sp_log, exp as sp_exp)
+                   together, log as sp_log, exp as sp_exp)
 
 if tuple(int(x) for x in sp.__version__.split('.')[:3]) < (1, 13, 3):
     raise RuntimeError(
@@ -287,7 +287,14 @@ class NBodyAlgebra:
         return result
 
     def simplify_generator(self, expr):
-        return cancel(expr)
+        # Patched 2026-04-19: was `cancel(expr)`. `together(expr)` produces
+        # mathematically equivalent output (1-12 summands vs 100k+ for cancel)
+        # in dramatically less time and RAM. See bench_flint/simplify_phases_summary.md
+        # for the full validation: Schwarzschild composite L<=3 went from
+        # ">5 hours, killed at 16 GB RAM" to "90 seconds, <0.2 GB RAM" with the
+        # canonical [3, 6, 17, 116] dim sequence. cancel still imported because
+        # it's used in verify_jacobi_symbolic (one-shot, not the hot loop).
+        return together(expr)
 
     # -----------------------------------------------------------------
     # Pre-computed derivatives for faster brackets
@@ -728,11 +735,16 @@ class NBodyAlgebra:
     # Checkpoints
     # -----------------------------------------------------------------
 
-    def save_checkpoint(self, level, all_exprs, all_names, all_levels):
+    def save_checkpoint(self, level, all_exprs, all_names, all_levels,
+                        computed_pairs=None, partial=False):
         os.makedirs(self.checkpoint_dir, exist_ok=True)
-        path = os.path.join(self.checkpoint_dir, f"level_{level}.pkl")
+        suffix = f"level_{level}_partial.pkl" if partial else f"level_{level}.pkl"
+        path = os.path.join(self.checkpoint_dir, suffix)
+        # Atomic write to avoid corruption on interrupt mid-pickle.
+        tmp = path + ".tmp"
         data = {
             "level": level,
+            "partial": bool(partial),
             "n_bodies": self.N,
             "d_spatial": self.d,
             "potential": self.potential,
@@ -741,20 +753,44 @@ class NBodyAlgebra:
             "exprs": all_exprs,
             "names": all_names,
             "levels": all_levels,
+            "computed_pairs": (
+                [tuple(sorted(p)) for p in computed_pairs]
+                if computed_pairs is not None else None
+            ),
         }
-        with open(path, "wb") as fh:
+        with open(tmp, "wb") as fh:
             pickle.dump(data, fh, protocol=pickle.HIGHEST_PROTOCOL)
-        print(f"    Checkpoint saved: {path}")
+        os.replace(tmp, path)
+        tag = "PARTIAL" if partial else "saved"
+        print(f"    Checkpoint {tag}: {path}")
 
     def load_checkpoint(self):
         os.makedirs(self.checkpoint_dir, exist_ok=True)
-        files = sorted(
+        # Prefer the most recent file. Partial checkpoints are valid restart
+        # points too, since save_checkpoint(..., partial=True) persists a
+        # consistent (exprs, names, levels, computed_pairs) tuple.
+        candidates = sorted(
             f for f in os.listdir(self.checkpoint_dir)
-            if f.endswith(".pkl")
+            if f.endswith(".pkl") and not f.endswith(".pkl.tmp")
         )
-        if not files:
+        if not candidates:
             return None
-        path = os.path.join(self.checkpoint_dir, files[-1])
+
+        def _level_key(name: str) -> tuple[int, int]:
+            # 'level_3.pkl' -> (3, 1) ; 'level_3_partial.pkl' -> (3, 0)
+            parts = name.removesuffix(".pkl").split("_")
+            try:
+                lv = int(parts[1])
+            except (IndexError, ValueError):
+                return (-1, -1)
+            is_partial = len(parts) >= 3 and parts[2] == "partial"
+            return (lv, 0 if is_partial else 1)
+
+        # Pick the highest (level, complete) tuple - prefer complete over
+        # partial at the same level, but prefer a higher partial over a
+        # lower complete.
+        best = max(candidates, key=_level_key)
+        path = os.path.join(self.checkpoint_dir, best)
         with open(path, "rb") as fh:
             data = pickle.load(fh)
         if data.get("d_spatial") != self.d:
@@ -769,7 +805,8 @@ class NBodyAlgebra:
             print(f"    WARNING: checkpoint potential={data.get('potential')!r} "
                   f"!= current {self.potential!r}, skipping")
             return None
-        print(f"    Loaded checkpoint: {path}  (level {data['level']})")
+        kind = "PARTIAL" if data.get("partial") else "complete"
+        print(f"    Loaded checkpoint: {path}  (level {data['level']}, {kind})")
         return data
 
     # -----------------------------------------------------------------
@@ -777,7 +814,7 @@ class NBodyAlgebra:
     # -----------------------------------------------------------------
 
     def compute_growth(self, max_level=3, n_samples=500, seed=42,
-                       resume=False, save_svd=False):
+                       resume=False, save_svd=False, checkpoint_every=None):
         N, d = self.N, self.d
         n_pairs = self.n_pairs
         dim_label = {1: "1D (linear)", 2: "2D (planar)", 3: "3D (spatial)"}
@@ -837,9 +874,21 @@ class NBodyAlgebra:
                 all_exprs = ckpt["exprs"]
                 all_names = ckpt["names"]
                 all_levels = ckpt["levels"]
-                start_level = ckpt["level"] + 1
-                # Only rebuild computed_pairs if we need more levels
-                if start_level <= max_level:
+                ckpt_level = ckpt["level"]
+                is_partial = bool(ckpt.get("partial"))
+                # If partial: we need to resume *inside* ckpt_level.
+                # If complete: start from ckpt_level + 1.
+                start_level = ckpt_level if is_partial else ckpt_level + 1
+                stored_pairs = ckpt.get("computed_pairs")
+                if stored_pairs is not None:
+                    computed_pairs = {frozenset(p) for p in stored_pairs}
+                    print(f"    Restored computed_pairs from checkpoint "
+                          f"({len(computed_pairs)} pairs, "
+                          f"resume {'mid-' if is_partial else 'after '}"
+                          f"level {ckpt_level})")
+                elif start_level <= max_level:
+                    # Legacy checkpoint without computed_pairs; rebuild
+                    # conservatively.
                     n_ckpt = len(all_exprs)
                     print(f"    Rebuilding computed_pairs for {n_ckpt} "
                           f"expressions...", end=" ", flush=True)
@@ -928,6 +977,20 @@ class NBodyAlgebra:
                     new_exprs.append(expr)
                     new_names.append(bracket_name)
 
+                    # Intra-level checkpoint for crash-resilience on long
+                    # levels (typically L3). Save a coherent snapshot every
+                    # ``checkpoint_every`` brackets: extend all_* with the
+                    # not-yet-merged new_* and persist with partial=True.
+                    if (checkpoint_every is not None
+                            and len(new_exprs) % checkpoint_every == 0):
+                        snap_exprs = all_exprs + new_exprs
+                        snap_names = all_names + new_names
+                        snap_levels = all_levels + [level] * len(new_exprs)
+                        self.save_checkpoint(
+                            level, snap_exprs, snap_names, snap_levels,
+                            computed_pairs=computed_pairs, partial=True,
+                        )
+
             for expr, name in zip(new_exprs, new_names):
                 all_exprs.append(expr)
                 all_names.append(name)
@@ -936,7 +999,16 @@ class NBodyAlgebra:
             elapsed_level = time() - t_level
             print(f"\n  Level {level}: {len(new_exprs)} candidates "
                   f"computed in {elapsed_level:.1f}s")
-            self.save_checkpoint(level, all_exprs, all_names, all_levels)
+            self.save_checkpoint(level, all_exprs, all_names, all_levels,
+                                 computed_pairs=computed_pairs)
+            # Clean up the partial file once the level is fully baked.
+            partial_path = os.path.join(
+                self.checkpoint_dir, f"level_{level}_partial.pkl")
+            if os.path.exists(partial_path):
+                try:
+                    os.remove(partial_path)
+                except OSError:
+                    pass
 
         # -- Jacobi identity --
         print("\n" + "=" * 70)

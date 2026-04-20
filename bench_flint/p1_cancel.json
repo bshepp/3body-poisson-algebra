@@ -1,0 +1,21 @@
+{
+  "strategy": "cancel",
+  "case": "schwarz_l2",
+  "max_level": 2,
+  "n_samples": 50,
+  "expected": [
+    3,
+    6,
+    17
+  ],
+  "started_at": "2026-04-19T15:33:29",
+  "elapsed_s": 4.913747500002501,
+  "completed_at": "2026-04-19T15:33:34",
+  "status": "done",
+  "sequence": [
+    3,
+    6,
+    17
+  ],
+  "match": true
+}
