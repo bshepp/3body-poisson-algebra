@@ -91,7 +91,7 @@ The original conjecture — that the dimension sequence depends only on N and th
 2. **Original survey artifact corrected** (Mar 23, 2026): the [3, 5, 13, 69] reported for unequal-mass gravitational systems was caused by SymPy 1.10.1 failing to lambdify level-3 expressions. Re-validation with SymPy 1.13.3 confirms [3, 6, 17, 116] for all mass ratios.
 3. **Charge magnitude at level 3**: integer charge magnitudes q=1..20 (same-sign Coulomb) all give [3,6,17,116]; mixed-sign charge geometries Li⁺ (+3,−1,−1) → 111 and H₂⁺ (+1,+1,−1) → 115 are confirmed real departures — levels 0–2 remain 3, 6, 17.
 
-### Multi-System Universality Survey (Mar 2026, in progress)
+### Multi-System Universality Survey (through Apr 2026, in progress)
 
 Testing the conjecture across 21 physical three-body systems spanning gravitational, atomic, nuclear, plasma, post-Newtonian, and exotic regimes. Computed on AWS (r6i.2xlarge for dimension sequences, c6i.8xlarge for atlas scans, r6i.4xlarge for composite/PN).
 
@@ -112,18 +112,20 @@ Testing the conjecture across 21 physical three-body systems spanning gravitatio
 | Atomic | H₂⁺ Molecular Ion (+1,+1,−1) | 1/r | [3, 6, 17, 115] | Complete |
 | Plasma | Penning Trap Ions (+1,+1,+1) | 1/r | [3, 6, 17, 116] | Complete |
 | Plasma | 2D Vortices | log(r) | [3, 6, 17, 116] | Complete |
-| Plasma | Dusty Plasma | Yukawa | — | In progress |
-| Nuclear | Tritium / He-3 | Yukawa | — | In progress |
+| Plasma | Yukawa potential (μ-sweep, equal masses) | exp(-μr)/r | [3, 6, 17, 116]† | Complete |
+| Plasma | Dusty Plasma (named config) | Yukawa | — | OOM, retry pending |
+| Nuclear | Tritium / He-3 (named config) | Yukawa | — | OOM, retry pending |
 | Nuclear | p-n-n Scattering | Yukawa | — | In progress |
 | PN | Kozai-Lidov (1PN) | composite | — | In progress |
-| Exotic | Magnetic Monopoles | 1/r² | — | In progress |
+| Exotic | Magnetic Monopoles | 1/r² | — | Atlas complete; dimseq pending |
 | Exotic | Dark Matter Halos | 1/r | — | In progress |
 | Parametric | 1/r^π (irrational) | 1/r^3.14159… | [3, 6, 17, 116] | Complete |
 | Parametric | 1/r^e (irrational) | 1/r^2.71828… | [3, 6, 17, 116] | Complete |
 | Parametric | 1/r^φ (irrational) | 1/r^1.61803… | [3, 6, 17, 116] | Complete |
 
-‡ Directly re-run on AWS with SymPy 1.13.3 and confirmed (Mar 24, 2026).
+‡ Directly re-run on AWS with SymPy 1.13.3 and confirmed (Mar 24, 2026). Corrected results in [`results/expansion_dimseq/expansion_dimseq_summary.json`](results/expansion_dimseq/expansion_dimseq_summary.json); the older [`data/expansion_dimseq_completion_clean.json`](data/expansion_dimseq_completion_clean.json) retains the artifact `[3, 5, 13, 69]` values for provenance.
 § True rank 116 guaranteed by symbolic mass invariance proof over ℚ(m₁,m₂,m₃); direct numerical computation shows SVD conditioning artifacts at these physical mass ratios (extreme values prevent clean gap detection).
+† μ-sweep over μ ∈ {1/10, 1/2, 7/10, 1, 2} (N=3, d=1, equal masses, max_level=3, 500 samples each); see [`results/yukawa_dimseq.json`](results/yukawa_dimseq.json). The named Yukawa configurations (tritium / He-3, dusty plasma) at their physical screening lengths and mass ratios are still pending — earlier r6i.8xlarge atlas runs were OOM-killed.
 
 Composite/PN results (separate pipeline):
 | System | Potential | Sequence | Status |
