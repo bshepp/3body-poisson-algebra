@@ -6121,3 +6121,59 @@ without manual curation. The manifest build is one Python invocation.
 The end-to-end loop from "AWS instance terminates" to "Figures page
 reflects the new scan" is four commands documented in Section 5 of the
 work order.
+
+
+---
+
+## 2026-04-21 - Independent Mathematica oracle for [3, 6, 17, 116]
+
+Wolfram Language 14.3 reproduction of the N=3 d=2 L=3 dimension sequence.
+Same Poisson-bracket convention and same Lie-closure filtration as the
+Python `nbody/symbolic_rank_nbody.py` engine, but the implementation
+shares zero source with SymPy:
+
+- Different CAS (Wolfram vs SymPy)
+- Different rank algorithm (`MatrixRank` over `Rationals` on a
+  `SparseArray` vs SymPy's `DomainMatrix`)
+- Different chain-rule plumbing for the auxiliary `u_ij = 1/r_ij`
+
+Result on the workstation, single Wolfram kernel:
+
+| Potential | Mathematica L=3 | Python pin | Match | Wall clock |
+|-----------|-----------------|------------|-------|------------|
+| 1/r       | [3, 6, 17, 116] | [3, 6, 17, 116] | YES | 40.4 s |
+| 1/r^2     | [3, 6, 17, 116] | [3, 6, 17, 116] | YES | 50.0 s |
+
+The headline result of the project now rests on two unrelated CAS
+implementations and two unrelated rank algorithms. This closes one of the
+standing referee-style worries (CAS-specific or algorithm-specific
+artifacts in the rank computation).
+
+Files: `mathematica/poisson_n3_d2_engine.wl` (engine),
+`poisson_n3_d2.wl` (sanity runner), `poisson_n3_d2_l4_backup.wl` (L=4
+fallback for HF Jobs), `mathematica/results/n3_d2_dimseq.json` (committed
+reference run), `mathematica/README.md` (conventions + run
+instructions). Recorded in `bench_flint/validation_summary.md` Phase F
+and in `registry/experiments.yaml` (entries `mathematica_oracle_n3_d2`
+and `mathematica_l4_backup`).
+
+
+---
+
+## 2026-04-21 - Mathematica oracle (cont.): harmonic [3, 6, 13, 15, 15]
+
+Same engine, complementary case: the harmonic potential
+`H_ij = T_i + T_j + r_ij^2` closes at dimension 15. Mathematica reproduces
+`[3, 6, 13, 15, 15]` exactly through L=4 in 31.8 s on the workstation,
+single Wolfram kernel. L=4 brackets all 11,937 candidate pairs through
+`MatrixRank` over `Rationals` and the cumulative rank stays at 15 -
+confirming algebraic closure rather than a level-3 plateau.
+
+This is the structural opposite of the singular potentials: same engine,
+same filtration, same rank algorithm, but the algebra closes instead of
+growing. Both halves of the universality picture are now independently
+confirmed in Wolfram Language.
+
+Files: `mathematica/poisson_n3_d2_harmonic.wl` (runner),
+`mathematica/results/n3_d2_harmonic.json` (reference run). Recorded in
+`bench_flint/validation_summary.md` Phase F.2.

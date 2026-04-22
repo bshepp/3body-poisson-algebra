@@ -144,6 +144,18 @@ STAGE_2 = [
         max_level=3, n_samples=500, seed=42,
         expected=[3, 6, 17, 116],
     ),
+    dict(
+        # Yukawa with mu = 1/2: short-range exponential cutoff. Distinct
+        # potential family (transcendental) - extends the battery beyond
+        # 1/r^n and log to confirm the patch works on the full nbody
+        # potential menu.
+        case_id="s2_yukawa_mu_half",
+        potential="yukawa",
+        potential_params=[("mu", "Rational(1, 2)")],
+        n_bodies=3, d_spatial=2,
+        max_level=3, n_samples=500, seed=42,
+        expected=[3, 6, 17, 116],
+    ),
 ]
 
 # Stage 3: spatial dimension d=1, d=2, d=3

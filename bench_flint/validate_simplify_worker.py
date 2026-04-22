@@ -87,13 +87,20 @@ def main() -> int:
     if case.get("charges"):
         charges = {int(k): int(v) for k, v in case["charges"].items()}
 
-    # composite potential params
+    # composite / yukawa potential params
     potential_params = None
     if potential == "composite":
         params_raw = case["potential_params"]
         potential_params = []
         for coeff, power in params_raw:
             potential_params.append((_parse_rational(coeff), int(power)))
+    elif potential == "yukawa":
+        # Yukawa shape: [("mu", <rational>)] - first element is the screening
+        # parameter name (kept for self-documentation), second is the value.
+        params_raw = case.get("potential_params") or [["mu", "1"]]
+        potential_params = []
+        for name, value in params_raw:
+            potential_params.append((str(name), _parse_rational(value)))
 
     # external potential (harmonic trap)
     external_potential = None

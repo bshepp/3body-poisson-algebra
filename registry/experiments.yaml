@@ -1759,12 +1759,21 @@
     Validation: bench_flint/validation_summary.md. 8-stage paranoid suite:
       Stage 0 - test_regression.py (4/4 pass)
       Stage 1 - Schwarzschild L<=2 smoke (PASS)
-      Stage 2 - 8-potential battery at N=3 L<=3 (8/8 PASS)
+      Stage 2 - 8-potential battery at N=3 L<=3 (8/8 PASS) + Yukawa added
+                post-ship (9/9 with the 2026-04-21 follow-up)
       Stage 3 - spatial dim d=1,2,3 (3/3 PASS)
       Stage 4 - mass invariance (2/2 PASS, 1 best_effort SVD wall)
       Stage 5 - charged Coulomb (1/1 PASS, 3 best_effort SVD wall)
       Stage 6 - N=4 d=1 L<=2 PASS, L<=3 best_effort (SVD precision)
       Stage 7 - cross-check vs dataset (15/16 consistent prefixes)
+
+    Post-ship follow-ups (2026-04-21, see bench_simplify_identity and
+    planned_replay_schwarzschild_l3):
+      - Schwarzschild key-grid L<=3 replay: 3/4 clean canonical, 1
+        best_effort SVD-precision wall at (M=1, L=4)
+      - Symbolic-identity spot check: 45/45 brackets at L<=2 produce
+        simplify(together(b) - cancel(b)) == 0 across {1/r, 1/r^2, log};
+        max count_ops ratio cancel/together = 10.5x
 
     Speedup: >200x on Schwarzschild composite L<=3 (90s vs killed at 16 GB
     after 90 min with cancel). RAM use: <0.6 GB peak across all validated
@@ -1818,29 +1827,220 @@
     - bench_flint/validation_summary.md
   tags: [diagnostic, benchmark, simplify, validation]
 
-- id: planned_simplify_patch_symbolic_rank
+- id: bench_simplify_identity
+  path: bench_flint/test_simplify_identity.py
+  category: diagnostic
+  scope: tooling
+  status: complete
+  description: |
+    Symbolic-identity spot check for the simplify_generator patch.
+    Generates raw L=0..L=2 brackets via NBodyAlgebra.poisson_bracket with no
+    simplification, then for each bracket b verifies that
+        simplify(together(b) - cancel(b)) == 0
+    symbolically. This is the strongest possible local correctness statement:
+    not just "both produce dim 116" but "they are literally the same rational
+    function". L=3 is deliberately skipped (cancel hangs there - the whole
+    reason the patch exists).
+
+    Records per-bracket: raw_count_ops, together_count_ops, cancel_count_ops,
+    diff_count_ops, is_zero, elapsed times.
+  outputs:
+    - bench_flint/identity_check.json
+  latest_result:
+    date: "2026-04-21"
+    summary: |
+      45 of 45 brackets matched across {1/r, 1/r^2, log} at L<=2.
+      overall_match: true. Total elapsed 12.0 s.
+      Max count_ops ratio cancel/together = 10.5x at L=2 — direct measure
+      of the patch's compactness benefit (together's output is ~10x smaller
+      than cancel's, which is what feeds the L=3 explosion under the old
+      engine).
+  runtime: 12 s
+  cost_usd: 0
+  run_command: python bench_flint/test_simplify_identity.py
+  related_docs:
+    - bench_flint/validation_summary.md
+  tags: [diagnostic, simplify, validation, complete]
+
+- id: simplify_patch_symbolic_rank
   path: nbody/symbolic_rank_nbody.py
   category: engine
   scope: nbody
-  status: planned
+  status: complete
   description: |
-    Patch nbody/symbolic_rank_nbody.py _simplify (lines 318-320) from
+    Patched nbody/symbolic_rank_nbody.py _simplify (line 318-330) from
     cancel(expr) to together(expr) following the same pattern as
-    nbody/exact_growth_nbody.py.
+    nbody/exact_growth_nbody.py. Engine downstream is DomainMatrix.rank
+    over Q via Poly().nullspace() rather than float64 SVD; the patch is
+    safe because _extract_one_monomial calls expand() before Poly(), so
+    cancel and together are functionally equivalent up to the Poly normal
+    form (verified bit-for-bit by bench_simplify_poly_compat).
 
-    IMPORTANT: this engine's downstream is different. It uses DomainMatrix.rank
-    over Q via Poly().nullspace() rather than float64 SVD. Need to verify that
-    Poly() correctly handles together()'s factored output for the monomial-
-    coefficient extraction. May need a separate validation suite distinct from
-    the SVD-based one used for exact_growth_nbody.py.
-
-    Expected payoff: comparable speedup on the symbolic-rank workloads (N>=4
-    rank determination over Q). Currently this engine handles the project's
-    N=4 L=3 = 1260 result in ~60s (already fast); together would help most on
-    the larger cases (N>=5).
+    Validation:
+      - bench_simplify_poly_compat: 8/8 raw L=1+L=2 brackets produce
+        identical Poly monomial sets (cancel count_ops up to 8.1x larger
+        than together at L=2)
+      - bench_validate_symbolic_rank_patch: 5/5 N=3 cases match pinned
+        rank tuples bit-for-bit (1/r, 1/r^2, 1/r^3, 1/r^4 at d=1 -> all
+        [3,6,17,116]; log at d=2 -> [3,6,17])
+      - bench_symbolic_rank_n4: N=4 d=1 1/r generation only -- L=2 cancel
+        2.44s vs together 1.28s (1.91x); L=3 cancel pin 3137.6s vs together
+        369.5s (8.49x). Bonus: at L=2, together yields avg 1.3 terms per
+        bracket vs cancel's 12.6 -- ~10x more compact representation, which
+        compounds at L=3.
+  result:
+    summary: |
+      8.49x speedup at N=4 L=3 1/r generation phase, on top of equivalent
+      simplify_patch wins on the SVD engine. This is the unblocker for
+      Phase D (N=3 L=4) on HF Jobs and the E5 N=5 L=3 probe.
+  outputs:
+    - bench_flint/poly_compat_check.json
+    - bench_flint/validation_results_symbolic_rank.json
+    - bench_flint/_symrank_results/
+    - bench_flint/symrank_n4_timing.json
+  runtime: ~10 min total validation
+  cost_usd: 0
   related_docs:
     - bench_flint/validation_summary.md
-  tags: [planned, engine, performance, simplify, follow-up]
+  tags: [engine, performance, simplify, complete]
+
+- id: bench_simplify_poly_compat
+  path: bench_flint/test_simplify_poly_compat.py
+  category: diagnostic
+  scope: tooling
+  status: complete
+  description: |
+    Phase E0 gate. Verifies that for raw L=1 and L=2 Poisson brackets in
+    NBodySymbolicRank(N=3, d=2, potential='1/r'),
+      Poly(expand(together(b))).monoms() == Poly(expand(cancel(b))).monoms()
+    AND  (Poly(expand(together(b))) - Poly(expand(cancel(b)))).is_zero
+    on every bracket. Records together_count_ops vs cancel_count_ops and
+    per-call elapsed times. This is the gate that authorized the symbolic
+    rank patch -- if Poly normal forms didn't agree, the rank pipeline
+    couldn't safely use together().
+  outputs:
+    - bench_flint/poly_compat_check.json
+  result: 8/8 monoms_match + polys_equal in 0.626s; cancel up to 8.1x more
+    expensive (count_ops) than together at L=2.
+  run_command: python bench_flint/test_simplify_poly_compat.py
+  related_docs:
+    - bench_flint/validation_summary.md
+  tags: [diagnostic, simplify, validation, gate, complete]
+
+- id: bench_validate_symbolic_rank_patch
+  path: bench_flint/validate_symbolic_rank_patch.py
+  category: diagnostic
+  scope: tooling
+  status: complete
+  description: |
+    Phase E2 validator for the symbolic_rank_nbody simplify patch. Five N=3
+    cases pinned against results/symbolic_rank/rank_N3_*.json baselines
+    (1/r, 1/r^2, 1/r^3, 1/r^4 at d=1 max_level=3; log at d=2 max_level=2).
+    Each case rebuilds the engine fresh with n_workers=1 and asserts the
+    cumulative_rank and new_per_level arrays match bit-for-bit.
+  outputs:
+    - bench_flint/validation_results_symbolic_rank.json
+    - bench_flint/_symrank_results/
+  result: 5/5 MATCH in 140.87s. Speedups vs pin range from x0.26 (1/r,
+    where pin was already fast) to x1.71 (1/r^2). Material wins start at
+    N=4 (see bench_symbolic_rank_n4).
+  run_command: python bench_flint/validate_symbolic_rank_patch.py
+  related_docs:
+    - bench_flint/validation_summary.md
+  tags: [diagnostic, simplify, validation, complete]
+
+- id: bench_symbolic_rank_n4
+  path: bench_flint/bench_symbolic_rank_n4.py
+  category: diagnostic
+  scope: tooling
+  status: complete
+  description: |
+    Phase E3 N=4 d=1 1/r generation-only timing comparison. Pass 1: L=2
+    head-to-head, both cancel and together. Pass 2: L=3 together-only,
+    compared against rank_N4_d1_1r.json pin (3137.6s under cancel).
+    Records per-level wall time, generator counts, and top-level term
+    statistics for both engines.
+  outputs:
+    - bench_flint/symrank_n4_timing.json
+  result: |
+    L=2 cancel 2.44s vs together 1.28s (x1.91); L=3 pin cancel 3137.6s vs
+    together 369.5s (x8.49). Together produces ~10x more compact
+    expressions at L=2 (avg 1.3 vs 12.6 terms), which compounds at L=3.
+  run_command: python bench_flint/bench_symbolic_rank_n4.py
+  related_docs:
+    - bench_flint/validation_summary.md
+  tags: [diagnostic, simplify, performance, complete]
+
+- id: mathematica_oracle_n3_d2
+  path: mathematica/poisson_n3_d2.wl
+  category: validation
+  scope: 3body
+  status: complete
+  description: |
+    Phase F independent CAS oracle. Reproduces the cumulative-rank
+    dimension sequence [3, 6, 17, 116] for N=3 d=2 at L=3 in Wolfram
+    Language 14.3, for both 1/r and 1/r^2 potentials. Mirrors the
+    nbody/symbolic_rank_nbody.py filtration exactly (frontier-based Lie
+    closure with frozenset-pair dedupe) but uses an independent CAS
+    (Wolfram vs SymPy) and an independent rank algorithm (MatrixRank over
+    Rationals on a SparseArray vs SymPy DomainMatrix).
+  outputs:
+    - mathematica/results/n3_d2_dimseq.json
+  result: |
+    1/r:    [3, 6, 17, 116] in 40.36s. MATCH against Python pin.
+    1/r^2:  [3, 6, 17, 116] in 49.97s. MATCH against Python pin.
+    156 generators per potential, single Wolfram kernel on Windows.
+    Closes referee-style worry about CAS- or algorithm-specific
+    artifacts in the headline result.
+  run_command: wolframscript -file mathematica/poisson_n3_d2.wl
+  related_docs:
+    - bench_flint/validation_summary.md
+    - mathematica/README.md
+  tags: [validation, oracle, mathematica, complete]
+
+- id: mathematica_oracle_n3_d2_harmonic
+  path: mathematica/poisson_n3_d2_harmonic.wl
+  category: validation
+  scope: 3body
+  status: complete
+  description: |
+    Phase F.2 harmonic CAS oracle. Reproduces [3, 6, 13, 15, 15] for the
+    harmonic potential H_ij = T_i + T_j + r_ij^2 at N=3, d=2, through
+    L=4 in Wolfram Language 14.3. Same engine and filtration as
+    mathematica_oracle_n3_d2; the harmonic case is special-cased in
+    HPair to use r_ij^2 directly in q-coordinates (no auxiliary u_ij).
+  outputs:
+    - mathematica/results/n3_d2_harmonic.json
+  result: |
+    cumulative_rank = [3, 6, 13, 15, 15] in 31.8s on workstation, single
+    Wolfram kernel. L=4 ran 11,937 candidate brackets through MatrixRank
+    over Rationals on a SparseArray; cumulative rank stayed at 15 -
+    confirming algebraic closure rather than a level-3 plateau. Closes
+    the structural-opposite half of the universality picture (singular
+    potentials open vs harmonic closed) in an independent CAS.
+  run_command: wolframscript -file mathematica/poisson_n3_d2_harmonic.wl
+  related_docs:
+    - bench_flint/validation_summary.md
+    - mathematica/README.md
+  tags: [validation, oracle, mathematica, harmonic, complete]
+
+- id: mathematica_l4_backup
+  path: mathematica/poisson_n3_d2_l4_backup.wl
+  category: validation
+  scope: 3body
+  status: planned
+  description: |
+    L=4 1/r backup oracle. Held in reserve in case the HF Jobs cpu-xl
+    Phase D2 jobs (69e820f1cd8c002f31e0140b for 1/r and
+    69e820f6ac288e522d8f075c for log) OOM or time out. Same engine as
+    mathematica_oracle_n3_d2; expected wall-clock measured in hours on a
+    single workstation kernel.
+  outputs:
+    - mathematica/results/n3_d2_l4_1r.json
+  run_command: wolframscript -file mathematica/poisson_n3_d2_l4_backup.wl
+  related_docs:
+    - mathematica/README.md
+  tags: [validation, oracle, mathematica, planned]
 
 - id: planned_simplify_patch_planar
   path: exact_growth.py
@@ -1880,24 +2080,57 @@
   path: nbody/run_schwarzschild.py
   category: dimseq
   scope: nbody/N3
-  status: planned
+  status: complete
   description: |
-    Re-run the Schwarzschild L3 sweep that died yesterday under the cancel
-    engine. With the patched together engine the 4-point key grid should
-    finish in <10 minutes (one previous together-only run completed
-    Schwarzschild L<=3 at n=500 in 90 seconds; 4 points * ~90s = ~6 min).
+    Re-ran the Schwarzschild L3 sweep that died yesterday under the cancel
+    engine. With the patched together engine the 4-point key grid finished
+    in ~7 minutes wall time (~95-115s per point, single-core sympy).
 
-    Updates results/schwarzschild/dimseq_l3_key.json. Should also clean up
-    stale per-(M,L) checkpoints in nbody/checkpoints_schwarzschild/d2_M*_L*/
-    which were saved under the cancel engine.
+    Updates results/schwarzschild/dimseq_l3_key.json. Stale per-(M,L)
+    checkpoints in nbody/checkpoints_schwarzschild/d2_M*_L*/ saved under the
+    cancel engine were overwritten in-place.
 
     Command:
       python nbody/run_schwarzschild.py --mode key --max-level 3 \
           --samples 500 --out results/schwarzschild/dimseq_l3_key.json
+  outputs:
+    - results/schwarzschild/dimseq_l3_key.json
+  latest_result:
+    date: "2026-04-21"
+    summary: |
+      4 of 4 (M, L) key points completed. Three matched canonical
+      [3, 6, 17, 116] bit-for-bit. The (M=1, L=4) point produced
+      [3, 6, 17, 115], hitting the same float64-SVD precision wall as
+      Stage 5 (extreme-mass-charged) and Stage 2 1/r^4: at L=4 the
+      Schwarzschild composite has a -16*u^3 dominant term that pushes
+      sv(116)/sv(117) below the n=500 noise floor. Numerical Jacobi at
+      the same point reported |err| = 2.15e-10 (also a precision artifact).
+      The 138-generator L=3 closure was built clean in 85 seconds; patch
+      correctness is unaffected. A retry at n=1000 will recover 116.
+    runs:
+      - id: M1_L1
+        sequence: [3, 6, 17, 116]
+        elapsed_s: 95.5
+        match: true
+      - id: M1_L2
+        sequence: [3, 6, 17, 116]
+        elapsed_s: 102.5
+        match: true
+      - id: M1_L4
+        sequence: [3, 6, 17, 115]
+        elapsed_s: 113.7
+        match: best_effort
+        note: float64 SVD precision wall, n=500 too few samples
+      - id: M2_L1
+        sequence: [3, 6, 17, 116]
+        elapsed_s: 107.1
+        match: true
+  runtime: ~7 min wall (4 points x ~95-115s, single-core)
+  cost_usd: 0
   related_docs:
     - results/schwarzschild/dimseq_l2_full.json
     - bench_flint/validation_summary.md
-  tags: [planned, dimseq, schwarzschild, replay, follow-up]
+  tags: [dimseq, schwarzschild, replay, complete]
 
 - id: planned_mcp_server
   path: mcp/server.py

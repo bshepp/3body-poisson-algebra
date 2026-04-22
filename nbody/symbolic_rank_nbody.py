@@ -44,7 +44,7 @@ sys.setrecursionlimit(500000)
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import sympy as sp
-from sympy import Integer, Rational, Add, Poly, expand, cancel, diff, Symbol
+from sympy import Integer, Rational, Add, Poly, expand, cancel, diff, Symbol, together
 
 import pickle
 
@@ -316,8 +316,17 @@ class NBodySymbolicRank:
                 yield (i,) + rest
 
     def _simplify(self, expr):
+        # E1 patch (2026-04-21): swap cancel -> together for u-using
+        # potentials. `together` produces a single fraction with shared
+        # denominator (much smaller intermediate expressions; ~10x lower
+        # count_ops at L=2 vs cancel) while remaining mathematically
+        # equivalent. The downstream pipeline calls `expand` then `Poly`
+        # in `extract_monomial_matrix`, which normalizes both forms to
+        # the same monomial-coefficient matrix (verified by
+        # bench_flint/test_simplify_poly_compat.py: 8/8 match at L<=2).
+        # See bench_flint/validation_summary.md for context.
         if self.uses_u:
-            return cancel(expr)
+            return together(expr)
         return expand(expr)
 
     def _ckpt_path(self, checkpoint_dir, tag):

@@ -1,0 +1,139 @@
+{
+  "runs": [
+    {
+      "id": "M1_L1",
+      "M": "1",
+      "L": "1",
+      "d_spatial": 2,
+      "max_level": 3,
+      "n_samples": 500,
+      "seed": 42,
+      "potential_params": [
+        [
+          "-1",
+          1
+        ],
+        [
+          "1/2",
+          2
+        ],
+        [
+          "-1",
+          3
+        ]
+      ],
+      "sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "elapsed_s": 95.48089504241943,
+      "completed_at": "2026-04-21T17:13:38"
+    },
+    {
+      "id": "M1_L2",
+      "M": "1",
+      "L": "2",
+      "d_spatial": 2,
+      "max_level": 3,
+      "n_samples": 500,
+      "seed": 42,
+      "potential_params": [
+        [
+          "-1",
+          1
+        ],
+        [
+          "2",
+          2
+        ],
+        [
+          "-4",
+          3
+        ]
+      ],
+      "sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "elapsed_s": 102.5208785533905,
+      "completed_at": "2026-04-21T17:15:21"
+    },
+    {
+      "id": "M1_L4",
+      "M": "1",
+      "L": "4",
+      "d_spatial": 2,
+      "max_level": 3,
+      "n_samples": 500,
+      "seed": 42,
+      "potential_params": [
+        [
+          "-1",
+          1
+        ],
+        [
+          "8",
+          2
+        ],
+        [
+          "-16",
+          3
+        ]
+      ],
+      "sequence": [
+        3,
+        6,
+        17,
+        115
+      ],
+      "elapsed_s": 113.70992398262024,
+      "completed_at": "2026-04-21T17:17:14"
+    },
+    {
+      "id": "M2_L1",
+      "M": "2",
+      "L": "1",
+      "d_spatial": 2,
+      "max_level": 3,
+      "n_samples": 500,
+      "seed": 42,
+      "potential_params": [
+        [
+          "-2",
+          1
+        ],
+        [
+          "1/2",
+          2
+        ],
+        [
+          "-2",
+          3
+        ]
+      ],
+      "sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "elapsed_s": 107.1171715259552,
+      "completed_at": "2026-04-21T17:19:01"
+    }
+  ],
+  "failures": [],
+  "config": {
+    "mode": "key",
+    "max_level": 3,
+    "n_samples": 500,
+    "seed": 42,
+    "d_spatial": 2,
+    "grid_size": 4,
+    "checkpoint_every": 10,
+    "resume": false
+  }
+}

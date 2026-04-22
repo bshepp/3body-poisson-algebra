@@ -1,0 +1,66 @@
+[2026-04-21T17:14:32] ========================================================================
+[2026-04-21T17:14:32] simplify-generator IDENTITY CHECK: cancel(b) ?= together(b)
+[2026-04-21T17:14:32]   potentials:       ['1/r', '1/r^2', 'log']
+[2026-04-21T17:14:32]   max L2 brackets:  12
+[2026-04-21T17:14:32] ========================================================================
+[2026-04-21T17:14:32] === potential: 1/r ===
+[2026-04-21T17:14:32]   L=0 generators: 3  (['H12', 'H13', 'H23'])
+[2026-04-21T17:14:32]     L1 [{H12,H13}]  ops r=  19 t= 19 c=  31 diff_ops= 0  zero=True  t_diff=0.11s
+[2026-04-21T17:14:32]     L1 [{H12,H23}]  ops r=  19 t= 19 c=  31 diff_ops= 0  zero=True  t_diff=0.02s
+[2026-04-21T17:14:32]     L1 [{H13,H23}]  ops r=  19 t= 19 c=  31 diff_ops= 0  zero=True  t_diff=0.02s
+[2026-04-21T17:14:32]   L2 candidates: 12
+[2026-04-21T17:14:33]     L2 [ 1/12] {{H12,H13},H12}  ops r=  145 t= 115 c=   335 diff_ops=  0  zero=True  t_c=0.05s t_diff=0.19s
+[2026-04-21T17:14:33]     L2 [ 2/12] {{H12,H13},H13}  ops r=  143 t= 113 c=   335 diff_ops=  0  zero=True  t_c=0.04s t_diff=0.18s
+[2026-04-21T17:14:33]     L2 [ 3/12] {{H12,H13},H23}  ops r=   81 t=  61 c=   211 diff_ops=  0  zero=True  t_c=0.03s t_diff=0.10s
+[2026-04-21T17:14:33]     L2 [ 4/12] {{H12,H23},H12}  ops r=  145 t= 115 c=   335 diff_ops=  0  zero=True  t_c=0.05s t_diff=0.18s
+[2026-04-21T17:14:33]     L2 [ 5/12] {{H12,H23},H13}  ops r=   81 t=  61 c=   211 diff_ops=  0  zero=True  t_c=0.02s t_diff=0.09s
+[2026-04-21T17:14:34]     L2 [ 6/12] {{H12,H23},H23}  ops r=  143 t= 113 c=   335 diff_ops=  0  zero=True  t_c=0.04s t_diff=0.14s
+[2026-04-21T17:14:34]     L2 [ 7/12] {{H13,H23},H12}  ops r=   81 t=  61 c=   211 diff_ops=  0  zero=True  t_c=0.02s t_diff=0.10s
+[2026-04-21T17:14:34]     L2 [ 8/12] {{H13,H23},H13}  ops r=  145 t= 115 c=   335 diff_ops=  0  zero=True  t_c=0.04s t_diff=0.18s
+[2026-04-21T17:14:34]     L2 [ 9/12] {{H13,H23},H23}  ops r=  143 t= 113 c=   335 diff_ops=  0  zero=True  t_c=0.04s t_diff=0.17s
+[2026-04-21T17:14:35]     L2 [10/12] {{H12,H13},{H12,H23}}  ops r=  111 t=  85 c=   851 diff_ops=  0  zero=True  t_c=0.08s t_diff=0.39s
+[2026-04-21T17:14:35]     L2 [11/12] {{H12,H13},{H13,H23}}  ops r=  109 t=  83 c=   851 diff_ops=  0  zero=True  t_c=0.06s t_diff=0.39s
+[2026-04-21T17:14:36]     L2 [12/12] {{H12,H23},{H13,H23}}  ops r=  107 t=  81 c=   851 diff_ops=  0  zero=True  t_c=0.06s t_diff=0.38s
+[2026-04-21T17:14:36]   -> {'potential': '1/r', 'n_brackets': 15, 'n_match': 15, 'n_mismatch': 0, 'max_count_ops_ratio_cancel_over_together': 10.506172839506172}
+[2026-04-21T17:14:36] === potential: 1/r^2 ===
+[2026-04-21T17:14:36]   L=0 generators: 3  (['H12', 'H13', 'H23'])
+[2026-04-21T17:14:36]     L1 [{H12,H13}]  ops r=  23 t= 20 c=  39 diff_ops= 0  zero=True  t_diff=0.03s
+[2026-04-21T17:14:36]     L1 [{H12,H23}]  ops r=  23 t= 20 c=  39 diff_ops= 0  zero=True  t_diff=0.04s
+[2026-04-21T17:14:36]     L1 [{H13,H23}]  ops r=  23 t= 20 c=  39 diff_ops= 0  zero=True  t_diff=0.03s
+[2026-04-21T17:14:36]   L2 candidates: 12
+[2026-04-21T17:14:36]     L2 [ 1/12] {{H12,H13},H12}  ops r=  157 t= 118 c=   353 diff_ops=  0  zero=True  t_c=0.05s t_diff=0.23s
+[2026-04-21T17:14:36]     L2 [ 2/12] {{H12,H13},H13}  ops r=  155 t= 116 c=   353 diff_ops=  0  zero=True  t_c=0.04s t_diff=0.22s
+[2026-04-21T17:14:37]     L2 [ 3/12] {{H12,H13},H23}  ops r=   85 t=  62 c=   215 diff_ops=  0  zero=True  t_c=0.03s t_diff=0.12s
+[2026-04-21T17:14:37]     L2 [ 4/12] {{H12,H23},H12}  ops r=  157 t= 118 c=   353 diff_ops=  0  zero=True  t_c=0.05s t_diff=0.23s
+[2026-04-21T17:14:37]     L2 [ 5/12] {{H12,H23},H13}  ops r=   85 t=  62 c=   215 diff_ops=  0  zero=True  t_c=0.03s t_diff=0.13s
+[2026-04-21T17:14:38]     L2 [ 6/12] {{H12,H23},H23}  ops r=  155 t= 116 c=   353 diff_ops=  0  zero=True  t_c=0.06s t_diff=0.26s
+[2026-04-21T17:14:38]     L2 [ 7/12] {{H13,H23},H12}  ops r=   85 t=  62 c=   215 diff_ops=  0  zero=True  t_c=0.03s t_diff=0.13s
+[2026-04-21T17:14:38]     L2 [ 8/12] {{H13,H23},H13}  ops r=  157 t= 118 c=   353 diff_ops=  0  zero=True  t_c=0.05s t_diff=0.24s
+[2026-04-21T17:14:38]     L2 [ 9/12] {{H13,H23},H23}  ops r=  155 t= 116 c=   353 diff_ops=  0  zero=True  t_c=0.04s t_diff=0.21s
+[2026-04-21T17:14:39]     L2 [10/12] {{H12,H13},{H12,H23}}  ops r=  123 t=  86 c=   867 diff_ops=  0  zero=True  t_c=0.08s t_diff=0.44s
+[2026-04-21T17:14:39]     L2 [11/12] {{H12,H13},{H13,H23}}  ops r=  121 t=  84 c=   867 diff_ops=  0  zero=True  t_c=0.07s t_diff=0.49s
+[2026-04-21T17:14:40]     L2 [12/12] {{H12,H23},{H13,H23}}  ops r=  119 t=  82 c=   867 diff_ops=  0  zero=True  t_c=0.08s t_diff=0.44s
+[2026-04-21T17:14:40]   -> {'potential': '1/r^2', 'n_brackets': 15, 'n_match': 15, 'n_mismatch': 0, 'max_count_ops_ratio_cancel_over_together': 10.573170731707316}
+[2026-04-21T17:14:40] === potential: log ===
+[2026-04-21T17:14:40]   L=0 generators: 3  (['H12', 'H13', 'H23'])
+[2026-04-21T17:14:40]     L1 [{H12,H13}]  ops r=  19 t= 19 c=  31 diff_ops= 0  zero=True  t_diff=0.02s
+[2026-04-21T17:14:40]     L1 [{H12,H23}]  ops r=  19 t= 19 c=  31 diff_ops= 0  zero=True  t_diff=0.03s
+[2026-04-21T17:14:40]     L1 [{H13,H23}]  ops r=  19 t= 19 c=  31 diff_ops= 0  zero=True  t_diff=0.03s
+[2026-04-21T17:14:40]   L2 candidates: 12
+[2026-04-21T17:14:40]     L2 [ 1/12] {{H12,H13},H12}  ops r=  133 t= 115 c=   335 diff_ops=  0  zero=True  t_c=0.06s t_diff=0.23s
+[2026-04-21T17:14:41]     L2 [ 2/12] {{H12,H13},H13}  ops r=  131 t= 113 c=   335 diff_ops=  0  zero=True  t_c=0.05s t_diff=0.21s
+[2026-04-21T17:14:41]     L2 [ 3/12] {{H12,H13},H23}  ops r=   73 t=  61 c=   211 diff_ops=  0  zero=True  t_c=0.03s t_diff=0.12s
+[2026-04-21T17:14:41]     L2 [ 4/12] {{H12,H23},H12}  ops r=  133 t= 115 c=   335 diff_ops=  0  zero=True  t_c=0.08s t_diff=0.20s
+[2026-04-21T17:14:41]     L2 [ 5/12] {{H12,H23},H13}  ops r=   73 t=  61 c=   211 diff_ops=  0  zero=True  t_c=0.03s t_diff=0.13s
+[2026-04-21T17:14:42]     L2 [ 6/12] {{H12,H23},H23}  ops r=  131 t= 113 c=   335 diff_ops=  0  zero=True  t_c=0.05s t_diff=0.21s
+[2026-04-21T17:14:42]     L2 [ 7/12] {{H13,H23},H12}  ops r=   73 t=  61 c=   211 diff_ops=  0  zero=True  t_c=0.04s t_diff=0.11s
+[2026-04-21T17:14:42]     L2 [ 8/12] {{H13,H23},H13}  ops r=  133 t= 115 c=   335 diff_ops=  0  zero=True  t_c=0.04s t_diff=0.20s
+[2026-04-21T17:14:42]     L2 [ 9/12] {{H13,H23},H23}  ops r=  131 t= 113 c=   335 diff_ops=  0  zero=True  t_c=0.04s t_diff=0.18s
+[2026-04-21T17:14:43]     L2 [10/12] {{H12,H13},{H12,H23}}  ops r=  103 t=  85 c=   851 diff_ops=  0  zero=True  t_c=0.07s t_diff=0.44s
+[2026-04-21T17:14:43]     L2 [11/12] {{H12,H13},{H13,H23}}  ops r=  101 t=  83 c=   851 diff_ops=  0  zero=True  t_c=0.06s t_diff=0.38s
+[2026-04-21T17:14:44]     L2 [12/12] {{H12,H23},{H13,H23}}  ops r=   99 t=  81 c=   851 diff_ops=  0  zero=True  t_c=0.08s t_diff=0.46s
+[2026-04-21T17:14:44]   -> {'potential': 'log', 'n_brackets': 15, 'n_match': 15, 'n_mismatch': 0, 'max_count_ops_ratio_cancel_over_together': 10.506172839506172}
+[2026-04-21T17:14:44] ========================================================================
+[2026-04-21T17:14:44] DONE in 12.0s.  overall_match = True
+[2026-04-21T17:14:44]   Aggregated:    bench_flint\identity_check.json
+[2026-04-21T17:14:44] ========================================================================

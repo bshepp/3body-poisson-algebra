@@ -1,0 +1,19 @@
+{
+  "phase": "E5",
+  "purpose": "N=5 d=1 1/r generation-only probe on patched (together) symbolic_rank engine",
+  "job_id": "69e81f3eac288e522d8f0752",
+  "url": "https://huggingface.co/jobs/bshepp/69e81f3eac288e522d8f0752",
+  "submitted_at": "2026-04-22T01:07:10Z",
+  "flavor": "cpu-xl",
+  "rate_usd_per_h": 1.0,
+  "timeout_h": 6,
+  "worst_case_cost_usd": 6.0,
+  "expected_cost_usd_estimate": "~1",
+  "bucket": "bshepp/3body-n5-l3-gen-probe",
+  "target": "run_n5_l3_gen.py",
+  "deliverable_path_in_bucket": "results/n5_l3.json (or n5_l3.partial.json on SIGTERM)",
+  "smoke_validated": {
+    "local_windows": "OK (0.1s, 18 generators)",
+    "hf_cpu_basic":  "OK (0.8s)"
+  }
+}

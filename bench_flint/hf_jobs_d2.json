@@ -1,0 +1,65 @@
+{
+  "submitted_at_utc": "2026-04-22T01:14Z",
+  "campaign": "phase_d_l4_n3_symbolic_rank",
+  "engine_patch": "together (Phase E1, 8.49x faster vs cancel at N=4 L=3)",
+  "flavor": "cpu-xl",
+  "vcpu": 16,
+  "memory_gb": 124,
+  "rate_usd_per_hour": 1.0,
+  "timeout": "6h",
+  "max_cost_usd_per_job": 6.0,
+  "max_cost_usd_total_d2": 12.0,
+  "jobs": {
+    "n5_l3_probe_resubmit": {
+      "purpose": "Phase E5 - N=5 d=1 1/r generation-only (resubmit after attribute-name fix)",
+      "id": "69e820eccd8c002f31e01409",
+      "view": "https://huggingface.co/jobs/bshepp/69e820eccd8c002f31e01409",
+      "bucket": "hf://buckets/bshepp/3body-n5-l3-gen-probe",
+      "target": "run_n5_l3_gen",
+      "args": [],
+      "expected_outputs": [
+        "results/n5_l3.json (complete)",
+        "results/n5_l3.partial.json (sigterm/oom)"
+      ],
+      "first_attempt_failure": {
+        "id": "69e81f3eac288e522d8f0752",
+        "exit_code": 137,
+        "underlying_python_exit": 1,
+        "cause": "AttributeError: NBodySymbolicRank has no attribute PHASE_VARS (engine API used uppercase; correct name is phase_vars; algebra is at engine.algebra.hamiltonian_list)",
+        "fix": "scripts/hf_jobs/run_n5_l3_gen.py L104-105 patched; resynced to bucket"
+      }
+    },
+    "l4_1r_d1": {
+      "purpose": "Phase D2 - N=3 L=4 d=1 1/r symbolic rank (extends L=3 [3,6,17,116] pin to L=4)",
+      "id": "69e820f1cd8c002f31e0140b",
+      "view": "https://huggingface.co/jobs/bshepp/69e820f1cd8c002f31e0140b",
+      "bucket": "hf://buckets/bshepp/3body-l4-1r",
+      "target": "run_l4_symbolic_rank",
+      "args": ["--potential", "1/r", "--d-spatial", "1"],
+      "expected_outputs": [
+        "results/l4_1r_d1.json (complete)",
+        "results/l4_1r_d1.partial.json (sigterm/oom)",
+        "checkpoints/* (per-level pickled state)"
+      ],
+      "baseline_local_cost_pin_l3": "3137.6s for N=4 L=3 with cancel; together gave 369.5s (8.49x). Local pin for N=3 L=4 1/r not measured (engine timed out)."
+    },
+    "l4_log_d2": {
+      "purpose": "Phase D2 - N=3 L=4 d=2 log symbolic rank (extends L=2 [3,6,17] pin; L=3 + L=4 both open)",
+      "id": "69e820f6ac288e522d8f075c",
+      "view": "https://huggingface.co/jobs/bshepp/69e820f6ac288e522d8f075c",
+      "bucket": "hf://buckets/bshepp/3body-l4-log",
+      "target": "run_l4_symbolic_rank",
+      "args": ["--potential", "log", "--d-spatial", "2"],
+      "expected_outputs": [
+        "results/l4_log_d2.json (complete)",
+        "results/l4_log_d2.partial.json (sigterm/oom)",
+        "checkpoints/* (per-level pickled state)"
+      ]
+    }
+  },
+  "monitoring": [
+    "hf jobs inspect <id>      # status / stage",
+    "hf jobs logs <id> -f      # streaming logs",
+    "hf buckets sync hf://buckets/bshepp/<bucket> ./hf_results/<bucket>"
+  ]
+}

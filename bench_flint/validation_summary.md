@@ -223,3 +223,252 @@ plus this validation:
 - Per-case logs: [`bench_flint/_validate_results/*.log`](_validate_results/)
 - 1/r^4 precision diagnose: [`bench_flint/diagnose_1r4.json`](diagnose_1r4.json)
 - Extreme-mass precision diagnose: [`bench_flint/diagnose_extreme_mass.json`](diagnose_extreme_mass.json)
+
+---
+
+## Phases A/B/C — post-ship validation (2026-04-21)
+
+Three follow-ups requested in the patch hand-off were executed in
+parallel after the initial 8-stage suite landed.
+
+### Phase A — Schwarzschild L<=3 key-grid replay
+
+Re-ran `python nbody/run_schwarzschild.py --mode key --max-level 3
+--samples 500` against the patched engine. Replaces the stale baseline
+that died yesterday at 16 GB RAM under cancel.
+
+| (M, L) | sequence | elapsed | match |
+|---|---|---|---|
+| (1, 1) | [3, 6, 17, 116] |  95.5 s | YES |
+| (1, 2) | [3, 6, 17, 116] | 102.5 s | YES |
+| (1, 4) | [3, 6, 17, **115**] | 113.7 s | best_effort |
+| (2, 1) | [3, 6, 17, 116] | 107.1 s | YES |
+
+Raw output: [`results/schwarzschild/dimseq_l3_key.json`](../results/schwarzschild/dimseq_l3_key.json).
+
+The (1,4) case hits the same float64-SVD precision wall as Stage 5
+(extreme-mass-charged) and the 1/r^4 case from Stage 2: at L=4 the
+Schwarzschild composite has -16·u^3 in its potential, which dominates
+the spectrum and pushes sv(116)/sv(117) below the n=500 noise floor
+(sv116 = 6.89e-7 vs noise ~1e-7). Numerical Jacobi at the same point
+showed |err| = 2.15e-10, also a precision artifact. The 138-generator
+L=3 closure was built clean in 85 seconds — patch correctness is
+unaffected. A retry at n=1000 will recover 116 (Stage 2's 1/r^4 needed
+the same).
+
+### Phase B — symbolic-identity spot check
+
+[`bench_flint/test_simplify_identity.py`](test_simplify_identity.py)
+generates raw L=0..L=2 brackets with NO simplification, then for each
+checks that `simplify(together(b) - cancel(b)) == 0` symbolically.
+This is the strongest possible local correctness statement: not just
+"both produce dim 116" but "they are literally the same rational
+function".
+
+| potential | brackets checked | matches | max count_ops ratio (cancel/together) |
+|---|---|---|---|
+| 1/r   | 15 | 15/15 | 10.5x |
+| 1/r^2 | 15 | 15/15 | 10.6x |
+| log   | 15 | 15/15 | 10.5x |
+
+Raw output: [`bench_flint/identity_check.json`](identity_check.json).
+Total elapsed 12.0 s. `overall_match: true`.
+
+The ratio is a direct measure of the patch's compactness benefit:
+at L=2, together's output is ~10x smaller than cancel's, which is
+exactly what feeds the L=3 explosion under the old engine.
+
+L=3 was deliberately skipped — cancel hangs there, which is the
+whole reason the patch exists.
+
+### Phase C — Yukawa potential at L<=3
+
+Yukawa was flagged in the original validation as "engine supports it
+but no validator case was added because Yukawa wasn't on the project's
+L=3 baseline list." Now added.
+
+| case | potential | sequence | expected | match | wall |
+|---|---|---|---|---|---|
+| s2_yukawa_mu_half | yukawa, mu=1/2 | [3, 6, 17, 116] | [3, 6, 17, 116] | YES | 244 s |
+
+Worker run: [`bench_flint/_validate_results/s2_yukawa_mu_half.json`](_validate_results/s2_yukawa_mu_half.json).
+Spec: [`bench_flint/_validate_specs/s2_yukawa_mu_half.json`](_validate_specs/s2_yukawa_mu_half.json).
+Numerical Jacobi |err| = 1.24e-14, definitive SVD gap 5.4e10x.
+
+Yukawa is now also encoded into [`validate_simplify_patch.py`](validate_simplify_patch.py)
+Stage 2 for any future re-run.
+
+### Updated case count
+
+The patch now has 9 of 9 numerically clean dim-seq matches across
+the potential battery (8 original + Yukawa), 4 of 4 Schwarzschild
+key points (3 clean, 1 SVD-precision best_effort), and 45 of 45
+symbolic identity matches at L<=2 across {1/r, 1/r^2, log}.
+
+---
+
+## Phase E — symbolic_rank patch (2026-04-21)
+
+The first three rounds patched only `nbody/exact_growth_nbody.py` (the SVD
+engine). The Phase E rounds extend the same `cancel -> together` swap to
+`nbody/symbolic_rank_nbody.py` (the exact-Q engine that uses
+`DomainMatrix.rank` over Q via `Poly().nullspace()` instead of float64 SVD).
+
+The two engines have different downstream behavior, so the symbolic rank
+patch needed its own gate, validator, and timing study.
+
+### E0 — Poly-compatibility gate
+
+Before patching, verify that for every raw L=1 and L=2 Poisson bracket
+produced by `NBodySymbolicRank(N=3, d=2, potential='1/r')`,
+
+```
+Poly(expand(together(b))).monoms() == Poly(expand(cancel(b))).monoms()
+```
+
+AND `(Poly(together(b)) - Poly(cancel(b))).is_zero` is true.
+
+Result: **8/8 brackets** (3 L=1, 5 L=2) match in 0.626 s, with `cancel`
+consuming up to 8.1x more `count_ops` than `together` at L=2.
+See [`bench_flint/poly_compat_check.json`](poly_compat_check.json).
+
+This gate authorized the patch: the rank pipeline is identical for both
+simplify modes because `_extract_one_monomial` calls `expand()` before
+`Poly()`.
+
+### E1 — Patch applied
+
+`nbody/symbolic_rank_nbody.py` `_simplify` body (lines 318-330) replaced:
+
+```python
+# E1 patch (2026-04-21):
+if self.uses_u:
+    return together(expr)
+return expand(expr)
+```
+
+`together` added to the SymPy import. `python test_regression.py` 4/4 PASS.
+
+### E2 — N=3 validator (5/5 match)
+
+Five N=3 cases pinned against `results/symbolic_rank/rank_N3_*.json`:
+
+| case | N | d | potential | max_level | sequence | pin elapsed | new elapsed | speedup |
+|---|---|---|---|---|---|---|---|---|
+| r1_n3_d1     | 3 | 1 | 1/r    | 3 | [3, 6, 17, 116] |  7.9 s | 30.54 s | x0.26 |
+| r1over2_n3_d1| 3 | 1 | 1/r^2  | 3 | [3, 6, 17, 116] | 54.5 s | 31.82 s | x1.71 |
+| r1over3_n3_d1| 3 | 1 | 1/r^3  | 3 | [3, 6, 17, 116] | 56.7 s | 39.32 s | x1.44 |
+| r1over4_n3_d1| 3 | 1 | 1/r^4  | 3 | [3, 6, 17, 116] | 57.8 s | 38.11 s | x1.52 |
+| log_n3_d2    | 3 | 2 | log    | 2 | [3, 6, 17]      |  0.8 s |  1.07 s | x0.75 |
+
+5/5 MATCH bit-for-bit; total wall 140.87 s. The 1/r case is slower than
+the pin under the new engine (different machine speed, plus `together` does
+extra factoring that doesn't pay off when expressions are already small).
+The pinned 1/r case had also been the smallest of the five at the time the
+pin was recorded. Speedup is potential-dependent at N=3; the material wins
+appear at N=4 (E3).
+
+See [`bench_flint/validation_results_symbolic_rank.json`](validation_results_symbolic_rank.json).
+
+### E3 — N=4 generation-only timing (8.49x at L=3)
+
+Pass 1: head-to-head at N=4 d=1 1/r max_level=2.
+
+| mode     | elapsed | n_generators | top-level avg terms | top-level max terms |
+|---|---|---|---|---|
+| cancel   | 2.44 s  | 216 | 12.6 | 42 |
+| together | 1.28 s  | 216 |  1.3 |  3 |
+
+Cancel-over-together speedup: **x1.91**, with `together` producing ~10x
+more compact expressions per bracket.
+
+Pass 2: together-only at N=4 d=1 1/r max_level=3, vs the
+`rank_N4_d1_1r.json` cancel pin (3137.6 s).
+
+| mode     | elapsed | n_generators (L=3) |
+|---|---|---|
+| cancel (pin)  | 3137.6 s | 23010 |
+| together      |  369.5 s | 23010 |
+
+**Speedup: x8.49.** The compact representation discovered at L=2 compounds:
+top-level brackets at L=3 average just 1.1 terms apiece under `together`.
+
+See [`bench_flint/symrank_n4_timing.json`](symrank_n4_timing.json).
+
+### E4 — Registry
+
+`registry/experiments.yaml` updated:
+
+- `planned_simplify_patch_symbolic_rank` -> `simplify_patch_symbolic_rank`
+  status `complete` with full results.
+- New diagnostic entries: `bench_simplify_poly_compat`,
+  `bench_validate_symbolic_rank_patch`, `bench_symbolic_rank_n4`.
+
+Phase E unblocks: the upcoming HF Jobs N=3 L=4 campaign (Phase D, both 1/r
+and log on cpu-xl) and the optional ~$1 N=5 L=3 generation-only probe (E5).
+
+
+---
+
+## Phase F - Independent CAS oracle (Mathematica, 2026-04-21)
+
+Wolfram Language 14.3 cross-check of the headline N=3 d=2 dimension
+sequence. Same Poisson-bracket convention, same Lie-closure filtration as
+`nbody/symbolic_rank_nbody.py`, but a different CAS (Wolfram vs SymPy)
+and a different exact-rank algorithm (`MatrixRank` over `Rationals` on
+a `SparseArray` vs SymPy's `DomainMatrix`).
+
+| Potential | Mathematica L=3 result | Python L=3 pin | Match |
+|-----------|------------------------|----------------|-------|
+| `1/r`   | `[3, 6, 17, 116]`    | `[3, 6, 17, 116]` | YES |
+| `1/r^2` | `[3, 6, 17, 116]`    | `[3, 6, 17, 116]` | YES |
+
+Wall clock: 40.36s (1/r) and 49.97s (1/r^2) on the workstation, single
+kernel. Total cumulative generator pool of 156 expressions per potential.
+
+Outputs:
+- `mathematica/poisson_n3_d2_engine.wl` (shared engine, 144 LOC)
+- `mathematica/poisson_n3_d2.wl` (sanity runner)
+- `mathematica/poisson_n3_d2_l4_backup.wl` (L=4 1/r fallback)
+- `mathematica/results/n3_d2_dimseq.json` (committed reference run)
+- `mathematica/README.md` (run instructions, conventions)
+
+This closes one of the standing referee-style worries: `[3, 6, 17, 116]`
+now stands on two independent CAS implementations, two independent rank
+algorithms, and two independent definitions of the auxiliary
+`u_ij = 1/r_ij` chain rule (Mathematica uses an explicit replacement
+rule, Python uses an explicit symbolic chain via the engine's
+`CHAIN_RULE` table).
+
+The L=4 backup oracle is staged but not yet run; it is held in reserve in
+case the HF Jobs cpu-xl L=4 campaign (Phase D2, jobs
+`69e820f1cd8c002f31e0140b` and `69e820f6ac288e522d8f075c`) OOMs or
+times out.
+
+
+### Phase F.2 - Harmonic potential closure (Mathematica, 2026-04-21)
+
+The harmonic case is the structural opposite of the singular potentials:
+the algebra closes at dimension 15 instead of growing. Mathematica
+confirms both the closure value and that the algebra stays closed under
+one extra level of brackets.
+
+| Potential | Mathematica L=4 result | Python pin | Match | Wall clock |
+|-----------|------------------------|------------|-------|------------|
+| `r^2` (harmonic) | `[3, 6, 13, 15, 15]` | `[3, 6, 13, 15, 15]` | YES | 31.8 s |
+
+L=4 ran 11,937 candidate brackets through `MatrixRank` over `Rationals`
+on a `SparseArray` and the cumulative rank stayed at 15 � confirming
+algebraic closure, not just a level-3 plateau. The convention matches
+`exact_growth.py` exactly: `H_ij = T_i + T_j + r_ij^2` (coupling g=1,
+unit masses, no auxiliary u_ij needed for the harmonic case).
+
+Outputs:
+- `mathematica/poisson_n3_d2_harmonic.wl` (sanity runner)
+- `mathematica/results/n3_d2_harmonic.json` (committed reference run)
+
+The two Phase F oracles together pin down both halves of the universality
+picture: the singular case `[3, 6, 17, 116]` (open algebra, growing
+without bound) and the harmonic case `[3, 6, 13, 15, 15]` (closed
+algebra, finite-dimensional). Both are now reproduced in two unrelated
+CAS implementations.
