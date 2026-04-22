@@ -443,6 +443,12 @@ body::before {
       <h3>Quantum Extension (April 2026)</h3>
       <p>Replacing the Poisson bracket with the Moyal bracket (ℏ-deformation), the quantum algebra gains exactly one extra dimension: <span class="qseq">[3, 6, 17, 117]</span>. The 117th generator is a negative semi-definite octupole (Legendre P₃) with 1/r¹⁴ collision divergence — and it is <em>not</em> conserved. This +1 appears for all singular potentials; polynomial potentials show no quantum correction.</p>
     </div>
+
+    <!-- Cross-CAS verification callout -->
+    <div class="quantum-callout">
+      <h3>Independent Cross-CAS Verification (April 21, 2026)</h3>
+      <p>The headline result <span class="qseq">[3, 6, 17, 116]</span> has been reproduced end-to-end in a second computer algebra system: <span class="highlight">Wolfram Language 14.3</span>, using an independent rank algorithm (<code>MatrixRank</code> over <code>Rationals</code> on a <code>SparseArray</code>) for both 1/r and 1/r² potentials. The harmonic closure <span class="dim">[3, 6, 13, 15, 15]</span> is also confirmed through L=4 in the same oracle. The headline numbers now stand on two unrelated CAS implementations and two unrelated rank algorithms.</p>
+    </div>
   </div>
 
   <!-- ═══ EXPLORE ═══ -->
