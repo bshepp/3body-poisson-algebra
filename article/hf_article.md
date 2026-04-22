@@ -1,9 +1,9 @@
----
+<!--
 title: "The Lie Algebra of Neural Network Training: Why SGD Produces Richer Algebras Than Gravity"
 thumbnail: /blog/assets/pairwise-poisson/thumbnail.png
 authors:
 - user: bshepp
----
+-->
 
 # The Lie Algebra of Neural Network Training
 
@@ -13,9 +13,9 @@ Train a 3-layer linear network with SGD and momentum. The training dynamics form
 
 You get **[3, 6, 17, 119]**.
 
-Now replace the network with three gravitating bodies — stars, atoms, black holes — interacting via \\(1/r\\). You get **[3, 6, 17, 116]**.
+Now replace the network with three gravitating bodies — stars, atoms, black holes — interacting via $1/r$. You get **[3, 6, 17, 116]**.
 
-The neural network produces **3 extra generators**. It breaks a universality that holds across every pairwise potential V(r) in our 16-potential physical survey — from 1/r through r^10, log r, Yukawa e^(-μr)/r, and the Calogero-Moser 1/r^2 — and across all spatial dimensions, mass ratios, and charge configurations tested. (Other neural couplings instead produce *smaller* algebras; see the seven-class table below.)
+The neural network produces **3 extra generators**. It breaks a universality that holds across every pairwise potential $V(r)$ in our 16-potential physical survey — from $1/r$ through $r^{10}$, $\log r$, Yukawa $e^{-\mu r}/r$, and the Calogero-Moser $1/r^2$ — and across all spatial dimensions, mass ratios, and charge configurations tested. (Other neural couplings instead produce *smaller* algebras; see the seven-class table below.)
 
 This article introduces [bshepp/pairwise-poisson-algebras](https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras) — the first systematic computation of Poisson bracket Lie algebras for neural network training dynamics. The dataset contains **993 rows across 13 Parquet tables**, including a dedicated `neural_algebras` split with 21 configurations sweeping network depth (L=2..5), width (k=1..3), **12 coupling types**, loss function, and activation function — revealing **seven distinct neural universality classes at L=3**, versus the single physical class at [3, 6, 17, 116].
 
@@ -40,21 +40,21 @@ This article introduces [bshepp/pairwise-poisson-algebras](https://huggingface.c
 
 ## SGD as a Hamiltonian System
 
-Consider a linear network \\(f(x) = w_3 w_2 w_1 x\\) trained on a single data point \\((x, t) = (1, 1)\\) with MSE loss:
+Consider a linear network $f(x) = w_3 w_2 w_1 x$ trained on a single data point $(x, t) = (1, 1)$ with MSE loss:
 
 $$L = \frac{1}{2}(w_1 w_2 w_3 - 1)^2$$
 
-SGD with momentum updates weights \\(w_i\\) and velocity buffers \\(v_i\\):
+SGD with momentum updates weights $w_i$ and velocity buffers $v_i$:
 
 $$v_i \leftarrow \mu v_i - \eta \frac{\partial L}{\partial w_i}, \quad w_i \leftarrow w_i + v_i$$
 
-In the continuous-time limit, this is Hamilton's equations with \\(w_i\\) as positions and \\(v_i\\) as conjugate momenta. The phase space is \\(2L\\)-dimensional for an \\(L\\)-layer network.
+In the continuous-time limit, this is Hamilton's equations with $w_i$ as positions and $v_i$ as conjugate momenta. The phase space is $2L$-dimensional for an $L$-layer network.
 
-The key insight: the loss couples all weights simultaneously, but we can decompose this into **pairwise interactions** between weight layers — exactly as gravitational N-body dynamics decomposes into pairwise forces. Each pair \\((i, j)\\) gets a Hamiltonian:
+The key insight: the loss couples all weights simultaneously, but we can decompose this into **pairwise interactions** between weight layers — exactly as gravitational N-body dynamics decomposes into pairwise forces. Each pair $(i, j)$ gets a Hamiltonian:
 
 $$H_{ij} = \frac{v_i^2}{2} + \frac{v_j^2}{2} + V_{ij}(w_1, \ldots, w_L)$$
 
-where \\(V_{ij}\\) captures how layers \\(i\\) and \\(j\\) interact through the loss. The choice of \\(V_{ij}\\) defines the **coupling type**.
+where $V_{ij}$ captures how layers $i$ and $j$ interact through the loss. The choice of $V_{ij}$ defines the **coupling type**.
 
 ### Coupling Types
 
@@ -62,14 +62,14 @@ The dataset sweeps **twelve** ways to extract pairwise interactions from the los
 
 | Coupling | Definition | Physical Analog |
 |----------|-----------|-----------------|
-| **Gradient-product** | \\(V_{ij} = \frac{1}{2}\frac{\partial L}{\partial w_i}\frac{\partial L}{\partial w_j}\\) | Force co-alignment |
-| **Hessian** | \\(V_{ij} = \frac{1}{2}\frac{\partial^2 L}{\partial w_i \partial w_j}w_i w_j\\) | Curvature coupling |
-| **Symmetric** | \\(V_{ij} = \frac{L}{\binom{L}{2}}\\) | Democratic loss sharing |
-| **Fisher** | \\(V_{ij} \propto g_i g_j (1 - L)\\) | Information geometry |
+| **Gradient-product** | $V_{ij} = \frac{1}{2}\frac{\partial L}{\partial w_i}\frac{\partial L}{\partial w_j}$ | Force co-alignment |
+| **Hessian** | $V_{ij} = \frac{1}{2}\frac{\partial^2 L}{\partial w_i \partial w_j}w_i w_j$ | Curvature coupling |
+| **Symmetric** | $V_{ij} = \frac{L}{\binom{L}{2}}$ | Democratic loss sharing |
+| **Fisher** | $V_{ij} \propto g_i g_j (1 - L)$ | Information geometry |
 
-The remaining eight (gradient_sum, gradient_abs, hessian_plain, hessian_full, directional, natural_gradient, loss_power, gradient_cubic) probe variations in symmetrization, normalization, and degree — and as we will see, every variation that changes the polynomial structure of \\(V_{ij}\\) at high degree produces a new universality class.
+The remaining eight (gradient_sum, gradient_abs, hessian_plain, hessian_full, directional, natural_gradient, loss_power, gradient_cubic) probe variations in symmetrization, normalization, and degree — and as we will see, every variation that changes the polynomial structure of $V_{ij}$ at high degree produces a new universality class.
 
-The Lie algebra is then generated by all \\(\lbrace H_{ij}, H_{kl}\rbrace\\) under the canonical Poisson bracket, exactly as in the gravitational N-body problem.
+The Lie algebra is then generated by all $\lbrace H_{ij}, H_{kl}\rbrace$ under the canonical Poisson bracket, exactly as in the gravitational N-body problem.
 
 ## Seven Universality Classes in Neural Algebras
 
@@ -87,29 +87,29 @@ The headline discovery: different coupling types produce **different algebras**.
 
 The **physical universality class** at N=3 is [3, 6, 17, **116**] — it sits between classes A (119) and B (115), and above all others in level-3 dimension. Classes A–F all match physics at levels 0–2 but diverge at level 3. Class G diverges already at level 1, producing only 5 independent generators (vs 6 in all other classes).
 
-**A key methodological note**: the cleaner Fisher formulation \\(V_{ij} = g_i g_j (1 - L)\\) used here places Fisher in Class A; an earlier polynomial-truncated variant landed in its own class. Small choices in how the coupling polynomial is normalized — what gets divided by what, where the loss enters multiplicatively — can move a coupling between classes. The 12-coupling sweep is designed to map this fine-grained landscape rather than treat it as noise.
+**A key methodological note**: the cleaner Fisher formulation $V_{ij} = g_i g_j (1 - L)$ used here places Fisher in Class A; an earlier polynomial-truncated variant landed in its own class. Small choices in how the coupling polynomial is normalized — what gets divided by what, where the loss enters multiplicatively — can move a coupling between classes. The 12-coupling sweep is designed to map this fine-grained landscape rather than treat it as noise.
 
 ### The structure of the extras
 
 The neural Class A algebra [3, 6, 17, 119] and the physical algebra [3, 6, 17, 116] have identical dimension counts at levels 0, 1, 2 but evaluate to completely different polynomials in phase space. In a shared 6D phase space (3 weights vs 3 positions), the rank of the concatenated 156+156 matrix equals **116 + 119 = 235** — every physical generator and every neural generator contributes an independent direction. The comparison is therefore structural (count vs count) rather than literal subalgebra.
 
 Polynomial-degree analysis reveals the source of the "3 extra":
-- **Physical (q-q)^4 algebra**: level-3 generators at degrees 6, 8, 10 with ranks 38, 95, 116. The top-degree (10) stratum contributes 116−95 = 21 new dimensions from 21 candidates (no syzygies).
-- **Neural gradient algebra**: level-3 generators at degrees 18, 26, 34 with ranks 32, 92, 119. The top-degree (34) stratum contributes 119−92 = 27 new dimensions from 30 candidates (3 syzygies).
+- **Physical $(q-q)^4$ algebra**: level-3 generators at degrees 6, 8, 10 with ranks 38, 95, 116. The top-degree (10) stratum contributes $116-95 = 21$ new dimensions from 21 candidates (no syzygies).
+- **Neural gradient algebra**: level-3 generators at degrees 18, 26, 34 with ranks 32, 92, 119. The top-degree (34) stratum contributes $119-92 = 27$ new dimensions from 30 candidates (3 syzygies).
 
 The **3 extra neural directions at level 3 are specifically at the highest polynomial-degree stratum**, where neural generators have 3 fewer linear dependencies than their physical counterparts.
 
 ## Width Invariance
 
-Does the dimension of weight space matter? We test networks with scalar weights (\\(k=1\\)), 2D weights (\\(k=2\\)), and 3D weights (\\(k=3\\)):
+Does the dimension of weight space matter? We test networks with scalar weights ($k=1$), 2D weights ($k=2$), and 3D weights ($k=3$):
 
-| Width \\(k\\) | Phase Space | Dims (L0, L1, L2) |
+| Width $k$ | Phase Space | Dims (L0, L1, L2) |
 |------------|-------------|-------------------|
 | 1 | 6D | [3, 6, 17] |
 | 2 | 12D | [3, 6, 17] |
 | 3 | 18D | [3, 6, 17] |
 
-**The algebra is independent of weight dimension.** This is the neural network analog of a remarkable property in physics: the pairwise Poisson algebra for \\(N\\) gravitating bodies is independent of the spatial dimension \\(d\\). Gravity in 1D, 2D, and 3D all produce [3, 6, 17, 116]. Neural networks with scalar, vector, and matrix weights all produce [3, 6, 17, ...].
+**The algebra is independent of weight dimension.** This is the neural network analog of a remarkable property in physics: the pairwise Poisson algebra for $N$ gravitating bodies is independent of the spatial dimension $d$. Gravity in 1D, 2D, and 3D all produce [3, 6, 17, 116]. Neural networks with scalar, vector, and matrix weights all produce [3, 6, 17, ...].
 
 ## Loss Function: Partial Invariance
 
@@ -117,15 +117,15 @@ Does the loss function matter? We test gradient-product coupling with three loss
 
 | Loss | Definition | Dims (L0, L1, L2, L3) | Class |
 |------|-----------|----------------------|-------|
-| MSE | \\(\frac{1}{2}(f - t)^2\\) | [3, 6, 17, 119] | A |
-| L1 (smooth proxy)† | quadratic surrogate for \\(\|f - t\|\\) | [3, 6, 17, 119] | A |
-| Cross-entropy | \\(-\log\sigma(f)\\) Taylor \\(z^2/4 + z^4/48\\) | [3, 6, 17, **62**] | new |
+| MSE | $\frac{1}{2}(f - t)^2$ | [3, 6, 17, 119] | A |
+| L1 (smooth proxy)† | quadratic surrogate for $\lvert f - t \rvert$ | [3, 6, 17, 119] | A |
+| Cross-entropy | $-\log\sigma(f)$ Taylor $z^2/4 + z^4/48$ | [3, 6, 17, **62**] | new |
 
-† The "L1" row uses a smooth quadratic proxy rather than the non-differentiable \\(|f-t|\\) itself; the polynomial structure of the coupling is what enters the algebra computation.
+† The "L1" row uses a smooth quadratic proxy rather than the non-differentiable $\lvert f-t \rvert$ itself; the polynomial structure of the coupling is what enters the algebra computation.
 
-**MSE and L1 give the identical algebra; cross-entropy does not.** The nonlinear \\(z^4\\) term in the cross-entropy Taylor expansion contributes new monomials that change the level-3 structure dramatically, dropping from 119 to 62 independent generators — an entirely new universality class.
+**MSE and L1 give the identical algebra; cross-entropy does not.** The nonlinear $z^4$ term in the cross-entropy Taylor expansion contributes new monomials that change the level-3 structure dramatically, dropping from 119 to 62 independent generators — an entirely new universality class.
 
-The MSE/L1 case is the neural analog of potential universality: quadratic losses behave like generic polynomial potentials \\(r^n\\) with \\(n \ge 4\\). Cross-entropy is the neural analog of an exceptional potential like \\(r^3\\) — it has enough special polynomial structure to produce its own class.
+The MSE/L1 case is the neural analog of potential universality: quadratic losses behave like generic polynomial potentials $r^n$ with $n \ge 4$. Cross-entropy is the neural analog of an exceptional potential like $r^3$ — it has enough special polynomial structure to produce its own class.
 
 ## Activation Invariance
 
@@ -156,34 +156,34 @@ The extras at level 1 follow an exact pattern:
 
 $$\text{extras}_{L,1} = \binom{L}{2}(L - 3)$$
 
-This gives 0, 6, 20 for L = 3, 4, 5 — matching the observed data. The formula vanishes at L=3, explaining why level 1 matches physics there but nowhere else.
+This gives 0, 6, 20 for $L = 3, 4, 5$ — matching the observed data. The formula vanishes at $L=3$, explaining why level 1 matches physics there but nowhere else.
 
-For comparison, the **physical** N-body problem with \\(N\\) bodies in 1D has closed-form scaling formulas:
+For comparison, the **physical** N-body problem with $N$ bodies in 1D has closed-form scaling formulas:
 
 $$d_0(N) = \binom{N}{2}, \quad d_1(N) = \frac{N(3N-5)}{2}, \quad d_2(N) = \frac{N(4N^2 - 9N + 3)}{2}$$
 
-Whether the neural depth scaling follows similar closed-form formulas for L >= 4 is an open question, though the linear formula for level-1 extras is now established.
+Whether the neural depth scaling follows similar closed-form formulas for $L \ge 4$ is an open question, though the linear formula for level-1 extras is now established.
 
 ## The Physical Benchmark: 116 vs 119
 
-The physical universality class at \\(N = 3\\) gives [3, 6, 17, **116**] for:
+The physical universality class at $N = 3$ gives [3, 6, 17, **116**] for:
 
-- Newtonian gravity \\(1/r\\)
-- Coulomb potential \\(1/r\\) (identical)
-- Calogero-Moser \\(1/r^2\\)
-- Dipole-dipole \\(1/r^3\\)
-- Logarithmic vortex \\(\log r\\)
-- Yukawa nuclear force \\(e^{-\mu r}/r\\)
+- Newtonian gravity $1/r$
+- Coulomb potential $1/r$ (identical)
+- Calogero-Moser $1/r^2$
+- Dipole-dipole $1/r^3$
+- Logarithmic vortex $\log r$
+- Yukawa nuclear force $e^{-\mu r}/r$
 - GUE eigenvalue dynamics (random matrix theory)
-- All polynomial \\(r^n\\) with \\(n \ge 4\\)
+- All polynomial $r^n$ with $n \ge 4$
 - 576 exponent values across the continuous landscape
 - 20 named physical systems (helium to triple black holes)
-- All mass ratios from 1 to \\(10^{10}\\)
+- All mass ratios from 1 to $10^{10}$
 - All charge configurations tested
 
 The neural gradient-product coupling gives [3, 6, 17, **119**]. The structure of the 3-dimensional "gap" has been characterized by polynomial-degree stratification:
 
-| Max degree | Physical \\((q_i-q_j)^4\\) cumulative rank | Neural gradient cumulative rank |
+| Max degree | Physical $(q_i-q_j)^4$ cumulative rank | Neural gradient cumulative rank |
 |-----------|-------------------------------------------|--------------------------------|
 | Level 3, lowest | 38 (deg 6) | 32 (deg 18) |
 | Level 3, middle | 95 (deg 8) | 92 (deg 26) |
@@ -191,7 +191,7 @@ The neural gradient-product coupling gives [3, 6, 17, **119**]. The structure of
 
 The **3 extra generators appear specifically at the top-degree stratum of level 3**. Physics has 21 independent top-degree generators out of 21 candidates (no syzygies). Neural has 27 independent top-degree generators out of 30 candidates (only 3 syzygies). Neural simply has 3 fewer linear relations at the polynomial frontier.
 
-The dimension counts are identical at levels 0, 1, 2; the neural and physical generators occupy entirely different polynomial subspaces (the combined rank is 116+119=235), so this is a structural-count rather than literal-containment relation.
+The dimension counts are identical at levels 0, 1, 2; the neural and physical generators occupy entirely different polynomial subspaces (the combined rank is $116+119=235$), so this is a structural-count rather than literal-containment relation.
 
 ## Dataset Overview
 
@@ -206,7 +206,7 @@ The full dataset contains **993 rows across 13 Parquet tables**:
 | `charge_sensitivity` | 38 | Charge-independence tests |
 | `mass_invariance` | 33 | Mass ratio sweep (10 orders of magnitude) |
 | `convergence_trajectories` | 77 | SVD rank convergence tracking |
-| `tier_decomposition` | 40 | \\(S_3\\) and \\(S_4\\) representation decomposition |
+| `tier_decomposition` | 40 | $S_3$ and $S_4$ representation decomposition |
 | `level4_convergence` | 19 | Level-4 lower bounds |
 | `spectral_statistics` | 17 | Phase-space atlas rank distributions |
 | `contextuality` | 16 | Kochen-Specker contextuality tests |
@@ -263,13 +263,13 @@ for dims, configs in sorted(classes.items()):
 
 ## Open Problems
 
-1. **Exact neural rank for the remaining classes at level 3**: The gradient-product [3, 6, 17, 119] result has been verified exactly over \\(\mathbb{Q}\\) (`neural/nn_poisson.py`). The other six classes currently rely on numerical SVD over 600+ phase-space samples, with a singular-value gap of \\(\sim 5 \times 10^8\\) at the cutoff, which is strong but not symbolic. Confirming each class with exact rational arithmetic would close the loop.
+1. **Exact neural rank for the remaining classes at level 3**: The gradient-product [3, 6, 17, 119] result has been verified exactly over $\mathbb{Q}$ (`neural/nn_poisson.py`). The other six classes currently rely on numerical SVD over 600+ phase-space samples, with a singular-value gap of $\sim 5 \times 10^8$ at the cutoff, which is strong but not symbolic. Confirming each class with exact rational arithmetic would close the loop.
 
 2. **Does activation break universality at level 3?** Linear, tanh (Taylor), and ReLU (softplus) all give [3, 6, 17] through level 2. The linear case extends to 119 at level 3; verifying tanh and ReLU at level 3 is computationally difficult due to polynomial blow-up.
 
-3. **The seven classes**: What operation on couplings governs the class? Hessian vs gradient vs gradient_sum are all natural choices, yet they produce 47, 119, 111. Is there a classification theorem for neural universality classes analogous to the physical \\(r^n\\) classification?
+3. **The seven classes**: What operation on couplings governs the class? Hessian vs gradient vs gradient_sum are all natural choices, yet they produce 47, 119, 111. Is there a classification theorem for neural universality classes analogous to the physical $r^n$ classification?
 
-4. **Depth scaling formulas**: The extras-at-level-1 formula \\(\binom{L}{2}(L-3)\\) is empirical and exact for L=3, 4, 5. A closed form for the full dimension sequence as a function of L (and for level 2, 3 extras) would generalize the physical scaling laws.
+4. **Depth scaling formulas**: The extras-at-level-1 formula $\binom{L}{2}(L-3)$ is empirical and exact for $L=3, 4, 5$. A closed form for the full dimension sequence as a function of $L$ (and for level 2, 3 extras) would generalize the physical scaling laws.
 
 5. **Nonlinear networks**: Full (non-Taylor) nonlinear activations create non-polynomial dynamics. Can the algebra be computed for genuine ReLU or sigmoid networks via asymptotic or numerical methods?
 
