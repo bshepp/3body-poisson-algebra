@@ -42,17 +42,17 @@ This article introduces [bshepp/pairwise-poisson-algebras](https://huggingface.c
 
 Consider a linear network \\(f(x) = w_3 w_2 w_1 x\\) trained on a single data point \\((x, t) = (1, 1)\\) with MSE loss:
 
-\\[L = \frac{1}{2}(w_1 w_2 w_3 - 1)^2\\]
+$$L = \frac{1}{2}(w_1 w_2 w_3 - 1)^2$$
 
 SGD with momentum updates weights \\(w_i\\) and velocity buffers \\(v_i\\):
 
-\\[v_i \leftarrow \mu v_i - \eta \frac{\partial L}{\partial w_i}, \quad w_i \leftarrow w_i + v_i\\]
+$$v_i \leftarrow \mu v_i - \eta \frac{\partial L}{\partial w_i}, \quad w_i \leftarrow w_i + v_i$$
 
 In the continuous-time limit, this is Hamilton's equations with \\(w_i\\) as positions and \\(v_i\\) as conjugate momenta. The phase space is \\(2L\\)-dimensional for an \\(L\\)-layer network.
 
 The key insight: the loss couples all weights simultaneously, but we can decompose this into **pairwise interactions** between weight layers — exactly as gravitational N-body dynamics decomposes into pairwise forces. Each pair \\((i, j)\\) gets a Hamiltonian:
 
-\\[H_{ij} = \frac{v_i^2}{2} + \frac{v_j^2}{2} + V_{ij}(w_1, \ldots, w_L)\\]
+$$H_{ij} = \frac{v_i^2}{2} + \frac{v_j^2}{2} + V_{ij}(w_1, \ldots, w_L)$$
 
 where \\(V_{ij}\\) captures how layers \\(i\\) and \\(j\\) interact through the loss. The choice of \\(V_{ij}\\) defines the **coupling type**.
 
@@ -154,13 +154,13 @@ As network depth increases, the neural algebra diverges from the physical N-body
 
 The extras at level 1 follow an exact pattern:
 
-\\[\text{extras}_{L,1} = \binom{L}{2}(L - 3)\\]
+$$\text{extras}_{L,1} = \binom{L}{2}(L - 3)$$
 
 This gives 0, 6, 20 for \\(L = 3, 4, 5\\) — matching the observed data. The formula vanishes at \\(L=3\\), explaining why level 1 matches physics there but nowhere else.
 
 For comparison, the **physical** N-body problem with \\(N\\) bodies in 1D has closed-form scaling formulas:
 
-\\[d_0(N) = \binom{N}{2}, \quad d_1(N) = \frac{N(3N-5)}{2}, \quad d_2(N) = \frac{N(4N^2 - 9N + 3)}{2}\\]
+$$d_0(N) = \binom{N}{2}, \quad d_1(N) = \frac{N(3N-5)}{2}, \quad d_2(N) = \frac{N(4N^2 - 9N + 3)}{2}$$
 
 Whether the neural depth scaling follows similar closed-form formulas for \\(L \ge 4\\) is an open question, though the linear formula for level-1 extras is now established.
 
