@@ -434,6 +434,10 @@ GitHub Actions CI runs on every push and PR to `main`, testing Python 3.10 and 3
 
 This work was developed with the assistance of Claude (Opus 4.6), a large language model by Anthropic. Claude contributed the polynomial representation trick (u_ij = 1/r_ij), the computational pipeline, the adversarial review that identified the Calogero-Moser comparison as the decisive test, and all three manuscripts. All mathematical results were independently verified. Full details in `docs/session_log.md`.
 
+## Citation
+
+If you use this software or its results, please cite this repository. Machine-readable metadata is provided in [`CITATION.cff`](CITATION.cff) (GitHub "Cite this repository") and [`.zenodo.json`](.zenodo.json) (used by the Zenodo–GitHub integration when a release is published). A DOI badge will be added here once the first Zenodo release is minted.
+
 ## License
 
 Code is released under the [MIT License](LICENSE). Papers, figures, and the Hugging Face dataset are released under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). Please cite the papers if you use them.
