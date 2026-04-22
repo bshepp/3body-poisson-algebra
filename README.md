@@ -436,4 +436,4 @@ This work was developed with the assistance of Claude (Opus 4.6), a large langua
 
 ## License
 
-This is research code shared for transparency and reproducibility. Please cite the papers if you use it.
+Code is released under the [MIT License](LICENSE). Papers, figures, and the Hugging Face dataset are released under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). Please cite the papers if you use them.
