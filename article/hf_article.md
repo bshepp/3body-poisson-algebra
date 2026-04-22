@@ -101,7 +101,7 @@ The **3 extra neural directions at level 3 are specifically at the highest polyn
 
 ## Width Invariance
 
-Does the dimension of weight space matter? We test networks with scalar weights \\(k=1\\), 2D weights \\(k=2\\), and 3D weights \\(k=3\\):
+Does the dimension of weight space matter? We test networks with scalar weights (\\(k=1\\)), 2D weights (\\(k=2\\)), and 3D weights (\\(k=3\\)):
 
 | Width \\(k\\) | Phase Space | Dims (L0, L1, L2) |
 |------------|-------------|-------------------|
