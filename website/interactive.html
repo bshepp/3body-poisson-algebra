@@ -253,8 +253,8 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
 /* ═══════════ VIEW-MODE TOGGLE (heatmap ↔ shape sphere) ═══════════ */
 .view-mode-btn {
   display: inline-flex; align-items: center; gap: 0.3rem;
-  padding: 0.15rem 0.55rem; margin-left: auto; margin-right: 0.4rem;
-  font-family: var(--mono); font-size: 0.6rem;
+  padding: 0.32rem 0.7rem;
+  font-family: var(--mono); font-size: 0.68rem;
   text-transform: uppercase; letter-spacing: 0.06em;
   color: var(--text-dim); background: transparent;
   border: 1px solid var(--border); border-radius: 3px;
@@ -510,6 +510,10 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
         </div>
       </div>
       <div class="control-group">
+        <span class="control-label">View</span>
+        <button class="view-mode-btn" id="view-mode-btn" onclick="toggleShapeSphere(this)" title="Toggle the atlas between the flat (μ, φ) heatmap and the 3D shape sphere (Dragt coordinates)">◉ Shape Sphere 3D</button>
+      </div>
+      <div class="control-group">
         <span class="control-label">&nbsp;</span>
         <button class="contour-btn" id="contour-btn" onclick="toggleContours()">◇ Contours</button>
       </div>
@@ -566,8 +570,7 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
     <div class="display-grid" id="display-grid">
       <div class="heatmap-panel" id="panel-primary">
         <div class="panel-title">Primary — <span class="scan-label" id="label-primary">...</span>
-          <button class="view-mode-btn" id="view-mode-btn" onclick="toggleShapeSphere(this)" title="Toggle between flat (μ, φ) heatmap and the 3D shape sphere (Dragt coordinates)">Shape Sphere 3D</button>
-          <button class="download-btn" onclick="downloadPlot('heatmap-primary')" title="Download as PNG"><svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-6 2h12v1.5H2V14z"/></svg>PNG</button>
+          <button class="download-btn" style="margin-left:auto" onclick="downloadPlot('heatmap-primary')" title="Download as PNG"><svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-6 2h12v1.5H2V14z"/></svg>PNG</button>
         </div>
         <div id="heatmap-primary" class="heatmap-div"></div>
         <div class="loading-overlay" id="loading-primary">Loading atlas data…</div>
@@ -1124,6 +1127,9 @@ function downloadPlot(divId) {
 function toggleShapeSphere(btn) {
   S.view3d = !S.view3d;
   if (btn) btn.classList.toggle('active', S.view3d);
+  // Plotly cannot in-place swap a 2D heatmap trace for a 3D surface (or vice
+  // versa) — purge first so the atlas div is rebuilt with the correct chart type.
+  try { if (typeof Plotly !== 'undefined') Plotly.purge('heatmap-primary'); } catch (e) {}
   if (S.primary.data) renderHeatmap('primary');
 }
 
