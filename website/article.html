@@ -253,7 +253,7 @@ body {
     <span>·</span>
     <a href="https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras" target="_blank" rel="noopener">HF Dataset</a>
     <span>·</span>
-    <a href="https://github.com/bshepp/3body-poisson-algebra/blob/main/article/hf_article.md" target="_blank" rel="noopener">Source on GitHub</a>
+    <a href="https://github.com/bshepp/3body-poisson-algebra/blob/main/article/article.md" target="_blank" rel="noopener">Source on GitHub</a>
     <span>·</span>
     <a href="https://github.com/bshepp/3body-poisson-algebra/blob/main/article/hf_article_physics.md" target="_blank" rel="noopener">Physics companion</a>
   </div>
@@ -277,13 +277,13 @@ body {
 <script>
 // ─── Load and render the markdown article. ────────────────────────────────
 //
-// Source of truth lives at article/hf_article.md in the repo. A copy is
-// staged at website/data/hf_article.md so this static page can fetch it
-// without the page bundle exploding. Math uses MDX-style \( ... \) and
-// $$ ... $$ delimiters in the source — we normalize to $-style here, then
-// extract math blocks before handing the rest to marked, then KaTeX-render
-// the extracted blocks back in. This avoids underscores in math being
-// mangled by the markdown emphasis rule.
+// Source of truth lives at article/article.md in the repo (standard LaTeX:
+// $...$ for inline math, $$...$$ for display). A copy is staged at
+// website/data/article.md so this static page can fetch it without the
+// page bundle exploding. We still defensively normalize MDX-style \( ... \)
+// and \[ ... \] to $-style, then extract math blocks before handing the
+// rest to marked, then KaTeX-render the extracted blocks back in. This
+// avoids underscores in math being mangled by the markdown emphasis rule.
 //
 async function renderArticle() {
   const status = document.getElementById('article-status');
@@ -291,7 +291,7 @@ async function renderArticle() {
   const tocEl  = document.getElementById('article-toc');
   let src;
   try {
-    const resp = await fetch('data/hf_article.md', { cache: 'no-cache' });
+    const resp = await fetch('data/article.md', { cache: 'no-cache' });
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     src = await resp.text();
   } catch (e) {
