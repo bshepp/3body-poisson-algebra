@@ -639,6 +639,10 @@ The website is served from S3 + CloudFront at `https://nbody.briansheppard.com`
 **Option A (current convention):** sync everything separately:
 
 ```powershell
+# Mirror the canonical neural article into website/data/ so article.html
+# can fetch it (source of truth lives at article/hf_article.md).
+Copy-Item article/hf_article.md website/data/hf_article.md -Force
+
 # Sync the page + its data manifest
 aws s3 sync website/ s3://nbody-briansheppard-com/ --exclude "data/datasets/*.json"
 
@@ -648,7 +652,7 @@ aws s3 sync figures_v2/ s3://nbody-briansheppard-com/figures_v2/
 # Invalidate CloudFront so the new figures appear immediately
 aws cloudfront create-invalidation `
   --distribution-id E3AHN5BEM2KUCH `
-  --paths "/figures.html" "/data/figures/manifest.json" "/figures_v2/*"
+  --paths "/figures.html" "/data/figures/manifest.json" "/figures_v2/*" "/article.html" "/data/hf_article.md"
 ```
 
 **Option B (cleaner):** move `figures_v2/` under `website/` so the bucket
