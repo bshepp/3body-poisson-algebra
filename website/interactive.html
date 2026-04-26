@@ -1149,20 +1149,37 @@ function renderShapeSphere(view) {
   const cbTitle   = isGap ? 'log₁₀(gap)' : 'Rank';
 
   // Build s1, s2, s3 grids (rows=mu, cols=phi) and color grid.
-  const NM = data.mu.length, NP = data.phi.length;
+  // The atlas only samples phi in [0, π] (particle 3 above the x-axis), which
+  // covers just the upper hemisphere (s3 ≥ 0). The lower hemisphere is the
+  // mirror image under φ → −φ, so we extend the phi axis to [−π, π] by
+  // reflecting the columns. This fills the full shape sphere.
+  const NM = data.mu.length, NP_HALF = data.phi.length;
+  const NP = 2 * NP_HALF;
+  // phi columns: [-φ_{NP_HALF-1}, ..., -φ_0, +φ_0, ..., +φ_{NP_HALF-1}]
+  const phiFull = new Array(NP);
+  for (let k = 0; k < NP_HALF; k++) {
+    phiFull[k] = -data.phi[NP_HALF - 1 - k];
+    phiFull[NP_HALF + k] = data.phi[k];
+  }
+  const colSrc = new Array(NP);  // index into the original (half) data column
+  for (let k = 0; k < NP_HALF; k++) {
+    colSrc[k] = NP_HALF - 1 - k;
+    colSrc[NP_HALF + k] = k;
+  }
   const X = new Array(NM), Y = new Array(NM), Z = new Array(NM), C = new Array(NM);
   let cmin = Infinity, cmax = -Infinity;
   for (let i = 0; i < NM; i++) {
     const xr = new Array(NP), yr = new Array(NP), zr = new Array(NP), cr = new Array(NP);
     for (let k = 0; k < NP; k++) {
-      const [s1, s2, s3] = muPhiToShapeSphere(data.mu[i], data.phi[k]);
+      const [s1, s2, s3] = muPhiToShapeSphere(data.mu[i], phiFull[k]);
       xr[k] = s1; yr[k] = s2; zr[k] = s3;
+      const srcK = colSrc[k];
       let cval;
       if (isGap) {
-        const g = data.gap[i][k];
+        const g = data.gap[i][srcK];
         cval = (g != null && isFinite(g) && g > 0) ? Math.log10(g) : null;
       } else {
-        cval = data.rank[i][k];
+        cval = data.rank[i][srcK];
       }
       if (cval != null && isFinite(cval)) {
         if (cval < cmin) cmin = cval;
@@ -1253,7 +1270,9 @@ function renderShapeSphere(view) {
     const k = (pt.pointNumber && pt.pointNumber.length === 2) ? pt.pointNumber[1] : null;
     if (i == null || k == null) return;
     const muVal = data.mu[i];
-    const phiRad = data.phi[k];
+    // k indexes the mirrored phi grid; map back to a half-grid index for the data.
+    const halfK = (k < NP_HALF) ? (NP_HALF - 1 - k) : (k - NP_HALF);
+    const phiRad = data.phi[halfK];
     onHeatmapClick({ points: [{ x: phiRad * 180 / Math.PI, y: muVal }] }, view);
   });
 }
