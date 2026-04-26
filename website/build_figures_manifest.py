@@ -477,6 +477,12 @@ def main() -> int:
                     members_resolved.append(fid)
         enriched = dict(g)
         enriched["members"] = members_resolved
+        # Sync primary_figure to the actual generated id convention
+        # (`comparisons__<id>`); fall back to the first resolved member.
+        if primary in fig_ids:
+            enriched["primary_figure"] = primary
+        elif members_resolved:
+            enriched["primary_figure"] = members_resolved[0]
         enriched_groups.append(enriched)
         # Tag every member figure with the group
         for fid in members_resolved:

@@ -368,9 +368,9 @@ body::before {
 <!-- Controls -->
 <div class="controls-bar">
   <div class="mode-tabs">
-    <button class="mode-tab" data-mode="system" onclick="setMode('system')">By system</button>
+    <button class="mode-tab active" data-mode="system" onclick="setMode('system')">By system</button>
     <button class="mode-tab" data-mode="analysis" onclick="setMode('analysis')">By analysis</button>
-    <button class="mode-tab active" data-mode="comparisons" onclick="setMode('comparisons')">Comparisons</button>
+    <button class="mode-tab" data-mode="comparisons" onclick="setMode('comparisons')">Comparisons</button>
   </div>
   <input type="text" class="search-box" id="searchBox" placeholder="Search figures (name, system, caption)...">
   <div class="view-toggle" id="viewToggle">
@@ -409,7 +409,7 @@ const ASSET_PREFIX = "";   // manifest paths are already "../figures_v2/..."
 
 const state = {
   manifest: null,
-  mode: "comparisons",            // system | analysis | comparisons
+  mode: "system",                 // system | analysis | comparisons
   facetSel: new Set(),            // selected facet ids in current mode
   search: "",
   view: "grid",                   // grid | list
