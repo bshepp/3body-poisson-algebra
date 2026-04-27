@@ -1,6 +1,6 @@
 # Shape Sphere — Missing Data Compute Plan
 
-**Status:** draft / proposal
+**Status:** ✅ DONE — Plan B implemented (`shape_sphere_atlas.py`); 8×16 smoke scan deployed to viewer; AWS launcher `infra/userdata_sphere.sh` ready for production-resolution scan.
 **Owner:** atlas team
 **Companion code:** `website/interactive.html` (`renderShapeSphere`, `muPhiToShapeSphere`)
 

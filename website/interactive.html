@@ -746,6 +746,7 @@ function configKey(scan) {
   if (scan.charges && Array.isArray(scan.charges)) k += '_c' + scan.charges.join('');
   else if (scan.charges && typeof scan.charges === 'object') k += '_helium';
   if (scan.mode === 'adaptive') k += '_adaptive';
+  if (scan.chart === 'shape_sphere') k += '_sphere';
   return k;
 }
 
@@ -759,6 +760,10 @@ function configLabel(key) {
     '1/r2_adaptive': 'V = 1/r²  (adaptive)',
     '1/r2_c2-1-1_adaptive': 'V = 1/r²  Coulomb (adaptive)',
     'harmonic': 'V = r²  (harmonic)',
+    '1/r_sphere': 'V = 1/r  (shape sphere chart)',
+    '1/r2_sphere': 'V = 1/r²  (shape sphere chart)',
+    '1/r3_sphere': 'V = 1/r³  (shape sphere chart)',
+    'harmonic_sphere': 'V = r²  (shape sphere chart)',
   };
   return map[key] || key;
 }
@@ -832,14 +837,17 @@ async function init() {
   // is preferable to leaving most scans rendering in only ~60% of the
   // available space. The full data is still in the manifest for any
   // downloaded plot.
+  // Shape-sphere scans use a (θ, φ_sph) chart and have no mu/phi axes; they
+  // must be excluded from the (μ, φ) global range computation.
+  const muphiScans = S.scans.filter(s => s.chart !== 'shape_sphere');
   S.globalRange = {
     mu: [
-      Math.max(...S.scans.map(s => (s.mu_range && s.mu_range[0]) ?? 0.2)),
-      Math.min(...S.scans.map(s => (s.mu_range && s.mu_range[1]) ?? 3.0)),
+      Math.max(...muphiScans.map(s => (s.mu_range && s.mu_range[0]) ?? 0.2)),
+      Math.min(...muphiScans.map(s => (s.mu_range && s.mu_range[1]) ?? 3.0)),
     ],
     phi: [
-      Math.max(...S.scans.map(s => (s.phi_range && s.phi_range[0]) ?? 0.1)),
-      Math.min(...S.scans.map(s => (s.phi_range && s.phi_range[1]) ?? Math.PI)),
+      Math.max(...muphiScans.map(s => (s.phi_range && s.phi_range[0]) ?? 0.1)),
+      Math.min(...muphiScans.map(s => (s.phi_range && s.phi_range[1]) ?? Math.PI)),
     ],
   };
   // Sanity: if intersection collapsed (shouldn't happen with our data),
@@ -1166,46 +1174,86 @@ function renderShapeSphere(view) {
   const colorscale = isGap ? CS_GAP : CS_RANK;
   const cbTitle   = isGap ? 'log₁₀(gap)' : 'Rank';
 
-  // Build s1, s2, s3 grids (rows=mu, cols=phi) and color grid.
-  // The atlas only samples phi in [0, π] (particle 3 above the x-axis), which
-  // covers just the upper hemisphere (s3 ≥ 0). The lower hemisphere is the
-  // mirror image under φ → −φ, so we extend the phi axis to [−π, π] by
-  // reflecting the columns. This fills the full shape sphere.
-  const NM = data.mu.length, NP_HALF = data.phi.length;
-  const NP = 2 * NP_HALF;
-  // phi columns: [-φ_{NP_HALF-1}, ..., -φ_0, +φ_0, ..., +φ_{NP_HALF-1}]
-  const phiFull = new Array(NP);
-  for (let k = 0; k < NP_HALF; k++) {
-    phiFull[k] = -data.phi[NP_HALF - 1 - k];
-    phiFull[NP_HALF + k] = data.phi[k];
-  }
-  const colSrc = new Array(NP);  // index into the original (half) data column
-  for (let k = 0; k < NP_HALF; k++) {
-    colSrc[k] = NP_HALF - 1 - k;
-    colSrc[NP_HALF + k] = k;
-  }
-  const X = new Array(NM), Y = new Array(NM), Z = new Array(NM), C = new Array(NM);
+  // Two schemas supported:
+  //   shape_sphere_v1 — direct (θ, φ_sph) grid on S²; full coverage incl.
+  //                     the r1=r2 cap.
+  //   default (μ, φ)  — atlas chart; fills upper hemisphere only, lower
+  //                     hemisphere mirrored from φ → −φ symmetry.
+  const isSphereSchema = (data.schema === 'shape_sphere_v1');
+
+  let X, Y, Z, C;
   let cmin = Infinity, cmax = -Infinity;
-  for (let i = 0; i < NM; i++) {
-    const xr = new Array(NP), yr = new Array(NP), zr = new Array(NP), cr = new Array(NP);
-    for (let k = 0; k < NP; k++) {
-      const [s1, s2, s3] = muPhiToShapeSphere(data.mu[i], phiFull[k]);
-      xr[k] = s1; yr[k] = s2; zr[k] = s3;
-      const srcK = colSrc[k];
-      let cval;
-      if (isGap) {
-        const g = data.gap[i][srcK];
-        cval = (g != null && isFinite(g) && g > 0) ? Math.log10(g) : null;
-      } else {
-        cval = data.rank[i][srcK];
+  let dataCurveIdx = 1;  // index of the data surface trace (after the ref sphere)
+
+  if (isSphereSchema) {
+    // (θ, φ_sph) → (s1, s2, s3) = (sinθ cosφ, sinθ sinφ, cosθ).
+    // Wrap longitude so the surface seams close visually.
+    const theta = data.theta;
+    const phi   = data.phi_sph;
+    const NT = theta.length, NPv = phi.length;
+    const NP = NPv + 1;  // wrap: append φ[0] + 2π at the end
+    X = new Array(NT); Y = new Array(NT); Z = new Array(NT); C = new Array(NT);
+    for (let i = 0; i < NT; i++) {
+      const st = Math.sin(theta[i]), ct = Math.cos(theta[i]);
+      const xr = new Array(NP), yr = new Array(NP), zr = new Array(NP), cr = new Array(NP);
+      for (let k = 0; k < NP; k++) {
+        const srcK = (k === NPv) ? 0 : k;
+        const ph = (k === NPv) ? phi[0] + 2 * Math.PI : phi[k];
+        xr[k] = st * Math.cos(ph);
+        yr[k] = st * Math.sin(ph);
+        zr[k] = ct;
+        let cval;
+        if (isGap) {
+          const g = data.gap[i][srcK];
+          cval = (g != null && isFinite(g) && g > 0) ? Math.log10(g) : null;
+        } else {
+          cval = data.rank[i][srcK];
+          if (cval === -1) cval = null;  // degenerate sentinel
+        }
+        if (cval != null && isFinite(cval)) {
+          if (cval < cmin) cmin = cval;
+          if (cval > cmax) cmax = cval;
+        }
+        cr[k] = cval;
       }
-      if (cval != null && isFinite(cval)) {
-        if (cval < cmin) cmin = cval;
-        if (cval > cmax) cmax = cval;
-      }
-      cr[k] = cval;
+      X[i] = xr; Y[i] = yr; Z[i] = zr; C[i] = cr;
     }
-    X[i] = xr; Y[i] = yr; Z[i] = zr; C[i] = cr;
+  } else {
+    // Legacy (μ, φ) atlas — mirror across φ → −φ to fill the lower hemisphere.
+    const NM = data.mu.length, NP_HALF = data.phi.length;
+    const NP = 2 * NP_HALF;
+    const phiFull = new Array(NP);
+    for (let k = 0; k < NP_HALF; k++) {
+      phiFull[k] = -data.phi[NP_HALF - 1 - k];
+      phiFull[NP_HALF + k] = data.phi[k];
+    }
+    const colSrc = new Array(NP);
+    for (let k = 0; k < NP_HALF; k++) {
+      colSrc[k] = NP_HALF - 1 - k;
+      colSrc[NP_HALF + k] = k;
+    }
+    X = new Array(NM); Y = new Array(NM); Z = new Array(NM); C = new Array(NM);
+    for (let i = 0; i < NM; i++) {
+      const xr = new Array(NP), yr = new Array(NP), zr = new Array(NP), cr = new Array(NP);
+      for (let k = 0; k < NP; k++) {
+        const [s1, s2, s3] = muPhiToShapeSphere(data.mu[i], phiFull[k]);
+        xr[k] = s1; yr[k] = s2; zr[k] = s3;
+        const srcK = colSrc[k];
+        let cval;
+        if (isGap) {
+          const g = data.gap[i][srcK];
+          cval = (g != null && isFinite(g) && g > 0) ? Math.log10(g) : null;
+        } else {
+          cval = data.rank[i][srcK];
+        }
+        if (cval != null && isFinite(cval)) {
+          if (cval < cmin) cmin = cval;
+          if (cval > cmax) cmax = cval;
+        }
+        cr[k] = cval;
+      }
+      X[i] = xr; Y[i] = yr; Z[i] = zr; C[i] = cr;
+    }
   }
 
   // Translucent reference unit sphere for context.
@@ -1265,9 +1313,11 @@ function renderShapeSphere(view) {
   });
 
   // Binary collision points (equator). r1=r3 and r2=r3 are sampled by the
-  // atlas; r1=r2 sits at (−1, 0, 0) which is the μ→∞ limit (unsampled).
+  // atlas; r1=r2 sits at (−1, 0, 0) which is the μ→∞ limit (unsampled by
+  // the (μ,φ) chart, but covered natively by the shape_sphere_v1 schema).
   const binX = [+0.5, +0.5], binY = [+SQRT3 / 2, -SQRT3 / 2], binZ = [0, 0];
   const binText = ['r₂=r₃', 'r₁=r₃'];
+  if (isSphereSchema) { binX.push(-1); binY.push(0); binZ.push(0); binText.push('r₁=r₂'); }
   traces.push({
     type: 'scatter3d', mode: 'markers+text',
     x: binX, y: binY, z: binZ, text: binText, textposition: 'middle right',
@@ -1277,15 +1327,17 @@ function renderShapeSphere(view) {
     hovertemplate: '%{text} binary collision<extra></extra>',
     showlegend: false,
   });
-  traces.push({
-    type: 'scatter3d', mode: 'markers+text',
-    x: [-1], y: [0], z: [0], text: ['r₁=r₂ (μ→∞, unsampled)'], textposition: 'middle left',
-    marker: { size: 7, color: 'rgba(0,0,0,0)', symbol: 'circle-open',
-              line: { color: themeColor('--text-dim', '#4a5060'), width: 2 } },
-    textfont: { color: themeColor('--text-dim', '#4a5060'), size: 9, family: 'JetBrains Mono, monospace' },
-    hovertemplate: 'r₁=r₂ binary collision (unreached by atlas; μ→∞ limit)<extra></extra>',
-    showlegend: false,
-  });
+  if (!isSphereSchema) {
+    traces.push({
+      type: 'scatter3d', mode: 'markers+text',
+      x: [-1], y: [0], z: [0], text: ['r₁=r₂ (μ→∞, unsampled)'], textposition: 'middle left',
+      marker: { size: 7, color: 'rgba(0,0,0,0)', symbol: 'circle-open',
+                line: { color: themeColor('--text-dim', '#4a5060'), width: 2 } },
+      textfont: { color: themeColor('--text-dim', '#4a5060'), size: 9, family: 'JetBrains Mono, monospace' },
+      hovertemplate: 'r₁=r₂ binary collision (unreached by atlas; μ→∞ limit)<extra></extra>',
+      showlegend: false,
+    });
+  }
 
   const txt = themeColor('--text-primary', '#c8ccd4');
   const dim = themeColor('--text-dim', '#4a5060');
@@ -1303,9 +1355,12 @@ function renderShapeSphere(view) {
   Plotly.react(divId, traces, layout, { responsive: true });
   requestAnimationFrame(() => { try { Plotly.Plots.resize(divId); } catch (e) {} });
 
-  // Click → inspect nearest (μ, φ) on the sphere.
+  // Click → inspect nearest (μ, φ) on the sphere. (Disabled for the
+  // shape_sphere_v1 schema since its native chart is (θ, φ_sph), not (μ, φ),
+  // and the inspect panel infrastructure is keyed on the latter.)
   const el = document.getElementById(divId);
   el.removeAllListeners && el.removeAllListeners('plotly_click');
+  if (isSphereSchema) return;
   el.on('plotly_click', d => {
     const pt = d.points[0];
     if (!pt || pt.curveNumber !== 1) return;  // only the data-bearing surface
@@ -1332,6 +1387,38 @@ function renderHeatmap(view) {
   const cbTitle = isGap ? 'log₁₀(gap)' : 'Rank';
 
   const divId = 'heatmap-' + view;
+
+  // Shape-sphere v1 schema: render as a (θ, φ_sph) lat/lon heatmap.
+  // The (μ,φ) inspect/overlay/contour/line-cut machinery does not apply,
+  // so we keep this branch minimal.
+  if (data.schema === 'shape_sphere_v1') {
+    const thetaDeg = data.theta.map(t => t * 180 / Math.PI);
+    const phiDeg   = data.phi_sph.map(p => p * 180 / Math.PI);
+    const zHeat = isGap
+      ? data.gap.map(row => row.map(v => (v != null && isFinite(v) && v > 0) ? Math.log10(v) : null))
+      : data.rank.map(row => row.map(v => (v === -1 ? null : v)));
+    const layout = Object.assign({}, getLayoutBase(), {
+      xaxis: { title: 'φ_sph  (degrees)', gridcolor: '#1e2430', zeroline: false,
+               range: [phiDeg[0], phiDeg[phiDeg.length - 1]], autorange: false, constrain: 'domain' },
+      yaxis: { title: 'θ  (degrees, polar)', gridcolor: '#1e2430', zeroline: false,
+               range: [thetaDeg[0], thetaDeg[thetaDeg.length - 1]], autorange: false, constrain: 'domain' },
+      margin: { l: 65, r: 80, t: 30, b: 55 },
+    });
+    const traces = [{
+      z: zHeat, x: phiDeg, y: thetaDeg,
+      type: 'heatmap', colorscale: colorscale,
+      colorbar: { title: { text: cbTitle, side: 'right' }, thickness: 15, len: 0.9 },
+      hovertemplate: isGap
+        ? 'φ_sph=%{x:.2f}°<br>θ=%{y:.2f}°<br>log₁₀(gap)=%{z:.1f}<extra></extra>'
+        : 'φ_sph=%{x:.2f}°<br>θ=%{y:.2f}°<br>Rank=%{z}<extra></extra>',
+    }];
+    Plotly.react(divId, traces, layout, { responsive: true });
+    requestAnimationFrame(() => { try { Plotly.Plots.resize(divId); } catch (e) {} });
+    const el = document.getElementById(divId);
+    el.removeAllListeners && el.removeAllListeners('plotly_click');
+    return;
+  }
+
   const gr = S.globalRange || { mu: [data.mu[0], data.mu[data.mu.length-1]],
                                   phi: [data.phi[0], data.phi[data.phi.length-1]] };
   // Axis convention matches figures_v2/heatmaps: phi (degrees) on x, mu on y.
