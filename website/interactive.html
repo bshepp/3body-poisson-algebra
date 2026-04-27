@@ -1115,14 +1115,28 @@ function downloadPlot(divId) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   SHAPE SPHERE (3D)  —  same data, Dragt-coordinate projection of (μ, φ).
-   Mapping (equal masses; r1=(0,0), r2=(1,0), r3=(μ cos φ, μ sin φ)):
-     w2 = (μ cos φ − 1/2,  μ sin φ)
-     N  = 1 + |w2|² = 1 + μ² − μ cos φ + 1/4
-     s1 = (1 − |w2|²)/N
-     s2 = 2 (μ cos φ − 1/2)/N
-     s3 = 2 μ sin φ / N
-   Lagrange equilateral → near pole; collinear → equator.
+   SHAPE SPHERE (3D)  —  canonical Hsiang–Montgomery / Iwai shape sphere.
+   For equal masses with r1=(0,0), r2=(1,0), r3=(μ cos φ, μ sin φ):
+     ρ1 = r2 − r1                       = (1, 0)
+     ρ2 = (2/√3)(r3 − (r1+r2)/2)        (Jacobi, normalized so equilateral
+                                         gives |ρ1| = |ρ2| ⇒ pole)
+     A  = μ² − μ cos φ + 1/4            (= |r3 − midpoint|²)
+     R² = |ρ1|² + |ρ2|²  = 1 + 4A/3     (hyperradius squared)
+     w1 = |ρ1|² − |ρ2|²  = 1 − 4A/3
+     w2 = 2 ρ1·ρ2       = (4/√3)(μ cos φ − 1/2)
+     w3 = 2 ρ1×ρ2       = (4/√3) μ sin φ
+     (s1,s2,s3) = (w1,w2,w3)/R²        →  s1²+s2²+s3² = 1.
+
+   Landmarks on the sphere:
+     • Equilateral L4 (μ=1, φ= π/3)   →  (0, 0, +1)   north pole
+     • Equilateral L5 (μ=1, φ=−π/3)   →  (0, 0, −1)   south pole
+     • Binary r2=r3   (μ=1, φ=0)      →  (+1/2, +√3/2, 0)
+     • Binary r1=r3   (μ=0, any φ)    →  (+1/2, −√3/2, 0)
+     • Binary r1=r2   (μ→∞ limit)     →  (−1, 0, 0)   ← UNREACHED by atlas
+     • Equator (s3=0)                  ↔  collinear configurations
+   The three binary-collision points sit at 120° on the equator; the atlas
+   only samples two of them. See docs/shape_sphere_compute_plan.md for the
+   strategy to fill the (−1, 0, 0) cap.
    ═══════════════════════════════════════════════════════════════════════ */
 function toggleShapeSphere(btn) {
   S.view3d = !S.view3d;
@@ -1133,11 +1147,15 @@ function toggleShapeSphere(btn) {
   if (S.primary.data) renderHeatmap('primary');
 }
 
+const SQRT3 = Math.sqrt(3);
 function muPhiToShapeSphere(mu, phi) {
   const cp = Math.cos(phi), sp = Math.sin(phi);
-  const w2sq = mu * mu - mu * cp + 0.25;
-  const N = 1.0 + w2sq;
-  return [(1 - w2sq) / N, 2 * (mu * cp - 0.5) / N, 2 * mu * sp / N];
+  const A  = mu * mu - mu * cp + 0.25;
+  const R2 = 1.0 + (4.0 / 3.0) * A;
+  const w1 = 1.0 - (4.0 / 3.0) * A;
+  const w2 = (4.0 / SQRT3) * (mu * cp - 0.5);
+  const w3 = (4.0 / SQRT3) * (mu * sp);
+  return [w1 / R2, w2 / R2, w3 / R2];
 }
 
 function renderShapeSphere(view) {
@@ -1228,7 +1246,9 @@ function renderShapeSphere(view) {
     },
   ];
 
-  // Lagrange L4 / L5 markers (μ=1, φ=±60°) for orientation.
+  // Landmark markers — Lagrange equilateral poles + the three binary
+  // collision points on the equator. The third binary collision (r1=r2)
+  // is unreached by the atlas and is rendered as a hollow placeholder.
   const lagX = [], lagY = [], lagZ = [], lagText = [];
   [['L4', 1.0,  Math.PI / 3], ['L5', 1.0, -Math.PI / 3]].forEach(([name, mu, phi]) => {
     const [a, b, c] = muPhiToShapeSphere(mu, phi);
@@ -1241,6 +1261,29 @@ function renderShapeSphere(view) {
               line: { color: themeColor('--bg-deep', '#0a0c10'), width: 1 } },
     textfont: { color: themeColor('--amber', '#f0a030'), size: 11, family: 'JetBrains Mono, monospace' },
     hovertemplate: '%{text} (Lagrange equilateral)<extra></extra>',
+    showlegend: false,
+  });
+
+  // Binary collision points (equator). r1=r3 and r2=r3 are sampled by the
+  // atlas; r1=r2 sits at (−1, 0, 0) which is the μ→∞ limit (unsampled).
+  const binX = [+0.5, +0.5], binY = [+SQRT3 / 2, -SQRT3 / 2], binZ = [0, 0];
+  const binText = ['r₂=r₃', 'r₁=r₃'];
+  traces.push({
+    type: 'scatter3d', mode: 'markers+text',
+    x: binX, y: binY, z: binZ, text: binText, textposition: 'middle right',
+    marker: { size: 5, color: themeColor('--phosphor', '#4ae290'), symbol: 'circle',
+              line: { color: themeColor('--bg-deep', '#0a0c10'), width: 1 } },
+    textfont: { color: themeColor('--phosphor', '#4ae290'), size: 10, family: 'JetBrains Mono, monospace' },
+    hovertemplate: '%{text} binary collision<extra></extra>',
+    showlegend: false,
+  });
+  traces.push({
+    type: 'scatter3d', mode: 'markers+text',
+    x: [-1], y: [0], z: [0], text: ['r₁=r₂ (μ→∞, unsampled)'], textposition: 'middle left',
+    marker: { size: 7, color: 'rgba(0,0,0,0)', symbol: 'circle-open',
+              line: { color: themeColor('--text-dim', '#4a5060'), width: 2 } },
+    textfont: { color: themeColor('--text-dim', '#4a5060'), size: 9, family: 'JetBrains Mono, monospace' },
+    hovertemplate: 'r₁=r₂ binary collision (unreached by atlas; μ→∞ limit)<extra></extra>',
     showlegend: false,
   });
 
