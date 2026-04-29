@@ -21,10 +21,12 @@ Environment:
 import argparse
 import json
 import os
+import signal
 import subprocess
 import sys
 import threading
 import time
+import urllib.request
 
 # Make the engine importable when running from /opt/3body
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -67,11 +69,76 @@ def s3_upload_file(path: str, key_suffix: str):
         print(f"[s3] cp warning: {e}", flush=True)
 
 
-def periodic_syncer(work_dir: str, stop_event: threading.Event,
-                    interval_s: int = 300):
-    """Background thread: mirror work_dir to S3 every `interval_s` seconds."""
+def periodic_syncer(work_dir: str, run_log_path: str,
+                    stop_event: threading.Event, interval_s: int = 60):
+    """Background thread: mirror work_dir to S3 every `interval_s` seconds.
+
+    Also uploads the tee'd run log so we have a live tail in S3 instead
+    of waiting for the post-driver userdata `aws s3 cp` (which never
+    runs if the instance is SIGKILL'd by spot reclaim).
+    """
     while not stop_event.wait(interval_s):
         s3_sync(work_dir, "checkpoints")
+        if run_log_path and os.path.isfile(run_log_path):
+            s3_upload_file(run_log_path, "lane_c_run.log")
+
+
+# IMDSv2 endpoints for spot interruption notice.
+# Returns 200 with JSON ~2 minutes before reclaim; 404 otherwise.
+_IMDS_TOKEN_URL = "http://169.254.169.254/latest/api/token"
+_IMDS_SPOT_URL = ("http://169.254.169.254/latest/meta-data/"
+                  "spot/instance-action")
+
+
+def _get_imds_token(timeout=2.0):
+    try:
+        req = urllib.request.Request(
+            _IMDS_TOKEN_URL, method="PUT",
+            headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"},
+        )
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.read().decode("ascii")
+    except Exception:
+        return None
+
+
+def spot_interruption_listener(stop_event: threading.Event,
+                               poll_s: int = 5):
+    """Watch IMDS for spot reclaim notice; on detection send SIGTERM
+    to ourselves so the engine's flush handler runs.
+
+    AWS gives ~2 minutes of warning, plenty for the engine to checkpoint
+    the current bracket batch and the driver to do a final S3 sync.
+    """
+    pid = os.getpid()
+    notified = False
+    while not stop_event.wait(poll_s):
+        token = _get_imds_token()
+        if token is None:
+            continue  # IMDS unreachable (probably not on EC2); just keep polling
+        try:
+            req = urllib.request.Request(
+                _IMDS_SPOT_URL,
+                headers={"X-aws-ec2-metadata-token": token},
+            )
+            with urllib.request.urlopen(req, timeout=2.0) as r:
+                body = r.read().decode("utf-8", errors="replace")
+            if not notified:
+                print(f"\n[spot] !!! INTERRUPTION NOTICE !!!  {body}",
+                      flush=True)
+                print("[spot] sending SIGTERM to driver to trigger "
+                      "engine flush + S3 sync", flush=True)
+                notified = True
+                try:
+                    os.kill(pid, signal.SIGTERM)
+                except OSError as e:
+                    print(f"[spot] SIGTERM failed: {e}", flush=True)
+                # Keep polling so we log if the action changes
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                continue  # normal: no interruption pending
+        except Exception:
+            continue
 
 
 def main():
@@ -86,6 +153,8 @@ def main():
     os.makedirs(work_dir, exist_ok=True)
     walltime = int(os.environ.get("MAX_WALLTIME_S", "18000"))
     batch_save = int(os.environ.get("BATCH_SAVE", "25"))
+    sync_interval_s = int(os.environ.get("S3_SYNC_INTERVAL_S", "60"))
+    run_log_path = os.environ.get("RUN_LOG", "/opt/3body/lane_c_run.log")
 
     print(f"=== Lane C driver ===", flush=True)
     print(f"  work_dir       = {work_dir}", flush=True)
@@ -94,15 +163,29 @@ def main():
     print(f"  prime          = {args.prime}", flush=True)
     print(f"  walltime_s     = {walltime}", flush=True)
     print(f"  batch_save     = {batch_save}", flush=True)
+    print(f"  sync_interval  = {sync_interval_s}s", flush=True)
+    print(f"  run_log        = {run_log_path}", flush=True)
     print(f"  S3 dest        = s3://{S3_BUCKET}/{S3_PREFIX}/", flush=True)
     print(f"  started        = {time.strftime('%Y-%m-%d %H:%M:%S')}", flush=True)
 
-    # Background S3 mirror so spot reclaim leaves recoverable state
+    # Background S3 mirror so spot reclaim leaves recoverable state.
+    # Also uploads the run log so we get live tailable progress.
     stop_event = threading.Event()
     syncer = threading.Thread(
-        target=periodic_syncer, args=(work_dir, stop_event, 300), daemon=True
+        target=periodic_syncer,
+        args=(work_dir, run_log_path, stop_event, sync_interval_s),
+        daemon=True,
     )
     syncer.start()
+
+    # IMDS spot interruption listener — converts the ~2-min reclaim
+    # notice into a SIGTERM the engine can flush on cleanly.
+    spot_listener = threading.Thread(
+        target=spot_interruption_listener,
+        args=(stop_event, 5),
+        daemon=True,
+    )
+    spot_listener.start()
 
     algebra = NBodyAlgebra(
         n_bodies=3, d_spatial=2, potential="1/r", checkpoint_dir=work_dir,
@@ -127,8 +210,10 @@ def main():
         elapsed = time.time() - t0
         print(f"[done] elapsed={elapsed:.1f}s", flush=True)
         stop_event.set()
-        # Final synchronous sync
+        # Final synchronous sync (checkpoints + run log)
         s3_sync(work_dir, "checkpoints")
+        if run_log_path and os.path.isfile(run_log_path):
+            s3_upload_file(run_log_path, "lane_c_run.log")
 
         summary = {
             "lane": "C",

@@ -28,7 +28,9 @@ export S3_BUCKET="3body-compute-290318"
 export S3_PREFIX="lane_c"
 export WORK_DIR="/opt/3body/lane_c"
 export MAX_WALLTIME_S="64800"   # 18h hard budget; spot reclaim still safe via periodic sync
-export BATCH_SAVE="25"
+export BATCH_SAVE="5"           # smaller batches => smaller loss on spot reclaim
+export S3_SYNC_INTERVAL_S="60"  # mirror checkpoints + run log every 60s
+export RUN_LOG="/opt/3body/lane_c_run.log"
 
 # Pull code (engine + driver)
 aws s3 sync s3://${S3_BUCKET}/code/ /opt/3body/ --no-progress

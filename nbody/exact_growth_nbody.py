@@ -1235,6 +1235,42 @@ class NBodyAlgebra:
             pickle.dump(state, fh, protocol=pickle.HIGHEST_PROTOCOL)
         os.replace(tmp, path)
 
+    def _save_progress_heartbeat(self, level, completed, total,
+                                 last_bracket, completed_this_run,
+                                 elapsed_s):
+        """Tiny atomic JSON write, called after every bracket.
+
+        The periodic S3 syncer in the AWS driver picks this file up
+        every ~60s, giving live progress visibility without depending
+        on the (much larger) pickle checkpoint flush cadence.
+        """
+        try:
+            os.makedirs(self.checkpoint_dir, exist_ok=True)
+            import json as _json
+            from time import strftime as _strftime, gmtime as _gmtime
+            rate = (completed_this_run / elapsed_s) if elapsed_s > 0 else 0.0
+            remaining = (total - completed) / rate if rate > 0 else None
+            payload = {
+                "level": int(level),
+                "completed": int(completed),
+                "total": int(total),
+                "last_bracket": str(last_bracket),
+                "completed_this_run": int(completed_this_run),
+                "elapsed_s_this_run": float(elapsed_s),
+                "rate_per_s": float(rate),
+                "eta_minutes": (float(remaining / 60.0)
+                                if remaining is not None else None),
+                "ts": _strftime("%Y-%m-%dT%H:%M:%SZ", _gmtime()),
+            }
+            path = os.path.join(self.checkpoint_dir,
+                                f"progress_modp_L{level}.json")
+            tmp = path + ".tmp"
+            with open(tmp, "w") as fh:
+                _json.dump(payload, fh, indent=2)
+            os.replace(tmp, path)
+        except Exception as exc:  # never let heartbeat failure abort the run
+            print(f"  [heartbeat] warning: {exc}", flush=True)
+
     def compute_growth_modp(self, max_level=4, prime=(1 << 31) - 1,
                             n_samples=80, seed=42, resume=True,
                             batch_save=25, max_walltime_s=None,
@@ -1519,6 +1555,18 @@ class NBodyAlgebra:
                 processed_pairs.add((i, j))
                 state["processed_pairs"] = sorted(processed_pairs)
                 completed_this_run += 1
+
+                # Per-bracket heartbeat (tiny atomic JSON; the AWS driver's
+                # periodic syncer picks this up so we have live progress
+                # visibility even mid-batch).
+                self._save_progress_heartbeat(
+                    level=L,
+                    completed=len(processed_pairs),
+                    total=n_target,
+                    last_bracket=bracket_name,
+                    completed_this_run=completed_this_run,
+                    elapsed_s=_time() - t0_phase,
+                )
 
                 if completed_this_run % 10 == 0 or completed_this_run <= 5:
                     elapsed = _time() - t0_phase
