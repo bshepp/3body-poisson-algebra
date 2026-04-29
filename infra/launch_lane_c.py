@@ -27,7 +27,9 @@ TEMPLATE = os.path.join(HERE, "userdata_lane_c.sh")
 # Python 3.7, which silently breaks sympy>=1.13 / python-flint installs.
 # `resolve:ssm:` lets EC2 dereference the parameter at launch time.
 AMI = "resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
-KEY_NAME = "3body-compute"
+# Use 3body-compute2 — that's the keypair we have a local PEM for.
+# (3body-compute also exists in AWS but the private key is missing locally.)
+KEY_NAME = "3body-compute2"
 SECURITY_GROUP = "sg-01db2d9932427a00a"
 IAM_PROFILE = "3body-profile"
 INSTANCE_TYPE = "r6a.16xlarge"   # 64 vCPU / 512 GiB — matches the lane plan
