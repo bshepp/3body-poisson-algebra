@@ -129,7 +129,7 @@
   category: analysis
   scope: 3body
   status: needs_review
-  description: Level-4 Comparison — Phase 1 Item 1.5 ======================================
+  description: Level-4 Comparison â€” Phase 1 Item 1.5 ======================================
   outputs: []
   tags: []
 - id: level4_highsample
@@ -145,7 +145,7 @@
   category: analysis
   scope: 3body
   status: needs_review
-  description: HISTORICAL ARTIFACT — DO NOT USE FOR NEW ANALYSIS ===================================================
+  description: HISTORICAL ARTIFACT â€” DO NOT USE FOR NEW ANALYSIS ===================================================
     This script and its results in bisection_results/ were produced on April 8, 2026
     using a "term-group factored evaluation" approach that has since been reverted
     from exact_growth.py and stability_atlas.py.
@@ -376,7 +376,7 @@
   category: analysis
   scope: 3body
   status: needs_review
-  description: 'Potential Comparison Study: 1/r vs 1/r² vs r² ================================================'
+  description: 'Potential Comparison Study: 1/r vs 1/rÂ² vs rÂ² ================================================'
   outputs: []
   tags: []
 - id: primes_check_1r_closure
@@ -400,7 +400,7 @@
   category: analysis
   scope: primes
   status: needs_review
-  description: Hilbert-Pólya operator search via GUE Lie algebra structure.
+  description: Hilbert-PÃ³lya operator search via GUE Lie algebra structure.
   outputs: []
   tags: []
 - id: primes_launch_gue
@@ -504,7 +504,7 @@
   category: analysis
   scope: 3body
   status: needs_review
-  description: 'SV #116 Analytical Prediction — Phase 1 Item 1.6 =================================================='
+  description: 'SV #116 Analytical Prediction â€” Phase 1 Item 1.6 =================================================='
   outputs: []
   tags: []
 - id: unequal_mass_study
@@ -512,7 +512,7 @@
   category: analysis
   scope: 3body
   status: needs_review
-  description: Unequal Mass Study — Dimension Sequence vs Mass Configuration ==============================================================
+  description: Unequal Mass Study â€” Dimension Sequence vs Mass Configuration ==============================================================
   outputs: []
   tags: []
 - id: analyze_atlas_data
@@ -560,7 +560,7 @@
   category: atlas
   scope: 3body
   status: needs_review
-  description: CG Atlas Comparison — Phase 1 Item 1.4 =======================================
+  description: CG Atlas Comparison â€” Phase 1 Item 1.4 =======================================
   outputs: []
   tags: []
 - id: full_atlas_scan
@@ -798,7 +798,7 @@
   category: dimseq
   scope: 3body
   status: needs_review
-  description: Mass Ratio Sweep — track dimension sequence and SVD gaps as mass ratio
+  description: Mass Ratio Sweep â€” track dimension sequence and SVD gaps as mass ratio
     varies continuously from equal (1:1:1) to extreme (1:1:1e6).
   outputs: []
   tags: []
@@ -1342,7 +1342,7 @@
   category: spectral
   scope: 3body
   status: needs_review
-  description: Spectral Depth Mining — Phase 1 Items 1.1 + 1.2 + 1.3 =======================================================
+  description: Spectral Depth Mining â€” Phase 1 Items 1.1 + 1.2 + 1.3 =======================================================
   outputs: []
   tags: []
 - id: nbody_compare_level3_structure
@@ -1563,7 +1563,7 @@
   category: website
   scope: website
   status: needs_review
-  description: Render the 1/r² (Calogero-Moser) knee-index map as a single-panel figure
+  description: Render the 1/rÂ² (Calogero-Moser) knee-index map as a single-panel figure
     for embedding on the research dashboard.
   outputs: []
   tags: []
@@ -1851,7 +1851,7 @@
     summary: |
       45 of 45 brackets matched across {1/r, 1/r^2, log} at L<=2.
       overall_match: true. Total elapsed 12.0 s.
-      Max count_ops ratio cancel/together = 10.5x at L=2 — direct measure
+      Max count_ops ratio cancel/together = 10.5x at L=2 â€” direct measure
       of the patch's compactness benefit (together's output is ~10x smaller
       than cancel's, which is what feeds the L=3 explosion under the old
       engine).
@@ -1888,7 +1888,7 @@
         369.5s (8.49x). Bonus: at L=2, together yields avg 1.3 terms per
         bracket vs cancel's 12.6 -- ~10x more compact representation, which
         compounds at L=3.
-  result:
+  latest_result:
     summary: |
       8.49x speedup at N=4 L=3 1/r generation phase, on top of equivalent
       simplify_patch wins on the SVD engine. This is the unblocker for
@@ -1920,8 +1920,8 @@
     couldn't safely use together().
   outputs:
     - bench_flint/poly_compat_check.json
-  result: 8/8 monoms_match + polys_equal in 0.626s; cancel up to 8.1x more
-    expensive (count_ops) than together at L=2.
+  latest_result:
+    summary: '8/8 monoms_match + polys_equal in 0.626s; cancel up to 8.1x more expensive (count_ops) than together at L=2.'
   run_command: python bench_flint/test_simplify_poly_compat.py
   related_docs:
     - bench_flint/validation_summary.md
@@ -1941,9 +1941,8 @@
   outputs:
     - bench_flint/validation_results_symbolic_rank.json
     - bench_flint/_symrank_results/
-  result: 5/5 MATCH in 140.87s. Speedups vs pin range from x0.26 (1/r,
-    where pin was already fast) to x1.71 (1/r^2). Material wins start at
-    N=4 (see bench_symbolic_rank_n4).
+  latest_result:
+    summary: '5/5 MATCH in 140.87s. Speedups vs pin range from x0.26 (1/r, where pin was already fast) to x1.71 (1/r^2). Material wins start at N=4 (see bench_symbolic_rank_n4).'
   run_command: python bench_flint/validate_symbolic_rank_patch.py
   related_docs:
     - bench_flint/validation_summary.md
@@ -1962,10 +1961,11 @@
     statistics for both engines.
   outputs:
     - bench_flint/symrank_n4_timing.json
-  result: |
-    L=2 cancel 2.44s vs together 1.28s (x1.91); L=3 pin cancel 3137.6s vs
-    together 369.5s (x8.49). Together produces ~10x more compact
-    expressions at L=2 (avg 1.3 vs 12.6 terms), which compounds at L=3.
+  latest_result:
+    summary: |
+      L=2 cancel 2.44s vs together 1.28s (x1.91); L=3 pin cancel 3137.6s vs
+      together 369.5s (x8.49). Together produces ~10x more compact
+      expressions at L=2 (avg 1.3 vs 12.6 terms), which compounds at L=3.
   run_command: python bench_flint/bench_symbolic_rank_n4.py
   related_docs:
     - bench_flint/validation_summary.md
@@ -1986,12 +1986,13 @@
     Rationals on a SparseArray vs SymPy DomainMatrix).
   outputs:
     - mathematica/results/n3_d2_dimseq.json
-  result: |
-    1/r:    [3, 6, 17, 116] in 40.36s. MATCH against Python pin.
-    1/r^2:  [3, 6, 17, 116] in 49.97s. MATCH against Python pin.
-    156 generators per potential, single Wolfram kernel on Windows.
-    Closes referee-style worry about CAS- or algorithm-specific
-    artifacts in the headline result.
+  latest_result:
+    summary: |
+      1/r:    [3, 6, 17, 116] in 40.36s. MATCH against Python pin.
+      1/r^2:  [3, 6, 17, 116] in 49.97s. MATCH against Python pin.
+      156 generators per potential, single Wolfram kernel on Windows.
+      Closes referee-style worry about CAS- or algorithm-specific
+      artifacts in the headline result.
   run_command: wolframscript -file mathematica/poisson_n3_d2.wl
   related_docs:
     - bench_flint/validation_summary.md
@@ -2011,13 +2012,14 @@
     HPair to use r_ij^2 directly in q-coordinates (no auxiliary u_ij).
   outputs:
     - mathematica/results/n3_d2_harmonic.json
-  result: |
-    cumulative_rank = [3, 6, 13, 15, 15] in 31.8s on workstation, single
-    Wolfram kernel. L=4 ran 11,937 candidate brackets through MatrixRank
-    over Rationals on a SparseArray; cumulative rank stayed at 15 -
-    confirming algebraic closure rather than a level-3 plateau. Closes
-    the structural-opposite half of the universality picture (singular
-    potentials open vs harmonic closed) in an independent CAS.
+  latest_result:
+    summary: |
+      cumulative_rank = [3, 6, 13, 15, 15] in 31.8s on workstation, single
+      Wolfram kernel. L=4 ran 11,937 candidate brackets through MatrixRank
+      over Rationals on a SparseArray; cumulative rank stayed at 15 -
+      confirming algebraic closure rather than a level-3 plateau. Closes
+      the structural-opposite half of the universality picture (singular
+      potentials open vs harmonic closed) in an independent CAS.
   run_command: wolframscript -file mathematica/poisson_n3_d2_harmonic.wl
   related_docs:
     - bench_flint/validation_summary.md
@@ -2151,3 +2153,51 @@
   related_supplemental:
     - nbody-atlas-mcp-suggestions.md
   tags: [planned, P3, mcp, tooling, atlas]
+
+- id: shape_sphere_atlas
+  path: shape_sphere_atlas.py
+  category: atlas
+  scope: nbody/N3
+  status: complete
+  description: |
+    Direct S^2 sampling of the N=3 shape sphere using the canonical
+    Hsiang-Montgomery Jacobi projection, filling the previously
+    unsampled r1=r2 cap and marking all three binary collisions.
+  outputs:
+    - shape_sphere_atlas/
+  run_command: python shape_sphere_atlas.py
+  related_docs:
+    - docs/shape_sphere_compute_plan.md
+  tags: [atlas, shape_sphere, complete]
+
+- id: test_shape_sphere_atlas
+  path: test_shape_sphere_atlas.py
+  category: test
+  scope: nbody/N3
+  status: complete
+  description: |
+    Regression test for shape_sphere_atlas.py covering binary-collision
+    marking and Jacobi projection invariants.
+  outputs: []
+  run_command: python test_shape_sphere_atlas.py
+  related_docs:
+    - docs/shape_sphere_compute_plan.md
+  tags: [test, shape_sphere, regression, complete]
+
+- id: launch_lane_c
+  path: infra/launch_lane_c.py
+  category: infra
+  scope: tooling
+  status: complete
+  description: |
+    AWS launcher for Lane C: r6a.16xlarge SPOT on AL2023 with python3.11
+    and python-flint. Boots the streaming mod-p N=3 L=4 1/r driver
+    (bench_flint/lane_c_aws_driver.py) which calls
+    NBodyAlgebra.compute_growth_modp to bypass the 16 GB symbolic
+    blowup observed in Phase D / Phase F.1. Supports --dry-run.
+  outputs: []
+  run_command: python infra/launch_lane_c.py --dry-run
+  related_docs:
+    - bench_flint/validation_summary.md
+    - docs/session_log.md
+  tags: [infra, aws, lane_c, modp, complete]

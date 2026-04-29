@@ -32,7 +32,8 @@
           "diagnostic",
           "engine",
           "website",
-          "docs"
+          "docs",
+          "validation"
         ]
       },
       "scope": {
