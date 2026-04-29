@@ -769,9 +769,15 @@ class NBodyAlgebra:
         # Prefer the most recent file. Partial checkpoints are valid restart
         # points too, since save_checkpoint(..., partial=True) persists a
         # consistent (exprs, names, levels, computed_pairs) tuple.
+        # Exclude streaming-modp checkpoints — they have a different schema
+        # (no full exprs/names/levels) and would otherwise be picked as the
+        # "highest" level by _level_key, then rejected for a missing
+        # d_spatial field — masking the real exact-Q checkpoint.
         candidates = sorted(
             f for f in os.listdir(self.checkpoint_dir)
-            if f.endswith(".pkl") and not f.endswith(".pkl.tmp")
+            if f.endswith(".pkl")
+            and not f.endswith(".pkl.tmp")
+            and not f.endswith("_modp.pkl")
         )
         if not candidates:
             return None
