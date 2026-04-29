@@ -170,6 +170,14 @@ hf_results/
 
 # Mathematica run output (committed reference: see registry/experiments.yaml)
 mathematica/results/*.json
+mathematica/results/*.log
 !mathematica/results/n3_d2_dimseq.json
 !mathematica/results/n3_d2_harmonic.json
+
+# Lane C (AWS mod-p L=4) local working directories and bootstrap logs
+_lane_c_local/
+_lane_c_install*.log
+
+# Shape sphere atlas output (large generated .npy/.npz; rebuild via shape_sphere_atlas.py)
+shape_sphere_atlas/
 

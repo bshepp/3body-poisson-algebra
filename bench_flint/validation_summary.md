@@ -472,3 +472,63 @@ picture: the singular case `[3, 6, 17, 116]` (open algebra, growing
 without bound) and the harmonic case `[3, 6, 13, 15, 15]` (closed
 algebra, finite-dimensional). Both are now reproduced in two unrelated
 CAS implementations.
+
+
+---
+
+## Phase G — streaming mod-p L=4 consumer (2026-04-28, in flight on AWS)
+
+The Phase D HF Jobs cpu-xl L=4 attempts and the Mathematica Phase F.1
+backup all hit the same wall: at L=4 the simultaneous in-RAM symbolic
+representation of all 11,937 candidate brackets blows past 16 GB and the
+job dies before `MatrixRank` (or SymPy's `DomainMatrix.rank`) ever runs.
+
+The Phase G fix factors the rank computation out of the symbolic layer.
+A new method `compute_growth_modp` was added to
+[`nbody/exact_growth_nbody.py`](../nbody/exact_growth_nbody.py).  The
+streaming consumer:
+
+1. Builds the L=0..L=max_level-1 symbolic generators using the existing
+   `compute_growth` machinery (n_samples=10, just enough to deduplicate).
+2. For each candidate bracket at the target level:
+   - run `poisson_bracket` + `simplify_generator` (the patched
+     `together` path),
+   - decompose the simplified expression into integer numerator and
+     denominator polynomials over Z (no `sympy.lambdify` — the L=4
+     bracket trees overflow the Python recursion limit),
+   - evaluate at `n_samples` random F_p sample points (independent-u
+     Schwartz–Zippel; prime is a 31-bit Mersenne by default),
+   - append the resulting column to a `python-flint` `nmod_mat`,
+   - **drop the symbolic expression**.
+3. The final dimension is `nmod_mat.rank()`.
+
+Memory peak is O(one bracket) for SymPy plus
+O(n_samples × n_gens) ints for the matrix, instead of holding the full
+L=4 generator pool symbolically.  A streaming pickle of every batch of
+columns lands in `checkpoints/` so the rank can be replayed from any
+checkpoint without re-doing brackets.
+
+Validated on L<=3 against the SVD answer `[3, 6, 17, 116]`.  L=4 is
+running now on AWS.
+
+### Lane C infrastructure
+
+The AWS driver lives in
+[`bench_flint/lane_c_aws_driver.py`](lane_c_aws_driver.py) and is
+launched by [`infra/launch_lane_c.py`](../infra/launch_lane_c.py)
+(r6a.16xlarge SPOT, AL2023, python3.11) via
+[`infra/userdata_lane_c.sh`](../infra/userdata_lane_c.sh).  Driver call:
+
+```python
+compute_growth_modp(
+    max_level=4, prime=2147483647, n_samples=120,
+    seed=20251108, batch_save=25, max_walltime_s=64800,
+)
+```
+
+Active instance `i-04dd72d097a4614be` launched 2026-04-29T00:26:34Z;
+Phase 1 (L<=3 symbolic) complete at 17:33 PDT; Phase 2 (L=4 mod-p
+columns) checkpointing every 25 columns to
+`s3://3body-compute-290318/lane_c/checkpoints/`.  Spot ~$1.07/hr,
+walltime cap 18 h.  Result will be appended to this section once the run
+finishes.

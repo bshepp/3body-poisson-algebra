@@ -1123,6 +1123,465 @@ class NBodyAlgebra:
 
         return level_dims
 
+    # -----------------------------------------------------------------
+    # Streaming mod-p rank consumer (Lane C: low-RAM L=4 path)
+    # -----------------------------------------------------------------
+    #
+    # Reuses everything above (poisson_bracket, simplify_generator,
+    # save_checkpoint/load_checkpoint, compute_growth's resume machinery
+    # for L<=max_level-1).  The ONLY new thing is the *consumer*:
+    #
+    #   for each (i,j) bracket at the target level:
+    #       simp = simplify_generator(poisson_bracket(...))
+    #       col  = evaluate simp at random F_p sample points
+    #       store col, DROP simp
+    #   final rank = nmod_mat(rows=n_samples, cols=n_gens, p).rank()
+    #
+    # Memory peak: O(one bracket) for SymPy + O(n_samples * n_gens) ints
+    # for the matrix.  Independent-u Schwartz-Zippel; validated on L<=3
+    # against the SVD answer [3, 6, 17, 116].
+
+    def _prep_modp_eval(self, expr, prime):
+        """Prepare a generator for fast mod-p evaluation.
+
+        Avoids ``sympy.lambdify`` (which builds a single nested Python
+        AST and blows the recursion / OS-stack limit for L>=3 brackets).
+        Instead, decompose the simplified expression into numerator and
+        denominator polynomials over QQ, harvest their term lists once,
+        and evaluate via a flat Python loop.
+
+        Returns
+        -------
+        (num_terms, den_terms) where each is a list of
+        ``(monomial_tuple, coeff_modp)`` pairs.  ``monomial_tuple`` is
+        a tuple of integer exponents over ``self.all_vars`` (length
+        n_vars).  ``coeff_modp`` is an int in [0, prime).
+        """
+        all_vars = self.all_vars
+        n, d = sp.fraction(sp.together(expr))
+        # Convert to Poly over QQ, then clear_denoms to get integer
+        # coefficients.  clear_denoms(convert=True) returns (coeff, poly)
+        # with poly == coeff * old_poly, so old_poly == poly / coeff.
+        pn = sp.Poly(n, *all_vars, domain=sp.QQ)
+        pd = sp.Poly(d, *all_vars, domain=sp.QQ)
+        cn, pn_int = pn.clear_denoms(convert=True)
+        cd, pd_int = pd.clear_denoms(convert=True)
+
+        # n / d = (pn_int / cn) / (pd_int / cd) = (cd * pn_int) / (cn * pd_int)
+        # Fold the constant rescalers (cd, cn) into the term coefficients.
+        cn_modp = int(sp.Integer(cn) % prime)
+        cd_modp = int(sp.Integer(cd) % prime)
+
+        n_vars = len(all_vars)
+
+        def _terms_modp(poly_int, scale_modp):
+            out = []
+            for monom, coef in poly_int.terms():
+                # monom is a tuple of length n_vars (Poly was built with
+                # *all_vars, so all variables are accounted for)
+                if len(monom) != n_vars:
+                    # Shouldn't happen, but pad just in case
+                    monom = tuple(list(monom) + [0] * (n_vars - len(monom)))
+                c = (int(coef) * scale_modp) % prime
+                if c == 0:
+                    continue
+                out.append((monom, c))
+            return out
+
+        # Distribute scalers: numerator gets cd, denominator gets cn
+        num_terms = _terms_modp(pn_int, cd_modp)
+        den_terms = _terms_modp(pd_int, cn_modp)
+        return num_terms, den_terms
+
+    @staticmethod
+    def _eval_poly_modp(terms, pt, prime):
+        """Evaluate a list of (monomial, coeff_modp) at point pt mod prime.
+
+        ``pt`` is a tuple of ints in [1, prime).  Uses pow(base, exp,
+        prime) for fast modular exponentiation.
+        """
+        total = 0
+        for monom, c in terms:
+            m = 1
+            for k, e in enumerate(monom):
+                if e == 0:
+                    continue
+                if e == 1:
+                    m = (m * pt[k]) % prime
+                else:
+                    m = (m * pow(pt[k], e, prime)) % prime
+            total = (total + c * m) % prime
+        return total
+
+    def _eval_expr_modp_column(self, expr, sample_pts, prime):
+        """Evaluate one generator at all sample points; return list of ints
+        mod prime (length n_samples), or None if any sample hits a
+        denominator zero mod p."""
+        num_terms, den_terms = self._prep_modp_eval(expr, prime)
+        col = []
+        for pt in sample_pts:
+            n_val = self._eval_poly_modp(num_terms, pt, prime)
+            d_val = self._eval_poly_modp(den_terms, pt, prime)
+            if d_val == 0:
+                return None
+            col.append((n_val * pow(d_val, -1, prime)) % prime)
+        return col
+
+    def _save_modp_checkpoint(self, path, state):
+        """Atomic pickle write."""
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        tmp = path + ".tmp"
+        with open(tmp, "wb") as fh:
+            pickle.dump(state, fh, protocol=pickle.HIGHEST_PROTOCOL)
+        os.replace(tmp, path)
+
+    def compute_growth_modp(self, max_level=4, prime=(1 << 31) - 1,
+                            n_samples=80, seed=42, resume=True,
+                            batch_save=25, max_walltime_s=None,
+                            modp_checkpoint=None):
+        """Streaming mod-p rank computation for arbitrary level.
+
+        Parameters
+        ----------
+        max_level : int
+            Target level.  Lower levels (<=max_level-1) are produced via
+            the standard exact-Q `compute_growth` path (using its
+            checkpoint/resume machinery), then evaluated mod p once.
+            Only the target level is processed in streaming mode.
+        prime : int
+            Prime for the F_p evaluation.  Default 2^31 - 1 (Mersenne).
+        n_samples : int
+            Number of random F_p sample points.  Should exceed the
+            expected rank.  Schwartz-Zippel error <= n_gens * deg / prime
+            per sample, so 80 samples at p~2^31 is robust for L=4.
+        seed : int
+            RNG seed for sample-point selection.
+        resume : bool
+            If True, reload modp checkpoint and skip already-evaluated
+            target-level pairs.
+        batch_save : int
+            Flush modp checkpoint every N target-level brackets.
+        max_walltime_s : float, optional
+            Soft wall-clock budget in seconds.  Stops cleanly between
+            brackets (after flushing) when exceeded.  Returns partial
+            state (final rank not computed).
+        modp_checkpoint : str, optional
+            Path for the modp checkpoint file.  Defaults to
+            <checkpoint_dir>/level_<L>_modp.pkl.
+
+        Returns
+        -------
+        dict with keys:
+            'rank'           : int or None (None if walltime exit)
+            'level'          : max_level
+            'prime'          : prime
+            'n_generators'   : total columns evaluated
+            'n_samples'      : n_samples
+            'partial'        : True if we stopped before completion
+            'completed_pairs': int (target-level pairs evaluated)
+            'total_pairs'    : int (target-level pairs needed)
+        """
+        try:
+            from flint import nmod_mat  # type: ignore
+        except ImportError as exc:
+            raise RuntimeError(
+                "compute_growth_modp requires python-flint. "
+                "Install with: pip install python-flint"
+            ) from exc
+
+        import signal
+        from time import time as _time
+
+        # lambdify on huge L>=3 expressions can exceed Python's default
+        # recursion limit (1000) when building the AST.  Bump generously;
+        # restore on exit.
+        _old_recursion = sys.getrecursionlimit()
+        sys.setrecursionlimit(max(_old_recursion, 100_000))
+
+        L = max_level
+        if modp_checkpoint is None:
+            modp_checkpoint = os.path.join(
+                self.checkpoint_dir, f"level_{L}_modp.pkl"
+            )
+
+        banner = "=" * 70
+        print(banner)
+        print(f"STREAMING MOD-p RANK  —  N={self.N}, d={self.d}, "
+              f"V={self.potential}, target level L={L}")
+        print(f"  prime = {prime}   n_samples = {n_samples}   "
+              f"seed = {seed}")
+        print(f"  modp checkpoint: {modp_checkpoint}")
+        print(banner)
+
+        # ---- Phase 1: ensure L<=L-1 generators exist (reuse existing
+        # exact-Q checkpointing).  This is the *only* place we touch the
+        # standard engine, and it's just a delegation.
+        if L >= 1:
+            print(f"\n[phase 1] ensuring exact-Q checkpoint for L<={L-1} ...")
+            existing = self.load_checkpoint()
+            need_lower = (existing is None
+                          or existing.get("level", -1) < L - 1
+                          or bool(existing.get("partial")))
+            if need_lower:
+                print("  running compute_growth to seed lower levels...")
+                self.compute_growth(max_level=L - 1, n_samples=10,
+                                    seed=seed, resume=True,
+                                    checkpoint_every=batch_save)
+            ckpt = self.load_checkpoint()
+            if ckpt is None or ckpt.get("level", -1) < L - 1:
+                raise RuntimeError(
+                    f"Failed to obtain L<={L-1} checkpoint after "
+                    "compute_growth call")
+        else:
+            # L=0: the "level 0" generators ARE the Hamiltonians.
+            # No brackets to compute; just evaluate them as columns.
+            ckpt = {
+                "exprs": list(self.hamiltonian_list),
+                "names": list(self.hamiltonian_names),
+                "levels": [0] * len(self.hamiltonian_list),
+            }
+
+        all_exprs_full = list(ckpt["exprs"])
+        all_names_full = list(ckpt["names"])
+        all_levels_full = list(ckpt["levels"])
+        # Filter to operands actually in scope for level L brackets:
+        # only generators of level <= L-1 contribute (compute_growth may
+        # over-shoot, e.g. compute_growth(max_level=0) also runs the L=1
+        # section unconditionally).  Special case: at L=0 the Hamiltonians
+        # themselves (level 0) ARE the columns we want to count.
+        lv_cap = L - 1 if L >= 1 else 0
+        keep = [k for k, lv in enumerate(all_levels_full) if lv <= lv_cap]
+        all_exprs = [all_exprs_full[k] for k in keep]
+        all_names = [all_names_full[k] for k in keep]
+        all_levels = [all_levels_full[k] for k in keep]
+        n_lower = len(all_exprs)
+        print(f"  L<={L-1} generators loaded: {n_lower}  "
+              f"(checkpoint had {len(all_exprs_full)} total)")
+
+        # ---- Phase 2: load or initialize modp state.
+        state = None
+        if resume and os.path.exists(modp_checkpoint):
+            try:
+                with open(modp_checkpoint, "rb") as fh:
+                    state = pickle.load(fh)
+                if (state.get("prime") != prime
+                        or state.get("seed") != seed
+                        or state.get("n_samples") != n_samples
+                        or state.get("level") != L
+                        or state.get("n_lower") != n_lower):
+                    print(f"  modp checkpoint params differ; discarding")
+                    state = None
+                else:
+                    print(f"  resumed modp checkpoint: "
+                          f"{len(state['processed_pairs'])} target-level "
+                          f"pairs already done, "
+                          f"{len(state['columns'])} total columns stored")
+            except Exception as exc:
+                print(f"  modp checkpoint unreadable ({exc}); starting fresh")
+                state = None
+
+        if state is None:
+            # Sample F_p points: integers in [1, prime-1] for ALL vars
+            # (q, p, u treated independently — Schwartz-Zippel in the
+            # polynomial ring k[q,p,u]).  Validated on L<=3 against the
+            # SVD result [3,6,17,116].
+            rng = np.random.RandomState(seed)
+            n_vars = len(self.all_vars)
+            sample_pts_arr = rng.randint(1, prime,
+                                         size=(n_samples, n_vars),
+                                         dtype=np.int64)
+            sample_pts = [tuple(int(x) for x in row)
+                          for row in sample_pts_arr]
+            state = {
+                "level": L,
+                "prime": prime,
+                "seed": seed,
+                "n_samples": n_samples,
+                "n_lower": n_lower,
+                "sample_pts": sample_pts,
+                "columns": [],   # list of dicts: {i,j,name,col}
+                "processed_pairs": [],  # list of (i,j) tuples
+            }
+
+        sample_pts = state["sample_pts"]
+        cols_done = {(c["i"], c["j"]) for c in state["columns"]
+                     if c.get("target_level")}
+        processed_pairs = {tuple(p) for p in state["processed_pairs"]}
+
+        # Eval lower-level generators if not already cached in state
+        n_lower_done = sum(1 for c in state["columns"]
+                           if not c.get("target_level"))
+        if n_lower_done < n_lower:
+            print(f"\n[phase 2a] evaluating lower-level generators "
+                  f"{n_lower_done}..{n_lower} mod p...")
+            t_lower = _time()
+            for k in range(n_lower_done, n_lower):
+                col = self._eval_expr_modp_column(
+                    all_exprs[k], sample_pts, prime)
+                if col is None:
+                    raise RuntimeError(
+                        f"Denominator vanished mod p evaluating lower-level "
+                        f"generator {all_names[k]}; rerun with different seed"
+                    )
+                state["columns"].append({
+                    "i": k, "j": -1, "name": all_names[k],
+                    "level": all_levels[k], "target_level": False,
+                    "col": col,
+                })
+                if (k + 1) % batch_save == 0:
+                    self._save_modp_checkpoint(modp_checkpoint, state)
+            self._save_modp_checkpoint(modp_checkpoint, state)
+            print(f"  lower levels evaluated in {_time()-t_lower:.1f}s")
+
+        # ---- Phase 3: enumerate target-level pairs (mirrors compute_growth
+        # exactly: at level L, the new brackets are pairs (i,j) with
+        # max(lv_i, lv_j) == L-1 (i.e. both operands available, and at
+        # least one is a frontier element)).  At L=0 there are no brackets.
+        if L == 0:
+            target_pairs = []
+        else:
+            already_lower = set()
+            for i in range(n_lower):
+                for j in range(i + 1, n_lower):
+                    if max(all_levels[i], all_levels[j]) < L - 1:
+                        already_lower.add(frozenset({i, j}))
+            target_pairs = []
+            seen = set()
+            for i in range(n_lower):
+                if all_levels[i] != L - 1:
+                    continue  # only frontier elements drive new brackets
+                for j in range(n_lower):
+                    if i == j:
+                        continue
+                    if max(all_levels[i], all_levels[j]) != L - 1:
+                        continue
+                    fp = frozenset({i, j})
+                    if fp in already_lower or fp in seen:
+                        continue
+                    seen.add(fp)
+                    target_pairs.append((min(i, j), max(i, j)))
+        n_target = len(target_pairs)
+        print(f"\n[phase 3] target-level (L={L}) pairs to evaluate: "
+              f"{n_target}  (already done: {len(processed_pairs)})")
+
+        # ---- SIGTERM/SIGINT handler: flush and exit cleanly
+        stop_flag = {"stop": False}
+
+        def _request_stop(signum, _frame):
+            print(f"\n  >>> signal {signum} received; "
+                  f"will flush and exit after current bracket")
+            stop_flag["stop"] = True
+
+        old_term = signal.signal(signal.SIGTERM, _request_stop)
+        try:
+            old_int = signal.signal(signal.SIGINT, _request_stop)
+        except ValueError:
+            old_int = None  # not in main thread
+
+        t0_phase = _time()
+        completed_this_run = 0
+
+        try:
+            for k, (i, j) in enumerate(target_pairs):
+                if (i, j) in processed_pairs:
+                    continue
+                if stop_flag["stop"]:
+                    break
+                if (max_walltime_s is not None
+                        and _time() - t0_phase >= max_walltime_s):
+                    print(f"\n  >>> walltime budget reached "
+                          f"({max_walltime_s}s); flushing")
+                    break
+
+                ni, nj = all_names[i], all_names[j]
+                t_b = _time()
+                raw = self.poisson_bracket(all_exprs[i], all_exprs[j])
+                simp = self.simplify_generator(raw)
+                col = self._eval_expr_modp_column(simp, sample_pts, prime)
+                # DROP simp explicitly (gc may delay)
+                del raw, simp
+
+                if col is None:
+                    # denominator hit zero mod p; record skip but don't
+                    # crash — this is rare for prime ~ 2^31
+                    print(f"    [{k:>5d}/{n_target}] {{{ni},{nj}}} "
+                          f"DENOM ZERO mod p; skipping")
+                    processed_pairs.add((i, j))
+                    state["processed_pairs"] = sorted(processed_pairs)
+                    continue
+
+                bracket_name = f"{{{ni},{nj}}}"
+                state["columns"].append({
+                    "i": i, "j": j, "name": bracket_name,
+                    "level": L, "target_level": True,
+                    "col": col,
+                })
+                processed_pairs.add((i, j))
+                state["processed_pairs"] = sorted(processed_pairs)
+                completed_this_run += 1
+
+                if completed_this_run % 10 == 0 or completed_this_run <= 5:
+                    elapsed = _time() - t0_phase
+                    rate = completed_this_run / elapsed if elapsed > 0 else 0
+                    remaining = (n_target - len(processed_pairs)) / rate \
+                        if rate > 0 else float('inf')
+                    print(f"    [{k:>5d}/{n_target}] {bracket_name}  "
+                          f"dt={_time()-t_b:.2f}s  "
+                          f"done={len(processed_pairs)}/{n_target}  "
+                          f"rate={rate:.2f}/s  "
+                          f"ETA={remaining/60:.1f}min")
+
+                if completed_this_run % batch_save == 0:
+                    self._save_modp_checkpoint(modp_checkpoint, state)
+        finally:
+            # Always flush before returning / re-raising
+            self._save_modp_checkpoint(modp_checkpoint, state)
+            signal.signal(signal.SIGTERM, old_term)
+            if old_int is not None:
+                signal.signal(signal.SIGINT, old_int)
+
+        partial = (len(processed_pairs) < n_target) or stop_flag["stop"]
+        n_gens = len(state["columns"])
+        result = {
+            "level": L,
+            "prime": prime,
+            "n_generators": n_gens,
+            "n_samples": n_samples,
+            "completed_pairs": len(processed_pairs),
+            "total_pairs": n_target,
+            "partial": partial,
+            "rank": None,
+        }
+
+        if partial:
+            print(f"\n  PARTIAL: {len(processed_pairs)}/{n_target} target "
+                  f"pairs done; rank not computed.  Resume with same args.")
+            sys.setrecursionlimit(_old_recursion)
+            return result
+
+        # ---- Phase 4: build nmod_mat (n_samples x n_gens) and rank
+        print(f"\n[phase 4] building {n_samples} x {n_gens} nmod_mat "
+              f"(prime {prime})...")
+        t_mat = _time()
+        # nmod_mat constructor accepts a flat list of ints (row-major)
+        flat = []
+        for r in range(n_samples):
+            for c in range(n_gens):
+                flat.append(int(state["columns"][c]["col"][r]))
+        mat = nmod_mat(n_samples, n_gens, flat, prime)
+        print(f"  built in {_time()-t_mat:.1f}s; computing rank...")
+        t_rank = _time()
+        rank = mat.rank()
+        print(f"  rank = {rank}   [{_time()-t_rank:.1f}s]")
+
+        result["rank"] = int(rank)
+        # Persist final rank in checkpoint so re-runs are no-ops
+        state["final_rank"] = int(rank)
+        state["complete"] = True
+        self._save_modp_checkpoint(modp_checkpoint, state)
+        sys.setrecursionlimit(_old_recursion)
+        return result
+
 
 def main():
     ap = argparse.ArgumentParser(

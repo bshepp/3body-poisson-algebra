@@ -162,7 +162,7 @@ confirmed [3, 6, 17] at level 2 for all ratios.
 
 | File | Purpose |
 |------|---------|
-| `exact_growth_nbody.py` | Core engine: NBodyAlgebra(n_bodies, d_spatial, potential, charges, masses) |
+| `exact_growth_nbody.py` | Core engine: NBodyAlgebra(n_bodies, d_spatial, potential, charges, masses). Includes `compute_growth_modp` (streaming mod-p L=4 consumer used by Lane C / AWS — see `../bench_flint/lane_c_aws_driver.py` and `../infra/launch_lane_c.py`) for low-RAM dimension counting at L=4 where the in-RAM symbolic generator pool blows past 16 GB. |
 | `symbolic_rank_nbody.py` | Exact algebraic rank over Q for arbitrary N, d, potential (no SVD) |
 | `expansion_configs.py` | Multi-System Survey scenario definitions (21 systems) |
 | `run_expansion_dimseq.py` | AWS orchestrator: dimension sequences for all survey scenarios |

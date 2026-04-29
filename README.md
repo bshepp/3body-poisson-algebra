@@ -194,7 +194,9 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 │   ├── launch_atlas_instances.py  # EC2 spot fleet orchestration (named systems)
 │   ├── launch_parametric.py    # 1/r^k exponent sweep launcher
 │   ├── launch_nbody_scaling.py    # N-body scaling fleet launch
-│   └── userdata_*.sh           # EC2 bootstrap scripts (gitignored)
+│   ├── launch_lane_c.py        # Lane C: r6a.16xlarge SPOT launcher for N=3 L=4 mod-p
+│   ├── userdata_lane_c.sh      # AL2023 + python3.11 bootstrap for Lane C
+│   └── userdata_*.sh           # Other EC2 bootstrap scripts
 ├── scripts/                    # Maintenance helpers
 │   └── archive_legacy_figures.py  # Moves legacy PNGs into legacy_figures_archive/
 ├── website/                    # Research website (deployed to nbody.briansheppard.com)
@@ -249,8 +251,9 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 |------|-------------|
 | `exact_growth.py` | Core symbolic Poisson bracket engine (levels 0–3) |
 | `exact_growth_cm.py` | Calogero-Moser (1/r²) variant |
-| `nbody/exact_growth_nbody.py` | `NBodyAlgebra` — arbitrary N, d, potential, masses, charges |
+| `nbody/exact_growth_nbody.py` | `NBodyAlgebra` — arbitrary N, d, potential, masses, charges. Includes `compute_growth_modp` for streaming low-RAM rank over F_p (Lane C path used for N=3 L=4 on AWS). |
 | `3d/exact_growth_nd.py` | `ThreeBodyAlgebra` — parameterized spatial dim d=1,2,3 |
+| `bench_flint/lane_c_aws_driver.py` | Driver invoked by Lane C userdata; calls `compute_growth_modp` and ships checkpoints to S3. |
 
 ### Atlas and landscape analysis
 | File | Description |
