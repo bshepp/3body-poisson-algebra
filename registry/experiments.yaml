@@ -2201,3 +2201,20 @@
     - bench_flint/validation_summary.md
     - docs/session_log.md
   tags: [infra, aws, lane_c, modp, complete]
+
+- id: launch_qeps
+  path: infra/launch_qeps.py
+  category: infra
+  scope: tooling
+  status: complete
+  description: |
+    AWS launcher for the Q(eps) symbolic-nullspace job: computes the exact
+    left-null kernel of the (4,3) binary-collision collision matrix over
+    Q(eps) (rather than at sample epsilons). Defaults to on-demand
+    r6i.4xlarge; supports --spot and --instance-type overrides plus
+    --dry-run. Ships userdata_qeps.sh which provisions the worker on AL2023.
+  outputs: []
+  run_command: python infra/launch_qeps.py --dry-run
+  related_docs:
+    - collision_syzygy/COLLISION_SYZYGY_REPORT.md
+  tags: [infra, aws, qeps, syzygy, collision, complete]
