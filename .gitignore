@@ -181,3 +181,13 @@ _lane_c_install*.log
 # Shape sphere atlas output (large generated .npy/.npz; rebuild via shape_sphere_atlas.py)
 shape_sphere_atlas/
 
+
+# Collision/syzygy folder: commit .py source, .md report, .json artifacts;
+# ignore intermediate run logs / stderr (regeneratable).
+collision_syzygy/*.log
+collision_syzygy/*.err
+
+# Root-level computation logs (ephemeral; full runs archived to S3 / collision_syzygy/)
+*.log.aws
+rebuild_*.log
+stratification.log

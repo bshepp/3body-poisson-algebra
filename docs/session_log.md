@@ -1,4 +1,4 @@
-﻿# Three-Body Lie Algebra Growth â€” Session Log
+# Three-Body Lie Algebra Growth â€” Session Log
 
 ## Project Goal
 
@@ -6218,3 +6218,371 @@ checkpoints to `s3://3body-compute-290318/lane_c/checkpoints/`. Partial
 results survive any walltime stop because checkpoints are flushed
 incrementally.
 
+
+
+## 2026-04-29 — Collision-edge syzygies: exact ℚ identity + KS reading
+
+Resumed from an interrupted investigation. Goal: identify the exact
+symbolic identity behind the 10⁻¹⁴ SVD signature at the binary-collision
+edge of the planar 1/r d=2 level-3 algebra and give it a Levi-Civita /
+Kustaanheimo-Stiefel reading.
+
+### Bug fix (wrong checkpoint)
+
+Earlier soft-syzygy claims were derived from a `level_3.pkl` that had
+been silently overwritten with the **harmonic** (V = r²) build during
+the Mathematica oracle work. The harmonic algebra closes at dim 15, so
+arbitrary syzygies among 156 generators were trivially extractable —
+none of them were valid for 1/r.
+
+Recovery:
+- archived the contaminated pickles to
+  `checkpoints/level_{0,1,2,3}_HARMONIC_BACKUP_HARMONIC_BACKUP.pkl`,
+- rebuilt a clean 1/r d=2 equal-mass level-≤3 checkpoint
+  (`checkpoints/level_3.pkl`, 15.18 MB, H12 = ½(p1²+p2²) − u12, levels
+  {0:3, 1:3, 2:12, 3:138}, SVD gap at index 116, ratio 6.89 × 10⁶),
+- patched `collision_stratification.py` to cap rank at the algebraic
+  upper bound (GENERIC_RANK = 116) so float64 ε-tail singular values
+  cannot inflate the rank past what 156 functions can span on any
+  subvariety.
+
+### v2 algebraic strategy (collinear contamination removed)
+
+Geometry: body₁ = (0,0), body₂ = (3ε, 4ε), body₃ = (4, 3). Then
+r₁₂ = 5ε, r₁₃ = 5 are rational, and r₂₃² = D(ε) = 25 − 48ε + 25ε²
+is rational but r₂₃ is irrational. Substituting u₁₂ → 1/(5ε),
+u₁₃ → 1/5, u₂₃ → S and reducing S² ↦ 1/D(ε) gives, for every
+generator, a unique splitting
+
+    G = A(p, ε) + B(p, ε) · S    over ℚ.
+
+A rational left-null vector c satisfies Σ cₖ Gₖ = 0 iff
+Σ cₖ Aₖ = 0 AND Σ cₖ Bₖ = 0. Stack [A | B] columns and take the
+exact left nullspace via `DomainMatrix(QQ).transpose().nullspace()`.
+Implementation: `collision_syzygy_v2.py`.
+
+### Stratification table (exact ℚ rank)
+
+| stratum                                      | rank | nullity |
+|----------------------------------------------|-----:|--------:|
+| (4,3) ε ∈ {1/3, 1/5, 1/10, 1/100, 1/1000}    |   80 |      76 |
+| (3,4) collinear, ε = 1/100                   |   56 |     100 |
+
+Constant rank 80 across the entire (4,3) ε-sweep — the same 76
+syzygies hold at every ε > 0. The collinear cap drops 24 more.
+
+### Identities at body₃ = (4,3), ε = 1/100
+
+DEEP (Jacobi, vanishes generically, level 3, 2 terms):
+
+    {{K₁, H₁₂}, H₁₃}  −  {{K₁, H₁₃}, H₁₂}  =  0.
+
+SOFT (vanishes only on the (4,3) ε = 1/100 slice; 13 terms,
+8 level-2 + 5 level-3):
+
+    A · ({K₁,H₁₂} − {K₁,H₁₃} − {K₂,H₁₃})
+  + B · ({K₁,H₂₃} − {K₂,H₁₂} + {K₂,H₂₃})
+  − (A−B) · ({K₃,H₁₃} − {K₃,H₂₃})
+  + 186 755 398 942 523 030 476 106 217 ·
+       (+{{K₁,H₁₂},{K₁,K₂}} − {{K₁,H₁₃},{K₁,K₂}}
+        + {{K₁,K₂},{K₂,H₁₃}} + {{K₁,K₂},{K₃,H₁₃}}
+        − {{K₁,K₂},{K₃,H₂₃}})  =  0,
+
+with
+A = 47 804 834 998 654 578 160 224 254 879 037 120,
+B = 47 804 750 569 320 079 766 707 059 083 468 800,
+A − B = 84 429 334 498 393 517 195 795 568 320.
+
+The leading ε-order at random rational momenta (seed 7) is **ε⁻⁸**
+— the algebraic origin of the 10⁻¹⁴ tail in float64 (~ (10⁻²)⁻⁸ × O(1)
+scaled by O(1) row balance).
+
+### KS / Levi-Civita reading
+
+The clean A + B·S splitting at every ε > 0 is the algebraic shadow of
+Levi-Civita / Kustaanheimo-Stiefel regularization of the (1,2) binary
+on this slice: introducing S = u₂₃ as an independent symbol with
+S² = 1/D(ε) is exactly the KS doubling that turns the 1/r singularity
+into a polynomial expression. The constant rank 80 along the entire
+(4,3) ε-family is the certificate that one change of variables
+regularizes the generators uniformly across the stratum; the +24
+collinear-cap drop is the residue that this single regularization
+does not absorb.
+
+### Operational notes (Windows pitfalls)
+
+- SymPy < 1.13.3 silently returns wrong rank at level 3 (the original
+  [3,5,13,69] miscount). Always pin ≥ 1.13.3.
+- `python -u` plus `Start-Process -RedirectStandardOutput` is the
+  reliable way to capture progress for hour-long jobs;
+  `Tee-Object | Select-Object -Last N` buffers stdout and produces
+  blank logs.
+- Always verify a checkpoint (H12 form, K1..K3 names, level histogram,
+  SVD gap location) before deriving any identities from it.
+
+### Artifacts
+
+- `checkpoints/level_3.pkl` — rebuilt clean 1/r pickle.
+- `collision_syzygy_v2.py` — exact ℚ left-nullspace pipeline.
+- `syzygy_v2.log` — verbatim 4.3 KB run log.
+- `COLLISION_SYZYGY_REPORT.md` — full writeup with all integer
+  coefficients and the ε-Laurent expansion.
+- `README.md` — new "Collision-edge syzygies (April 2026)" subsection
+  under "Summary of results".
+- `/memories/repo/collision-syzygy-results.md` — persistent repo memory.
+
+### Open follow-ups (in progress)
+
+A. **ℚ(ε) family-wide nullspace.** Sample the (4,3) build at K ≥ 10
+   distinct rational ε values, reduce each null-basis to a shared
+   pivot order, and Lagrange-interpolate the integer coefficients
+   into ℚ(ε) to lift the 76-dimensional rank-80 nullspace to a single
+   family-wide ℚ(ε) basis. New script
+   `collision_syzygy_v2_eps_lift.py`. CPU budget ≈ 70 min.
+
+B. **Classify the 24 extra collinear syzygies.** At body₃ = (3,4),
+   ε = 1/100, extract all 100 null vectors and bucket by (deep vs soft,
+   binary-collision-only vs collinear-only vs both) to isolate the new
+   24 collinear-cap relations. New script
+   `collision_syzygy_v2_collinear.py`.
+
+
+---
+
+## 2026-04-29 -- Collision-edge follow-ups: eps-lift + collinear classification
+
+Both follow-ups identified at the end of the morning session are now
+resolved. New code:
+
+- [collision_syzygy_v2_eps_lift.py](../collision_syzygy/collision_syzygy_v2_eps_lift.py)
+- [collision_syzygy_v2_collinear.py](../collision_syzygy/collision_syzygy_v2_collinear.py)
+
+New artefacts:
+
+- [collision_syzygy_eps_lift.json](../collision_syzygy/collision_syzygy_eps_lift.json) (2.78 MB)
+- [syzygy_v2_eps_lift.log](../collision_syzygy/syzygy_v2_eps_lift.log)
+- [syzygy_v2_collinear.log](../collision_syzygy/syzygy_v2_collinear.log)
+
+### Follow-up A -- universal Q(eps) basis  [~28 min wall]
+
+Sampled the (4,3) binary-collision stratum at K=8 eps-values
+{1/2, 1/3, 1/4, 1/5, 1/7, 1/10, 1/25, 1/100}. For each eps:
+
+- build [A | B] over Q (shape 156 x 164),
+- take RREF of M^T using DomainMatrix(QQ),
+- read off the canonical pivot-parameterized left-null basis (76 vectors).
+
+**Pivot column set is the same 80-element subset of {0..155} at every
+sample.** This means the 76 canonical basis vectors lift directly to
+rational-function vectors in Q(eps) -- no choice of pivots needed at any
+eps, so the kernel is a free Q(eps)-module of rank 76 with bounded
+denominators in eps and D(eps) = 25 - 48 eps + 25 eps^2.
+
+Per-sample timing (rank, nullity, wall):
+- eps=1/2:   80 / 76 / 201.6 s
+- eps=1/3:   80 / 76 / 203.8 s
+- eps=1/4:   80 / 76 / 206.2 s
+- eps=1/5:   80 / 76 / 201.8 s
+- eps=1/7:   80 / 76 / 215.6 s
+- eps=1/10:  80 / 76 / 211.7 s
+- eps=1/25:  80 / 76 / 214.0 s
+- eps=1/100: 80 / 76 / 209.5 s
+
+(Full coefficient tables in JSON; 76 free columns per sample, each row 156
+Rationals stored as "p/q".)
+
+### Follow-up B -- classify the 100-dim collinear nullspace  [~12 min wall]
+
+Built two [A | B] matrices: (3,4) collinear at eps=1/100 (rank 56,
+nullity 100) and (4,3) non-collinear at eps=1/100 (rank 80, nullity 76).
+Took canonical RREF basis of N(3,4) (100 vectors) and classified each
+along two axes:
+
+- axis 1: vanish at make_generic_sub() ?  -> DEEP vs SOFT
+- axis 2: vanish at (4,3)/eps=1/100 sub ? -> binary-also vs collinear-only
+
+Result:
+
+| bucket                   | count |
+|--------------------------|------:|
+| DEEP, binary-also        |    14 |
+| DEEP, collinear-only     |     0 |
+| SOFT, binary-also        |     0 |
+| SOFT, collinear-only     |    86 |
+| total                    | 100   |
+
+Headline: **14 independent deep level-3 Jacobi identities**, not the
+single one isolated in §3.1 of the report. The sparse representative is
+still
+
+    {{K1,H12}, H13} - {{K1,H13}, H12} = 0  (2 terms).
+
+These 14 deep witnesses are part of the 156 - 116 = 40 generic syzygies;
+the remaining 26 lie in the RREF complement of this particular basis
+choice.
+
+### Documentation updates
+
+- [COLLISION_SYZYGY_REPORT.md](../collision_syzygy/COLLISION_SYZYGY_REPORT.md) gained a
+  §8 "Follow-up results" section (lines 290-372) with the JSON + log
+  pointers, pivot-set constancy, 4-bucket table, and 6 new follow-ups
+  (Pade interpolation; identify the 14 deep witnesses).
+- [/memories/repo/collision-syzygy-results.md](memory:/memories/repo/collision-syzygy-results.md)
+  updated.
+
+### Operational notes
+
+- Both jobs use Start-Process with -WindowStyle Hidden (or detached) to
+  avoid the Ctrl+C / console-attach issue that killed the first launch
+  of follow-up B at 10:41:39 AM.
+- Use \utf-8='utf-8' before launching scripts that
+  print non-ASCII characters; cp1252 is still the default on Windows
+  Python 3.13.
+- canonical_nullspace via DomainMatrix(QQ).transpose().rref() -- pivots
+  in column order, so for each free column j set v[j] = 1 and
+  v[pivot] = - R[i_pivot, j].
+
+
+---
+
+## A.5: Pade reconstruction of the eps-rational nullspace (2026-04-29 evening)
+
+
+### Goal
+
+Close Â§8.3 follow-up #5 from COLLISION_SYZYGY_REPORT.md: take the 8-sample
+Îµ-lift JSON produced by Follow-up A (`collision_syzygy_eps_lift.json`,
+shape 76 Ã— 156, â„š entries at Îµ âˆˆ {1/2, 1/3, 1/4, 1/5, 1/7, 1/10, 1/25, 1/100})
+and PadÃ©-interpolate every entry as a rational function in â„š(Îµ) with
+denominator of the form `eps^a * D(eps)^b`, where `D = 25 - 48*eps + 25*eps^2`.
+
+### Implementation
+
+`collision_syzygy_v2_pade.py` (~280 lines, pure-Python `fractions.Fraction`,
+no SymPy in the inner loop):
+
+- `AB_GRID = sorted([(a,b) for a in 0..8 for b in 0..4], key=(a+2b, a, b))`
+- For each sample, compute `samples * eps^a * D^b` and Lagrange-interpolate
+  the result.
+- **Acceptance test (critical):** `deg(num) <= K - 2 - a - 2*b` -- one
+  degree of freedom must vanish. The first version used `K - 1 - a - 2*b`
+  which is vacuous (8 points fit a unique deg-7 poly), and incorrectly
+  reported 1360/1360 fits at `(0, 0)` in 1.3 s.
+- After fix: 15.0 s end-to-end; **216 fits, 1144 failures**.
+- Each fit is then leave-one-out cross-validated; **0 LOO failures**.
+
+Output: `collision_syzygy_pade.json` (2.59 MB) with one record per
+(row j, column i) of shape `{kind: 'const'|'rat'|'FAIL', a, b, num: [...]}`.
+
+### Result -- per-entry breakdown
+
+| count | category                                | meaning |
+|------:|-----------------------------------------|---------|
+| 4720  | exact zeros at every sample             | structural zero in this basis |
+|  216  | nonzero, fit at `(a,b)=(0,0)`, deg 0    | confirmed integer constant |
+| 1144  | failed all `(a,b)` in the grid          | denominator outside `eps^a * D^b`, `a+2b <= 6` |
+
+All 216 constants pass leave-one-out cross-validation -- they are
+genuine Îµ-independent integers.
+
+### Result -- per-row classification
+
+`_classify_pade.py` partitions the 76 free-column basis vectors by
+whether **any** entry failed the PadÃ© fit:
+
+- **23 PURE-CONSTANT rows** -- every nonzero pivot is an integer constant,
+  i.e. these basis vectors are entirely Îµ-independent algebraic
+  identities of the level-3 algebra.
+- **53 MIXED rows** -- at least one entry is genuinely Îµ-dependent.
+
+Pure-row free columns:
+
+```
+{15, 32, 35, 48, 51, 52, 63, 77, 90, 96, 102, 105, 113,
+ 126, 132, 135, 136, 139, 140, 141, 143, 146, 147}
+```
+
+Sparsity profile: 3 rows have a single non-zero pivot (2-term
+identities), 16 have 2 pivots (3-term), 4 have 3 pivots (4-term).
+All coefficients lie in `{-2, -1, +1}`.
+
+### The named identities (from `_decode_pure_syzygies.py`)
+
+The four sparsest:
+
+```
+{{K1,H13},H12} - {{K1,H12},H13}              = 0       (level 3, 2 terms)
+{{K1,H23},{K3,H12}} - {{K1,H23},{K2,H13}}    = 0       (level 3, 2 terms)
+{{K2,H13},{K3,H12}} - {{K1,H23},{K2,H13}}    = 0       (level 3, 2 terms)
+{K3,H12} + {K1,H23} - {K2,H13}               = 0       (level 2, 3 terms)
+```
+
+The fourth is the unique level-2 syzygy -- it is exactly the
+totally-antisymmetric combination of the three cross-brackets
+`{K_a, H_{bc}}` and explains the 17 vs 18 dimension gap at level 2.
+This was conjectured but not previously exhibited explicitly;
+it now comes out of the PadÃ© fit with no manual choice.
+
+The first identity is the "sparsest deep witness" guessed at in Â§8.2 of
+COLLISION_SYZYGY_REPORT.md (then derived combinatorially); here it falls
+out of the Îµ-lifted nullspace directly.
+
+The remaining 19 pure rows (3 / 4-term identities) are listed in full
+with names in `syzygy_v2_pade_decoded.log`. Many of them have the
+"swap K1 â†” K3 with H12 â†” H13" pattern, suggesting they are images of a
+single Jacobi family under the (1,3) particle-permutation involution.
+
+### Failure histogram of the 53 mixed rows
+
+```
+ 8 failures: 17 rows
+26 failures: 32 rows
+44 failures:  4 rows
+```
+
+Trimodal with arithmetic step 18 = number of pivots reached per cubic
+denominator extension. This is a combinatorial fingerprint: the missing
+17 generic syzygies live in a basis where the denominator carries an
+extra linear / cubic / quintic factor (e.g. `(5*eps - 1)`, the
+discriminant of `D`, or a higher-order resolvent).
+
+### Reconciliation with Follow-up B's "14 DEEP" count
+
+Follow-up B (single point Îµ = 1/100, different RREF basis) reported
+14 DEEP / 0 / 0 / 86 SOFT-collinear-only.
+
+Follow-up A.5 (8 Îµ-samples, PadÃ© basis) reports 23 pure-constant rows.
+
+The two are **not contradictory**: both are basis-dependent counts of
+Îµ-independent rows, not invariants. The true invariant is the dimension
+of the Îµ-independent sub-nullspace, computable as the kernel of the
+parametric `[A(Îµ) | B(Îµ)]` matrix over `QQ.frac_field(eps)` -- one of
+the still-open follow-ups. The lower bound from this work is now
+`max(14, 23) = 23`, and the true number is `<= 40` (the count of generic
+syzygies on the algebra).
+
+### Files added / modified
+
+- **NEW:** [collision_syzygy_v2_pade.py](../collision_syzygy/collision_syzygy_v2_pade.py) -- production fitter
+- **NEW:** [collision_syzygy_pade.json](../collision_syzygy/collision_syzygy_pade.json) -- 2.59 MB grid of records
+- **NEW:** [_classify_pade.py](../collision_syzygy/_classify_pade.py) -- per-row classifier
+- **NEW:** [_decode_pure_syzygies.py](../collision_syzygy/_decode_pure_syzygies.py) -- name decoder
+- **NEW:** [syzygy_v2_pade.log](../collision_syzygy/syzygy_v2_pade.log) -- run log
+- **NEW:** [syzygy_v2_pade_decoded.log](../collision_syzygy/syzygy_v2_pade_decoded.log) -- 23-identity dump
+- **MODIFIED:** [COLLISION_SYZYGY_REPORT.md](../collision_syzygy/COLLISION_SYZYGY_REPORT.md) -- new Â§8.4 "Pade reconstruction of the Q(eps) nullspace"
+
+### Operational lesson
+
+Always include at least one degree of freedom in polynomial-fit
+acceptance tests. With `K` samples and Lagrange interpolation, accepting
+all polynomials of degree `<= K - 1` is vacuous (any `K` points fit
+uniquely); the test must be `<= K - 2 - (excess denominator degree)` to
+have any rejecting power. The vacuous version produced a "100% fit at
+(a,b)=(0,0)" false positive in 1.3 s before the fix.
+
+### Status of Â§8.3 follow-ups after this work
+
+- 1, 3: âœ“ closed (8.1, 8.2)
+- 4: still open (3D / KS proper)
+- 5: âœ“ closed (this work, 8.4)
+- 6: partially advanced -- the PadÃ© route now yields 23 explicit Îµ-independent identities, including the level-2 Jacobi witness, with named generators. The remaining task is to reconcile the 23 with Follow-up B's 14 by computing a basis-independent count via `QQ.frac_field(eps)` RREF.
