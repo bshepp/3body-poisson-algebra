@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OEIS A395423 — an interactive explainer</title>
+<link rel="stylesheet" href="style.css">
+<!-- KaTeX (math rendering) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body,{delimiters:[
+          {left:'$$',right:'$$',display:true},
+          {left:'$',right:'$',display:false}
+        ]});"></script>
+</head>
+<body>
+
+<header class="hero">
+  <h1>OEIS&nbsp;A395423</h1>
+  <p class="sub">An interactive walk through the dimension sequence<br>
+     <span class="seq">3, 6, 17, 116, &hellip;</span></p>
+  <p class="byline">Companion to <a href="https://oeis.org/A395423">oeis.org/A395423</a> &middot;
+     source: <a href="https://github.com/bshepp/3body-poisson-algebra">github.com/bshepp/3body-poisson-algebra</a></p>
+</header>
+
+<main>
+
+<!-- ============================================================ -->
+<!-- §0  THE THREE-BODY SYSTEM                                    -->
+<!-- ============================================================ -->
+<section id="s0">
+  <h2><span class="num">§0</span> The three-body system</h2>
+
+  <p>Three point masses move in a plane, pulling on each other through Newtonian
+     gravity. That is the entire physical setup behind every term in
+     A395423. Drag the sliders, pick a preset, or just hit <em>Random</em>
+     and watch the orbits.</p>
+
+  <figure class="widget" id="orbit-widget">
+    <canvas id="orbit-canvas" width="640" height="480"></canvas>
+    <div class="controls">
+      <div class="presets">
+        <button data-preset="lagrange">Lagrange&nbsp;triangle</button>
+        <button data-preset="figure8">Figure-8</button>
+        <button data-preset="chaos">Click for chaos</button>
+      </div>
+      <div class="sliders">
+        <label>m<sub>1</sub> <input type="range" id="m1" min="-1" max="1" step="0.05" value="0"><output id="m1v">1.00</output></label>
+        <label>m<sub>2</sub> <input type="range" id="m2" min="-1" max="1" step="0.05" value="0"><output id="m2v">1.00</output></label>
+        <label>m<sub>3</sub> <input type="range" id="m3" min="-1" max="1" step="0.05" value="0"><output id="m3v">1.00</output></label>
+        <label>speed <input type="range" id="speed" min="0.1" max="4" step="0.1" value="1"><output id="speedv">1.0&times;</output></label>
+      </div>
+      <div class="buttons">
+        <button id="play">&#9658; Play</button>
+        <button id="pause">&#10074;&#10074; Pause</button>
+        <button id="reset">&#x21bb; Reset</button>
+        <button id="trails">Toggle trails</button>
+      </div>
+    </div>
+    <figcaption>
+      Whatever this system <em>can do</em> &mdash; periodic dances, near-collisions,
+      wild ejections &mdash; is encoded by the algebra of observables that
+      A395423 is counting the dimensions of.
+    </figcaption>
+  </figure>
+
+  <p class="next">Next: §1 phase space &middot; §2 the Poisson bracket &middot; &hellip;
+     <em>(coming soon)</em></p>
+</section>
+
+<!-- placeholder anchors for later sections -->
+<section id="s1">
+  <h2><span class="num">§1</span> Symplectic phase space</h2>
+  <p>Forget shapes in space for a moment. The natural arena for classical mechanics
+     is <em>phase space</em>: every degree of freedom $q$ is paired with a
+     conjugate momentum $p$. A single planar pendulum lives in
+     $(q, p) \in S^1 \times \mathbb R$, and its entire future is a curve on
+     that cylinder &mdash; one trajectory per energy.</p>
+
+  <p>The Hamiltonian is</p>
+  $$ H(q, p) \;=\; \tfrac12 p^2 \;-\; \cos q. $$
+
+  <figure class="widget" id="pendulum-widget">
+    <canvas id="pendulum-canvas" width="640" height="380"></canvas>
+    <div class="controls">
+      <div class="buttons">
+        <button id="pend-pause">&#10074;&#10074; Pause</button>
+        <button id="pend-clear">Clear trajectories</button>
+      </div>
+      <p style="font-size:0.85em;color:var(--muted);margin:6px 0 0;">
+        Last launched H = <output id="pend-h">—</output>
+      </p>
+    </div>
+    <figcaption>
+      Click anywhere on the $(q, p)$ plane to launch a trajectory from that
+      initial condition. Inside the orange <em>separatrix</em> ($H=1$) the
+      pendulum swings back and forth (libration); outside, it spins all the way
+      around (rotation). The whole picture is foliated by curves of constant
+      $H$ &mdash; energy is conserved because the bracket
+      $\{H, H\} = 0$.
+    </figcaption>
+  </figure>
+
+  <p>For three planar bodies the phase space jumps from $\mathbb R^2$ to
+     $\mathbb R^{12}$, but the principle is identical: the state of the
+     universe is a point, and time evolution is a curve.</p>
+</section>
+
+<section id="s2">
+  <h2><span class="num">§2</span> The Poisson bracket</h2>
+  <p>Phase space comes equipped with an operation that turns two functions
+     of $(q, p)$ into a third:</p>
+  $$ \{f, g\} \;=\; \frac{\partial f}{\partial q}\,\frac{\partial g}{\partial p}
+                   \;-\; \frac{\partial f}{\partial p}\,\frac{\partial g}{\partial q}. $$
+  <p>This is the <em>Poisson bracket</em>. It is bilinear, antisymmetric, and
+     satisfies the Jacobi identity. Hamilton&rsquo;s equations are simply
+     $\dot f = \{f, H\}$ &mdash; the Hamiltonian uses the bracket to flow
+     every observable forward in time.</p>
+
+  <p>Pick two observables and watch the bracket appear:</p>
+
+  <figure class="widget" id="bracket-widget">
+    <div class="bracket-row">
+      <div class="bracket-cell">
+        <label class="cellsel">f: <select id="br-fsel"></select></label>
+        <canvas id="br-f"  width="200" height="200"></canvas>
+        <div class="celllabel" id="br-flabel"></div>
+      </div>
+      <div class="bracket-cell">
+        <label class="cellsel">g: <select id="br-gsel"></select></label>
+        <canvas id="br-g"  width="200" height="200"></canvas>
+        <div class="celllabel" id="br-glabel"></div>
+      </div>
+      <div class="bracket-cell">
+        <div class="cellsel" style="visibility:hidden">.</div>
+        <canvas id="br-fg" width="200" height="200"></canvas>
+        <div class="celllabel" id="br-fglabel"></div>
+      </div>
+    </div>
+    <figcaption>
+      Each panel is a heatmap on the $(q, p)$ window
+      $[-2.5, 2.5]^2$: orange is positive, blue is negative, black is zero.
+      The bracket $\{f, g\}$ on the right is computed numerically by central
+      differences &mdash; for the menu&rsquo;s observables it agrees with the
+      closed forms shown beneath each panel.
+    </figcaption>
+  </figure>
+
+  <p>Two facts are already visible:</p>
+  <ul>
+    <li>$\{q, p\} = 1$ &mdash; this is the canonical relation that defines the
+        symplectic structure.</li>
+    <li>$\{H, H\} = 0$ &mdash; every Hamiltonian commutes with itself, so
+        energy is conserved.</li>
+  </ul>
+  <p>The bracket of two functions is itself a function. <em>Iterating</em> the
+     bracket on a starting set of observables generates a Lie algebra &mdash;
+     and that is exactly what A395423 measures the dimension of.</p>
+</section>
+
+<section id="s3">
+  <h2><span class="num">§3</span> Pairwise potentials</h2>
+  <p>Now the leap from one pendulum to three bodies. Each pair of bodies
+     contributes a Hamiltonian that depends only on their separation:</p>
+  $$ H_{ij}(\mathbf q) \;=\; m_i\, m_j\, V\!\left(r_{ij}\right),
+     \qquad r_{ij} = \lVert \mathbf q_i - \mathbf q_j \rVert. $$
+  <p>The full gravitational Hamiltonian is just the sum,
+     $H = \tfrac12 \sum p_i^2/m_i + \sum_{i<j} H_{ij}$,
+     but the algebra story keeps the three pieces separate &mdash; they are
+     the seed of everything that follows.</p>
+
+  <figure class="widget" id="pot-widget">
+    <div class="pot-row">
+      <div class="pot-cell">
+        <label class="cellsel">V(r): <select id="pot-sel"></select></label>
+        <canvas id="pot-canvas" width="320" height="220"></canvas>
+      </div>
+      <div class="pot-cell">
+        <div class="cellsel" style="visibility:hidden">.</div>
+        <canvas id="pot-bond" width="320" height="220"></canvas>
+      </div>
+    </div>
+    <figcaption>
+      Left: the potential $V(r)$. Right: three bodies breathing in and out,
+      with the live values of the three pair Hamiltonians $H_{12}, H_{13}, H_{23}$
+      shown on each bond. Switch the potential and watch how the bond
+      strengths respond &mdash; same geometry, very different physics.
+    </figcaption>
+  </figure>
+
+  <p>So the seed set is</p>
+  $$ L_0 \;=\; \operatorname{span}\{\, H_{12},\; H_{13},\; H_{23}\,\}, \qquad \dim L_0 = 3. $$
+  <p>That is the first term of A395423.</p>
+</section>
+
+<section id="s4">
+  <h2><span class="num">§4</span> Building the algebra</h2>
+  <p>From the seed $L_0$, generate a sequence of subspaces by closing under
+     the Poisson bracket:</p>
+  $$ L_{n+1} \;=\; L_n \;+\; \{\, L_0,\; L_n\,\}. $$
+  <p>Each step adds whatever new functions the bracket produces. The
+     dimension $a(n) = \dim L_n$ is exactly what A395423 records. Step
+     through the construction:</p>
+
+  <figure class="widget" id="algebra-widget">
+    <div id="algebra-stage"></div>
+    <div class="controls">
+      <div class="buttons">
+        <button id="alg-step">Compute next level →</button>
+        <button id="alg-reset">↻ Reset</button>
+      </div>
+      <p style="font-size:0.85em;color:var(--muted);margin:6px 0 0;">
+        Sequence so far: <output id="alg-dim">[3]</output>
+      </p>
+    </div>
+    <figcaption>
+      The level-3 jump from 17 to 116 is where the algebra reveals it is
+      genuinely non-trivial. Beyond that, level 4 is currently only known by
+      a numerical lower bound &mdash; computed by lambdifying every level-4
+      generator and taking an SVD on a 4096-point sample of phase space.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="s5">
+  <h2><span class="num">§5</span> The dimension sequence</h2>
+  <p>Stack the values for $V(r) = 1/r$ and you get the sequence A395423 is
+     named for:</p>
+  $$ a(0),\, a(1),\, a(2),\, a(3) \;=\; 3,\; 6,\; 17,\; 116. $$
+  <p>The remarkable empirical fact is that <em>almost every</em> two-body
+     potential gives the same first four terms. The chart below shows the
+     comparison &mdash; only the harmonic potential $V(r) = r^2$ is special,
+     because its algebra closes at level 2.</p>
+
+  <figure class="widget" id="dim-widget">
+    <canvas id="dim-canvas" width="720" height="320"></canvas>
+    <figcaption>
+      Bars are linear in dimension up to 116. Newton, Calogero–Moser, $1/r^3$,
+      log, and Yukawa all share the sequence 3, 6, 17, 116.
+      The harmonic case caps out at dim 15 because every $H_{ij} = m_i m_j r_{ij}^2$
+      is a polynomial of degree 2, and the bracket of two quadratics is
+      another quadratic. Universality and its single exception are the
+      subjects of §6.
+    </figcaption>
+  </figure>
+</section>
+<section id="s6">
+  <h2><span class="num">§6</span> Universality &mdash; the dimension doesn't care</h2>
+  <p>
+    What if you don't know the right potential? Maybe the bodies interact
+    through gravity, or screened gravity, or a logarithmic plasma force.
+    Surely the algebra changes? Slide the knobs below to mix
+    $\,1/r$, $1/r^2$, and $\log r$ contributions:
+  </p>
+  $$ V(r) \;=\; \alpha\,\tfrac{1}{r} \;+\; \beta\,\tfrac{1}{r^2} \;+\; \gamma\,\log r. $$
+  <figure class="widget">
+    <canvas id="uni-canvas" width="640" height="240"></canvas>
+    <div class="uni-controls">
+      <label>α <input type="range" id="uni-alpha" min="-2" max="2" step="0.05" value="1"></label>
+      <label>β <input type="range" id="uni-beta"  min="-2" max="2" step="0.05" value="0"></label>
+      <label>γ <input type="range" id="uni-gamma" min="-2" max="2" step="0.05" value="0"></label>
+      <output id="uni-formula" class="muted"></output>
+    </div>
+    <figcaption>
+      The shape of $V(r)$ swings wildly. The dimension at level 3
+      does not. Every singular potential we have tested &mdash; Newton,
+      Calogero&ndash;Moser, Yukawa, log, $1/r^3$, and arbitrary positive
+      mixtures &mdash; lands on the same sequence
+      $\bigl[3,\,6,\,17,\,116\bigr]$.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="s7">
+  <h2><span class="num">§7</span> Spatial dimension $d \in \{1,2,3\}$</h2>
+  <p>
+    Universality is not just a fact about potentials. It is a fact about
+    geometry. The same Lie algebra grows out of three particles on a
+    line, three particles in a plane, and three particles in space.
+    The phase space changes shape; the algebra does not.
+  </p>
+  <figure class="widget">
+    <div id="dim-stage" class="dim-toggle">
+      <button data-d="1">d = 1 (line)</button>
+      <button data-d="2">d = 2 (plane)</button>
+      <button data-d="3">d = 3 (space)</button>
+    </div>
+    <canvas id="dim-bodies" width="640" height="220"></canvas>
+    <output id="dim-out" class="dim-out"></output>
+    <figcaption>
+      The class <code>NBodyAlgebra(N=3, d)</code> reproduces
+      $\bigl[3,6,17,116\bigr]$ for $d=1, 2, 3$. The dimension is
+      controlled by the combinatorics of pairs $(i,j)$, not by where
+      the particles live.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="s8">
+  <h2><span class="num">§8</span> Mass invariance</h2>
+  <p>
+    The early calculations almost ran aground here. With unequal masses
+    a buggy version of <code>SymPy</code> miscounted level 3 as 69 instead
+    of 116, and for a while we believed the dimension <em>did</em> depend
+    on the mass ratios. The fix in <code>SymPy 1.13.3</code> restored the
+    truth: every choice of positive masses gives the same Lie algebra.
+  </p>
+  <figure class="widget">
+    <canvas id="mass-canvas" width="640" height="320"></canvas>
+    <output id="mass-out" class="muted"></output>
+    <figcaption>
+      Hover over the mass-ratio plane $(m_1/m_3,\, m_2/m_3)$. Every
+      generic point yields $\dim L_3 = 116$. The result is invariant
+      under rescaling $m_i \to \lambda m_i$, swapping particle labels,
+      and on every line where two masses coincide.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="s9">
+  <h2><span class="num">§9</span> The numerical witness: SVD rank gap</h2>
+  <p>
+    How do we <em>know</em> the dimension is 116 and not 117 or 115?
+    The symbolic generators are <code>lambdify</code>'d to NumPy
+    callables, evaluated at hundreds of random phase-space points,
+    and stacked into a tall matrix $M$. The number of nonzero singular
+    values of $M$ is the dimension of the span. The trick is the gap.
+  </p>
+  <figure class="widget">
+    <canvas id="svd-canvas" width="720" height="320"></canvas>
+    <output id="svd-out" class="muted"></output>
+    <figcaption>
+      The first 116 singular values decay slowly. Beyond index 116 they
+      collapse onto the numerical floor near machine epsilon. The ratio
+      $\sigma_{116}/\sigma_{117} > 10^{10}$ is the oracle: a gap that
+      large can only mean the matrix has exact rank 116 and the
+      remaining $\sigma_i$ are pure roundoff. We require this gap on
+      every regression run.
+    </figcaption>
+  </figure>
+</section>
+
+<section id="s10">
+  <h2><span class="num">§10</span> The frontier: $a(4) \geq 5604$</h2>
+  <p>
+    For four bodies the same machinery applies, but the symbolic algebra
+    explodes. Level 0 has 6 generators (one for each pair),
+    level 1 has 14, level 2 has 62, and level 3 climbs to a number we
+    cannot yet compute symbolically. The best lower bound at the time
+    of writing is from a 4096-sample numerical SVD running on AWS spot
+    instances:
+  </p>
+  $$ a(4) \;\geq\; 5604. $$
+  <figure class="widget">
+    <canvas id="front-canvas" width="720" height="320"></canvas>
+    <figcaption>
+      Each bar is a step in our climb toward $a(4)$. The true value is
+      unknown. Pushing the bound higher needs either better symbolic
+      reductions, smarter sampling, or considerably more compute. If
+      you would like to help &mdash; the code is on
+      <a href="https://github.com/bshepp/3body-poisson-algebra">GitHub</a>
+      and the integer sequence
+      $\bigl[3, 6, 17, 116, \geq 5604, \ldots\bigr]$ has been submitted
+      to the OEIS as <strong>A395423</strong>.
+    </figcaption>
+  </figure>
+  <p class="closing">
+    Three bodies. One bracket. Four numbers. The rest is open.
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <p>Built with vanilla JS &middot; no tracking, no cookies &middot;
+     <a href="https://github.com/bshepp/3body-poisson-algebra/tree/main/explainer">view source</a></p>
+</footer>
+
+<script src="js/orbit_widget.js"></script>
+<script src="js/pendulum_widget.js"></script>
+<script src="js/bracket_widget.js"></script>
+<script src="js/potentials_widget.js"></script>
+<script src="js/algebra_widget.js"></script>
+<script src="js/dimseq_widget.js"></script>
+<script src="js/universality_widget.js"></script>
+<script src="js/dimension_widget.js"></script>
+<script src="js/mass_widget.js"></script>
+<script src="js/svd_widget.js"></script>
+<script src="js/frontier_widget.js"></script>
+</body>
+</html>

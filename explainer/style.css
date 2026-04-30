@@ -1,0 +1,140 @@
+/* OEIS A395423 explainer — minimal print-paper aesthetic */
+:root {
+  --fg: #1a1a1a;
+  --bg: #fafaf7;
+  --accent: #b8410e;
+  --muted: #666;
+  --rule: #ddd;
+  --panel: #f0eee8;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg);
+  font: 17px/1.55 Georgia, "Times New Roman", serif; }
+main, header, footer { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+
+header.hero { padding: 60px 24px 30px; text-align: center; border-bottom: 1px solid var(--rule); }
+header.hero h1 { font-size: 2.6em; margin: 0 0 0.2em; letter-spacing: -0.02em; }
+header.hero .sub { font-size: 1.25em; color: var(--muted); margin: 0.2em 0; }
+header.hero .seq { font-family: "Courier New", monospace; font-size: 1.3em; color: var(--accent); }
+header.hero .byline { font-size: 0.85em; color: var(--muted); margin-top: 1.5em; }
+
+section { padding: 50px 0 30px; border-bottom: 1px solid var(--rule); }
+section h2 { font-size: 1.6em; margin: 0 0 0.8em; font-weight: normal; }
+section h2 .num { color: var(--accent); font-family: "Courier New", monospace;
+  font-size: 0.75em; margin-right: 0.5em; }
+section h2 small { font-size: 0.55em; color: var(--muted); margin-left: 0.5em; }
+
+section.todo { opacity: 0.45; padding: 30px 0; }
+
+.next { font-size: 0.9em; color: var(--muted); font-style: italic; }
+
+/* Widgets */
+.widget { background: var(--panel); border: 1px solid var(--rule);
+  border-radius: 4px; padding: 16px; margin: 24px 0; }
+.widget canvas { display: block; width: 100%; height: auto; max-width: 640px;
+  margin: 0 auto; background: #111; border-radius: 2px; }
+.widget figcaption { font-size: 0.9em; color: var(--muted); margin-top: 12px;
+  font-style: italic; line-height: 1.5; }
+
+.controls { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+.presets, .buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+.sliders { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 16px; }
+.sliders label { font-size: 0.85em; display: flex; align-items: center; gap: 8px; }
+.sliders input[type=range] { flex: 1; }
+.sliders output { font-family: "Courier New", monospace; font-size: 0.85em;
+  color: var(--accent); min-width: 3.5em; text-align: right; }
+
+button { font: inherit; font-size: 0.85em; padding: 5px 12px;
+  background: white; border: 1px solid #aaa; border-radius: 3px; cursor: pointer;
+  color: var(--fg); }
+button:hover { background: var(--accent); color: white; border-color: var(--accent); }
+button:active { transform: translateY(1px); }
+
+footer { padding: 30px 24px 50px; font-size: 0.85em; color: var(--muted);
+  text-align: center; border-top: 1px solid var(--rule); margin-top: 40px; }
+footer a { color: var(--muted); }
+
+a { color: var(--accent); }
+
+/* §2 bracket triple panel */
+.bracket-row { display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 12px; align-items: start; }
+.bracket-cell { display: flex; flex-direction: column; align-items: center;
+  gap: 6px; }
+.bracket-cell canvas { width: 100%; max-width: 200px; height: auto;
+  background: #111; border-radius: 2px; }
+.cellsel { font-size: 0.85em; color: var(--muted); }
+.cellsel select { font: inherit; padding: 2px 6px; background: white;
+  border: 1px solid #aaa; border-radius: 3px; }
+.celllabel { font-size: 0.9em; color: var(--fg); min-height: 1.4em;
+  text-align: center; }
+@media (max-width: 560px) {
+  .bracket-row { grid-template-columns: 1fr; }
+}
+
+/* §3 potentials triple panel */
+.pot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  align-items: start; }
+.pot-cell { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.pot-cell canvas { width: 100%; max-width: 320px; height: auto;
+  background: #fafaf7; border: 1px solid #e0ddd5; border-radius: 2px; }
+@media (max-width: 560px) { .pot-row { grid-template-columns: 1fr; } }
+
+/* §4 algebra builder */
+#algebra-stage { display: flex; flex-direction: column; gap: 8px;
+  margin: 8px 0 12px; }
+.alg-row { display: grid; grid-template-columns: 50px 1fr; gap: 10px;
+  padding: 8px 10px; background: var(--panel); border-left: 3px solid var(--accent);
+  border-radius: 2px; animation: alg-fade 0.4s ease-out; }
+.alg-row-1 { border-left-color: #d77a2c; }
+.alg-row-2 { border-left-color: #3aa0ff; }
+.alg-row-3 { border-left-color: #7bc94c; }
+.alg-row-4 { border-left-color: #c074ff; }
+.alg-tag { font-weight: bold; font-size: 1.1em; color: var(--fg); }
+.alg-dim-line { font-size: 0.95em; }
+.alg-desc { color: var(--muted); font-style: italic; }
+.alg-items { margin: 4px 0 0 0; padding-left: 18px; font-size: 0.85em;
+  color: var(--muted); font-family: 'Georgia', serif; }
+.alg-items li { margin: 2px 0; }
+@keyframes alg-fade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* §5 dimension chart */
+#dim-canvas { width: 100%; max-width: 720px; height: auto;
+  background: #fafaf7; border: 1px solid #e0ddd5; border-radius: 2px; }
+
+/* §6 universality */
+#uni-canvas { background: #fafaf7; border: 1px solid #e0ddd5; max-width: 640px; }
+.uni-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center;
+  margin-top: 10px; font-size: 0.9em; }
+.uni-controls label { display: flex; align-items: center; gap: 6px; }
+.uni-controls input[type=range] { width: 120px; }
+.uni-controls output { font-family: "Courier New", monospace; font-size: 0.85em;
+  margin-left: auto; color: var(--muted); }
+
+/* §7 spatial dimension */
+.dim-toggle { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.dim-toggle button { padding: 6px 14px; border: 1px solid var(--rule);
+  background: #fff; color: var(--fg); font: inherit; cursor: pointer; border-radius: 3px; }
+.dim-toggle button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+#dim-bodies { background: #fafaf7; border: 1px solid #e0ddd5; max-width: 640px; }
+.dim-out { display: block; margin-top: 10px; font-family: "Courier New", monospace;
+  font-size: 0.95em; color: var(--fg); }
+
+/* §8 mass invariance */
+#mass-canvas { background: #fafaf7; border: 1px solid #e0ddd5; max-width: 640px;
+  cursor: crosshair; }
+
+/* §9 SVD */
+#svd-canvas { background: #fafaf7; border: 1px solid #e0ddd5; max-width: 720px;
+  cursor: crosshair; }
+
+/* §10 frontier */
+#front-canvas { background: #fafaf7; border: 1px solid #e0ddd5; max-width: 720px; }
+.closing { text-align: center; font-style: italic; font-size: 1.1em; color: var(--accent);
+  margin-top: 36px; }
+
+.muted { color: var(--muted); font-size: 0.85em; }
