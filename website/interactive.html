@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Atlas — Three-Body Poisson Algebra</title>
+<title>Interactive Atlas: Three-Body Poisson Algebra</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/theme.css">
 <script src="assets/theme.js" defer></script>
@@ -472,7 +472,7 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
 
 <!-- ═══════════ HEADER ═══════════ -->
 <div class="page-header">
-  <h1>Interactive Atlas <span class="dim">— Configuration Space Explorer</span></h1>
+  <h1>Interactive Atlas <span class="dim">(Configuration Space Explorer)</span></h1>
   <div class="subtitle">Explore rank structure and singular value landscapes across potentials, regularization, and charge configurations</div>
 </div>
 
@@ -536,7 +536,7 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
     <div class="anim-bar" id="anim-bar">
       <button class="anim-btn" id="anim-play" onclick="toggleAnimation()" title="Play / Pause">▶</button>
       <input type="range" class="anim-slider" id="anim-slider" min="0" max="1" value="0" oninput="onAnimSliderChange(this.value)">
-      <span class="anim-label" id="anim-label">ε = —</span>
+      <span class="anim-label" id="anim-label">ε = -</span>
       <div class="anim-speed-group">
         <button class="anim-speed" onclick="setAnimSpeed(1500, this)">Slow</button>
         <button class="anim-speed active" onclick="setAnimSpeed(800, this)">Normal</button>
@@ -569,21 +569,21 @@ select:focus { outline: none; border-color: var(--phosphor-dim); }
   <div class="section">
     <div class="display-grid" id="display-grid">
       <div class="heatmap-panel" id="panel-primary">
-        <div class="panel-title">Primary — <span class="scan-label" id="label-primary">...</span>
+        <div class="panel-title">Primary: <span class="scan-label" id="label-primary">...</span>
           <button class="download-btn" style="margin-left:auto" onclick="downloadPlot('heatmap-primary')" title="Download as PNG"><svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-6 2h12v1.5H2V14z"/></svg>PNG</button>
         </div>
         <div id="heatmap-primary" class="heatmap-div"></div>
         <div class="loading-overlay" id="loading-primary">Loading atlas data…</div>
       </div>
       <div class="heatmap-panel" id="panel-compare" style="display:none">
-        <div class="panel-title" style="color:var(--cyan-dim)">Comparison — <span class="scan-label" id="label-compare">...</span>
+        <div class="panel-title" style="color:var(--cyan-dim)">Comparison: <span class="scan-label" id="label-compare">...</span>
           <button class="download-btn" onclick="downloadPlot('heatmap-compare')" title="Download as PNG"><svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-6 2h12v1.5H2V14z"/></svg>PNG</button>
         </div>
         <div id="heatmap-compare" class="heatmap-div"></div>
         <div class="loading-overlay" id="loading-compare">Loading atlas data…</div>
       </div>
       <div class="heatmap-panel" id="panel-diff" style="display:none">
-        <div class="panel-title" style="color:var(--violet)">Difference — <span class="scan-label" id="label-diff">A − B</span>
+        <div class="panel-title" style="color:var(--violet)">Difference: <span class="scan-label" id="label-diff">A − B</span>
           <button class="download-btn" onclick="downloadPlot('heatmap-diff')" title="Download as PNG"><svg viewBox="0 0 16 16"><path d="M8 12l-4-4h2.5V2h3v6H12L8 12zm-6 2h12v1.5H2V14z"/></svg>PNG</button>
         </div>
         <div id="heatmap-diff" class="heatmap-div"></div>
@@ -666,7 +666,7 @@ const S = {
   view3d: false,   // Primary panel: false = flat (μ,φ) heatmap, true = 3D shape sphere
 };
 
-// Plotly layout template — colors pulled from CSS vars so it follows the theme.
+// Plotly layout template: colors pulled from CSS vars so it follows the theme.
 function themeColor(name, fallback) {
   try {
     var v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -820,7 +820,7 @@ async function init() {
     const resp = await fetch('data/manifest.json');
     S.manifest = await resp.json();
   } catch (e) {
-    document.getElementById('label-primary').textContent = 'Error loading manifest.json — run preprocess_atlas_data.py first';
+    document.getElementById('label-primary').textContent = 'Error loading manifest.json (run preprocess_atlas_data.py first)';
     return;
   }
   // Helium is excluded from the interactive UI for now: its (mu, phi) range
@@ -1123,7 +1123,7 @@ function downloadPlot(divId) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   SHAPE SPHERE (3D)  —  canonical Hsiang–Montgomery / Iwai shape sphere.
+   SHAPE SPHERE (3D): canonical Hsiang–Montgomery / Iwai shape sphere.
    For equal masses with r1=(0,0), r2=(1,0), r3=(μ cos φ, μ sin φ):
      ρ1 = r2 − r1                       = (1, 0)
      ρ2 = (2/√3)(r3 − (r1+r2)/2)        (Jacobi, normalized so equilateral
@@ -1150,7 +1150,7 @@ function toggleShapeSphere(btn) {
   S.view3d = !S.view3d;
   if (btn) btn.classList.toggle('active', S.view3d);
   // Plotly cannot in-place swap a 2D heatmap trace for a 3D surface (or vice
-  // versa) — purge first so the atlas div is rebuilt with the correct chart type.
+  // versa); purge first so the atlas div is rebuilt with the correct chart type.
   try { if (typeof Plotly !== 'undefined') Plotly.purge('heatmap-primary'); } catch (e) {}
   if (S.primary.data) renderHeatmap('primary');
 }
@@ -1175,9 +1175,9 @@ function renderShapeSphere(view) {
   const cbTitle   = isGap ? 'log₁₀(gap)' : 'Rank';
 
   // Two schemas supported:
-  //   shape_sphere_v1 — direct (θ, φ_sph) grid on S²; full coverage incl.
+  //   shape_sphere_v1: direct (θ, φ_sph) grid on S²; full coverage incl.
   //                     the r1=r2 cap.
-  //   default (μ, φ)  — atlas chart; fills upper hemisphere only, lower
+  //   default (μ, φ): atlas chart; fills upper hemisphere only, lower
   //                     hemisphere mirrored from φ → −φ symmetry.
   const isSphereSchema = (data.schema === 'shape_sphere_v1');
 
@@ -1219,7 +1219,7 @@ function renderShapeSphere(view) {
       X[i] = xr; Y[i] = yr; Z[i] = zr; C[i] = cr;
     }
   } else {
-    // Legacy (μ, φ) atlas — mirror across φ → −φ to fill the lower hemisphere.
+    // Legacy (μ, φ) atlas: mirror across φ → −φ to fill the lower hemisphere.
     const NM = data.mu.length, NP_HALF = data.phi.length;
     const NP = 2 * NP_HALF;
     const phiFull = new Array(NP);
@@ -1294,7 +1294,7 @@ function renderShapeSphere(view) {
     },
   ];
 
-  // Landmark markers — Lagrange equilateral poles + the three binary
+  // Landmark markers: Lagrange equilateral poles + the three binary
   // collision points on the equator. The third binary collision (r1=r2)
   // is unreached by the atlas and is rendered as a hollow placeholder.
   const lagX = [], lagY = [], lagZ = [], lagText = [];
@@ -1502,7 +1502,7 @@ async function onHeatmapClick(data, view) {
     `<span class="info-item">μ = <b>${atlas.mu[muIdx].toFixed(4)}</b></span> ` +
     `<span class="info-item">φ = <b>${atlas.phi[phiIdx].toFixed(4)}</b></span> ` +
     `<span class="info-item">Rank = <b>${rank}</b></span> ` +
-    `<span class="info-item">Gap ratio = <b class="amber">${(gap == null || !isFinite(gap)) ? '—' : gap.toExponential(2)}</b></span>`;
+    `<span class="info-item">Gap ratio = <b class="amber">${(gap == null || !isFinite(gap)) ? '-' : gap.toExponential(2)}</b></span>`;
 
   document.getElementById('inspector').classList.add('active');
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Neural-Network Universality — Three-Body Poisson Algebra</title>
+<title>Neural-Network Universality: Three-Body Poisson Algebra</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/theme.css">
 <!-- KaTeX -->
@@ -178,7 +178,7 @@ body {
 .katex { font-size: 1em; }
 .katex-display { margin: 1.1rem 0; overflow-x: auto; overflow-y: hidden; }
 
-/* TOC pulled out of the markdown body — auto-generated from h2s */
+/* TOC pulled out of the markdown body, auto-generated from h2s */
 .toc {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -248,7 +248,7 @@ body {
 <!-- ═══ HEADER ═══ -->
 <div class="page-header">
   <h1>The Lie Algebra of Neural Network Training</h1>
-  <div class="subtitle">Why SGD produces richer algebras than gravity — seven universality classes at L=3.</div>
+  <div class="subtitle">Why SGD produces richer algebras than gravity: seven universality classes at L=3.</div>
   <div class="meta">
     <span>April 2026</span>
     <span>·</span>
@@ -297,14 +297,14 @@ async function renderArticle() {
     src = await resp.text();
   } catch (e) {
     status.innerHTML = 'Failed to load article: ' + e.message +
-      '<br><span style="font-size:0.78rem;">(If you are opening this file directly, serve <code>website/</code> over HTTP — the article is fetched at runtime.)</span>';
+      '<br><span style="font-size:0.78rem;">(If you are opening this file directly, serve <code>website/</code> over HTTP; the article is fetched at runtime.)</span>';
     return;
   }
 
   // Strip the HTML-comment frontmatter at the top of the source.
   src = src.replace(/^<!--[\s\S]*?-->\s*/, '');
 
-  // Drop the in-source TOC block — we render our own from the H2s after parse.
+  // Drop the in-source TOC block; we render our own from the H2s after parse.
   src = src.replace(/##\s+Table of Contents[\s\S]*?(?=\n##\s)/, '');
 
   // Normalize MDX math delimiters to $-style.

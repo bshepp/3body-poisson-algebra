@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Datasets — Three-Body Poisson Algebra</title>
+<title>Datasets: Three-Body Poisson Algebra</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/theme.css">
 <script src="assets/theme.js" defer></script>
@@ -342,7 +342,7 @@ table.data td.null { color: var(--text-dim); font-style: italic; }
 
 <!-- ═══ HEADER ═══ -->
 <div class="page-header">
-  <h1>Datasets <span class="dim">— Curated Tabular Records of the Algebra</span></h1>
+  <h1>Datasets <span class="dim">(Curated Tabular Records of the Algebra)</span></h1>
   <div class="subtitle">
     Thirteen Parquet tables (993 rows total) covering dimension sequences across N, d, potentials, masses, and charges; algebra structure (structure constants, Killing forms, irrep decomposition); convergence statistics; and quantum/contextuality probes. Sourced from <a href="https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras" style="color:var(--cyan)">bshepp/pairwise-poisson-algebras</a> on Hugging Face.
   </div>
@@ -423,7 +423,7 @@ table.data td.null { color: var(--text-dim); font-style: italic; }
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// Datasets explorer — vanilla JS over a static manifest
+// Datasets explorer: vanilla JS over a static manifest
 // ═══════════════════════════════════════════════════════════════
 
 const MANIFEST_URL = "data/datasets/manifest.json";
@@ -643,7 +643,7 @@ function goPage(p) {
 }
 
 function formatCell(v) {
-  if (v == null) return `<td class="null">—</td>`;
+  if (v == null) return `<td class="null">-</td>`;
   if (typeof v === "number") return `<td class="num">${formatNum(v)}</td>`;
   if (typeof v === "boolean") return `<td class="${v ? "bool-true" : "bool-false"}">${v}</td>`;
   if (typeof v === "object") {
@@ -687,7 +687,7 @@ function renderChart(t, rows) {
 
   const fn = CHARTS[t.id];
   if (!fn) {
-    tip.textContent = "No bespoke chart for this table — explore via the table above.";
+    tip.textContent = "No bespoke chart for this table; explore via the table above.";
     el.style.display = "none";
     return;
   }
@@ -749,7 +749,7 @@ const CHARTS = {
       marker: { color: sorted.map(r => r.matches_universal ? "#3ddc84" : "#f0a030") },
     }], {
       ...dark,
-      title: { text: "Physical systems — dim L3", font: { size: 13 } },
+      title: { text: "Physical systems: dim L3", font: { size: 13 } },
       height: Math.max(400, 24 * sorted.length + 80),
       margin: { ...dark.margin, l: 220 },
       xaxis: { ...dark.xaxis, title: "dim_L3" },
@@ -777,7 +777,7 @@ const CHARTS = {
     Plotly.newPlot(el, traces, {
       ...dark,
       barmode: "group",
-      title: { text: "Neural algebras — dim L3 per coupling", font: { size: 13 } },
+      title: { text: "Neural algebras: dim L3 per coupling", font: { size: 13 } },
       xaxis: { ...dark.xaxis, tickangle: -45, title: "" },
       yaxis: { ...dark.yaxis, title: "dim_L3" },
       shapes: [{ type: "line", x0: -0.5, x1: rows.length - 0.5, y0: 116, y1: 116,
@@ -820,7 +820,7 @@ const CHARTS = {
       ...dark,
       height: Math.max(420, 18 * sorted.length + 80),
       margin: { ...dark.margin, l: 220 },
-      title: { text: "Charge sensitivity — dim L3", font: { size: 13 } },
+      title: { text: "Charge sensitivity: dim L3", font: { size: 13 } },
       xaxis: { ...dark.xaxis, title: "dim_L3" },
       yaxis: { ...dark.yaxis, automargin: true },
       shapes: [{ type: "line", y0: -0.5, y1: sorted.length - 0.5, x0: 116, x1: 116,
@@ -1065,7 +1065,7 @@ function runCross() {
   });
 }
 function shortVal(v) {
-  if (v == null) return "—";
+  if (v == null) return "-";
   const s = typeof v === "object" ? JSON.stringify(v) : String(v);
   return escapeHtml(s.length > 40 ? s.slice(0, 37) + "…" : s);
 }

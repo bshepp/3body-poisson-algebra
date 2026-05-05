@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About — Three-Body Poisson Algebra</title>
+<title>About: Three-Body Poisson Algebra</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/theme.css">
 <script src="assets/theme.js" defer></script>
@@ -263,14 +263,14 @@ body {
       <p>This bracket is antisymmetric and satisfies the Jacobi identity, making the smooth functions on phase space into a <strong>Lie algebra</strong> under {·,·}.</p>
       <p>We start with the three pairwise Hamiltonians H₁₂, H₁₃, H₂₃ and build the <strong>Lie algebra they generate</strong>:</p>
       <ul>
-        <li>Level 0: {H₁₂, H₁₃, H₂₃} — dimension 3</li>
-        <li>Level 1: span of all {Hᵢⱼ, Hₖₗ} — dimension 6</li>
-        <li>Level 2: brackets of level-1 with level-0 — dimension 17</li>
-        <li>Level 3: next bracket layer — dimension 116</li>
+        <li>Level 0: {H₁₂, H₁₃, H₂₃}, dimension 3</li>
+        <li>Level 1: span of all {Hᵢⱼ, Hₖₗ}, dimension 6</li>
+        <li>Level 2: brackets of level-1 with level-0, dimension 17</li>
+        <li>Level 3: next bracket layer, dimension 116</li>
       </ul>
       <p>The dimension is computed numerically. We <strong>substitute random phase-space points</strong> into the symbolic expressions, building a matrix where each row is a generator evaluated at a sample point. The <strong>SVD</strong> of this matrix reveals the numerical rank: singular values above 10⁻⁶ count as "real," and the gap ratio σₖ/σₖ₊₁ exceeds 10¹⁰ at the transition, giving an unambiguous rank determination.</p>
       <p>A key technical trick: we introduce auxiliary variables <code>uᵢⱼ = 1/rᵢⱼ</code> so that Poisson brackets of potentials like 1/r produce <strong>polynomial</strong> expressions (via chain rule), avoiding messy radicals.</p>
-      <p>The universality result — the same [3, 6, 17, 116] for 1/r, 1/r², 1/r³, log(r), all masses, and all dimensions d = 1, 2, 3 — is checked by running the computation across thousands of parameter configurations in the <strong>Interactive Atlas</strong> on this site.</p>
+      <p>The universality result (the same [3, 6, 17, 116] for 1/r, 1/r², 1/r³, log(r), all masses, and all dimensions d = 1, 2, 3) is checked by running the computation across thousands of parameter configurations in the <strong>Interactive Atlas</strong> on this site.</p>
     </div>
   </div>
 
