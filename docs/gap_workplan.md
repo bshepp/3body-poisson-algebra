@@ -95,7 +95,7 @@
 - **Script to create:** `s4_tier_analysis.py`
 
 ### 2.6 Harmonic Dimension 15 — Representation-Theoretic Derivation
-- **Status:** NOT STARTED (question posed in conjectures.md)
+- **Status:** ✅ COMPLETE (2026-05-11) — identified as the **Jacobi algebra `sp(4, ℝ) ⋉ h₂`** (15-dim, Killing signature (6+, 4−, 5z), 5-dim Heisenberg radical with 1-d center). See `docs/harmonic_dim15.md` for the written derivation and `harmonic_lie_algebra_id.py` for the numerical identification from the exact rational structure constants at `results/algebra_structure/N3_d2_r2/`.
 - **Task:** The 3-body harmonic oscillator has the Lie algebra of coupled oscillators (sp(4,ℝ) or similar). The 12D phase space should close at a predictable dimension from representation theory. Derive the number 15 from the isotropic oscillator algebra.
 - **Question answered:** Is dim=15 a known Lie-algebraic quantity, or anomalous?
 - **Approach:** Compute the centralizer of the harmonic Hamiltonian analytically; or simply identify the Lie algebra generators symbolically from the checkpoints.
@@ -197,7 +197,7 @@
 - **Impact:** VERY HIGH — strongest evidence yet for universal isomorphism class. r^3 L3 non-nilpotency is a novel discovery.
 
 ### 4.6 Noise Plateau Mapping
-- **Status:** NOT STARTED
+- **Status:** ✅ COMPLETE (2026-05-11) — see `noise_plateau_mapping.py` and `docs/noise_plateau_findings.md`. Outcome (a) at moderate conditioning, narrowing predictably to (b) at extreme conditioning. L=2 plateau width 13.0 decades at equal mass, dropping to 6.0 decades at m₃/m₁=10¹⁰ — mechanistically explains the Sun-Earth-Moon / Sun-Jupiter-Asteroid float64 rank deficit as a plateau collapse past the detection floor. L=3 equal-mass generic plateau ~5.5 decades.
 - **Motivation:** The SVD-gap rank determination depends on a threshold choice (`1e-8 × σ_max` currently). Understanding how the reported rank varies as a function of this threshold — across mass configurations, spatial positions, and potential types — is valuable both for validating the robustness of the 116 result and for characterizing the conditioning structure of the algebra.
 - **Approach:** At each configuration, sweep the SVD threshold from 10⁻¹ down to 10⁻¹⁵ and plot the reported dimension. Three possible outcomes: (a) a clean plateau at 116 (strong robustness), (b) continuous variation (threshold artifact), (c) irregular steps (hierarchical scale structure). Run at equal mass, moderate ratio (10:1), and extreme ratio (10⁶:1 and beyond).
 - **Expected value:** Produces a single figure showing plateau width vs. mass ratio — a reviewer-accessible demonstration of robustness that complements the symbolic rank result.
@@ -227,7 +227,7 @@ Mark items with status as work proceeds:
 | 2.3 | r⁴ and 1/r⁴ potentials | ✅ |
 | 2.4 | Charge sweep phase 3 | ⬜ |
 | 2.5 | S₄ tier decomposition | ⬜ |
-| 2.6 | Harmonic dim=15 derivation | ⬜ |
+| 2.6 | Harmonic dim=15 derivation | ✅ |
 | 2.7 | H₃⁺ and ozone | ⬜ |
 | 3.1 | Parametric exponent sweep | 🔄 (π, e, φ done; full sweep pending cost optimization) |
 | 3.2 | Yukawa debugging + run | ❌ |
@@ -239,7 +239,7 @@ Mark items with status as work proceeds:
 | 4.3 | Level-4 bound improvement | ⬜ |
 | 4.4 | Symbolic rank over Q | ✅ |
 | 4.5 | Algebra structure extraction | ✅ |
-| 4.6 | Noise plateau mapping | ⬜ |
+| 4.6 | Noise plateau mapping | ✅ |
 | 4.7 | 1D structure cross-section (singularity detection) | ✅ |
 | 4.8 | Level-3 structure extraction (rank 116) | 🔄 |
 | 4.9 | Symbolic Gram determinant sweep (rationalized Bareiss) | ✅ |

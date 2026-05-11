@@ -488,6 +488,396 @@ PATCHES: dict[str, dict] = {
         "description": "Moves legacy PNGs into legacy_figures_archive/.",
         "tags": ["tooling", "figures"],
     },
+
+    # ======================================================================
+    # 2026-05-11 curation pass: analysis (52) + atlas (13) categories
+    # ======================================================================
+    # ------ analysis: 3D engine drivers (complete) ------------------------
+    "3d_run_1d": {
+        "category": "analysis", "scope": "3body/d=1", "status": "complete",
+        "description": "Driver: 1D (linear) Poisson algebra computation. Established d-independence for N=3 at d=1.",
+        "run_command": "python 3d/run_1d.py",
+        "tags": ["analysis", "d=1", "engine-driver"],
+    },
+    "3d_run_3d": {
+        "category": "analysis", "scope": "3body/d=3", "status": "complete",
+        "description": "Driver: 3D (spatial) Poisson algebra computation. Established d-independence for N=3 at d=3.",
+        "run_command": "python 3d/run_3d.py",
+        "tags": ["analysis", "d=3", "engine-driver"],
+    },
+    # ------ analysis: legacy numerical engine, superseded -----------------
+    "algebra_growth": {
+        "category": "analysis", "scope": "3body", "status": "superseded",
+        "superseded_by": "exact_growth",
+        "description": "Original Phase 1 numerical-finite-difference engine. Produced unstable level-3 estimates (39-103). Superseded by exact_growth.py polynomial-u trick.",
+        "tags": ["analysis", "legacy", "phase1"],
+    },
+    "analyze_results": {
+        "category": "analysis", "scope": "3body", "status": "complete",
+        "description": "Post-hoc analysis of early growth runs. One-shot script that consumed algebra_growth output to characterize sensitivity.",
+        "tags": ["analysis", "phase1"],
+    },
+    # ------ analysis: Level-4 pipeline (complete) -------------------------
+    "aws_level4": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Level-4 dimension multi-config AWS pipeline. Produced d(4)>=5604 lower bound across multiple configurations.",
+        "outputs": ["results/level4_global_*/", "results/level4_lagrange_*/", "results/level4_euler_*/", "results/level4_scalene_*/"],
+        "tags": ["analysis", "level4", "aws"],
+    },
+    "level4_comparison": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Level-4 comparison chart (gap_workplan Phase 1 Item 1.5). Bar chart + convergence curves across 4 config types.",
+        "outputs": ["level4_comparison_chart.png", "level4_convergence_curves.png"],
+        "related_docs": ["docs/gap_workplan.md"],
+        "tags": ["analysis", "level4", "phase1"],
+    },
+    "level4_highsample": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Level-4 high-sample bound tightening. Pushed d(4) bounds with up to 200K samples at generic configs.",
+        "tags": ["analysis", "level4"],
+    },
+    # ------ analysis: sanity / utility (complete) -------------------------
+    "check_1r2": {
+        "category": "analysis", "scope": "3body", "status": "complete",
+        "description": "1/r^2 sanity check script: validates Calogero-Moser variant produces [3, 6, 17, 116].",
+        "tags": ["analysis", "sanity", "calogero-moser"],
+    },
+    "clebsch_gordan_analysis": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Canonical S_3 representation decomposition of the N=3 Poisson algebra. Establishes n_E = 52 = Tier 1 size exactly. Referenced from paper 2 (S_3 jet filtration).",
+        "outputs": ["potential_comparison_plots/quantization_analysis.md"],
+        "related_docs": ["papers/paper2_s3_filtration.tex", "docs/s4_tier_predictions.md"],
+        "tags": ["analysis", "representation-theory", "s3", "tier-decomposition"],
+    },
+    "cm_comparison": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Calogero-Moser vs Newtonian gravity bracket-algebra comparison. Established universality across singular potential types.",
+        "tags": ["analysis", "calogero-moser", "universality"],
+    },
+    "data_inventory": {
+        "category": "analysis", "scope": "3body", "status": "complete",
+        "description": "Complete data inventory utility across all results/ subdirectories.",
+        "outputs": ["data/data_inventory.json"],
+        "tags": ["analysis", "utility", "inventory"],
+    },
+    # ------ analysis: Dirac-constraint exploration (complete) -------------
+    "dirac_analysis_from_svd": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Dirac constraint analysis using pre-computed SVD data. Comprehensive noise-floor taxonomy: 32 syzygies + 8 true zeros + significant generators. Settled the question of whether 40 vanishing SVs are constraints (answer: 8 constraints + 32 syzygies).",
+        "tags": ["analysis", "dirac", "syzygy", "noise-floor"],
+    },
+    "dirac_constraint_test": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Tests whether the 40 noise-floor generators are Dirac constraints. Result: 32 are syzygies (Jacobi-identity consequences), 8 are true constraints (translation invariance).",
+        "tags": ["analysis", "dirac", "syzygy"],
+    },
+    "dirac_direct_eval": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Direct generator evaluation to identify which level-3 generators vanish everywhere on phase space (true zeros) vs only at generic points (syzygies).",
+        "tags": ["analysis", "dirac", "syzygy"],
+    },
+    # ------ analysis: viz / figure generation -----------------------------
+    "generate_triptychs": {
+        "category": "analysis", "scope": "3body", "status": "superseded",
+        "superseded_by": "website_figures_compare",
+        "description": "Original triptych atlas series renderer. Superseded by the website/figures_compare.py pipeline (Apr 18, 2026 rebuild).",
+        "tags": ["analysis", "viz", "legacy"],
+    },
+    "rerender_frames": {
+        "category": "analysis", "scope": "3body", "status": "complete",
+        "description": "Atlas animation re-render utility with adaptive colorscale. One-shot fix for early animation issues.",
+        "tags": ["analysis", "viz", "utility"],
+    },
+    # ------ analysis: hires Lagrange (complete tool) ----------------------
+    "hires_lagrange_scan": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "High-resolution Lagrange-region scan tool. Used to resolve the concentric ring features around the equilateral point.",
+        "tags": ["analysis", "lagrange", "hires"],
+    },
+    # ------ analysis: explicitly archived ---------------------------------
+    "mass_ratio_bisection": {
+        "category": "analysis", "scope": "3body", "status": "archived",
+        "description": "HISTORICAL ARTIFACT. The docstring of the script itself flags it as DO NOT USE FOR NEW ANALYSIS. Predates the symbolic rank proof.",
+        "tags": ["analysis", "legacy", "do-not-use"],
+    },
+    # ------ analysis: 117th generator chain (complete) --------------------
+    "nbody_analyze_117th_compact": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Compact 10-term relative-coordinate form of the 117th quantum generator.",
+        "tags": ["analysis", "117th", "quantum"],
+    },
+    "nbody_analyze_117th_definite": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Sign-definiteness proof for the 117th generator: g = -(9/4)*[(A-B)^2 + A^2] is negative semi-definite.",
+        "tags": ["analysis", "117th", "quantum"],
+    },
+    "nbody_analyze_117th_physics": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Physical interpretation of the 117th generator: NOT a conserved quantity ([G, H_total] != 0).",
+        "tags": ["analysis", "117th", "quantum"],
+    },
+    "nbody_identify_117th": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Identifies the 117th generator: indices into the basis, Legendre P_3 octupole structure, S_3 average.",
+        "tags": ["analysis", "117th", "quantum"],
+    },
+    "nbody_identify_117th_rank": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Rank of the 48 hbar^2 corrections among themselves (probes quantum L3 algebra structure).",
+        "tags": ["analysis", "117th", "quantum"],
+    },
+    # ------ analysis: N-body scaling --------------------------------------
+    "nbody_analyze_scaling": {
+        "category": "analysis", "scope": "nbody", "status": "complete",
+        "description": "N-body dimension-sequence scaling analysis. Derived L2(N) = N(4N^2-9N+3)/2 for N>=4 by fitting new_L2 = 12*C(N,3).",
+        "outputs": ["results/analysis/nbody_scaling_formulas.json"],
+        "tags": ["analysis", "scaling", "n-body"],
+    },
+    # ------ analysis: multi-system survey analysis ------------------------
+    "nbody_expansion_analysis": {
+        "category": "analysis", "scope": "nbody", "status": "complete",
+        "description": "Multi-system universality survey: analysis + plotting across 21 physical systems.",
+        "outputs": ["results/expansion_dimseq/"],
+        "tags": ["analysis", "universality-survey", "multi-system"],
+    },
+    # ------ analysis: L3 structure constant comparison chain (complete) ---
+    "nbody_fast_level3_compare": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Fast numerical L3 structure constant comparison via finite differences. One of four L3 comparison methods.",
+        "tags": ["analysis", "L3", "structure-constants"],
+    },
+    "nbody_numerical_level3_compare": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Numerical SVD-based L3 structure constant comparison between potentials.",
+        "tags": ["analysis", "L3", "structure-constants"],
+    },
+    "nbody_symbolic_level3_compare": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Exact symbolic L3 structure constant comparison over QQ (~37h/potential on AWS).",
+        "tags": ["analysis", "L3", "structure-constants", "exact"],
+    },
+    # ------ analysis: helium / atomic -------------------------------------
+    "nbody_run_helium": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Helium atom Poisson algebra. Confirms sign of interaction doesn't matter: helium (+2, -1, -1) gives [3, 6, 17, 116].",
+        "latest_result": {"date": "2026-03-19", "summary": "Helium charge-sign invariance confirmed.",
+                          "sequence": [3, 6, 17, 116]},
+        "tags": ["analysis", "helium", "atomic", "charge-sign"],
+    },
+    # ------ analysis: N=4 priority runs, superseded by general engine ------
+    "nbody_run_n4_d1": {
+        "category": "analysis", "scope": "nbody/N4", "status": "superseded",
+        "superseded_by": "nbody_symbolic_rank_nbody",
+        "description": "Priority 4a: N=4, d=1 through L=2. Now subsumed by the general nbody/symbolic_rank_nbody.py engine.",
+        "tags": ["analysis", "n4", "legacy"],
+    },
+    "nbody_run_n4_d2": {
+        "category": "analysis", "scope": "nbody/N4", "status": "superseded",
+        "superseded_by": "nbody_symbolic_rank_nbody",
+        "description": "Priority 1: N=4, d=2, 1/r through L=2. Subsumed by general engine.",
+        "tags": ["analysis", "n4", "legacy"],
+    },
+    "nbody_run_n4_d3": {
+        "category": "analysis", "scope": "nbody/N4", "status": "superseded",
+        "superseded_by": "nbody_symbolic_rank_nbody",
+        "description": "Priority 4b: N=4, d=3 through L=2. Subsumed by general engine.",
+        "tags": ["analysis", "n4", "legacy"],
+    },
+    "nbody_run_n4_mass": {
+        "category": "analysis", "scope": "nbody/N4", "status": "complete",
+        "description": "N=4 mass invariance test. Confirmed: 3 configs (equal, hierarchical, mixed) all give [6, 14, 62].",
+        "latest_result": {"date": "2026-03-15",
+                          "summary": "N=4 mass invariance confirmed across 3 configurations.",
+                          "sequence": [6, 14, 62]},
+        "tags": ["analysis", "n4", "mass-invariance"],
+    },
+    "nbody_run_potential_1r3": {
+        "category": "analysis", "scope": "nbody/N3", "status": "superseded",
+        "superseded_by": "nbody_symbolic_rank_nbody",
+        "description": "Priority 2: N=3, d=2, 1/r^3 through L=3. Now subsumed by the general engine with --potential 1/r3.",
+        "tags": ["analysis", "1/r3", "legacy"],
+    },
+    # ------ analysis: post-Newtonian chain (complete) ---------------------
+    "nbody_run_pn_aws": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "AWS orchestrator for composite-potential / post-Newtonian dimension-sequence runs.",
+        "tags": ["analysis", "post-newtonian", "aws", "composite"],
+    },
+    "nbody_run_pn_mass_test": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Post-Newtonian mass invariance test.",
+        "tags": ["analysis", "post-newtonian", "mass-invariance"],
+    },
+    "nbody_run_post_newtonian": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Post-Newtonian (1PN) three-body Poisson algebra. Confirms PN correction does not change the algebra: [3, 6, 17, 116].",
+        "latest_result": {"date": "2026-03-22",
+                          "summary": "1PN preserves [3, 6, 17, 116].",
+                          "sequence": [3, 6, 17, 116]},
+        "tags": ["analysis", "post-newtonian"],
+    },
+    # ------ analysis: symbolic n proof chain ------------------------------
+    "nbody_symbolic_n_level3": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "L3 verification at 10 concrete rational p-values for V = -u^p potentials.",
+        "tags": ["analysis", "symbolic", "exponent-sweep"],
+    },
+    "nbody_symbolic_n_proof": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Numerical survey of dimension vs potential exponent p. Established [3, 6, 17] is universal at L2 across 79+ rational p-values; the p=-2 harmonic exception is infinitely sharp.",
+        "tags": ["analysis", "exponent-survey", "universality"],
+    },
+    # ------ analysis: neural chain ----------------------------------------
+    "neural_identify_extra_generators": {
+        "category": "analysis", "scope": "neural", "status": "complete",
+        "description": "Identifies the 3 extra generators in the gradient-product neural algebra not present in the physical N=3 universal set.",
+        "tags": ["analysis", "neural"],
+    },
+    "neural_physics_vs_neural": {
+        "category": "analysis", "scope": "neural", "status": "complete",
+        "description": "Direct comparison: physical N=3 algebra vs neural gradient-product algebra in the same 6D phase space.",
+        "tags": ["analysis", "neural"],
+    },
+    "neural_summarize_results": {
+        "category": "analysis", "scope": "neural", "status": "complete",
+        "description": "Summary table of all saved neural-algebra results.",
+        "tags": ["analysis", "neural", "summary"],
+    },
+    # ------ analysis: potential comparison + CM exact ---------------------
+    "potential_comparison": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Potential comparison study: 1/r vs 1/r^2 vs r^2. Foundational comparison establishing that singular and integrable potentials produce identical dimension sequences (1/r and 1/r^2 both [3,6,17,116]) while harmonic closes finite at dim 15.",
+        "run_command": "python potential_comparison.py",
+        "tags": ["analysis", "universality", "harmonic"],
+    },
+    "run_cm_exact": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Exact Calogero-Moser run by patching exact_growth.py Hamiltonians. Reuses the full infrastructure.",
+        "tags": ["analysis", "calogero-moser", "exact"],
+    },
+    # ------ analysis: primes chain ----------------------------------------
+    "primes_check_1r_closure": {
+        "category": "analysis", "scope": "primes", "status": "complete",
+        "description": "Closure test for the 1/r potential algebra. Result: NOT closed at 116 (infinite-dimensional).",
+        "tags": ["analysis", "primes", "closure"],
+    },
+    "primes_closure_check": {
+        "category": "analysis", "scope": "primes", "status": "complete",
+        "description": "L=4 dimension computation for 1/r and log potentials. Confirms infinite growth.",
+        "tags": ["analysis", "primes", "closure", "L4"],
+    },
+    "primes_hilbert_polya_search": {
+        "category": "analysis", "scope": "primes", "status": "superseded",
+        "superseded_by": "primes_check_1r_closure",
+        "description": "Hilbert-Polya operator search via GUE Lie algebra structure. Superseded by the infinite-dimensionality discovery: the 116 generators do not form a closed Lie subalgebra (Jacobi fails for the SC tensor), so the HP route via this construction does not work.",
+        "tags": ["analysis", "primes", "hilbert-polya", "superseded"],
+    },
+    "primes_launch_gue": {
+        "category": "analysis", "scope": "primes", "status": "complete",
+        "description": "AWS EC2 spot launcher for the GUE log-gas Poisson algebra computation. Ran the 4-config GUE study.",
+        "tags": ["analysis", "primes", "gue", "aws-launcher"],
+    },
+    "primes_multi_potential_r_comparison": {
+        "category": "analysis", "scope": "primes", "status": "complete",
+        "description": "Multi-potential <r> (coadjoint orbit spacing ratio) comparison across all singular potentials. Confirms <r> ~ 0.64 universal.",
+        "tags": ["analysis", "primes", "BGS", "spectral"],
+    },
+    # ------ analysis: quantization analysis -------------------------------
+    "quantization_analysis": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Tier-structure statistics + LQG/Bekenstein-style integer-scaling hypothesis tests. Foundational for Paper 2 (S_3 jet filtration).",
+        "outputs": ["potential_comparison_plots/quantization_analysis.md"],
+        "related_docs": ["papers/paper2_s3_filtration.tex"],
+        "tags": ["analysis", "tier-decomposition", "lqg", "phase1"],
+    },
+    # ------ analysis: SV116 + unequal mass -------------------------------
+    "sv116_analytical": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "SV #116 analytical prediction (gap_workplan Phase 1 Item 1.6). Achieved R^2 = 0.630 correlation between analytical prediction and observed SV #116.",
+        "outputs": ["spectral_depth/sv116_predicted_vs_observed.png"],
+        "related_docs": ["docs/gap_workplan.md"],
+        "tags": ["analysis", "sv116", "phase1"],
+    },
+    "unequal_mass_study": {
+        "category": "analysis", "scope": "nbody/N3", "status": "complete",
+        "description": "Unequal-mass dimension-sequence study. The original [3,5,13,69] vs [3,6,17,116] artifact study; superseded by the symbolic-rank-over-Q proof of mass invariance for all positive masses.",
+        "run_command": "python unequal_mass_study.py",
+        "tags": ["analysis", "mass-invariance", "historical"],
+    },
+
+    # ====================== atlas (13) ====================================
+    "analyze_atlas_data": {
+        "category": "atlas", "scope": "nbody/N3", "status": "complete",
+        "description": "Diagnostic for atlas_1000 data: clean-merge + excluded-block check.",
+        "tags": ["atlas", "diagnostic", "utility"],
+    },
+    "assemble_atlases": {
+        "category": "atlas", "scope": "nbody/N3", "status": "superseded",
+        "superseded_by": "website_figures_render",
+        "description": "Original atlas assembly + comprehensive shape-sphere visualization. Superseded by the website/figures_render.py + figures_compare.py pipeline (Apr 18, 2026 rebuild).",
+        "tags": ["atlas", "viz", "legacy"],
+    },
+    "atlas_1000": {
+        "category": "atlas", "scope": "nbody/N3", "status": "complete",
+        "description": "1000x1000 parallelized high-resolution shape-sphere scan. Produced the canonical hi-res atlases.",
+        "outputs": ["aws_results/atlas_1000/"],
+        "tags": ["atlas", "hires", "1000x1000"],
+    },
+    "atlas_diagnostics": {
+        "category": "atlas", "scope": "nbody/N3", "status": "complete",
+        "description": "Atlas diagnostic checks. Validates the atlas pipeline output.",
+        "tags": ["atlas", "diagnostic"],
+    },
+    "audit_atlas_data": {
+        "category": "atlas", "scope": "3body", "status": "complete",
+        "description": "Audit local atlas data against S3 to detect stale/incomplete syncs (fixes the s3 sync size-only artifact for fixed-size numpy arrays).",
+        "tags": ["atlas", "diagnostic", "s3"],
+    },
+    "cg_atlas_comparison": {
+        "category": "atlas", "scope": "nbody/N3", "status": "complete",
+        "description": "Clebsch-Gordan atlas comparison (gap_workplan Phase 1 Item 1.4). Lagrange=33 doublets (E-frac=0.57), Euler=14, Iso-90=24.",
+        "outputs": ["spectral_depth/cg_predicted_vs_observed.png",
+                    "spectral_depth/cg_residual_map.png"],
+        "related_docs": ["docs/gap_workplan.md"],
+        "tags": ["atlas", "cg", "phase1"],
+    },
+    "full_atlas_scan": {
+        "category": "atlas", "scope": "nbody/N3", "status": "complete",
+        "description": "Full shape-sphere atlas scanner with SVD gap analysis and mass-aware momentum sampling. Core atlas tool.",
+        "run_command": "python full_atlas_scan.py --resolution 100 --samples 500",
+        "tags": ["atlas", "core-tool", "scanner"],
+    },
+    "merge_atlas_1000": {
+        "category": "atlas", "scope": "nbody/N3", "status": "complete",
+        "description": "Selective merge of 1000x1000 atlas data across multiple AWS spot runs.",
+        "tags": ["atlas", "utility"],
+    },
+    "nbody_helium_atlas": {
+        "category": "atlas", "scope": "nbody/N3", "status": "complete",
+        "description": "Helium atlas: charge-sign invariance comparison tool. Used for the (+2, -1, -1) atlas vs gravitational baseline.",
+        "tags": ["atlas", "helium", "charge-sign"],
+    },
+    "run_expansion_atlas": {
+        "category": "atlas", "scope": "nbody", "status": "complete",
+        "description": "AWS orchestrator for the Multi-System Universality Survey stability atlases. Produced the 18 completed atlas configurations.",
+        "tags": ["atlas", "universality-survey", "aws"],
+    },
+    "shape_sphere": {
+        "category": "atlas", "scope": "nbody/N3", "status": "complete",
+        "description": "Shape sphere gap-ratio landscape renderer. The original shape-sphere visualization (canonical for paper 1).",
+        "tags": ["atlas", "shape-sphere", "viz"],
+    },
+    "shape_sphere_hires": {
+        "category": "atlas", "scope": "nbody/N3", "status": "superseded",
+        "superseded_by": "shape_sphere_atlas",
+        "description": "High-resolution shape-sphere atlas; superseded by shape_sphere_atlas.py (canonical Hsiang-Montgomery Jacobi projection, see recent commits d33a55e and f7e8b29).",
+        "tags": ["atlas", "shape-sphere", "legacy"],
+    },
+    "sv_landscape_viz": {
+        "category": "atlas", "scope": "nbody/N3", "status": "complete",
+        "description": "Singular-value landscape visualizations across the shape sphere. Used for the spectral depth mining figures.",
+        "tags": ["atlas", "viz", "sv-landscape"],
+    },
 }
 
 

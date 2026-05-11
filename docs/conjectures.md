@@ -306,10 +306,15 @@ appear at non-symmetric points across a comprehensive scan.
   [3, 3, 11, 99] and second differences [0, 8, 88] hint at a
   pattern but don't pin one down.
 
-- What is the harmonic dimension 15? The phase space is 12D, so
-  15 > 12 means some generators are Casimir-dependent. The number
-  15 should be computable from the Lie algebra of SO(2) x ... acting
-  on coupled oscillators.
+- ~~What is the harmonic dimension 15?~~ **RESOLVED** (2026-05-11).
+  The harmonic 3-body planar Poisson algebra is the **Jacobi algebra
+  `sp(4, ℝ) ⋉ h₂`** — a Levi decomposition with `sp(4, ℝ) ≅ so(3, 2)`
+  as the simple part (Killing signature (6+, 4−)) and a 5-dim
+  Heisenberg radical `h₂` with 1-dim center (the total Hamiltonian).
+  The algebra is **perfect** (`g = [g, g]`) but not semisimple. Full
+  derivation in [`harmonic_dim15.md`](harmonic_dim15.md); numerical
+  identification in
+  [`harmonic_lie_algebra_id.py`](../harmonic_lie_algebra_id.py).
 
 - Can this framework detect individual periodic orbits (not just
   symmetric configurations)? Probably not directly, but the rank

@@ -1,0 +1,159 @@
+{
+  "source_sc": "results\\algebra_structure\\N3_d2_r2\\structure_constants_exact.json",
+  "dimension": 15,
+  "antisymmetry_ok": true,
+  "jacobi_ok": false,
+  "killing_signature": {
+    "positive": 6,
+    "negative": 4,
+    "zero": 5
+  },
+  "killing_eigenvalues_exact": [
+    {
+      "eigenvalue": "4170.21527411688",
+      "multiplicity": 1,
+      "float_approx": 4170.215274116876
+    },
+    {
+      "eigenvalue": "956.569975538365",
+      "multiplicity": 1,
+      "float_approx": 956.5699755383654
+    },
+    {
+      "eigenvalue": "952",
+      "multiplicity": 1,
+      "float_approx": 952.0000000000002
+    },
+    {
+      "eigenvalue": "569.214082231356",
+      "multiplicity": 1,
+      "float_approx": 569.2140822313562
+    },
+    {
+      "eigenvalue": "204.355411749802",
+      "multiplicity": 1,
+      "float_approx": 204.35541174980213
+    },
+    {
+      "eigenvalue": "86.4308891045739",
+      "multiplicity": 1,
+      "float_approx": 86.43088910457394
+    },
+    {
+      "eigenvalue": "1.85228915367295e-13",
+      "multiplicity": 1,
+      "float_approx": 1.852289153672951e-13
+    },
+    {
+      "eigenvalue": "5.45428857751366e-14",
+      "multiplicity": 1,
+      "float_approx": 5.4542885775136623e-14
+    },
+    {
+      "eigenvalue": "3.45049166679437e-14",
+      "multiplicity": 1,
+      "float_approx": 3.450491666794374e-14
+    },
+    {
+      "eigenvalue": "2.45581976364695e-14",
+      "multiplicity": 1,
+      "float_approx": 2.4558197636469492e-14
+    },
+    {
+      "eigenvalue": "-1.06910109320903e-13",
+      "multiplicity": 1,
+      "float_approx": -1.069101093209027e-13
+    },
+    {
+      "eigenvalue": "-208.907070594876",
+      "multiplicity": 1,
+      "float_approx": -208.90707059487605
+    },
+    {
+      "eigenvalue": "-280.646163221448",
+      "multiplicity": 1,
+      "float_approx": -280.6461632214477
+    },
+    {
+      "eigenvalue": "-317.94234792378",
+      "multiplicity": 1,
+      "float_approx": -317.94234792377983
+    },
+    {
+      "eigenvalue": "-699.290051000869",
+      "multiplicity": 1,
+      "float_approx": -699.2900510008692
+    }
+  ],
+  "center_dim": 1,
+  "center_basis": [
+    [
+      "40/9",
+      "40/9",
+      "-32/9",
+      "0",
+      "0",
+      "0",
+      "-16/9",
+      "16/9",
+      "-4/3",
+      "0",
+      "0",
+      "20/9",
+      "4/9",
+      "0",
+      "1"
+    ]
+  ],
+  "radical_dim": 5,
+  "radical_abelian": false,
+  "radical_bracket_rank": 1,
+  "derived_series_dims": [
+    15,
+    15
+  ],
+  "lower_central_series_dims": [
+    15,
+    15
+  ],
+  "solvable": false,
+  "nilpotent": false,
+  "candidate_matches": [
+    "sp(4, R) (+) heisenberg_2 (Jacobi algebra)",
+    "sp(4, R) (+) R^5  (sp(4, R) acting on abelian rad)",
+    "so(3,2) (+) rad (de Sitter symmetry of M^3 extended)"
+  ],
+  "candidate_filtered_by_radical": [
+    "sp(4, R) (+) heisenberg_2 (Jacobi algebra)",
+    "so(3,2) (+) rad (de Sitter symmetry of M^3 extended)"
+  ],
+  "candidate_details": [
+    {
+      "name": "sp(4, R) (+) heisenberg_2 (Jacobi algebra)",
+      "decomp": "Levi: sp(4, R) (simple, non-cpt) (+) Heisenberg h_2 (rad dim 5, 1-d center)",
+      "killing_signature_dim15": [
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "sp(4, R) (+) R^5  (sp(4, R) acting on abelian rad)",
+      "decomp": "Levi: sp(4, R) (+) R^5 abelian (rad dim 5, center dim 5)",
+      "killing_signature_dim15": [
+        6,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "so(3,2) (+) rad (de Sitter symmetry of M^3 extended)",
+      "decomp": "Same as sp(4, R) (+) rad via the isomorphism so(3,2) = sp(4, R)",
+      "killing_signature_dim15": [
+        6,
+        4,
+        5
+      ]
+    }
+  ]
+}

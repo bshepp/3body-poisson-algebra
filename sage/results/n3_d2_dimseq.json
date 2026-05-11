@@ -1,0 +1,51 @@
+{
+  "sage_version": "10.8",
+  "python_version": "3.14.4",
+  "system_id": "Linux-x86_64",
+  "timestamp_utc": "2026-05-11T18:33:29",
+  "n_bodies": 3,
+  "d_spatial": 2,
+  "max_level": 3,
+  "results": {
+    "1/r": {
+      "potential": "1/r",
+      "n_bodies": 3,
+      "d_spatial": 2,
+      "max_level": 3,
+      "elapsed_s": 60,
+      "cumulative_rank": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "raw_gens_per_level": [
+        3,
+        3,
+        12,
+        138
+      ],
+      "total_generators": 156
+    },
+    "1/r^2": {
+      "potential": "1/r^2",
+      "n_bodies": 3,
+      "d_spatial": 2,
+      "max_level": 3,
+      "elapsed_s": 57,
+      "cumulative_rank": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "raw_gens_per_level": [
+        3,
+        3,
+        12,
+        138
+      ],
+      "total_generators": 156
+    }
+  }
+}

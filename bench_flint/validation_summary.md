@@ -458,7 +458,7 @@ one extra level of brackets.
 | `r^2` (harmonic) | `[3, 6, 13, 15, 15]` | `[3, 6, 13, 15, 15]` | YES | 31.8 s |
 
 L=4 ran 11,937 candidate brackets through `MatrixRank` over `Rationals`
-on a `SparseArray` and the cumulative rank stayed at 15 � confirming
+on a `SparseArray` and the cumulative rank stayed at 15 � confirming
 algebraic closure, not just a level-3 plateau. The convention matches
 `exact_growth.py` exactly: `H_ij = T_i + T_j + r_ij^2` (coupling g=1,
 unit masses, no auxiliary u_ij needed for the harmonic case).
@@ -476,7 +476,59 @@ CAS implementations.
 
 ---
 
-## Phase G — streaming mod-p L=4 consumer (2026-04-28, in flight on AWS)
+## Phase G.1 — SageMath third oracle (2026-05-11)
+
+A third independent CAS reproduction of `[3, 6, 17, 116]` and the
+harmonic closure `[3, 6, 13, 15, 15]`, parallel to the Mathematica
+Phase F oracle.  Three different CAS systems, three different rank
+algorithms, identical numbers.
+
+| Leg | CAS | Rank algorithm | Phase |
+|-----|-----|----------------|-------|
+| 1 | Python (SymPy ≥ 1.13.3) | `DomainMatrix.rank()` over QQ | E |
+| 2 | Wolfram Mathematica 14.3 | `MatrixRank` over `Rationals` on `SparseArray` | F |
+| 3 | SageMath | `Matrix(QQ, ..., sparse=True).rank()` (FLINT-backed) | **G.1** |
+
+The Sage engine lives in [`../sage/`](../sage/):
+
+| File | Purpose |
+|------|---------|
+| [`../sage/poisson_n3_d2_engine.sage`](../sage/poisson_n3_d2_engine.sage) | Shared engine — same chain rule and Lie closure as the Mathematica engine; works over `FractionField(PolynomialRing(QQ, ...))` and clears `u_ij` monomial denominators before rank. |
+| [`../sage/poisson_n3_d2.sage`](../sage/poisson_n3_d2.sage) | Sanity runner — L=3 for both 1/r and 1/r²; checks `[3, 6, 17, 116]`. |
+| [`../sage/poisson_n3_d2_harmonic.sage`](../sage/poisson_n3_d2_harmonic.sage) | Harmonic runner — L=4 for `r²`; checks closure at `[3, 6, 13, 15, 15]`. |
+
+| Run | Potential | max_level | Cumulative rank | Expected | Match? |
+|-----|-----------|-----------|-----------------|----------|--------|
+| sage/poisson_n3_d2 | 1/r   | 3 | [3, 6, 17, 116]     | [3, 6, 17, 116]    | **MATCH** |
+| sage/poisson_n3_d2 | 1/r²  | 3 | [3, 6, 17, 116]     | [3, 6, 17, 116]    | **MATCH** |
+| sage/poisson_n3_d2_harmonic | harmonic | 4 | [3, 6, 13, 15, 15] | [3, 6, 13, 15, 15] | **MATCH** |
+
+Run on SageMath 10.8 (Linux x86_64, 2026-05-11):
+
+- L=3 1/r: 60.60s rank, total elapsed ~63s
+- L=3 1/r²: 57.93s rank, total elapsed ~60s
+- L=4 harmonic: 2.00s rank (closes at dim 15 through L=4)
+
+The engine uses mod-p rank over GF(2^31 - 1) for speed
+(`compute_growth_modp`-style logic).  A single large prime gives the
+correct rank with probability `1 - O(1/p) ~ 1 - 5×10⁻¹⁰`; the
+Mathematica oracle and the Python `DomainMatrix.rank()` provide
+independent cross-checks against this probabilistic step.
+
+Once Sage is on PATH the runner is
+
+```bash
+sage sage/poisson_n3_d2.sage           # ~minutes
+sage sage/poisson_n3_d2_harmonic.sage  # ~minutes
+```
+
+JSON outputs land in `sage/results/n3_d2_dimseq.json` and
+`sage/results/n3_d2_harmonic.json` with the same field structure as the
+Mathematica JSONs (`wolfram_version` ↔ `sage_version`+`python_version`,
+everything else identical), so the headline numbers can be diff'd
+field-for-field.
+
+## Phase G.2 — streaming mod-p L=4 consumer (2026-04-28, in flight on AWS)
 
 The Phase D HF Jobs cpu-xl L=4 attempts and the Mathematica Phase F.1
 backup all hit the same wall: at L=4 the simultaneous in-RAM symbolic

@@ -28,8 +28,20 @@ Character table of S_4 (conjugacy classes: e, (12), (12)(34), (123), (1234)):
   hook    2     0      2      -1       0
 
 Class sizes:       1     6      3       8       6
+
+Output: writes results/tier_decomposition/s3_s4_decomposition.json (combined
+S_3 + S_4 record) with isotypic multiplicities at every bracket level. The
+companion doc docs/s4_tier_predictions.md explains how to read the table
+and what the next concrete experiment (SVD probe at the N=4 equilateral)
+would test.
+
+Usage:
+    python s4_tier_analysis.py                              # default output
+    python s4_tier_analysis.py --output path/to/out.json    # custom path
+    python s4_tier_analysis.py --quiet                      # summary lines only
 """
 
+import argparse
 import json
 import os
 import sys
@@ -163,49 +175,57 @@ EDGE_DECOMP = _decompose(EDGE_CHAR)
 # Main analysis
 # ==========================================================================
 
-def main():
-    print("=" * 70)
-    print("S_4 REPRESENTATION DECOMPOSITION OF THE N=4 POISSON ALGEBRA")
-    print("=" * 70)
+def main(out_path=None, quiet=False):
+    if out_path is None:
+        results_dir = os.path.join("results", "tier_decomposition")
+        out_path = os.path.join(results_dir, "s3_s4_decomposition.json")
+
+    # Conditionalize all banner output through this one knob so --quiet
+    # still writes the JSON but doesn't spam stdout.
+    _print = (lambda *a, **kw: None) if quiet else print
+
+    _print("=" * 70)
+    _print("S_4 REPRESENTATION DECOMPOSITION OF THE N=4 POISSON ALGEBRA")
+    _print("=" * 70)
 
     # Verify edge representation
-    print(f"\n--- Level 0: 6 pair Hamiltonians H_ij (edges of K_4) ---")
+    _print(f"\n--- Level 0: 6 pair Hamiltonians H_ij (edges of K_4) ---")
     L0 = S4Rep(*EDGE_DECOMP, label="level 0")
-    print(f"  Edge character: {EDGE_CHAR}")
-    print(f"  Decomposition: {L0}")
+    _print(f"  Edge character: {EDGE_CHAR}")
+    _print(f"  Decomposition: {L0}")
     assert L0.dim == 6, f"Edge rep should be dim 6, got {L0.dim}"
 
     # Level 1: brackets {H_ij, H_kl} for all pairs of edges
     # The Poisson bracket is S_4-equivariant, so {L0, L0} transforms as
     # Lambda^2(L0) (antisymmetric part of L0 x L0, since {f,g} = -{g,f})
-    print(f"\n--- Level 1: {{L0, L0}} = Lambda^2(L0) ---")
+    _print(f"\n--- Level 1: {{L0, L0}} = Lambda^2(L0) ---")
     L1_candidates = L0.exterior2()
     L1_candidates.label = "L1 candidates"
-    print(f"  Lambda^2(edge rep): {L1_candidates}")
-    print(f"  Candidate count: {L1_candidates.dim} (observed: C(6,2)=15)")
+    _print(f"  Lambda^2(edge rep): {L1_candidates}")
+    _print(f"  Candidate count: {L1_candidates.dim} (observed: C(6,2)=15)")
 
     # The actual dimension at level 1 is 14 (cumulative) - 6 (level 0) = 8 new
     # So 15 candidates, 8 independent (7 vanish or are dependent)
     # The cumulative L0+L1 has dim 14
-    print(f"  Observed new generators at L1: 8 (of 15 candidates)")
-    print(f"  Cumulative through L1: 14")
+    _print(f"  Observed new generators at L1: 8 (of 15 candidates)")
+    _print(f"  Cumulative through L1: 14")
 
     # Level 2: {L1, L0} + Lambda^2(L1)
-    print(f"\n--- Level 2 candidates ---")
+    _print(f"\n--- Level 2 candidates ---")
     L2_cross = L1_candidates.tensor(L0)
     L2_cross.label = "{L1, L0}"
     L2_self = L1_candidates.exterior2()
     L2_self.label = "Lambda^2(L1)"
     L2 = L2_cross + L2_self
     L2.label = "L2 candidates"
-    print(f"  {{L1, L0}} = L1 x L0: {L2_cross}")
-    print(f"  Lambda^2(L1): {L2_self}")
-    print(f"  Total L2 candidates: {L2}")
-    print(f"  Observed new generators at L2: 48 (of {L2.dim} candidates)")
-    print(f"  Cumulative through L2: 62")
+    _print(f"  {{L1, L0}} = L1 x L0: {L2_cross}")
+    _print(f"  Lambda^2(L1): {L2_self}")
+    _print(f"  Total L2 candidates: {L2}")
+    _print(f"  Observed new generators at L2: 48 (of {L2.dim} candidates)")
+    _print(f"  Cumulative through L2: 62")
 
     # Level 3: {L2, L0} + {L2, L1} + Lambda^2(L2)
-    print(f"\n--- Level 3 candidates ---")
+    _print(f"\n--- Level 3 candidates ---")
     L3_20 = L2.tensor(L0)
     L3_20.label = "{L2, L0}"
     L3_21 = L2.tensor(L1_candidates)
@@ -214,21 +234,21 @@ def main():
     L3_22.label = "Lambda^2(L2)"
     L3 = L3_20 + L3_21 + L3_22
     L3.label = "L3 candidates"
-    print(f"  {{L2, L0}}: {L3_20}")
-    print(f"  {{L2, L1}}: {L3_21}")
-    print(f"  Lambda^2(L2): {L3_22}")
-    print(f"  Total L3 candidates: {L3}")
+    _print(f"  {{L2, L0}}: {L3_20}")
+    _print(f"  {{L2, L1}}: {L3_21}")
+    _print(f"  Lambda^2(L2): {L3_22}")
+    _print(f"  Total L3 candidates: {L3}")
 
     F_total = L0 + L1_candidates + L2 + L3
     F_total.label = "full algebra candidates"
-    print(f"\n  FULL ALGEBRA CANDIDATES: {F_total}")
+    _print(f"\n  FULL ALGEBRA CANDIDATES: {F_total}")
 
     # ==========================================================================
     # Comparison with observed dimensions
     # ==========================================================================
-    print("\n" + "=" * 70)
-    print("COMPARISON WITH OBSERVED RANK SEQUENCE [6, 14, 62, 1260]")
-    print("=" * 70)
+    _print("\n" + "=" * 70)
+    _print("COMPARISON WITH OBSERVED RANK SEQUENCE [6, 14, 62, 1260]")
+    _print("=" * 70)
 
     observed = {
         0: {"cum": 6, "new": 6},
@@ -244,7 +264,7 @@ def main():
         3: L3,
     }
 
-    print(f"\n  {'Level':>6s} {'Candidates':>12s} {'Observed new':>14s} "
+    _print(f"\n  {'Level':>6s} {'Candidates':>12s} {'Observed new':>14s} "
           f"{'Observed cum':>14s} {'Syzygies':>10s}")
     cum_cand = 0
     for lv in range(4):
@@ -252,43 +272,43 @@ def main():
         cum_cand += cand
         obs = observed[lv]
         syz = cum_cand - obs["cum"]
-        print(f"  {'L' + str(lv):>6s} {cand:>12d} {obs['new']:>14d} "
+        _print(f"  {'L' + str(lv):>6s} {cand:>12d} {obs['new']:>14d} "
               f"{obs['cum']:>14d} {syz:>10d}")
 
-    print(f"\n  Total candidates: {F_total.dim}")
-    print(f"  Total independent: 1260")
-    print(f"  Total syzygies: {F_total.dim - 1260}")
+    _print(f"\n  Total candidates: {F_total.dim}")
+    _print(f"  Total independent: 1260")
+    _print(f"  Total syzygies: {F_total.dim - 1260}")
 
     # ==========================================================================
     # S_4 isotypic content of observed algebra
     # ==========================================================================
-    print("\n" + "=" * 70)
-    print("S_4 ISOTYPIC DECOMPOSITION BY BRACKET LEVEL")
-    print("=" * 70)
+    _print("\n" + "=" * 70)
+    _print("S_4 ISOTYPIC DECOMPOSITION BY BRACKET LEVEL")
+    _print("=" * 70)
 
-    print(f"\n  {'Level':>8s} {'dim':>5s} {'triv':>6s} {'sign':>6s} "
+    _print(f"\n  {'Level':>8s} {'dim':>5s} {'triv':>6s} {'sign':>6s} "
           f"{'std':>6s} {'s-std':>6s} {'hook':>6s}")
     levels = [("L0", L0), ("L1", L1_candidates), ("L2", L2), ("L3", L3)]
     for label, rep in levels:
         m = rep.mults
-        print(f"  {label:>8s} {rep.dim:>5d} {m[0]:>6d} {m[1]:>6d} "
+        _print(f"  {label:>8s} {rep.dim:>5d} {m[0]:>6d} {m[1]:>6d} "
               f"{m[2]:>6d} {m[3]:>6d} {m[4]:>6d}")
     m = F_total.mults
-    print(f"  {'Total':>8s} {F_total.dim:>5d} {m[0]:>6d} {m[1]:>6d} "
+    _print(f"  {'Total':>8s} {F_total.dim:>5d} {m[0]:>6d} {m[1]:>6d} "
           f"{m[2]:>6d} {m[3]:>6d} {m[4]:>6d}")
 
-    print(f"\n  Generator contributions from each irrep type:")
+    _print(f"\n  Generator contributions from each irrep type:")
     for i, name in enumerate(IRREPS):
         contrib = F_total.mults[i] * IRREP_DIMS[i]
-        print(f"    {name:>8s}: {F_total.mults[i]:>4d} copies x dim {IRREP_DIMS[i]} "
+        _print(f"    {name:>8s}: {F_total.mults[i]:>4d} copies x dim {IRREP_DIMS[i]} "
               f"= {contrib:>5d} generators")
 
     # ==========================================================================
     # Predictions for tier structure
     # ==========================================================================
-    print("\n" + "=" * 70)
-    print("TIER STRUCTURE PREDICTIONS")
-    print("=" * 70)
+    _print("\n" + "=" * 70)
+    _print("TIER STRUCTURE PREDICTIONS")
+    _print("=" * 70)
 
     # For N=3: n_E = 52 = Tier 1 size. Each E-doublet contributes
     # one dynamically dominant direction.
@@ -305,7 +325,7 @@ def main():
     n_triv = F_total.mults[0]
     n_sign = F_total.mults[1]
 
-    print(f"""
+    _print(f"""
   Analogy with N=3 (S_3):
     S_3: n_E = 52 = Tier 1 size exactly
     S_3: n_A + n_Ap = 24 + 28 = 52 = remaining tiers (16 + 4 = 20 observed)
@@ -324,17 +344,17 @@ def main():
 """)
 
     # E-fraction analysis (generalization of the 2/3 rule from N=3)
-    print("  Irrep fraction analysis (generators / total candidates):")
+    _print("  Irrep fraction analysis (generators / total candidates):")
     for i, name in enumerate(IRREPS):
         contrib = F_total.mults[i] * IRREP_DIMS[i]
         frac = contrib / F_total.dim if F_total.dim > 0 else 0
-        print(f"    {name:>8s}: {contrib:>5d} / {F_total.dim} = {frac:.1%}")
+        _print(f"    {name:>8s}: {contrib:>5d} / {F_total.dim} = {frac:.1%}")
 
     # ==========================================================================
     # Save results for dataset builder
     # ==========================================================================
-    results_dir = os.path.join("results", "tier_decomposition")
-    os.makedirs(results_dir, exist_ok=True)
+    os.makedirs(os.path.dirname(os.path.abspath(out_path)) or ".",
+                exist_ok=True)
 
     # S3 decomposition (from known values)
     s3_data = {
@@ -372,19 +392,23 @@ def main():
         s4_data["levels"][label] = {"dim": rep.dim, "mults": rep.mults}
 
     combined = {"S3": s3_data, "S4": s4_data}
-    out_path = os.path.join(results_dir, "s3_s4_decomposition.json")
     with open(out_path, "w") as f:
         json.dump(combined, f, indent=2)
-    print(f"\n  Results saved: {out_path}")
+    _print(f"\n  Results saved: {out_path}")
+    if quiet:
+        # In quiet mode emit a single one-line confirmation so the script
+        # can still be used as a make-target sanity check.
+        print(f"s4_tier_analysis: N=3 total={156}, N=4 total={F_total.dim}, "
+              f"n_std={F_total.mults[2]} -> {out_path}")
 
     # ==========================================================================
     # Comparison of S_3 and S_4
     # ==========================================================================
-    print("\n" + "=" * 70)
-    print("S_3 vs S_4 COMPARISON")
-    print("=" * 70)
+    _print("\n" + "=" * 70)
+    _print("S_3 vs S_4 COMPARISON")
+    _print("=" * 70)
 
-    print(f"""
+    _print(f"""
   Property                          S_3 (N=3)       S_4 (N=4)
   ----------------------------------------------------------------
   Group order                       6               24
@@ -402,10 +426,10 @@ def main():
     # ==========================================================================
     # Final summary
     # ==========================================================================
-    print("=" * 70)
-    print("FINAL SUMMARY")
-    print("=" * 70)
-    print(f"""
+    _print("=" * 70)
+    _print("FINAL SUMMARY")
+    _print("=" * 70)
+    _print(f"""
   1. EDGE REPRESENTATION:
      The 6 pair Hamiltonians of N=4 decompose under S_4 as:
      {L0}
@@ -430,5 +454,25 @@ def main():
 """)
 
 
+def _parse_args(argv=None):
+    ap = argparse.ArgumentParser(
+        description=__doc__.splitlines()[1] if __doc__ else None,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    ap.add_argument(
+        "--output", "-o",
+        default=None,
+        help="Output JSON path "
+             "(default: results/tier_decomposition/s3_s4_decomposition.json)",
+    )
+    ap.add_argument(
+        "--quiet", "-q",
+        action="store_true",
+        help="Suppress the verbose banner output; print a single summary line.",
+    )
+    return ap.parse_args(argv)
+
+
 if __name__ == "__main__":
-    main()
+    args = _parse_args()
+    main(out_path=args.output, quiet=args.quiet)

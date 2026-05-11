@@ -12,145 +12,226 @@
 - id: 3d_run_1d
   path: 3d/run_1d.py
   category: analysis
-  scope: 3body/3d
-  status: needs_review
-  description: Run the 1D (linear) Poisson algebra computation.
+  scope: 3body/d=1
+  status: complete
+  description: 'Driver: 1D (linear) Poisson algebra computation. Established d-independence
+    for N=3 at d=1.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - d=1
+  - engine-driver
+  run_command: python 3d/run_1d.py
 - id: 3d_run_3d
   path: 3d/run_3d.py
   category: analysis
-  scope: 3body/3d
-  status: needs_review
-  description: Run the 3D (spatial) Poisson algebra computation.
+  scope: 3body/d=3
+  status: complete
+  description: 'Driver: 3D (spatial) Poisson algebra computation. Established d-independence
+    for N=3 at d=3.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - d=3
+  - engine-driver
+  run_command: python 3d/run_3d.py
 - id: algebra_growth
   path: algebra_growth.py
   category: analysis
   scope: 3body
-  status: needs_review
-  description: Three-Body Lie Algebra Growth Characterization ================================================
+  status: superseded
+  description: Original Phase 1 numerical-finite-difference engine. Produced unstable
+    level-3 estimates (39-103). Superseded by exact_growth.py polynomial-u trick.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - legacy
+  - phase1
+  superseded_by: exact_growth
 - id: analyze_results
   path: analyze_results.py
   category: analysis
   scope: 3body
-  status: needs_review
-  description: Post-hoc Analysis of Lie Algebra Growth Results =================================================
+  status: complete
+  description: Post-hoc analysis of early growth runs. One-shot script that consumed
+    algebra_growth output to characterize sensitivity.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - phase1
 - id: aws_level4
   path: aws_level4.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: Level 4 Lie Algebra Dimension -- Multi-Configuration Pipeline ================================================================
-  outputs: []
-  tags: []
+  scope: nbody/N3
+  status: complete
+  description: Level-4 dimension multi-config AWS pipeline. Produced d(4)>=5604 lower
+    bound across multiple configurations.
+  outputs:
+  - results/level4_global_*/
+  - results/level4_lagrange_*/
+  - results/level4_euler_*/
+  - results/level4_scalene_*/
+  tags:
+  - analysis
+  - level4
+  - aws
 - id: check_1r2
   path: check_1r2.py
   category: analysis
   scope: 3body
-  status: needs_review
-  description: (no docstring) check_1r2.py
+  status: complete
+  description: '1/r^2 sanity check script: validates Calogero-Moser variant produces
+    [3, 6, 17, 116].'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - sanity
+  - calogero-moser
 - id: clebsch_gordan_analysis
   path: clebsch_gordan_analysis.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: Decompose the Poisson algebra under S_3 x SO(2) and check whether the
-    tier structure 52 + 44 + 16 + 4 = 116 is predicted by Clebsch-Gordan.
-  outputs: []
-  tags: []
+  scope: nbody/N3
+  status: complete
+  description: Canonical S_3 representation decomposition of the N=3 Poisson algebra.
+    Establishes n_E = 52 = Tier 1 size exactly. Referenced from paper 2 (S_3 jet filtration).
+  outputs:
+  - potential_comparison_plots/quantization_analysis.md
+  tags:
+  - analysis
+  - representation-theory
+  - s3
+  - tier-decomposition
+  related_docs:
+  - papers/paper2_s3_filtration.tex
+  - docs/s4_tier_predictions.md
 - id: cm_comparison
   path: cm_comparison.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: 'Calogero-Moser vs Gravitational: Bracket Algebra Comparison ============================================================='
+  scope: nbody/N3
+  status: complete
+  description: Calogero-Moser vs Newtonian gravity bracket-algebra comparison. Established
+    universality across singular potential types.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - calogero-moser
+  - universality
 - id: data_inventory
   path: data_inventory.py
   category: analysis
   scope: 3body
-  status: needs_review
-  description: Complete data inventory across all datasets.
-  outputs: []
-  tags: []
+  status: complete
+  description: Complete data inventory utility across all results/ subdirectories.
+  outputs:
+  - data/data_inventory.json
+  tags:
+  - analysis
+  - utility
+  - inventory
 - id: dirac_analysis_from_svd
   path: dirac_analysis_from_svd.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: Dirac constraint analysis using ONLY pre-computed SVD data.
+  scope: nbody/N3
+  status: complete
+  description: 'Dirac constraint analysis using pre-computed SVD data. Comprehensive
+    noise-floor taxonomy: 32 syzygies + 8 true zeros + significant generators. Settled
+    the question of whether 40 vanishing SVs are constraints (answer: 8 constraints
+    + 32 syzygies).'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - dirac
+  - syzygy
+  - noise-floor
 - id: dirac_constraint_test
   path: dirac_constraint_test.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: Test whether the 40 noise-floor generators are Dirac constraints.
+  scope: nbody/N3
+  status: complete
+  description: 'Tests whether the 40 noise-floor generators are Dirac constraints.
+    Result: 32 are syzygies (Jacobi-identity consequences), 8 are true constraints
+    (translation invariance).'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - dirac
+  - syzygy
 - id: dirac_direct_eval
   path: dirac_direct_eval.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: Direct evaluation of all generators to identify which are constraints.
+  scope: nbody/N3
+  status: complete
+  description: Direct generator evaluation to identify which level-3 generators vanish
+    everywhere on phase space (true zeros) vs only at generic points (syzygies).
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - dirac
+  - syzygy
 - id: generate_triptychs
   path: generate_triptychs.py
   category: analysis
   scope: 3body
-  status: needs_review
-  description: Triptych Atlas Series ======================
+  status: superseded
+  description: Original triptych atlas series renderer. Superseded by the website/figures_compare.py
+    pipeline (Apr 18, 2026 rebuild).
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - viz
+  - legacy
+  superseded_by: website_figures_compare
 - id: hires_lagrange_scan
   path: hires_lagrange_scan.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: High-Resolution Lagrange Region Scan ======================================
-    Focused 1000x1000 grid scan centered on the equilateral (Lagrange) point at epsilon=2e-4
-    for the 1/r^2 (Calogero-Moser) potential.
+  scope: nbody/N3
+  status: complete
+  description: High-resolution Lagrange-region scan tool. Used to resolve the concentric
+    ring features around the equilateral point.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - lagrange
+  - hires
 - id: level4_comparison
   path: level4_comparison.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: Level-4 Comparison â€” Phase 1 Item 1.5 ======================================
-  outputs: []
-  tags: []
+  scope: nbody/N3
+  status: complete
+  description: Level-4 comparison chart (gap_workplan Phase 1 Item 1.5). Bar chart
+    + convergence curves across 4 config types.
+  outputs:
+  - level4_comparison_chart.png
+  - level4_convergence_curves.png
+  tags:
+  - analysis
+  - level4
+  - phase1
+  related_docs:
+  - docs/gap_workplan.md
 - id: level4_highsample
   path: level4_highsample.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: Level 4 High-Sample Bound Tightening =====================================
+  scope: nbody/N3
+  status: complete
+  description: Level-4 high-sample bound tightening. Pushed d(4) bounds with up to
+    200K samples at generic configs.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - level4
 - id: mass_ratio_bisection
   path: mass_ratio_bisection.py
   category: analysis
   scope: 3body
-  status: needs_review
-  description: HISTORICAL ARTIFACT â€” DO NOT USE FOR NEW ANALYSIS ===================================================
-    This script and its results in bisection_results/ were produced on April 8, 2026
-    using a "term-group factored evaluation" approach that has since been reverted
-    from exact_growth.py and stability_atlas.py.
+  status: archived
+  description: HISTORICAL ARTIFACT. The docstring of the script itself flags it as
+    DO NOT USE FOR NEW ANALYSIS. Predates the symbolic rank proof.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - legacy
+  - do-not-use
 - id: nbody_analyze_117th
   path: nbody/analyze_117th.py
   category: analysis
@@ -166,182 +247,292 @@
 - id: nbody_analyze_117th_compact
   path: nbody/analyze_117th_compact.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: Extract the compact 10-term relative-coordinate form and analyze it.
+  scope: nbody/N3
+  status: complete
+  description: Compact 10-term relative-coordinate form of the 117th quantum generator.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - 117th
+  - quantum
 - id: nbody_analyze_117th_definite
   path: nbody/analyze_117th_definite.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: 'Final analysis: clean mathematical form and sign-definiteness proof.
-    Key finding: g = (u12*u13)^p * F(w12, w13) with p+q = 8.'
+  scope: nbody/N3
+  status: complete
+  description: 'Sign-definiteness proof for the 117th generator: g = -(9/4)*[(A-B)^2
+    + A^2] is negative semi-definite.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - 117th
+  - quantum
 - id: nbody_analyze_117th_physics
   path: nbody/analyze_117th_physics.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: 'Physical interpretation: does g commute with the Hamiltonian? Is it
-    a conserved quantity?'
+  scope: nbody/N3
+  status: complete
+  description: 'Physical interpretation of the 117th generator: NOT a conserved quantity
+    ([G, H_total] != 0).'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - 117th
+  - quantum
 - id: nbody_analyze_scaling
   path: nbody/analyze_scaling.py
   category: analysis
   scope: nbody
-  status: needs_review
-  description: Analyze N-body dimension sequence scaling.
-  outputs: []
-  tags: []
+  status: complete
+  description: N-body dimension-sequence scaling analysis. Derived L2(N) = N(4N^2-9N+3)/2
+    for N>=4 by fitting new_L2 = 12*C(N,3).
+  outputs:
+  - results/analysis/nbody_scaling_formulas.json
+  tags:
+  - analysis
+  - scaling
+  - n-body
 - id: nbody_expansion_analysis
   path: nbody/expansion_analysis.py
   category: analysis
   scope: nbody
-  status: needs_review
-  description: Multi-System Universality Survey -- Analysis and Plotting
-  outputs: []
-  tags: []
+  status: complete
+  description: 'Multi-system universality survey: analysis + plotting across 21 physical
+    systems.'
+  outputs:
+  - results/expansion_dimseq/
+  tags:
+  - analysis
+  - universality-survey
+  - multi-system
 - id: nbody_fast_level3_compare
   path: nbody/fast_level3_compare.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: Fast numerical comparison of level-3 structure constants.
+  scope: nbody/N3
+  status: complete
+  description: Fast numerical L3 structure constant comparison via finite differences.
+    One of four L3 comparison methods.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - L3
+  - structure-constants
 - id: nbody_identify_117th
   path: nbody/identify_117th.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: Identify the 117th Generator =============================
+  scope: nbody/N3
+  status: complete
+  description: 'Identifies the 117th generator: indices into the basis, Legendre P_3
+    octupole structure, S_3 average.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - 117th
+  - quantum
 - id: nbody_identify_117th_rank
   path: nbody/identify_117th_rank.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: Determine the rank of the 48 hbar^2 corrections among themselves.
+  scope: nbody/N3
+  status: complete
+  description: Rank of the 48 hbar^2 corrections among themselves (probes quantum
+    L3 algebra structure).
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - 117th
+  - quantum
 - id: nbody_numerical_level3_compare
   path: nbody/numerical_level3_compare.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: Numerical comparison of level-3 structure constants between potentials.
+  scope: nbody/N3
+  status: complete
+  description: Numerical SVD-based L3 structure constant comparison between potentials.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - L3
+  - structure-constants
 - id: nbody_run_helium
   path: nbody/run_helium.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: 'Helium atom Poisson algebra: does the sign of the interaction matter?'
+  scope: nbody/N3
+  status: complete
+  description: 'Helium atom Poisson algebra. Confirms sign of interaction doesn''t
+    matter: helium (+2, -1, -1) gives [3, 6, 17, 116].'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - helium
+  - atomic
+  - charge-sign
+  latest_result:
+    date: '2026-03-19'
+    summary: Helium charge-sign invariance confirmed.
+    sequence:
+    - 3
+    - 6
+    - 17
+    - 116
 - id: nbody_run_n4_d1
   path: nbody/run_n4_d1.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: 'Priority 4a: N=4, d=1 through Level 2.'
+  scope: nbody/N4
+  status: superseded
+  description: 'Priority 4a: N=4, d=1 through L=2. Now subsumed by the general nbody/symbolic_rank_nbody.py
+    engine.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - n4
+  - legacy
+  superseded_by: nbody_symbolic_rank_nbody
 - id: nbody_run_n4_d2
   path: nbody/run_n4_d2.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: 'Priority 1: N=4, d=2, 1/r through Level 2.'
+  scope: nbody/N4
+  status: superseded
+  description: 'Priority 1: N=4, d=2, 1/r through L=2. Subsumed by general engine.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - n4
+  - legacy
+  superseded_by: nbody_symbolic_rank_nbody
 - id: nbody_run_n4_d3
   path: nbody/run_n4_d3.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: 'Priority 4b: N=4, d=3 through Level 2.'
+  scope: nbody/N4
+  status: superseded
+  description: 'Priority 4b: N=4, d=3 through L=2. Subsumed by general engine.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - n4
+  - legacy
+  superseded_by: nbody_symbolic_rank_nbody
 - id: nbody_run_n4_mass
   path: nbody/run_n4_mass.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: 'Priority 3: N=4 mass invariance test.'
+  scope: nbody/N4
+  status: complete
+  description: 'N=4 mass invariance test. Confirmed: 3 configs (equal, hierarchical,
+    mixed) all give [6, 14, 62].'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - n4
+  - mass-invariance
+  latest_result:
+    date: '2026-03-15'
+    summary: N=4 mass invariance confirmed across 3 configurations.
+    sequence:
+    - 6
+    - 14
+    - 62
 - id: nbody_run_pn_aws
   path: nbody/run_pn_aws.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: AWS orchestrator for composite-potential and post-Newtonian runs.
+  scope: nbody/N3
+  status: complete
+  description: AWS orchestrator for composite-potential / post-Newtonian dimension-sequence
+    runs.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - post-newtonian
+  - aws
+  - composite
 - id: nbody_run_pn_mass_test
   path: nbody/run_pn_mass_test.py
   category: analysis
-  scope: nbody
-  status: needs_review
+  scope: nbody/N3
+  status: complete
   description: Post-Newtonian mass invariance test.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - post-newtonian
+  - mass-invariance
 - id: nbody_run_post_newtonian
   path: nbody/run_post_newtonian.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: Post-Newtonian (1PN) three-body Poisson algebra.
+  scope: nbody/N3
+  status: complete
+  description: 'Post-Newtonian (1PN) three-body Poisson algebra. Confirms PN correction
+    does not change the algebra: [3, 6, 17, 116].'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - post-newtonian
+  latest_result:
+    date: '2026-03-22'
+    summary: 1PN preserves [3, 6, 17, 116].
+    sequence:
+    - 3
+    - 6
+    - 17
+    - 116
 - id: nbody_run_potential_1r3
   path: nbody/run_potential_1r3.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: 'Priority 2: N=3, d=2, 1/r^3 potential through Level 3.'
+  scope: nbody/N3
+  status: superseded
+  description: 'Priority 2: N=3, d=2, 1/r^3 through L=3. Now subsumed by the general
+    engine with --potential 1/r3.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - 1/r3
+  - legacy
+  superseded_by: nbody_symbolic_rank_nbody
 - id: nbody_symbolic_level3_compare
   path: nbody/symbolic_level3_compare.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: Symbolic level-3 structure constant comparison across potentials.
+  scope: nbody/N3
+  status: complete
+  description: Exact symbolic L3 structure constant comparison over QQ (~37h/potential
+    on AWS).
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - L3
+  - structure-constants
+  - exact
 - id: nbody_symbolic_n_level3
   path: nbody/symbolic_n_level3.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: 'Phase 4: Level-3 verification at 10 concrete rational p-values.'
+  scope: nbody/N3
+  status: complete
+  description: L3 verification at 10 concrete rational p-values for V = -u^p potentials.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - symbolic
+  - exponent-sweep
 - id: nbody_symbolic_n_proof
   path: nbody/symbolic_n_proof.py
   category: analysis
-  scope: nbody
-  status: needs_review
-  description: Numerical survey of Poisson algebra dimension vs potential exponent.
+  scope: nbody/N3
+  status: complete
+  description: Numerical survey of dimension vs potential exponent p. Established
+    [3, 6, 17] is universal at L2 across 79+ rational p-values; the p=-2 harmonic
+    exception is infinitely sharp.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - exponent-survey
+  - universality
 - id: neural_identify_extra_generators
   path: neural/identify_extra_generators.py
   category: analysis
   scope: neural
-  status: needs_review
-  description: Identify the 3 extra generators in the gradient-product neural algebra
-    that are NOT present in the physical N=3 universal algebra.
+  status: complete
+  description: Identifies the 3 extra generators in the gradient-product neural algebra
+    not present in the physical N=3 universal set.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - neural
 - id: neural_nn_extra_generators
   path: neural/nn_extra_generators.py
   category: analysis
@@ -358,99 +549,299 @@
   path: neural/physics_vs_neural.py
   category: analysis
   scope: neural
-  status: needs_review
+  status: complete
   description: 'Direct comparison: physical N=3 algebra vs neural gradient-product
-    algebra in the SAME 6D phase space.'
+    algebra in the same 6D phase space.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - neural
 - id: neural_summarize_results
   path: neural/summarize_results.py
   category: analysis
   scope: neural
-  status: needs_review
-  description: Print a table of all saved neural algebra results.
+  status: complete
+  description: Summary table of all saved neural-algebra results.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - neural
+  - summary
 - id: potential_comparison
   path: potential_comparison.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: 'Potential Comparison Study: 1/r vs 1/rÂ² vs rÂ² ================================================'
+  scope: nbody/N3
+  status: complete
+  description: 'Potential comparison study: 1/r vs 1/r^2 vs r^2. Foundational comparison
+    establishing that singular and integrable potentials produce identical dimension
+    sequences (1/r and 1/r^2 both [3,6,17,116]) while harmonic closes finite at dim
+    15.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - universality
+  - harmonic
+  run_command: python potential_comparison.py
 - id: primes_check_1r_closure
   path: primes/check_1r_closure.py
   category: analysis
   scope: primes
-  status: needs_review
-  description: 'Quick check: does the 1/r potential algebra close at 116?'
+  status: complete
+  description: 'Closure test for the 1/r potential algebra. Result: NOT closed at
+    116 (infinite-dimensional).'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - primes
+  - closure
 - id: primes_closure_check
   path: primes/closure_check.py
   category: analysis
   scope: primes
-  status: needs_review
-  description: Compute level-4 dimension of the Poisson algebra for 1/r and log potentials.
+  status: complete
+  description: L=4 dimension computation for 1/r and log potentials. Confirms infinite
+    growth.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - primes
+  - closure
+  - L4
 - id: primes_hilbert_polya_search
   path: primes/hilbert_polya_search.py
   category: analysis
   scope: primes
-  status: needs_review
-  description: Hilbert-PÃ³lya operator search via GUE Lie algebra structure.
+  status: superseded
+  description: 'Hilbert-Polya operator search via GUE Lie algebra structure. Superseded
+    by the infinite-dimensionality discovery: the 116 generators do not form a closed
+    Lie subalgebra (Jacobi fails for the SC tensor), so the HP route via this construction
+    does not work.'
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - primes
+  - hilbert-polya
+  - superseded
+  superseded_by: primes_check_1r_closure
 - id: primes_launch_gue
   path: primes/launch_gue.py
   category: analysis
   scope: primes
-  status: needs_review
-  description: Launch EC2 instance for GUE log-gas Poisson algebra computation.
+  status: complete
+  description: AWS EC2 spot launcher for the GUE log-gas Poisson algebra computation.
+    Ran the 4-config GUE study.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - primes
+  - gue
+  - aws-launcher
 - id: primes_multi_potential_r_comparison
   path: primes/multi_potential_r_comparison.py
   category: analysis
   scope: primes
-  status: needs_review
-  description: Multi-potential comparison of coadjoint orbit spacing ratio <r>.
+  status: complete
+  description: Multi-potential <r> (coadjoint orbit spacing ratio) comparison across
+    all singular potentials. Confirms <r> ~ 0.64 universal.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - primes
+  - BGS
+  - spectral
 - id: quantization_analysis
   path: quantization_analysis.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: Definitive LQG/Bekenstein Quantization Test
-  outputs: []
-  tags: []
+  scope: nbody/N3
+  status: complete
+  description: Tier-structure statistics + LQG/Bekenstein-style integer-scaling hypothesis
+    tests. Foundational for Paper 2 (S_3 jet filtration).
+  outputs:
+  - potential_comparison_plots/quantization_analysis.md
+  tags:
+  - analysis
+  - tier-decomposition
+  - lqg
+  - phase1
+  related_docs:
+  - papers/paper2_s3_filtration.tex
 - id: rerender_frames
   path: rerender_frames.py
   category: analysis
   scope: 3body
-  status: needs_review
-  description: Re-render atlas animation frames with adaptive colorscale.
+  status: complete
+  description: Atlas animation re-render utility with adaptive colorscale. One-shot
+    fix for early animation issues.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - viz
+  - utility
 - id: run_cm_exact
   path: run_cm_exact.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: Run exact CM computation by patching exact_growth.py's Hamiltonians.
-    Reuses the full infrastructure including _make_flat_func for large expressions.
+  scope: nbody/N3
+  status: complete
+  description: Exact Calogero-Moser run by patching exact_growth.py Hamiltonians.
+    Reuses the full infrastructure.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - calogero-moser
+  - exact
+- id: harmonic_lie_algebra_id
+  path: harmonic_lie_algebra_id.py
+  category: structure
+  scope: nbody/N3
+  status: complete
+  description: 'Identifies the 15-dim Lie algebra of the harmonic (r^2) 3-body
+
+    planar Poisson algebra. Reads exact rational structure constants
+
+    from results/algebra_structure/N3_d2_r2/, computes the Killing
+
+    form over Q, decomposes into semisimple Levi + solvable radical,
+
+    and matches against a catalog of dim-15 candidates. Reports
+
+    derived series, lower central series, center, and the radical
+
+    bracket structure to disambiguate Heisenberg-style radicals from
+
+    abelian ones. Closes the long-standing dim=15 question from
+
+    docs/conjectures.md section 3.
+
+    '
+  outputs:
+  - results/algebra_structure/harmonic_n3_d2_identification.json
+  run_command: python harmonic_lie_algebra_id.py --no-jacobi
+  related_docs:
+  - docs/harmonic_dim15.md
+  - docs/conjectures.md
+  - docs/gap_workplan.md
+  latest_result:
+    date: '2026-05-11'
+    summary: 'Killing signature (6+, 4-, 5z); center dim 1; radical
+
+      (Killing kernel) dim 5 with [rad, rad] dim 1 (NOT abelian);
+
+      perfect (g = [g, g]); not nilpotent, not solvable.
+
+      Identification: Jacobi algebra g = sp(4, R) (semidirect)
+
+      heisenberg_2, equivalently so(3,2) (semidirect) h_2.
+
+      '
+  tags:
+  - structure
+  - harmonic
+  - lie_algebra
+  - sp4R
+  - jacobi
+  - complete
+- id: noise_plateau_mapping
+  path: noise_plateau_mapping.py
+  category: analysis
+  scope: 3body
+  status: complete
+  description: 'SVD rank-threshold plateau mapping (gap_workplan section 4.6).
+
+    Sweeps tau from 1e-1 down to 1e-18 over: (A) the 1/r and 1/r^2
+
+    equal-mass L=3 atlas SV cubes at three exemplar grid points
+
+    (generic, Lagrange, Euler), (B) the L=2 mass-ratio sweep across
+
+    33 m_3 values from 1 to 10^10, (C) a 1000-point sample of L=3
+
+    plateau widths across the 1/r^2 atlas. The plateau width is the
+
+    diagnostic for float64 SVD robustness; it confirms outcome (a)
+
+    of the gap_workplan hypothesis at moderate conditioning and
+
+    narrows monotonically with mass ratio. Closes the methodological
+
+    gap on ''is the rank=116 result threshold-dependent''.
+
+    '
+  outputs:
+  - figures/noise_plateau.png
+  - results/noise_plateau/noise_plateau_data.json
+  run_command: python noise_plateau_mapping.py
+  related_docs:
+  - docs/noise_plateau_findings.md
+  - docs/gap_workplan.md
+  latest_result:
+    date: '2026-05-11'
+    summary: 'L=2 plateau width drops from 13.0 decades at equal mass to 6.0
+
+      decades at m_3=10^10 -- monotonic and predictable. L=3 generic
+
+      equal-mass plateau ~5.5 decades. Mechanistically explains the
+
+      float64 rank deficits at Sun-Earth-Moon and Sun-Jupiter-Asteroid
+
+      as plateau-collapse, not algebraic closure. Symbolic rank over
+
+      Q(m_1, m_2, m_3) remains 116 universally.
+
+      '
+  tags:
+  - validation
+  - svd
+  - robustness
+  - noise_plateau
+  - complete
 - id: s4_tier_analysis
   path: s4_tier_analysis.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: S_4 Representation Decomposition for the N=4 Poisson Algebra.
-  outputs: []
+  scope: nbody/N4
+  status: complete
+  description: 'Pure representation-theoretic decomposition of the N=4 pairwise
+
+    Poisson algebra under S_4. Computes Clebsch-Gordan content of the
+
+    edge representation and its iterated Lambda^2 / tensor products,
+
+    yielding 23,226 candidate generators decomposing as 941 triv +
+
+    976 sign + 2893 std + 2932 sign_std + 1917 hook. Compares against
+
+    the observed exact rank [6, 14, 62, 1260] to expose the 94.6 %
+
+    syzygy fraction (vs 25.6 % for S_3). Companion doc at
+
+    docs/s4_tier_predictions.md sharpens the Tier-1 prediction and
+
+    enumerates the three structural ways the S_3 analogy can break;
+
+    flags the single-configuration SVD probe at the N=4 equilateral
+
+    as the next concrete experiment.
+
+    '
+  outputs:
+  - results/tier_decomposition/s3_s4_decomposition.json
+  run_command: python s4_tier_analysis.py
+  related_docs:
+  - docs/s4_tier_predictions.md
+  - docs/conjectures.md
+  - potential_comparison_plots/quantization_analysis.md
+  latest_result:
+    date: '2026-05-11'
+    summary: 'Reps decomposed: 23,226 candidates total -> 1,260 independent at
+
+      L3 (94.6 % syzygy fraction). n_std = 2,893 is the naive Tier-1
+
+      prediction but exceeds the 1,260-dim L3 algebra, so the S_3
+
+      analogy ''standard rep exhausts Tier 1'' must break under S_4.
+
+      Awaiting N=4 d>=2 SVD tier data for the empirical test.
+
+      '
   tags: []
 - id: scripts_archive_legacy_figures
   path: scripts/archive_legacy_figures.py
@@ -502,84 +893,131 @@
 - id: sv116_analytical
   path: sv116_analytical.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: 'SV #116 Analytical Prediction â€” Phase 1 Item 1.6 =================================================='
-  outputs: []
-  tags: []
+  scope: nbody/N3
+  status: complete
+  description: 'SV #116 analytical prediction (gap_workplan Phase 1 Item 1.6). Achieved
+    R^2 = 0.630 correlation between analytical prediction and observed SV #116.'
+  outputs:
+  - spectral_depth/sv116_predicted_vs_observed.png
+  tags:
+  - analysis
+  - sv116
+  - phase1
+  related_docs:
+  - docs/gap_workplan.md
 - id: unequal_mass_study
   path: unequal_mass_study.py
   category: analysis
-  scope: 3body
-  status: needs_review
-  description: Unequal Mass Study â€” Dimension Sequence vs Mass Configuration ==============================================================
+  scope: nbody/N3
+  status: complete
+  description: Unequal-mass dimension-sequence study. The original [3,5,13,69] vs
+    [3,6,17,116] artifact study; superseded by the symbolic-rank-over-Q proof of mass
+    invariance for all positive masses.
   outputs: []
-  tags: []
+  tags:
+  - analysis
+  - mass-invariance
+  - historical
+  run_command: python unequal_mass_study.py
 - id: analyze_atlas_data
   path: analyze_atlas_data.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: 'Quick diagnostic of atlas_1000 data: clean merge + excluded block.'
+  scope: nbody/N3
+  status: complete
+  description: 'Diagnostic for atlas_1000 data: clean-merge + excluded-block check.'
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - diagnostic
+  - utility
 - id: assemble_atlases
   path: assemble_atlases.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: 'Atlas Assembly: Comprehensive Shape-Sphere Atlas Visualization ================================================================'
+  scope: nbody/N3
+  status: superseded
+  description: Original atlas assembly + comprehensive shape-sphere visualization.
+    Superseded by the website/figures_render.py + figures_compare.py pipeline (Apr
+    18, 2026 rebuild).
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - viz
+  - legacy
+  superseded_by: website_figures_render
 - id: atlas_1000
   path: atlas_1000.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: '1000x1000 Atlas: Parallelized High-Resolution Shape Sphere Scan'
-  outputs: []
-  tags: []
+  scope: nbody/N3
+  status: complete
+  description: 1000x1000 parallelized high-resolution shape-sphere scan. Produced
+    the canonical hi-res atlases.
+  outputs:
+  - aws_results/atlas_1000/
+  tags:
+  - atlas
+  - hires
+  - 1000x1000
 - id: atlas_diagnostics
   path: atlas_diagnostics.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: Atlas Diagnostic Checks ========================
+  scope: nbody/N3
+  status: complete
+  description: Atlas diagnostic checks. Validates the atlas pipeline output.
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - diagnostic
 - id: audit_atlas_data
   path: audit_atlas_data.py
   category: atlas
   scope: 3body
-  status: needs_review
-  description: Audit all local atlas data against S3 to detect stale/incomplete syncs.
+  status: complete
+  description: Audit local atlas data against S3 to detect stale/incomplete syncs
+    (fixes the s3 sync size-only artifact for fixed-size numpy arrays).
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - diagnostic
+  - s3
 - id: cg_atlas_comparison
   path: cg_atlas_comparison.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: CG Atlas Comparison â€” Phase 1 Item 1.4 =======================================
-  outputs: []
-  tags: []
+  scope: nbody/N3
+  status: complete
+  description: Clebsch-Gordan atlas comparison (gap_workplan Phase 1 Item 1.4). Lagrange=33
+    doublets (E-frac=0.57), Euler=14, Iso-90=24.
+  outputs:
+  - spectral_depth/cg_predicted_vs_observed.png
+  - spectral_depth/cg_residual_map.png
+  tags:
+  - atlas
+  - cg
+  - phase1
+  related_docs:
+  - docs/gap_workplan.md
 - id: full_atlas_scan
   path: full_atlas_scan.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: Full shape-sphere atlas scanner with corrected SVD gap analysis and
-    mass-aware momentum sampling.
+  scope: nbody/N3
+  status: complete
+  description: Full shape-sphere atlas scanner with SVD gap analysis and mass-aware
+    momentum sampling. Core atlas tool.
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - core-tool
+  - scanner
+  run_command: python full_atlas_scan.py --resolution 100 --samples 500
 - id: merge_atlas_1000
   path: merge_atlas_1000.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: Selective merge of 1000x1000 atlas data.
+  scope: nbody/N3
+  status: complete
+  description: Selective merge of 1000x1000 atlas data across multiple AWS spot runs.
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - utility
 - id: multi_epsilon_atlas
   path: multi_epsilon_atlas.py
   category: atlas
@@ -611,11 +1049,15 @@
 - id: nbody_helium_atlas
   path: nbody/helium_atlas.py
   category: atlas
-  scope: nbody
-  status: needs_review
-  description: 'Helium Atlas: Charge-Sign Invariance Comparison Tool ====================================================='
+  scope: nbody/N3
+  status: complete
+  description: 'Helium atlas: charge-sign invariance comparison tool. Used for the
+    (+2, -1, -1) atlas vs gravitational baseline.'
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - helium
+  - charge-sign
 - id: parametric_atlas_scan
   path: parametric_atlas_scan.py
   category: atlas
@@ -635,28 +1077,41 @@
 - id: run_expansion_atlas
   path: run_expansion_atlas.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: AWS orchestrator for the Multi-System Universality Survey -- stability
-    atlases.
+  scope: nbody
+  status: complete
+  description: AWS orchestrator for the Multi-System Universality Survey stability
+    atlases. Produced the 18 completed atlas configurations.
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - universality-survey
+  - aws
 - id: shape_sphere
   path: shape_sphere.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: Shape Sphere Gap Ratio Landscape =================================
+  scope: nbody/N3
+  status: complete
+  description: Shape sphere gap-ratio landscape renderer. The original shape-sphere
+    visualization (canonical for paper 1).
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - shape-sphere
+  - viz
 - id: shape_sphere_hires
   path: shape_sphere_hires.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: High-Resolution Shape Sphere Atlas ====================================
+  scope: nbody/N3
+  status: superseded
+  description: High-resolution shape-sphere atlas; superseded by shape_sphere_atlas.py
+    (canonical Hsiang-Montgomery Jacobi projection, see recent commits d33a55e and
+    f7e8b29).
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - shape-sphere
+  - legacy
+  superseded_by: shape_sphere_atlas
 - id: stability_atlas
   path: stability_atlas.py
   category: atlas
@@ -671,11 +1126,15 @@
 - id: sv_landscape_viz
   path: sv_landscape_viz.py
   category: atlas
-  scope: 3body
-  status: needs_review
-  description: Singular Value Landscape Visualizations ========================================
+  scope: nbody/N3
+  status: complete
+  description: Singular-value landscape visualizations across the shape sphere. Used
+    for the spectral depth mining figures.
   outputs: []
-  tags: []
+  tags:
+  - atlas
+  - viz
+  - sv-landscape
 - id: targeted_adaptive_scan
   path: targeted_adaptive_scan.py
   category: atlas
@@ -798,8 +1257,8 @@
   category: dimseq
   scope: 3body
   status: needs_review
-  description: Mass Ratio Sweep â€” track dimension sequence and SVD gaps as mass ratio
-    varies continuously from equal (1:1:1) to extreme (1:1:1e6).
+  description: Mass Ratio Sweep â€” track dimension sequence and SVD gaps as mass
+    ratio varies continuously from equal (1:1:1) to extreme (1:1:1e6).
   outputs: []
   tags: []
 - id: nbody_charge_sensitivity_sweep
@@ -1563,658 +2022,1024 @@
   category: website
   scope: website
   status: needs_review
-  description: Render the 1/rÂ² (Calogero-Moser) knee-index map as a single-panel figure
-    for embedding on the research dashboard.
+  description: Render the 1/rÂ² (Calogero-Moser) knee-index map as a single-panel
+    figure for embedding on the research dashboard.
   outputs: []
   tags: []
-
-# ---------------------------------------------------------------------------
-# Planned actions from supplemental triage (docs/supplemental_triage.md).
-# These entries describe scripts that do not yet exist on disk; status=planned
-# is exempt from the path-exists lint check.
-# ---------------------------------------------------------------------------
-
 - id: nbody_run_schwarzschild
   path: nbody/run_schwarzschild.py
   category: dimseq
   scope: nbody/N3
   status: wip
-  description: |
-    Schwarzschild effective-potential dimension-sequence sweep.
+  description: 'Schwarzschild effective-potential dimension-sequence sweep.
+
     V_eff = -M*u + (L^2/2)*u^2 - M*L^2*u^3 expressed as a 3-term composite in u=1/r.
+
     Sweeps over a (M, L) grid testing whether [3, 6, 17, 116] is (M, L)-invariant
+
     (the GR analogue of mass-invariance). First Schwarzschild result in the project.
+
     A full 2D atlas in (r/M, L/M) is the natural follow-up once the dimseq battery
+
     is settled.
+
+    '
   inputs: []
   outputs:
-    - results/schwarzschild/dimseq_l2_full.json
-    - results/schwarzschild/dimseq_l3_key.json
-    - results/schwarzschild/run.log
+  - results/schwarzschild/dimseq_l2_full.json
+  - results/schwarzschild/dimseq_l3_key.json
+  - results/schwarzschild/run.log
   latest_result:
-    date: "2026-04-19"
-    summary: |
-      L2 full grid (30 (M,L) points) DONE in 2m11s: all give [3, 6, 17] - L2
-      universality confirmed across the full Schwarzschild parameter grid. L3 on
-      4 physically-meaningful points (M=1,L=1; M=1,L=2; M=1,L=4; M=2,L=1)
-      RUNNING overnight, ETA ~4-5 hours.
-    sequence: [3, 6, 17]
-  runtime: L2 full (30 pts) ~2 min; L3 key (4 pts) ~4-5 hours; L3 full (30 pts) ~30+ hours
-  cost_usd: 0
-  run_command: |
-    python nbody/run_schwarzschild.py --mode full --max-level 2 --samples 200 \
-        --out results/schwarzschild/dimseq_l2_full.json
-    python nbody/run_schwarzschild.py --mode key --max-level 3 --samples 500 \
-        --out results/schwarzschild/dimseq_l3_key.json
-  related_docs:
-    - docs/supplemental_triage.md
-  related_supplemental:
-    - schwarzschild_scope.md
-  tags: [dimseq, schwarzschild, GR, composite, P1]
+    date: '2026-04-19'
+    summary: 'L2 full grid (30 (M,L) points) DONE in 2m11s: all give [3, 6, 17] -
+      L2
 
+      universality confirmed across the full Schwarzschild parameter grid. L3 on
+
+      4 physically-meaningful points (M=1,L=1; M=1,L=2; M=1,L=4; M=2,L=1)
+
+      RUNNING overnight, ETA ~4-5 hours.
+
+      '
+    sequence:
+    - 3
+    - 6
+    - 17
+  runtime: L2 full (30 pts) ~2 min; L3 key (4 pts) ~4-5 hours; L3 full (30 pts) ~30+
+    hours
+  cost_usd: 0
+  run_command: "python nbody/run_schwarzschild.py --mode full --max-level 2 --samples\
+    \ 200 \\\n    --out results/schwarzschild/dimseq_l2_full.json\npython nbody/run_schwarzschild.py\
+    \ --mode key --max-level 3 --samples 500 \\\n    --out results/schwarzschild/dimseq_l3_key.json\n"
+  related_docs:
+  - docs/supplemental_triage.md
+  related_supplemental:
+  - schwarzschild_scope.md
+  tags:
+  - dimseq
+  - schwarzschild
+  - GR
+  - composite
+  - P1
 - id: planned_atlas_structure_sweep
   path: atlas_structure_sweep.py
   category: structure
   scope: nbody/N3
   status: planned
-  description: |
-    Atlas of structure constants over the (mu, phi) shape sphere. Compute the 32 non-zero
-    structure constants (and Killing eigenvalues + center dimension) at every grid point and
+  description: 'Atlas of structure constants over the (mu, phi) shape sphere. Compute
+    the 32 non-zero
+
+    structure constants (and Killing eigenvalues + center dimension) at every grid
+    point and
+
     render as sphere maps. Builds on nbody/isomorphism_test.py L2 pipeline.
+
+    '
   inputs: []
   outputs:
-    - results/structure_atlas/
+  - results/structure_atlas/
   runtime: 2-3 days; AWS optional
   related_docs:
-    - docs/supplemental_triage.md
+  - docs/supplemental_triage.md
   related_supplemental:
-    - MAP_STRUCTURE_ACROSS_PARAMETER_SPACE.md
-    - EXTRACT_ALGEBRA_STRUCTURE.md
-  tags: [planned, P2, structure, isomorphism, atlas]
-
+  - MAP_STRUCTURE_ACROSS_PARAMETER_SPACE.md
+  - EXTRACT_ALGEBRA_STRUCTURE.md
+  tags:
+  - planned
+  - P2
+  - structure
+  - isomorphism
+  - atlas
 - id: planned_compute_monodromy
   path: compute_monodromy.py
   category: structure
   scope: nbody/N3
   status: planned
-  description: |
-    Parallel-transport the structure-constant basis around a small loop encircling a binary
-    collision and check the resulting permutation on basis indices. Companion to
-    planned_atlas_structure_sweep.
-  outputs:
-    - results/monodromy/
-  related_docs:
-    - docs/supplemental_triage.md
-  related_supplemental:
-    - MAP_STRUCTURE_ACROSS_PARAMETER_SPACE.md
-  tags: [planned, P2, monodromy, structure, collisions]
+  description: 'Parallel-transport the structure-constant basis around a small loop
+    encircling a binary
 
+    collision and check the resulting permutation on basis indices. Companion to
+
+    planned_atlas_structure_sweep.
+
+    '
+  outputs:
+  - results/monodromy/
+  related_docs:
+  - docs/supplemental_triage.md
+  related_supplemental:
+  - MAP_STRUCTURE_ACROSS_PARAMETER_SPACE.md
+  tags:
+  - planned
+  - P2
+  - monodromy
+  - structure
+  - collisions
 - id: planned_compare_atlas_structures
   path: compare_atlas_structures.py
   category: structure
   scope: nbody/N3
   status: planned
-  description: |
-    Cross-potential comparison of atlas structure-constant tensors. Renders difference maps
-    between universal-class potentials at every grid point.
-  related_docs:
-    - docs/supplemental_triage.md
-  related_supplemental:
-    - MAP_STRUCTURE_ACROSS_PARAMETER_SPACE.md
-  tags: [planned, P2, structure, comparison]
+  description: 'Cross-potential comparison of atlas structure-constant tensors. Renders
+    difference maps
 
+    between universal-class potentials at every grid point.
+
+    '
+  related_docs:
+  - docs/supplemental_triage.md
+  related_supplemental:
+  - MAP_STRUCTURE_ACROSS_PARAMETER_SPACE.md
+  tags:
+  - planned
+  - P2
+  - structure
+  - comparison
 - id: bench_flint
   path: bench_flint/bench.py
   category: diagnostic
   scope: tooling
   status: complete
-  description: |
-    python-flint vs default ground-types benchmark on the actual project workload.
+  description: 'python-flint vs default ground-types benchmark on the actual project
+    workload.
+
     Three benches: (1) micro cancel() on a hard rational polynomial; (2) end-to-end
+
     Schwarzschild composite L<=2 dimseq; (3) end-to-end Schwarzschild composite L<=3.
+
     Run via `SYMPY_GROUND_TYPES=flint bench_flint/venv/Scripts/python bench_flint/bench.py`.
+
+    '
   inputs: []
   outputs:
-    - bench_flint/results.jsonl
-    - bench_flint/probe_flint.log
-    - bench_flint/probe_python.log
+  - bench_flint/results.jsonl
+  - bench_flint/probe_flint.log
+  - bench_flint/probe_python.log
   latest_result:
-    date: "2026-04-19"
-    summary: |
-      NEGATIVE RESULT: SymPy 1.14.0 does not include DMP_Flint for multivariate
+    date: '2026-04-19'
+    summary: 'NEGATIVE RESULT: SymPy 1.14.0 does not include DMP_Flint for multivariate
+
       polynomials (univariate only; PR #26793 still in development). Setting
+
       SYMPY_GROUND_TYPES=flint accelerates coefficient arithmetic but the
+
       polynomial GCD path falls back to DMP_Python. Measured per-bracket times
+
       are within 5-10% of stock Python (sometimes slightly slower due to FLINT
+
       coefficient overhead). FLINT is currently NOT a speedup for this project.
+
       Re-evaluate after PR #26793 merges in a future SymPy release.
 
+
       SECONDARY FINDING: probe.py shows together(raw) takes 3.43s and produces
+
       1 (factored) term while cancel(raw) takes 107s and produces 121,002
+
       (expanded) terms. Suggests simplify_generator() in nbody/exact_growth_nbody.py
+
       could be 10-30x faster by adopting a smarter canonicalization strategy
+
       (factored form internally, expand-on-demand for SVD evaluation). Worth
+
       a focused experiment.
+
+      '
     sequence: []
   runtime: ~10 min for full L3 bench
   cost_usd: 0
-  run_command: |
-    SYMPY_GROUND_TYPES=flint bench_flint/venv/Scripts/python bench_flint/bench.py
-    python bench_flint/bench.py
-  related_docs:
-    - docs/supplemental_triage.md
-  related_supplemental: []
-  tags: [diagnostic, benchmark, flint, performance]
+  run_command: 'SYMPY_GROUND_TYPES=flint bench_flint/venv/Scripts/python bench_flint/bench.py
 
+    python bench_flint/bench.py
+
+    '
+  related_docs:
+  - docs/supplemental_triage.md
+  related_supplemental: []
+  tags:
+  - diagnostic
+  - benchmark
+  - flint
+  - performance
 - id: bench_simplify_phases
   path: bench_flint/run_simplify_phases.py
   category: diagnostic
   scope: tooling
   status: complete
-  description: |
-    Three-phase smarter-simplify experiment. Tests whether `together` can replace
+  description: 'Three-phase smarter-simplify experiment. Tests whether `together`
+    can replace
+
     `cancel` in NBodyAlgebra.simplify_generator. Each phase runs strategies
+
     serially under a watchdog (hard wall-clock timeout + RSS cap). Phase 1 is a
+
     L<=2 sanity gate; Phase 2 is the 1/r L<=3 controlled baseline; Phase 3 is
+
     Schwarzschild composite L<=3 (the production-relevant heavy case).
+
+    '
   inputs: []
   outputs:
-    - bench_flint/phase1_results.json
-    - bench_flint/phase2_results.json
-    - bench_flint/phase3_results.json
-    - bench_flint/p3_together_500samples.json
-    - bench_flint/simplify_phases_summary.md
+  - bench_flint/phase1_results.json
+  - bench_flint/phase2_results.json
+  - bench_flint/phase3_results.json
+  - bench_flint/p3_together_500samples.json
+  - bench_flint/simplify_phases_summary.md
   latest_result:
-    date: "2026-04-19"
-    summary: |
-      DEFINITIVE WIN. together() is >200x faster than cancel() on Schwarzschild
+    date: '2026-04-19'
+    summary: 'DEFINITIVE WIN. together() is >200x faster than cancel() on Schwarzschild
+
       composite L<=3 (90s vs cancel killed at 16 GB RAM cap after 90 minutes;
-      yesterday's run took 12 hours and reached 35 GB before manual kill).
+
+      yesterday''s run took 12 hours and reached 35 GB before manual kill).
+
       Critically: together produces the canonical [3, 6, 17, 116] dim sequence
+
       at the production sample count of 500. Phase 2 (N=3 1/r L<=3) showed 109x
+
       speedup with bit-identical truncated dim sequence. Phase 1 sanity gate
+
       (Schwarzschild L<=2) confirmed cancel/together/identity all give [3,6,17].
+
       Recommendation: patch nbody/exact_growth_nbody.py simplify_generator()
+
       from cancel(expr) to together(expr).
-    sequence: [3, 6, 17, 116]
-  runtime: ~3.5 hours total (Phase 1 ~30s, Phase 2 ~50min, Phase 3 ~2h cancel timeout + ~90s together)
+
+      '
+    sequence:
+    - 3
+    - 6
+    - 17
+    - 116
+  runtime: ~3.5 hours total (Phase 1 ~30s, Phase 2 ~50min, Phase 3 ~2h cancel timeout
+    + ~90s together)
   cost_usd: 0
   run_command: python bench_flint/run_simplify_phases.py
   related_docs:
-    - bench_flint/simplify_phases_summary.md
-    - bench_flint/probe_flint.log
-  tags: [diagnostic, benchmark, simplify, performance, P0, headline]
-
+  - bench_flint/simplify_phases_summary.md
+  - bench_flint/probe_flint.log
+  tags:
+  - diagnostic
+  - benchmark
+  - simplify
+  - performance
+  - P0
+  - headline
 - id: simplify_generator_patch
   path: nbody/exact_growth_nbody.py
   category: engine
   scope: nbody
   status: complete
-  description: |
-    Patched nbody/exact_growth_nbody.py simplify_generator() from cancel(expr)
-    to together(expr). Single-line change at line 290 plus together added to
-    the SymPy imports at line 32. cancel still imported because it's used at
-    line 686 in verify_jacobi_symbolic (one-shot, not the hot loop).
-
-    Validation: bench_flint/validation_summary.md. 8-stage paranoid suite:
-      Stage 0 - test_regression.py (4/4 pass)
-      Stage 1 - Schwarzschild L<=2 smoke (PASS)
-      Stage 2 - 8-potential battery at N=3 L<=3 (8/8 PASS) + Yukawa added
-                post-ship (9/9 with the 2026-04-21 follow-up)
-      Stage 3 - spatial dim d=1,2,3 (3/3 PASS)
-      Stage 4 - mass invariance (2/2 PASS, 1 best_effort SVD wall)
-      Stage 5 - charged Coulomb (1/1 PASS, 3 best_effort SVD wall)
-      Stage 6 - N=4 d=1 L<=2 PASS, L<=3 best_effort (SVD precision)
-      Stage 7 - cross-check vs dataset (15/16 consistent prefixes)
-
-    Post-ship follow-ups (2026-04-21, see bench_simplify_identity and
-    planned_replay_schwarzschild_l3):
-      - Schwarzschild key-grid L<=3 replay: 3/4 clean canonical, 1
-        best_effort SVD-precision wall at (M=1, L=4)
-      - Symbolic-identity spot check: 45/45 brackets at L<=2 produce
-        simplify(together(b) - cancel(b)) == 0 across {1/r, 1/r^2, log};
-        max count_ops ratio cancel/together = 10.5x
-
-    Speedup: >200x on Schwarzschild composite L<=3 (90s vs killed at 16 GB
-    after 90 min with cancel). RAM use: <0.6 GB peak across all validated
-    cases vs cancel hitting the 16 GB watchdog cap.
+  description: "Patched nbody/exact_growth_nbody.py simplify_generator() from cancel(expr)\n\
+    to together(expr). Single-line change at line 290 plus together added to\nthe\
+    \ SymPy imports at line 32. cancel still imported because it's used at\nline 686\
+    \ in verify_jacobi_symbolic (one-shot, not the hot loop).\n\nValidation: bench_flint/validation_summary.md.\
+    \ 8-stage paranoid suite:\n  Stage 0 - test_regression.py (4/4 pass)\n  Stage\
+    \ 1 - Schwarzschild L<=2 smoke (PASS)\n  Stage 2 - 8-potential battery at N=3\
+    \ L<=3 (8/8 PASS) + Yukawa added\n            post-ship (9/9 with the 2026-04-21\
+    \ follow-up)\n  Stage 3 - spatial dim d=1,2,3 (3/3 PASS)\n  Stage 4 - mass invariance\
+    \ (2/2 PASS, 1 best_effort SVD wall)\n  Stage 5 - charged Coulomb (1/1 PASS, 3\
+    \ best_effort SVD wall)\n  Stage 6 - N=4 d=1 L<=2 PASS, L<=3 best_effort (SVD\
+    \ precision)\n  Stage 7 - cross-check vs dataset (15/16 consistent prefixes)\n\
+    \nPost-ship follow-ups (2026-04-21, see bench_simplify_identity and\nplanned_replay_schwarzschild_l3):\n\
+    \  - Schwarzschild key-grid L<=3 replay: 3/4 clean canonical, 1\n    best_effort\
+    \ SVD-precision wall at (M=1, L=4)\n  - Symbolic-identity spot check: 45/45 brackets\
+    \ at L<=2 produce\n    simplify(together(b) - cancel(b)) == 0 across {1/r, 1/r^2,\
+    \ log};\n    max count_ops ratio cancel/together = 10.5x\n\nSpeedup: >200x on\
+    \ Schwarzschild composite L<=3 (90s vs killed at 16 GB\nafter 90 min with cancel).\
+    \ RAM use: <0.6 GB peak across all validated\ncases vs cancel hitting the 16 GB\
+    \ watchdog cap.\n"
   inputs: []
   outputs:
-    - nbody/exact_growth_nbody.py
-    - bench_flint/validation_summary.md
-    - bench_flint/validation_results.json
-    - bench_flint/stage7_crosscheck.json
+  - nbody/exact_growth_nbody.py
+  - bench_flint/validation_summary.md
+  - bench_flint/validation_results.json
+  - bench_flint/stage7_crosscheck.json
   latest_result:
-    date: "2026-04-19"
-    summary: |
-      SHIPPED. The simplify swap is mathematically correct on every
+    date: '2026-04-19'
+    summary: 'SHIPPED. The simplify swap is mathematically correct on every
+
       numerically clean test case. All 8 potential-battery cases match
+
       canonical [3, 6, 17, 116] bit-for-bit. All 3 spatial-dimension cases
+
       pass. Equal-mass and mild-mass-ratio cases pass. N=4 L<=2 passes.
+
       Best-effort failures are all the documented float64 SVD precision wall
+
       at extreme mass ratios, which cancel hits identically. Speedup is
+
       conservatively 100-200x on the heavy L=3 cases that have been
+
       bottlenecking the project for months.
-    sequence: [3, 6, 17, 116]
+
+      '
+    sequence:
+    - 3
+    - 6
+    - 17
+    - 116
   runtime: ~25 min total validation across 21 cases (Schwarzschild L<=3 was 90s)
   cost_usd: 0
   run_command: python bench_flint/validate_simplify_patch.py
   related_docs:
-    - bench_flint/validation_summary.md
-    - bench_flint/simplify_phases_summary.md
-  tags: [engine, performance, simplify, P0, headline, complete]
-
+  - bench_flint/validation_summary.md
+  - bench_flint/simplify_phases_summary.md
+  tags:
+  - engine
+  - performance
+  - simplify
+  - P0
+  - headline
+  - complete
 - id: bench_validate_simplify_patch
   path: bench_flint/validate_simplify_patch.py
   category: diagnostic
   scope: tooling
   status: complete
-  description: |
-    Paranoid 8-stage validator for the simplify_generator patch. Runs each
+  description: 'Paranoid 8-stage validator for the simplify_generator patch. Runs
+    each
+
     case as a separate Python subprocess under bench_flint/watchdog.py with
+
     per-case timeout + RSS cap. Atomic per-case JSON output. Stages cover:
+
     L<=2 sanity gate, potential battery, spatial dimension, mass invariance,
+
     charged Coulomb, N=4, and dataset cross-check.
 
+
     Worker: bench_flint/validate_simplify_worker.py (single-case runner).
+
     Cross-check: bench_flint/stage7_dataset_crosscheck.py (compares against
+
     dataset/output/dimension_sequences.parquet pinned canonical results).
+
+    '
   outputs:
-    - bench_flint/validation_results.json
-    - bench_flint/_validate_results/
+  - bench_flint/validation_results.json
+  - bench_flint/_validate_results/
   run_command: python bench_flint/validate_simplify_patch.py
   related_docs:
-    - bench_flint/validation_summary.md
-  tags: [diagnostic, benchmark, simplify, validation]
-
+  - bench_flint/validation_summary.md
+  tags:
+  - diagnostic
+  - benchmark
+  - simplify
+  - validation
 - id: bench_simplify_identity
   path: bench_flint/test_simplify_identity.py
   category: diagnostic
   scope: tooling
   status: complete
-  description: |
-    Symbolic-identity spot check for the simplify_generator patch.
-    Generates raw L=0..L=2 brackets via NBodyAlgebra.poisson_bracket with no
-    simplification, then for each bracket b verifies that
-        simplify(together(b) - cancel(b)) == 0
-    symbolically. This is the strongest possible local correctness statement:
-    not just "both produce dim 116" but "they are literally the same rational
-    function". L=3 is deliberately skipped (cancel hangs there - the whole
-    reason the patch exists).
-
-    Records per-bracket: raw_count_ops, together_count_ops, cancel_count_ops,
-    diff_count_ops, is_zero, elapsed times.
+  description: "Symbolic-identity spot check for the simplify_generator patch.\nGenerates\
+    \ raw L=0..L=2 brackets via NBodyAlgebra.poisson_bracket with no\nsimplification,\
+    \ then for each bracket b verifies that\n    simplify(together(b) - cancel(b))\
+    \ == 0\nsymbolically. This is the strongest possible local correctness statement:\n\
+    not just \"both produce dim 116\" but \"they are literally the same rational\n\
+    function\". L=3 is deliberately skipped (cancel hangs there - the whole\nreason\
+    \ the patch exists).\n\nRecords per-bracket: raw_count_ops, together_count_ops,\
+    \ cancel_count_ops,\ndiff_count_ops, is_zero, elapsed times.\n"
   outputs:
-    - bench_flint/identity_check.json
+  - bench_flint/identity_check.json
   latest_result:
-    date: "2026-04-21"
-    summary: |
-      45 of 45 brackets matched across {1/r, 1/r^2, log} at L<=2.
+    date: '2026-04-21'
+    summary: '45 of 45 brackets matched across {1/r, 1/r^2, log} at L<=2.
+
       overall_match: true. Total elapsed 12.0 s.
+
       Max count_ops ratio cancel/together = 10.5x at L=2 â€” direct measure
-      of the patch's compactness benefit (together's output is ~10x smaller
-      than cancel's, which is what feeds the L=3 explosion under the old
+
+      of the patch''s compactness benefit (together''s output is ~10x smaller
+
+      than cancel''s, which is what feeds the L=3 explosion under the old
+
       engine).
+
+      '
   runtime: 12 s
   cost_usd: 0
   run_command: python bench_flint/test_simplify_identity.py
   related_docs:
-    - bench_flint/validation_summary.md
-  tags: [diagnostic, simplify, validation, complete]
-
+  - bench_flint/validation_summary.md
+  tags:
+  - diagnostic
+  - simplify
+  - validation
+  - complete
 - id: simplify_patch_symbolic_rank
   path: nbody/symbolic_rank_nbody.py
   category: engine
   scope: nbody
   status: complete
-  description: |
-    Patched nbody/symbolic_rank_nbody.py _simplify (line 318-330) from
-    cancel(expr) to together(expr) following the same pattern as
-    nbody/exact_growth_nbody.py. Engine downstream is DomainMatrix.rank
-    over Q via Poly().nullspace() rather than float64 SVD; the patch is
-    safe because _extract_one_monomial calls expand() before Poly(), so
-    cancel and together are functionally equivalent up to the Poly normal
-    form (verified bit-for-bit by bench_simplify_poly_compat).
-
-    Validation:
-      - bench_simplify_poly_compat: 8/8 raw L=1+L=2 brackets produce
-        identical Poly monomial sets (cancel count_ops up to 8.1x larger
-        than together at L=2)
-      - bench_validate_symbolic_rank_patch: 5/5 N=3 cases match pinned
-        rank tuples bit-for-bit (1/r, 1/r^2, 1/r^3, 1/r^4 at d=1 -> all
-        [3,6,17,116]; log at d=2 -> [3,6,17])
-      - bench_symbolic_rank_n4: N=4 d=1 1/r generation only -- L=2 cancel
-        2.44s vs together 1.28s (1.91x); L=3 cancel pin 3137.6s vs together
-        369.5s (8.49x). Bonus: at L=2, together yields avg 1.3 terms per
-        bracket vs cancel's 12.6 -- ~10x more compact representation, which
-        compounds at L=3.
+  description: "Patched nbody/symbolic_rank_nbody.py _simplify (line 318-330) from\n\
+    cancel(expr) to together(expr) following the same pattern as\nnbody/exact_growth_nbody.py.\
+    \ Engine downstream is DomainMatrix.rank\nover Q via Poly().nullspace() rather\
+    \ than float64 SVD; the patch is\nsafe because _extract_one_monomial calls expand()\
+    \ before Poly(), so\ncancel and together are functionally equivalent up to the\
+    \ Poly normal\nform (verified bit-for-bit by bench_simplify_poly_compat).\n\n\
+    Validation:\n  - bench_simplify_poly_compat: 8/8 raw L=1+L=2 brackets produce\n\
+    \    identical Poly monomial sets (cancel count_ops up to 8.1x larger\n    than\
+    \ together at L=2)\n  - bench_validate_symbolic_rank_patch: 5/5 N=3 cases match\
+    \ pinned\n    rank tuples bit-for-bit (1/r, 1/r^2, 1/r^3, 1/r^4 at d=1 -> all\n\
+    \    [3,6,17,116]; log at d=2 -> [3,6,17])\n  - bench_symbolic_rank_n4: N=4 d=1\
+    \ 1/r generation only -- L=2 cancel\n    2.44s vs together 1.28s (1.91x); L=3\
+    \ cancel pin 3137.6s vs together\n    369.5s (8.49x). Bonus: at L=2, together\
+    \ yields avg 1.3 terms per\n    bracket vs cancel's 12.6 -- ~10x more compact\
+    \ representation, which\n    compounds at L=3.\n"
   latest_result:
-    summary: |
-      8.49x speedup at N=4 L=3 1/r generation phase, on top of equivalent
+    summary: '8.49x speedup at N=4 L=3 1/r generation phase, on top of equivalent
+
       simplify_patch wins on the SVD engine. This is the unblocker for
+
       Phase D (N=3 L=4) on HF Jobs and the E5 N=5 L=3 probe.
+
+      '
   outputs:
-    - bench_flint/poly_compat_check.json
-    - bench_flint/validation_results_symbolic_rank.json
-    - bench_flint/_symrank_results/
-    - bench_flint/symrank_n4_timing.json
+  - bench_flint/poly_compat_check.json
+  - bench_flint/validation_results_symbolic_rank.json
+  - bench_flint/_symrank_results/
+  - bench_flint/symrank_n4_timing.json
   runtime: ~10 min total validation
   cost_usd: 0
   related_docs:
-    - bench_flint/validation_summary.md
-  tags: [engine, performance, simplify, complete]
-
+  - bench_flint/validation_summary.md
+  tags:
+  - engine
+  - performance
+  - simplify
+  - complete
 - id: bench_simplify_poly_compat
   path: bench_flint/test_simplify_poly_compat.py
   category: diagnostic
   scope: tooling
   status: complete
-  description: |
-    Phase E0 gate. Verifies that for raw L=1 and L=2 Poisson brackets in
-    NBodySymbolicRank(N=3, d=2, potential='1/r'),
-      Poly(expand(together(b))).monoms() == Poly(expand(cancel(b))).monoms()
-    AND  (Poly(expand(together(b))) - Poly(expand(cancel(b)))).is_zero
-    on every bracket. Records together_count_ops vs cancel_count_ops and
-    per-call elapsed times. This is the gate that authorized the symbolic
-    rank patch -- if Poly normal forms didn't agree, the rank pipeline
-    couldn't safely use together().
+  description: "Phase E0 gate. Verifies that for raw L=1 and L=2 Poisson brackets\
+    \ in\nNBodySymbolicRank(N=3, d=2, potential='1/r'),\n  Poly(expand(together(b))).monoms()\
+    \ == Poly(expand(cancel(b))).monoms()\nAND  (Poly(expand(together(b))) - Poly(expand(cancel(b)))).is_zero\n\
+    on every bracket. Records together_count_ops vs cancel_count_ops and\nper-call\
+    \ elapsed times. This is the gate that authorized the symbolic\nrank patch --\
+    \ if Poly normal forms didn't agree, the rank pipeline\ncouldn't safely use together().\n"
   outputs:
-    - bench_flint/poly_compat_check.json
+  - bench_flint/poly_compat_check.json
   latest_result:
-    summary: '8/8 monoms_match + polys_equal in 0.626s; cancel up to 8.1x more expensive (count_ops) than together at L=2.'
+    summary: 8/8 monoms_match + polys_equal in 0.626s; cancel up to 8.1x more expensive
+      (count_ops) than together at L=2.
   run_command: python bench_flint/test_simplify_poly_compat.py
   related_docs:
-    - bench_flint/validation_summary.md
-  tags: [diagnostic, simplify, validation, gate, complete]
-
+  - bench_flint/validation_summary.md
+  tags:
+  - diagnostic
+  - simplify
+  - validation
+  - gate
+  - complete
 - id: bench_validate_symbolic_rank_patch
   path: bench_flint/validate_symbolic_rank_patch.py
   category: diagnostic
   scope: tooling
   status: complete
-  description: |
-    Phase E2 validator for the symbolic_rank_nbody simplify patch. Five N=3
+  description: 'Phase E2 validator for the symbolic_rank_nbody simplify patch. Five
+    N=3
+
     cases pinned against results/symbolic_rank/rank_N3_*.json baselines
+
     (1/r, 1/r^2, 1/r^3, 1/r^4 at d=1 max_level=3; log at d=2 max_level=2).
+
     Each case rebuilds the engine fresh with n_workers=1 and asserts the
+
     cumulative_rank and new_per_level arrays match bit-for-bit.
+
+    '
   outputs:
-    - bench_flint/validation_results_symbolic_rank.json
-    - bench_flint/_symrank_results/
+  - bench_flint/validation_results_symbolic_rank.json
+  - bench_flint/_symrank_results/
   latest_result:
-    summary: '5/5 MATCH in 140.87s. Speedups vs pin range from x0.26 (1/r, where pin was already fast) to x1.71 (1/r^2). Material wins start at N=4 (see bench_symbolic_rank_n4).'
+    summary: 5/5 MATCH in 140.87s. Speedups vs pin range from x0.26 (1/r, where pin
+      was already fast) to x1.71 (1/r^2). Material wins start at N=4 (see bench_symbolic_rank_n4).
   run_command: python bench_flint/validate_symbolic_rank_patch.py
   related_docs:
-    - bench_flint/validation_summary.md
-  tags: [diagnostic, simplify, validation, complete]
-
+  - bench_flint/validation_summary.md
+  tags:
+  - diagnostic
+  - simplify
+  - validation
+  - complete
 - id: bench_symbolic_rank_n4
   path: bench_flint/bench_symbolic_rank_n4.py
   category: diagnostic
   scope: tooling
   status: complete
-  description: |
-    Phase E3 N=4 d=1 1/r generation-only timing comparison. Pass 1: L=2
+  description: 'Phase E3 N=4 d=1 1/r generation-only timing comparison. Pass 1: L=2
+
     head-to-head, both cancel and together. Pass 2: L=3 together-only,
+
     compared against rank_N4_d1_1r.json pin (3137.6s under cancel).
+
     Records per-level wall time, generator counts, and top-level term
+
     statistics for both engines.
+
+    '
   outputs:
-    - bench_flint/symrank_n4_timing.json
+  - bench_flint/symrank_n4_timing.json
   latest_result:
-    summary: |
-      L=2 cancel 2.44s vs together 1.28s (x1.91); L=3 pin cancel 3137.6s vs
+    summary: 'L=2 cancel 2.44s vs together 1.28s (x1.91); L=3 pin cancel 3137.6s vs
+
       together 369.5s (x8.49). Together produces ~10x more compact
+
       expressions at L=2 (avg 1.3 vs 12.6 terms), which compounds at L=3.
+
+      '
   run_command: python bench_flint/bench_symbolic_rank_n4.py
   related_docs:
-    - bench_flint/validation_summary.md
-  tags: [diagnostic, simplify, performance, complete]
-
+  - bench_flint/validation_summary.md
+  tags:
+  - diagnostic
+  - simplify
+  - performance
+  - complete
 - id: mathematica_oracle_n3_d2
   path: mathematica/poisson_n3_d2.wl
   category: validation
   scope: 3body
   status: complete
-  description: |
-    Phase F independent CAS oracle. Reproduces the cumulative-rank
+  description: 'Phase F independent CAS oracle. Reproduces the cumulative-rank
+
     dimension sequence [3, 6, 17, 116] for N=3 d=2 at L=3 in Wolfram
+
     Language 14.3, for both 1/r and 1/r^2 potentials. Mirrors the
+
     nbody/symbolic_rank_nbody.py filtration exactly (frontier-based Lie
+
     closure with frozenset-pair dedupe) but uses an independent CAS
+
     (Wolfram vs SymPy) and an independent rank algorithm (MatrixRank over
+
     Rationals on a SparseArray vs SymPy DomainMatrix).
+
+    '
   outputs:
-    - mathematica/results/n3_d2_dimseq.json
+  - mathematica/results/n3_d2_dimseq.json
   latest_result:
-    summary: |
-      1/r:    [3, 6, 17, 116] in 40.36s. MATCH against Python pin.
+    summary: '1/r:    [3, 6, 17, 116] in 40.36s. MATCH against Python pin.
+
       1/r^2:  [3, 6, 17, 116] in 49.97s. MATCH against Python pin.
+
       156 generators per potential, single Wolfram kernel on Windows.
+
       Closes referee-style worry about CAS- or algorithm-specific
+
       artifacts in the headline result.
+
+      '
   run_command: wolframscript -file mathematica/poisson_n3_d2.wl
   related_docs:
-    - bench_flint/validation_summary.md
-    - mathematica/README.md
-  tags: [validation, oracle, mathematica, complete]
-
+  - bench_flint/validation_summary.md
+  - mathematica/README.md
+  tags:
+  - validation
+  - oracle
+  - mathematica
+  - complete
 - id: mathematica_oracle_n3_d2_harmonic
   path: mathematica/poisson_n3_d2_harmonic.wl
   category: validation
   scope: 3body
   status: complete
-  description: |
-    Phase F.2 harmonic CAS oracle. Reproduces [3, 6, 13, 15, 15] for the
+  description: 'Phase F.2 harmonic CAS oracle. Reproduces [3, 6, 13, 15, 15] for the
+
     harmonic potential H_ij = T_i + T_j + r_ij^2 at N=3, d=2, through
+
     L=4 in Wolfram Language 14.3. Same engine and filtration as
+
     mathematica_oracle_n3_d2; the harmonic case is special-cased in
+
     HPair to use r_ij^2 directly in q-coordinates (no auxiliary u_ij).
+
+    '
   outputs:
-    - mathematica/results/n3_d2_harmonic.json
+  - mathematica/results/n3_d2_harmonic.json
   latest_result:
-    summary: |
-      cumulative_rank = [3, 6, 13, 15, 15] in 31.8s on workstation, single
+    summary: 'cumulative_rank = [3, 6, 13, 15, 15] in 31.8s on workstation, single
+
       Wolfram kernel. L=4 ran 11,937 candidate brackets through MatrixRank
+
       over Rationals on a SparseArray; cumulative rank stayed at 15 -
+
       confirming algebraic closure rather than a level-3 plateau. Closes
+
       the structural-opposite half of the universality picture (singular
+
       potentials open vs harmonic closed) in an independent CAS.
+
+      '
   run_command: wolframscript -file mathematica/poisson_n3_d2_harmonic.wl
   related_docs:
-    - bench_flint/validation_summary.md
-    - mathematica/README.md
-  tags: [validation, oracle, mathematica, harmonic, complete]
-
+  - bench_flint/validation_summary.md
+  - mathematica/README.md
+  tags:
+  - validation
+  - oracle
+  - mathematica
+  - harmonic
+  - complete
 - id: mathematica_l4_backup
   path: mathematica/poisson_n3_d2_l4_backup.wl
   category: validation
   scope: 3body
   status: planned
-  description: |
-    L=4 1/r backup oracle. Held in reserve in case the HF Jobs cpu-xl
+  description: 'L=4 1/r backup oracle. Held in reserve in case the HF Jobs cpu-xl
+
     Phase D2 jobs (69e820f1cd8c002f31e0140b for 1/r and
+
     69e820f6ac288e522d8f075c for log) OOM or time out. Same engine as
+
     mathematica_oracle_n3_d2; expected wall-clock measured in hours on a
+
     single workstation kernel.
+
+    '
   outputs:
-    - mathematica/results/n3_d2_l4_1r.json
+  - mathematica/results/n3_d2_l4_1r.json
   run_command: wolframscript -file mathematica/poisson_n3_d2_l4_backup.wl
   related_docs:
-    - mathematica/README.md
-  tags: [validation, oracle, mathematica, planned]
+  - mathematica/README.md
+  tags:
+  - validation
+  - oracle
+  - mathematica
+  - planned
+- id: sage_oracle_n3_d2_engine
+  path: sage/poisson_n3_d2_engine.sage
+  category: validation
+  scope: 3body
+  status: complete
+  description: 'Shared SageMath engine for the planar 3-body Poisson algebra (Phase
 
+    G.1 third-leg oracle). Mirrors mathematica/poisson_n3_d2_engine.wl
+
+    line-for-line: Poisson bracket with chain rule on u_ij = 1/r_ij,
+
+    Lie closure with frontier-based dedupe, exact rank via mod-p
+
+    reduction over GF(2^31 - 1) (probabilistic but FLINT-backed and
+
+    cross-validated by the Mathematica oracle). Imported by
+
+    sage_oracle_n3_d2 and sage_oracle_n3_d2_harmonic.
+
+    '
+  related_docs:
+  - sage/README.md
+  - bench_flint/validation_summary.md
+  tags:
+  - validation
+  - oracle
+  - sage
+  - engine
+  - complete
+- id: sage_oracle_n3_d2
+  path: sage/poisson_n3_d2.sage
+  category: validation
+  scope: 3body
+  status: complete
+  description: 'Phase G.1 SageMath sanity runner. Reproduces the cumulative-rank
+
+    dimension sequence [3, 6, 17, 116] for N=3 d=2 at L=3 in SageMath,
+
+    for both 1/r and 1/r^2 potentials. Uses the same filtration as
+
+    mathematica_oracle_n3_d2 and the SymPy nbody/symbolic_rank_nbody.py
+
+    pipeline, but a third independent CAS (Sage) and rank algorithm
+
+    (mod-p over GF(2^31 - 1)). Closes the "two unrelated CAS" gap by
+
+    adding a third leg.
+
+    '
+  outputs:
+  - sage/results/n3_d2_dimseq.json
+  run_command: sage sage/poisson_n3_d2.sage
+  related_docs:
+  - sage/README.md
+  - bench_flint/validation_summary.md
+  latest_result:
+    date: '2026-05-11'
+    summary: "1/r:    [3, 6, 17, 116] in 60.6s on SageMath 10.8 (Linux x86_64).\n\
+      \        MATCH against Mathematica and Python pins.\n1/r^2:  [3, 6, 17, 116]\
+      \ in 57.9s. MATCH.\nHeadline numbers now stand on three unrelated CAS implementations\n\
+      and three unrelated rank algorithms.\n"
+    sequence:
+    - 3
+    - 6
+    - 17
+    - 116
+  tags:
+  - validation
+  - oracle
+  - sage
+  - complete
+- id: sage_oracle_n3_d2_harmonic
+  path: sage/poisson_n3_d2_harmonic.sage
+  category: validation
+  scope: 3body
+  status: complete
+  description: 'Phase G.1 SageMath harmonic-closure runner. Reproduces
+
+    [3, 6, 13, 15, 15] for the harmonic potential H_ij = T_i + T_j +
+
+    r_ij^2 at N=3, d=2, through L=4 in SageMath. Same engine and
+
+    filtration as sage_oracle_n3_d2; harmonic case uses r_ij^2 directly
+
+    in q-coordinates (no auxiliary u_ij), special-cased in h_pair.
+
+    '
+  outputs:
+  - sage/results/n3_d2_harmonic.json
+  run_command: sage sage/poisson_n3_d2_harmonic.sage
+  related_docs:
+  - sage/README.md
+  - bench_flint/validation_summary.md
+  latest_result:
+    date: '2026-05-11'
+    summary: 'cumulative_rank = [3, 6, 13, 15, 15] in 2.00s on SageMath 10.8,
+
+      Linux x86_64. L=4 ran 11,937 candidate brackets through mod-p
+
+      rank over GF(2^31 - 1); cumulative rank stayed at 15 -
+
+      confirming algebraic closure in a third independent CAS.
+
+      '
+    sequence:
+    - 3
+    - 6
+    - 13
+    - 15
+    - 15
+  tags:
+  - validation
+  - oracle
+  - sage
+  - harmonic
+  - complete
 - id: planned_simplify_patch_planar
   path: exact_growth.py
   category: engine
   scope: 3body
   status: planned
-  description: |
-    Patch exact_growth.py simplify_generator (line 144-149) and the inline
+  description: 'Patch exact_growth.py simplify_generator (line 144-149) and the inline
+
     cancel call at line 722 (Jacobi verification) from cancel to together.
+
     Same pattern as the validated nbody/exact_growth_nbody.py patch.
 
-    The planar engine is a legacy code path; most current work uses
-    nbody/exact_growth_nbody.py. Lower priority but trivially safe given
-    the validation evidence on the equivalent N=3 d=2 1/r case.
-  related_docs:
-    - bench_flint/validation_summary.md
-  tags: [planned, engine, performance, simplify, follow-up]
 
+    The planar engine is a legacy code path; most current work uses
+
+    nbody/exact_growth_nbody.py. Lower priority but trivially safe given
+
+    the validation evidence on the equivalent N=3 d=2 1/r case.
+
+    '
+  related_docs:
+  - bench_flint/validation_summary.md
+  tags:
+  - planned
+  - engine
+  - performance
+  - simplify
+  - follow-up
 - id: planned_simplify_patch_3d
   path: 3d/exact_growth_nd.py
   category: engine
   scope: 3body/3d
   status: planned
-  description: |
-    Patch 3d/exact_growth_nd.py simplify_generator (line 171-172) and the
+  description: 'Patch 3d/exact_growth_nd.py simplify_generator (line 171-172) and
+    the
+
     Jacobi cancel at line 421 from cancel to together. Same pattern as
+
     nbody/exact_growth_nbody.py.
 
-    The 3d engine handles ThreeBodyAlgebra (N=3 fixed, parameterized d).
-    Less hot than nbody/exact_growth_nbody.py but used by the project's
-    d-independence verification in test_regression.py and the d=3 atlas work.
-  related_docs:
-    - bench_flint/validation_summary.md
-  tags: [planned, engine, performance, simplify, follow-up]
 
+    The 3d engine handles ThreeBodyAlgebra (N=3 fixed, parameterized d).
+
+    Less hot than nbody/exact_growth_nbody.py but used by the project''s
+
+    d-independence verification in test_regression.py and the d=3 atlas work.
+
+    '
+  related_docs:
+  - bench_flint/validation_summary.md
+  tags:
+  - planned
+  - engine
+  - performance
+  - simplify
+  - follow-up
 - id: planned_replay_schwarzschild_l3
   path: nbody/run_schwarzschild.py
   category: dimseq
   scope: nbody/N3
   status: complete
-  description: |
-    Re-ran the Schwarzschild L3 sweep that died yesterday under the cancel
-    engine. With the patched together engine the 4-point key grid finished
-    in ~7 minutes wall time (~95-115s per point, single-core sympy).
-
-    Updates results/schwarzschild/dimseq_l3_key.json. Stale per-(M,L)
-    checkpoints in nbody/checkpoints_schwarzschild/d2_M*_L*/ saved under the
-    cancel engine were overwritten in-place.
-
-    Command:
-      python nbody/run_schwarzschild.py --mode key --max-level 3 \
-          --samples 500 --out results/schwarzschild/dimseq_l3_key.json
+  description: "Re-ran the Schwarzschild L3 sweep that died yesterday under the cancel\n\
+    engine. With the patched together engine the 4-point key grid finished\nin ~7\
+    \ minutes wall time (~95-115s per point, single-core sympy).\n\nUpdates results/schwarzschild/dimseq_l3_key.json.\
+    \ Stale per-(M,L)\ncheckpoints in nbody/checkpoints_schwarzschild/d2_M*_L*/ saved\
+    \ under the\ncancel engine were overwritten in-place.\n\nCommand:\n  python nbody/run_schwarzschild.py\
+    \ --mode key --max-level 3 \\\n      --samples 500 --out results/schwarzschild/dimseq_l3_key.json\n"
   outputs:
-    - results/schwarzschild/dimseq_l3_key.json
+  - results/schwarzschild/dimseq_l3_key.json
   latest_result:
-    date: "2026-04-21"
-    summary: |
-      4 of 4 (M, L) key points completed. Three matched canonical
+    date: '2026-04-21'
+    summary: '4 of 4 (M, L) key points completed. Three matched canonical
+
       [3, 6, 17, 116] bit-for-bit. The (M=1, L=4) point produced
+
       [3, 6, 17, 115], hitting the same float64-SVD precision wall as
+
       Stage 5 (extreme-mass-charged) and Stage 2 1/r^4: at L=4 the
+
       Schwarzschild composite has a -16*u^3 dominant term that pushes
+
       sv(116)/sv(117) below the n=500 noise floor. Numerical Jacobi at
+
       the same point reported |err| = 2.15e-10 (also a precision artifact).
+
       The 138-generator L=3 closure was built clean in 85 seconds; patch
+
       correctness is unaffected. A retry at n=1000 will recover 116.
+
+      '
     runs:
-      - id: M1_L1
-        sequence: [3, 6, 17, 116]
-        elapsed_s: 95.5
-        match: true
-      - id: M1_L2
-        sequence: [3, 6, 17, 116]
-        elapsed_s: 102.5
-        match: true
-      - id: M1_L4
-        sequence: [3, 6, 17, 115]
-        elapsed_s: 113.7
-        match: best_effort
-        note: float64 SVD precision wall, n=500 too few samples
-      - id: M2_L1
-        sequence: [3, 6, 17, 116]
-        elapsed_s: 107.1
-        match: true
+    - id: M1_L1
+      sequence:
+      - 3
+      - 6
+      - 17
+      - 116
+      elapsed_s: 95.5
+      match: true
+    - id: M1_L2
+      sequence:
+      - 3
+      - 6
+      - 17
+      - 116
+      elapsed_s: 102.5
+      match: true
+    - id: M1_L4
+      sequence:
+      - 3
+      - 6
+      - 17
+      - 115
+      elapsed_s: 113.7
+      match: best_effort
+      note: float64 SVD precision wall, n=500 too few samples
+    - id: M2_L1
+      sequence:
+      - 3
+      - 6
+      - 17
+      - 116
+      elapsed_s: 107.1
+      match: true
   runtime: ~7 min wall (4 points x ~95-115s, single-core)
   cost_usd: 0
   related_docs:
-    - results/schwarzschild/dimseq_l2_full.json
-    - bench_flint/validation_summary.md
-  tags: [dimseq, schwarzschild, replay, complete]
-
+  - results/schwarzschild/dimseq_l2_full.json
+  - bench_flint/validation_summary.md
+  tags:
+  - dimseq
+  - schwarzschild
+  - replay
+  - complete
 - id: planned_mcp_server
   path: mcp/server.py
   category: infra
   scope: tooling
   status: planned
-  description: |
-    FastMCP (stdio) server exposing read-only tools over local aws_results/ .npy atlas data:
+  description: 'FastMCP (stdio) server exposing read-only tools over local aws_results/
+    .npy atlas data:
+
     list_configurations, get_rank, get_sv_spectrum, get_gap_ratio, get_heatmap_slice,
-    get_line_cut, compare_configs, get_point_detail. Plus list_experiments backed by the
+
+    get_line_cut, compare_configs, get_point_detail. Plus list_experiments backed
+    by the
+
     registry. HTTP transport later.
+
+    '
   outputs: []
   runtime: 1-2 days
   cost_usd: 0
   related_docs:
-    - docs/supplemental_triage.md
-    - registry/README.md
+  - docs/supplemental_triage.md
+  - registry/README.md
   related_supplemental:
-    - nbody-atlas-mcp-suggestions.md
-  tags: [planned, P3, mcp, tooling, atlas]
-
+  - nbody-atlas-mcp-suggestions.md
+  tags:
+  - planned
+  - P3
+  - mcp
+  - tooling
+  - atlas
 - id: shape_sphere_atlas
   path: shape_sphere_atlas.py
   category: atlas
   scope: nbody/N3
   status: complete
-  description: |
-    Direct S^2 sampling of the N=3 shape sphere using the canonical
+  description: 'Direct S^2 sampling of the N=3 shape sphere using the canonical
+
     Hsiang-Montgomery Jacobi projection, filling the previously
+
     unsampled r1=r2 cap and marking all three binary collisions.
+
+    '
   outputs:
-    - shape_sphere_atlas/
+  - shape_sphere_atlas/
   run_command: python shape_sphere_atlas.py
   related_docs:
-    - docs/shape_sphere_compute_plan.md
-  tags: [atlas, shape_sphere, complete]
-
+  - docs/shape_sphere_compute_plan.md
+  tags:
+  - atlas
+  - shape_sphere
+  - complete
 - id: test_shape_sphere_atlas
   path: test_shape_sphere_atlas.py
   category: test
   scope: nbody/N3
   status: complete
-  description: |
-    Regression test for shape_sphere_atlas.py covering binary-collision
+  description: 'Regression test for shape_sphere_atlas.py covering binary-collision
+
     marking and Jacobi projection invariants.
+
+    '
   outputs: []
   run_command: python test_shape_sphere_atlas.py
   related_docs:
-    - docs/shape_sphere_compute_plan.md
-  tags: [test, shape_sphere, regression, complete]
-
+  - docs/shape_sphere_compute_plan.md
+  tags:
+  - test
+  - shape_sphere
+  - regression
+  - complete
 - id: launch_lane_c
   path: infra/launch_lane_c.py
   category: infra
   scope: tooling
   status: complete
-  description: |
-    AWS launcher for Lane C: r6a.16xlarge SPOT on AL2023 with python3.11
+  description: 'AWS launcher for Lane C: r6a.16xlarge SPOT on AL2023 with python3.11
+
     and python-flint. Boots the streaming mod-p N=3 L=4 1/r driver
+
     (bench_flint/lane_c_aws_driver.py) which calls
+
     NBodyAlgebra.compute_growth_modp to bypass the 16 GB symbolic
+
     blowup observed in Phase D / Phase F.1. Supports --dry-run.
+
+    '
   outputs: []
   run_command: python infra/launch_lane_c.py --dry-run
   related_docs:
-    - bench_flint/validation_summary.md
-    - docs/session_log.md
-  tags: [infra, aws, lane_c, modp, complete]
-
+  - bench_flint/validation_summary.md
+  - docs/session_log.md
+  tags:
+  - infra
+  - aws
+  - lane_c
+  - modp
+  - complete
 - id: launch_qeps
   path: infra/launch_qeps.py
   category: infra
   scope: tooling
   status: complete
-  description: |
-    AWS launcher for the Q(eps) symbolic-nullspace job: computes the exact
+  description: 'AWS launcher for the Q(eps) symbolic-nullspace job: computes the exact
+
     left-null kernel of the (4,3) binary-collision collision matrix over
+
     Q(eps) (rather than at sample epsilons). Defaults to on-demand
+
     r6i.4xlarge; supports --spot and --instance-type overrides plus
+
     --dry-run. Ships userdata_qeps.sh which provisions the worker on AL2023.
+
+    '
   outputs: []
   run_command: python infra/launch_qeps.py --dry-run
   related_docs:
-    - collision_syzygy/COLLISION_SYZYGY_REPORT.md
-  tags: [infra, aws, qeps, syzygy, collision, complete]
+  - collision_syzygy/COLLISION_SYZYGY_REPORT.md
+  tags:
+  - infra
+  - aws
+  - qeps
+  - syzygy
+  - collision
+  - complete
