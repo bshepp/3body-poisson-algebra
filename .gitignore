@@ -191,3 +191,13 @@ collision_syzygy/*.err
 *.log.aws
 rebuild_*.log
 stratification.log
+# OEIS A395423 live-review working notes: kept local while the review is
+# active (editors browse this repo via the entry's links). The April-era
+# draft remains in git history; current strategy/paste-map notes do not.
+OEIS/candidates/A395423.md
+OEIS/candidates/A395423_hookfirst.md
+
+# Saved OEIS draft-page snapshots (logged-in session pages, other people's
+# discussion comments; bulky, worthless after approval). Never commit.
+docs/A395423 - OEIS*.html
+docs/A395423 - OEIS*_files/
