@@ -6586,3 +6586,120 @@ have any rejecting power. The vacuous version produced a "100% fit at
 - 4: still open (3D / KS proper)
 - 5: âœ“ closed (this work, 8.4)
 - 6: partially advanced -- the PadÃ© route now yields 23 explicit Îµ-independent identities, including the level-2 Jacobi witness, with named generators. The remaining task is to reconcile the 23 with Follow-up B's 14 by computing a basis-independent count via `QQ.frac_field(eps)` RREF.
+
+
+## 2026-05-05 -- Website copy pass (logged retroactively 2026-07-11)
+
+Single commit `801cc58`, seven website pages, 95 lines. Em dashes removed
+per the epistemological style guide; the N=8 L2 value corrected to 748;
+hero parenthetical added. No science content.
+
+## 2026-05-11 -- SageMath third-CAS leg, harmonic dim=15 identification, noise plateau mapping, S4 predictions, registry curation (logged retroactively 2026-07-11)
+
+Single large commit `7aa44ab` (23 files, +7306/-723). Reconstructed here
+from the commit and its documents; full detail lives in the linked files.
+
+### SageMath leg (gap 4.1)
+
+- `sage/poisson_n3_d2.sage` + `sage/poisson_n3_d2_engine.sage` reproduce
+  [3, 6, 17, 116] (`sage/results/n3_d2_dimseq.json`); the harmonic variant
+  reproduces [3, 6, 13, 15] (`sage/results/n3_d2_harmonic.json`).
+  `bench_flint/validation_summary.md` updated with the third leg.
+- Honest scope (sharpened by the 2026-06-07 audit): Sage computes rank
+  over GF(2^31 - 1) by default -- a third CAS, but the same method class
+  as the project's own mod-p path. The exact-QQ legs remain SymPy and
+  Wolfram.
+
+### Harmonic dim=15 identification (gap 2.6)
+
+- `harmonic_lie_algebra_id.py` + `docs/harmonic_dim15.md`: the
+  15-dimensional harmonic algebra identified as the Jacobi algebra
+  sp(4, R) |x h_2 -- Killing signature (6+, 4-, 5z), 5-dim Heisenberg
+  radical, 1-dim center.
+- Scope: identification by invariant matching (dimension + signature +
+  radical/center structure), not a verified isomorphism; the underlying
+  numerical structure-constant tensor did not pass its Jacobi check
+  (jacobi_ok false), a gap flagged by the June audit and still open.
+
+### Noise plateau mapping (gap 4.6)
+
+- `noise_plateau_mapping.py`, `docs/noise_plateau_findings.md`,
+  `figures/noise_plateau.png`: SVD-threshold sweeps across mass ratios.
+  L=2 plateau width 13.0 decades at equal mass, narrowing to 6.0 decades
+  at m3/m1 = 10^10; L=3 equal-mass generic plateau ~5.5 decades.
+  Mechanistically explains the Sun-Earth-Moon / Sun-Jupiter-Asteroid
+  float64 rank deficits as plateau collapse past the detection floor.
+
+### Other
+
+- `docs/s4_tier_predictions.md` + `s4_tier_analysis.py` polish (S4 tier
+  decomposition predictions for N=4).
+- `scripts/registry_curate.py` + `registry/experiments.yaml` curation.
+- OEIS candidate `A395423.md` updated.
+
+## 2026-07-10/11 -- OEIS A395423 self-containment rewrite shipped; Lane C post-mortem; repo hygiene
+
+After a two-month stall, the A395423 draft was fully reworked in response
+to the editor's 2026-05-11 self-containment request, and the new fields
+were pasted to the live draft (edits #13-#15, 2026-07-11), with
+discussion replies posted.
+
+### The audit's "a(1) sign bug" resolved as a convention mismatch
+
+- The 2026-06-07 audit called the %e worked example the negative of
+  {H12, H13}. Re-checked in sympy under the entry's own stated convention
+  (%C: H_ij = T + V(r_ij); %e: "with V(r) = 1/r"): the published
+  expression is CORRECT as written. The audit had computed with the %o
+  program's Hamiltonian, which used H_ij = T - u_ij (V = -1/r).
+- The real defect was the %e/%o convention mismatch. Fix: %o flipped to
+  + u[(i, j)]. The dimension sequence is invariant under u -> -u: the
+  chain rule du/dq = -(q - q')*u^3 is odd in u, so u -> -u is a signed
+  substitution on monomials and ranks are unchanged.
+- Program re-verified after the flip, extracted from the draft file by
+  scripted prefix-stripping: d=1 (26 s), d=2 planar (364 s), and d=1 in
+  a clean venv (pip install sympy only; sympy 1.14.0) -- all print
+  [3, 6, 17, 116].
+
+### Other entry fixes
+
+- a(3) comment reworded to lead with exact rational rank (sympy
+  DomainMatrix + Mathematica sparse rational rank) as the primary
+  verification; the SVD gap claim softened from 10^10 to 10^9 (10^10
+  holds only at L0-L2; the max observed L3 gap over stored grid points
+  is ~5e9).
+- Reconciled with the live draft's editorial state: fields the editors
+  deleted (FORMULA, the standalone a(4) comment, the CROSSREFS
+  parentheticals) were not re-added; the (Python) marker appears on the
+  first PROG line only, matching earlier editor formatting fixes.
+- Reviewer observation (A. Zabolotskii, 2026-07-02) confirmed: H_ij
+  includes kinetic terms, and the old comment's H_ij = m_i*m_j*V(r_ij)
+  was wrong. The new comments define H_ij in full, including the
+  unequal-mass form (px_i^2 + py_i^2)/(2*m_i) + (px_j^2 + py_j^2)/(2*m_j)
+  + m_i*m_j*V(r_ij), matching `exact_growth.py build_hamiltonians()`.
+  Without the kinetic terms all generators would Poisson-commute and the
+  sequence would collapse to 3, 3, 3, 3.
+- Post-paste verification: the saved draft page was parsed and diffed
+  against the local field prep -- COMMENTS 6/6 paragraphs and PROG 50/50
+  lines byte-identical (all 28 indented lines intact); three small
+  LINKS/EXAMPLE glitches (duplicate link, missing SageMath link,
+  whitespace run) found and subsequently fixed on the draft.
+
+### Lane C post-mortem (S3 checked, no new compute spent)
+
+- `s3://3body-compute-290318/lane_c/checkpoints/progress_modp_L4.json`:
+  26/11,937 L4 brackets completed at ~2,872 s/bracket; ETA ~570,090
+  minutes (~396 days). Status PARTIAL, result null.
+- Diagnosis: the wall is symbolic L4 bracket generation (bracketing the
+  large L3 generators), not the mod-p rank. Do not relaunch as-is. An
+  a(4) push needs either the stalled mpmath rank checkpoint (4.4%, on
+  S3) or a redesigned evaluation path.
+- N=5 L3 mod-p is NOT invalidated: its 1.1M brackets are already
+  generated and checkpointed on S3; only the QQ rank OOM'd at 256 GB.
+  That remains the most promising open computation (prediction:
+  L3(5) = 6135 if new_L3 = 1198*C(N,4)).
+
+### Repo hygiene
+
+- OEIS working notes (`OEIS/candidates/A395423*.md`) and saved
+  draft-page snapshots kept local and gitignored while the review is
+  live (`49e200a`); dangling links in `OEIS/README.md` fixed (`8fd4722`).
