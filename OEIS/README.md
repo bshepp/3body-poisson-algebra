@@ -16,7 +16,7 @@ specific situation.
 
 | # | Sequence (first few terms) | What it is | OEIS status | Draft |
 |---|----------------------------|------------|-------------|-------|
-| 1 | `3, 6, 17, 116` | N=3 cumulative dim under Poisson bracket, singular pairwise potentials (1/r, 1/r², 1/r³, log, Yukawa, composite); d-, mass-, potential-invariant; cross-CAS confirmed (Python + Wolfram) | **Submitted as [A395423](https://oeis.org/A395423)** (2026-04-21) | [`candidates/A395423.md`](candidates/A395423.md) — interactive walkthrough: [`explainer/`](../explainer/) |
+| 1 | `3, 6, 17, 116` | N=3 cumulative dim under Poisson bracket, singular pairwise potentials (1/r, 1/r², 1/r³, log, Yukawa, composite); d-, mass-, potential-invariant; cross-CAS confirmed (Python + Wolfram) | **Submitted as [A395423](https://oeis.org/A395423)** (2026-04-21) | working notes kept local while the review is live (gitignored); interactive walkthrough: [`explainer/`](../explainer/) |
 | 2 | `6, 14, 62, 1260` | N=4 cumulative dim under Poisson bracket, singular potentials; d=1,2,3 confirmed; mass-invariant; potential-invariant for 1/r², 1/r³, log | **Novel** — search returns no results | [`candidates/A_3body_n4_singular.md`](candidates/A_3body_n4_singular.md) |
 | 3 | `3, 6, 13, 15, 15` | N=3 harmonic (V = +r²) cumulative dim; algebra **closes** at dim 15 (verified L=4 in Mathematica with 11,937 brackets) | **Novel** — search returns unrelated factorial sequence | [`candidates/A_3body_n3_harmonic.md`](candidates/A_3body_n3_harmonic.md) |
 | 4 | `62, 145, 279, 476, 748, 1107, ...` (N=4..9) | Closed-form L2(N) = N(4N²−9N+3)/2 for the singular potentials; verified for N=4..9 | **Novel** — search returns no results | [`candidates/A_3body_l2_closed_form.md`](candidates/A_3body_l2_closed_form.md) |
@@ -157,7 +157,7 @@ OEIS/
 ├── README.md                                 (this file)
 ├── checklist.md                              (Style Sheet -> our entries)
 └── candidates/
-    ├── A395423.md                            (submitted as A395423: [3, 6, 17, 116])
+    ├── A395423.md                            (submitted as A395423: [3, 6, 17, 116]; local-only during review, gitignored)
     ├── A_3body_n4_singular.md                (draft for [6, 14, 62, 1260])
     ├── A_3body_n3_harmonic.md                (draft for [3, 6, 13, 15, 15])
     ├── A_3body_l2_closed_form.md             (draft for L2(N))
