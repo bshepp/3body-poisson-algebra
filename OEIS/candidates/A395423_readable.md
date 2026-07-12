@@ -17,10 +17,16 @@ Yukawa, whatever you like — so the system is described by three
 "interaction Hamiltonians":
 
 $$
-H_{12} = m_1 m_2\, V(r_{12}), \qquad
-H_{13} = m_1 m_3\, V(r_{13}), \qquad
-H_{23} = m_2 m_3\, V(r_{23}).
+H_{12} = \frac{|p_1|^2}{2m_1} + \frac{|p_2|^2}{2m_2} + V(r_{12}), \qquad
+H_{13} = \frac{|p_1|^2}{2m_1} + \frac{|p_3|^2}{2m_3} + V(r_{13}), \qquad
+H_{23} = \frac{|p_2|^2}{2m_2} + \frac{|p_3|^2}{2m_3} + V(r_{23}),
 $$
+
+with $V(r) = 1/r$ for the headline (Newtonian/Coulomb) case. The
+kinetic terms are not optional: writing $H_{ij}$ as interaction-only
+($m_i m_j\, V(r_{ij})$, dropping the $|p_i|^2/2m_i + |p_j|^2/2m_j$
+part) is the exact error an OEIS reviewer (Andrei Zabolotskii) caught
+on the live entry.
 
 These three functions live on the 12-dimensional phase space of
 positions and momenta. The Poisson bracket gives them an algebraic
@@ -55,8 +61,10 @@ getting the same dimensions: 3, 6, 17, 116.
 When you change the spatial dimension from $d=2$ to $d=3$ (or down to
 $d=1$), you still get 3, 6, 17, 116.
 
-When you make the three masses unequal — pick any positive
-$(m_1, m_2, m_3)$ you want — you still get 3, 6, 17, 116.
+When you make the three masses unequal, you still get 3, 6, 17, 116 —
+proved symbolically for generic masses over $\mathbb{Q}(m_1, m_2, m_3)$
+(no exceptional mass ratio has been found; confirmed numerically at
+25+ mass ratios spanning $10^{-3}$ to $10^{6}$).
 
 The only way to break the universality is to switch to a **harmonic**
 potential, $V(r) = r^2$. That gives a *different* sequence,
@@ -90,9 +98,11 @@ an offset shift).
 
 At level 2 the algebra grows by 11 new independent generators. Why
 exactly 11? We don't know. The closed form $L_2(N) = N(4N^2-9N+3)/2$
-that fits all $N \ge 4$ predicts 13 here, but $N=3$ falls outside its
-range. The number 17 is genuinely irregular — neither pentagonal, nor
-binomial, nor a value of any clean polynomial we've found.
+that fits all $N \ge 4$ predicts 18 here, one more than the actual 17 —
+$N=3$ sits just outside its range, off by the same boundary
+correction of $-1$ that appears in the $N=3$ case generally. The
+number 17 is genuinely irregular — neither pentagonal, nor binomial,
+nor a value of any clean polynomial we've found.
 
 ### a(3) = 116 — the headline
 
@@ -103,26 +113,30 @@ monomials, and took the matrix rank.
 
 To make sure the answer is *exact* we ran the computation two ways:
 
-1. In Python with sympy, evaluating the symbolic expressions on a
-   numerical phase-space grid and computing the SVD. The smallest
-   singular value above the rank cutoff is more than $10^{10}$ times
-   the largest one below it — a clean rank gap that establishes the
-   integer rank rigorously.
-
-2. In Wolfram Mathematica 14.3, taking the exact rational rank of the
+1. In Wolfram Mathematica 14.3, taking the exact rational rank of the
    sparse coefficient matrix directly (no numerical step at all). This
    completes in about 40 seconds on a single core and returns 116 to
-   the digit.
+   the digit. This exact-rational computation, not a numerical gap, is
+   what establishes the integer rank.
+
+2. In Python with sympy, evaluating the symbolic expressions on a
+   numerical phase-space grid and computing the SVD. The SVD gap
+   exceeds $10^9$ at every level (above $10^{10}$ at levels 0-2; the
+   max observed gap at level 3, where $a(3) = 116$, is about
+   $5 \times 10^9$). The dimension values themselves are exact ranks
+   over $\mathbb{Q}$; the SVD is a cross-check, not the proof.
 
 Both methods agree, on $1/r$ and on $1/r^2$.
 
-### a(4) = ? — being computed now
+### a(4) = ? — open
 
-The next term is currently out of our reach for a fully verified
-rational rank, but numerical experiments at single-precision suggest
-$a(4) \ge 5604$. Two large-CPU jobs are running on Hugging Face
-Jobs as of this writing, one with $V = 1/r$ and one with $V = \log r$;
-both should land an exact answer if the algebra cooperates.
+$a(4)$ is not yet known exactly. The best current bound is
+$a(4) \ge 5{,}604$ (200,000 float64 samples; the boundary gap there is
+only $\approx 1.2\times$, not a definitive rank gap). An exact rank
+computation is blocked: the mod-$p$ approach (Lane C) stalls on
+symbolic bracket generation at level 4, having produced only 26 of the
+11,937 brackets required. No compute job is currently running toward
+$a(4)$.
 
 ---
 
@@ -131,19 +145,26 @@ both should land an exact answer if the algebra cooperates.
 ### In Python
 
 ```python
-from nbody.symbolic_rank_nbody import NBodyAlgebra
+from nbody.exact_growth_nbody import NBodyAlgebra
 
-alg = NBodyAlgebra(N=3, d=2, potential="1/r")
-print([alg.level_dim(k) for k in range(4)])
+alg = NBodyAlgebra(n_bodies=3, d_spatial=2, potential="1/r")
+dims = alg.compute_growth(max_level=3)
+print([dims[k] for k in sorted(dims)])
 # [3, 6, 17, 116]
 ```
 
 This requires `sympy >= 1.13.3` — earlier versions silently miscount
 level 3 for unequal masses (this was the reason for an earlier
-incorrect sequence in the literature, `[3, 5, 13, 69]`).
+incorrect sequence in the literature, `[3, 5, 13, 69]`). Verified
+locally (sympy 1.14.0): the full run through level 3 above completes
+in well under a minute and prints `[3, 6, 17, 116]`. `compute_growth`
+determines the rank at each level from a float64 SVD of the generators
+evaluated on a random phase-space sample — a numerical cross-check, not
+the exact-rational computation (see "To make sure the answer is exact"
+above for that).
 
 The full engine lives in
-[`nbody/symbolic_rank_nbody.py`](../../nbody/symbolic_rank_nbody.py)
+[`nbody/exact_growth_nbody.py`](../../nbody/exact_growth_nbody.py)
 in this repository.
 
 ### In Mathematica
@@ -198,13 +219,15 @@ Three reasons.
    character.
 
 2. **Cross-validation.** The terms have been independently verified by
-   two different computer algebra systems (Python sympy and Wolfram
-   Mathematica), both with exact arithmetic. This is more than the
+   three independent CAS implementations: two exact rational legs
+   (SymPy, and Wolfram MatrixRank over Rationals) plus a mod-p leg
+   (SageMath, FLINT-backed rank over GF(2^31-1)). This is more than the
    bar OEIS sets and is recorded in our submission as evidence.
 
 3. **An open question with a definite first answer.** $a(4)$ is not
    yet known exactly. OEIS has the keyword `more` for exactly this
-   case, and the entry can be amended once the computation completes.
+   case, and the entry can be amended once an exact $a(4)$ is
+   eventually obtained.
 
 ---
 
@@ -218,9 +241,9 @@ Three reasons.
   systems.
 - [`mathematica/README.md`](../../mathematica/README.md) — conventions
   used by the Mathematica reproduction.
-- The OEIS submission draft itself is in
-  [`A_3body_n3_singular.md`](A_3body_n3_singular.md) in the same
-  folder.
+- The sequence's live OEIS entry is
+  [A395423](https://oeis.org/A395423), which carries the submitted
+  definitions, formulas, and program.
 
 ---
 

@@ -33,9 +33,10 @@ disconnected from the "pentagonal numbers minus 1" framing.
 ```
 Also a(N-1) = N*(3*N - 5)/2 = L_1(N) for N >= 3, the dimension of the first
 level of the Lie algebra generated under the Poisson bracket by the C(N, 2)
-pairwise interaction Hamiltonians H_{ij} = m_i*m_j*V(r_{ij}) of an N-body
-system with a singular pairwise potential V (the value is invariant under the
-choice of singular V and under the spatial dimension d in {1, 2, 3}).
+pairwise Hamiltonians H_{ij} = (|p_i|^2)/(2*m_i) + (|p_j|^2)/(2*m_j) + V(r_{ij})
+of an N-body system with a singular pairwise potential V (the value is
+invariant under the choice of singular V and under the spatial dimension d in
+{1, 2, 3}).
 - _Brian Sheppard_, Apr 21 2026
 ```
 
