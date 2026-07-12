@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OEIS A395423 — an interactive explainer</title>
+<title>OEIS A395423: an interactive explainer</title>
 <link rel="stylesheet" href="style.css">
 <!-- KaTeX (math rendering) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
@@ -59,8 +59,8 @@
       </div>
     </div>
     <figcaption>
-      Whatever this system <em>can do</em> &mdash; periodic dances, near-collisions,
-      wild ejections &mdash; is encoded by the algebra of observables that
+      Whatever this system <em>can do</em>: periodic dances, near-collisions,
+      wild ejections, is encoded by the algebra of observables that
       A395423 is counting the dimensions of.
     </figcaption>
   </figure>
@@ -76,7 +76,7 @@
      is <em>phase space</em>: every degree of freedom $q$ is paired with a
      conjugate momentum $p$. A single planar pendulum lives in
      $(q, p) \in S^1 \times \mathbb R$, and its entire future is a curve on
-     that cylinder &mdash; one trajectory per energy.</p>
+     that cylinder: one trajectory per energy.</p>
 
   <p>The Hamiltonian is</p>
   $$ H(q, p) \;=\; \tfrac12 p^2 \;-\; \cos q. $$
@@ -97,7 +97,7 @@
       initial condition. Inside the orange <em>separatrix</em> ($H=1$) the
       pendulum swings back and forth (libration); outside, it spins all the way
       around (rotation). The whole picture is foliated by curves of constant
-      $H$ &mdash; energy is conserved because the bracket
+      $H$: energy is conserved because the bracket
       $\{H, H\} = 0$.
     </figcaption>
   </figure>
@@ -115,7 +115,7 @@
                    \;-\; \frac{\partial f}{\partial p}\,\frac{\partial g}{\partial q}. $$
   <p>This is the <em>Poisson bracket</em>. It is bilinear, antisymmetric, and
      satisfies the Jacobi identity. Hamilton&rsquo;s equations are simply
-     $\dot f = \{f, H\}$ &mdash; the Hamiltonian uses the bracket to flow
+     $\dot f = \{f, H\}$: the Hamiltonian uses the bracket to flow
      every observable forward in time.</p>
 
   <p>Pick two observables and watch the bracket appear:</p>
@@ -142,20 +142,20 @@
       Each panel is a heatmap on the $(q, p)$ window
       $[-2.5, 2.5]^2$: orange is positive, blue is negative, black is zero.
       The bracket $\{f, g\}$ on the right is computed numerically by central
-      differences &mdash; for the menu&rsquo;s observables it agrees with the
+      differences. For the menu&rsquo;s observables it agrees with the
       closed forms shown beneath each panel.
     </figcaption>
   </figure>
 
   <p>Two facts are already visible:</p>
   <ul>
-    <li>$\{q, p\} = 1$ &mdash; this is the canonical relation that defines the
+    <li>$\{q, p\} = 1$: this is the canonical relation that defines the
         symplectic structure.</li>
-    <li>$\{H, H\} = 0$ &mdash; every Hamiltonian commutes with itself, so
+    <li>$\{H, H\} = 0$: every Hamiltonian commutes with itself, so
         energy is conserved.</li>
   </ul>
   <p>The bracket of two functions is itself a function. <em>Iterating</em> the
-     bracket on a starting set of observables generates a Lie algebra &mdash;
+     bracket on a starting set of observables generates a Lie algebra,
      and that is exactly what A395423 measures the dimension of.</p>
 </section>
 
@@ -167,7 +167,7 @@
      \qquad r_{ij} = \lVert \mathbf q_i - \mathbf q_j \rVert. $$
   <p>The full gravitational Hamiltonian is just the sum,
      $H = \tfrac12 \sum p_i^2/m_i + \sum_{i<j} H_{ij}$,
-     but the algebra story keeps the three pieces separate &mdash; they are
+     but the algebra story keeps the three pieces separate: they are
      the seed of everything that follows.</p>
 
   <figure class="widget" id="pot-widget">
@@ -185,7 +185,7 @@
       Left: the potential $V(r)$. Right: three bodies breathing in and out,
       with the live values of the three pair Hamiltonians $H_{12}, H_{13}, H_{23}$
       shown on each bond. Switch the potential and watch how the bond
-      strengths respond &mdash; same geometry, very different physics.
+      strengths respond: same geometry, very different physics.
     </figcaption>
   </figure>
 
@@ -217,8 +217,8 @@
     <figcaption>
       The level-3 jump from 17 to 116 is where the algebra reveals it is
       genuinely non-trivial. Beyond that, level 4 is currently only known by
-      a numerical lower bound &mdash; computed by lambdifying every level-4
-      generator and taking an SVD on a 4096-point sample of phase space.
+      a numerical lower bound, computed by lambdifying every level-4
+      generator and taking an SVD on a 200,000-point sample of phase space.
     </figcaption>
   </figure>
 </section>
@@ -230,8 +230,12 @@
   $$ a(0),\, a(1),\, a(2),\, a(3) \;=\; 3,\; 6,\; 17,\; 116. $$
   <p>The remarkable empirical fact is that <em>almost every</em> two-body
      potential gives the same first four terms. The chart below shows the
-     comparison &mdash; only the harmonic potential $V(r) = r^2$ is special,
-     because its algebra closes at level 2.</p>
+     comparison: among the potentials charted, only the harmonic potential
+     $V(r) = r^2$ departs, closing its algebra at level 2. Two further
+     integer-power potentials are exceptional in the same way but sit
+     outside this chart: $V(r) = r$ closes even sooner, at dimension 5,
+     and $V(r) = r^3$ departs onto a different, infinite-dimensional
+     branch at level 3.</p>
 
   <figure class="widget" id="dim-widget">
     <canvas id="dim-canvas" width="720" height="320"></canvas>
@@ -240,13 +244,13 @@
       log, and Yukawa all share the sequence 3, 6, 17, 116.
       The harmonic case caps out at dim 15 because every $H_{ij} = m_i m_j r_{ij}^2$
       is a polynomial of degree 2, and the bracket of two quadratics is
-      another quadratic. Universality and its single exception are the
+      another quadratic. Universality and its exceptions are the
       subjects of §6.
     </figcaption>
   </figure>
 </section>
 <section id="s6">
-  <h2><span class="num">§6</span> Universality &mdash; the dimension doesn't care</h2>
+  <h2><span class="num">§6</span> Universality: the dimension doesn't care</h2>
   <p>
     What if you don't know the right potential? Maybe the bodies interact
     through gravity, or screened gravity, or a logarithmic plasma force.
@@ -264,10 +268,10 @@
     </div>
     <figcaption>
       The shape of $V(r)$ swings wildly. The dimension at level 3
-      does not. Every singular potential we have tested &mdash; Newton,
+      does not. Every singular potential we have tested lands on the
+      same sequence $\bigl[3,\,6,\,17,\,116\bigr]$: Newton,
       Calogero&ndash;Moser, Yukawa, log, $1/r^3$, and arbitrary positive
-      mixtures &mdash; lands on the same sequence
-      $\bigl[3,\,6,\,17,\,116\bigr]$.
+      mixtures.
     </figcaption>
   </figure>
 </section>
@@ -304,7 +308,10 @@
     a buggy version of <code>SymPy</code> miscounted level 3 as 69 instead
     of 116, and for a while we believed the dimension <em>did</em> depend
     on the mass ratios. The fix in <code>SymPy 1.13.3</code> restored the
-    truth: every choice of positive masses gives the same Lie algebra.
+    truth: the symbolic computation over $\mathbb{Q}(m_1,m_2,m_3)$ proves
+    rank 116 for generic masses, every mass triple outside a possible
+    proper subvariety (none found; confirmed numerically at 25+ mass
+    ratios from $10^{-3}$ to $10^6$).
   </p>
   <figure class="widget">
     <canvas id="mass-canvas" width="640" height="320"></canvas>
@@ -332,11 +339,14 @@
     <output id="svd-out" class="muted"></output>
     <figcaption>
       The first 116 singular values decay slowly. Beyond index 116 they
-      collapse onto the numerical floor near machine epsilon. The ratio
-      $\sigma_{116}/\sigma_{117} > 10^{10}$ is the oracle: a gap that
-      large can only mean the matrix has exact rank 116 and the
-      remaining $\sigma_i$ are pure roundoff. We require this gap on
-      every regression run.
+      collapse onto the numerical floor near machine epsilon. The SVD
+      gap exceeds $10^9$ at every level (above $10^{10}$ at levels 0&ndash;2;
+      about $5\times10^9$ at level 3, the $\sigma_{116}/\sigma_{117}$
+      ratio shown here). The dimension values themselves are exact
+      ranks over $\mathbb{Q}$; this gap is a cross-check, not the proof.
+      The plotted curve above is a synthetic, representative illustration
+      of the shape, not the actual level-3 spectrum. We require the real
+      gap on every regression run.
     </figcaption>
   </figure>
 </section>
@@ -344,21 +354,32 @@
 <section id="s10">
   <h2><span class="num">§10</span> The frontier: $a(4) \geq 5604$</h2>
   <p>
-    For four bodies the same machinery applies, but the symbolic algebra
-    explodes. Level 0 has 6 generators (one for each pair),
-    level 1 has 14, level 2 has 62, and level 3 climbs to a number we
-    cannot yet compute symbolically. The best lower bound at the time
-    of writing is from a 4096-sample numerical SVD running on AWS spot
+    Level 4 is simply the next term of A395423 itself, not a different
+    physical system. (A genuinely different four-body problem exists
+    too, and it is not this frontier: three bodies at level 4 is one
+    question, four bodies is another, and the four-body case is already
+    solved exactly through level 3, <code>[6, 14, 62, 1260]</code>.)
+    Bracketing the 116 level-3 generators against the original seed
+    produces a candidate matrix with roughly 19,000 rows before any
+    rank reduction, far beyond what the symbolic pipeline that handled
+    levels 0 through 3 can chew through directly. The best evidence so
+    far comes from a 200,000-sample numerical SVD run on AWS spot
     instances:
   </p>
   $$ a(4) \;\geq\; 5604. $$
   <figure class="widget">
     <canvas id="front-canvas" width="720" height="320"></canvas>
     <figcaption>
-      Each bar is a step in our climb toward $a(4)$. The true value is
-      unknown. Pushing the bound higher needs either better symbolic
-      reductions, smarter sampling, or considerably more compute. If
-      you would like to help &mdash; the code is on
+      Each bar is a step in the sampling climb toward $a(4)$: the bound
+      rises from 4,501 at 30,000 samples to 5,604 at 200,000. Even at
+      200,000 samples the boundary gap is only about 1.2&times;, so this
+      remains a lower bound, not a definitive rank. A parallel attempt
+      at the exact rank, computing modulo a large prime instead of over
+      the rationals, has stalled before it ever reached the rank step:
+      it cannot finish generating the symbolic level-4 brackets
+      themselves. Pushing the bound further needs either a faster
+      symbolic path or considerably more compute. If you would like to
+      help, the code is on
       <a href="https://github.com/bshepp/3body-poisson-algebra">GitHub</a>
       and the integer sequence
       $\bigl[3, 6, 17, 116, \geq 5604, \ldots\bigr]$ has been submitted

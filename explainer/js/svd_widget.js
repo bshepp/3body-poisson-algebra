@@ -77,7 +77,7 @@
     ctx.moveTo(ax - 4, y117 - 4); ctx.lineTo(ax, y117); ctx.lineTo(ax + 4, y117 - 4);
     ctx.stroke();
     ctx.fillStyle = '#b8410e'; ctx.font = '12px Georgia';
-    ctx.fillText('σ₁₁₆ / σ₁₁₇  >  10¹⁰', ax + 8, (y116 + y117) / 2 + 4);
+    ctx.fillText('σ₁₁₆ / σ₁₁₇ ≈ 5×10⁹ (actual)', ax + 8, (y116 + y117) / 2 + 4);
 
     if (hoverIdx != null) {
       const x = xCoord(hoverIdx), y = yCoord(sigmas[hoverIdx]);
@@ -99,6 +99,8 @@
     const i = Math.round((x - padL) / plotW * (N - 1));
     draw(i);
   });
-  cv.addEventListener('mouseleave', () => { out.textContent = ''; draw(); });
+  const DEFAULT_CAPTION = 'Synthetic, representative spectrum (for illustration only).';
+  cv.addEventListener('mouseleave', () => { out.textContent = DEFAULT_CAPTION; draw(); });
   draw();
+  out.textContent = DEFAULT_CAPTION;
 })();

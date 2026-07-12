@@ -50,7 +50,7 @@
     ctx.textAlign = 'center';
     ctx.fillText('dim L₃ = 116', W / 2, H / 2 - 6);
     ctx.font = 'italic 12px Georgia';
-    ctx.fillText('for every (m₁, m₂, m₃) with mᵢ > 0', W / 2, H / 2 + 14);
+    ctx.fillText('for generic (m₁, m₂, m₃): every mass triple tested', W / 2, H / 2 + 14);
     ctx.textAlign = 'start';
 
     // hovered point

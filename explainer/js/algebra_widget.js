@@ -1,4 +1,4 @@
-// algebra_widget.js — §4 build the algebra step by step
+// algebra_widget.js: §4 build the algebra step by step
 // Visualize L_0 → L_1 → L_2 → L_3 with cumulative dimensions 3, 6, 17, 116.
 
 (function () {
@@ -19,26 +19,26 @@
     {
       label: 'L₁',
       dim: 6,
-      desc: 'add {Hᵢⱼ, Hₖₗ} for sharing a body — three new mixed generators',
+      desc: 'add {Hᵢⱼ, Hₖₗ} for sharing a body: three new mixed generators',
       items: ['{H₁₂, H₁₃}', '{H₁₂, H₂₃}', '{H₁₃, H₂₃}']
     },
     {
       label: 'L₂',
       dim: 17,
-      desc: 'iterate again — eleven independent new observables emerge',
+      desc: 'iterate again: eleven independent new observables emerge',
       items: ['{H₁₂, {H₁₂, H₁₃}}', '{H₁₃, {H₁₂, H₂₃}}', '… (11 new)']
     },
     {
       label: 'L₃',
       dim: 116,
-      desc: 'level 3: ninety-nine new generators — the algebra is non-trivial',
+      desc: 'level 3: ninety-nine new generators, the algebra is non-trivial',
       items: ['(99 new symbolic expressions, ranks verified by SVD)']
     },
     {
       label: 'L₄',
       dim: '≥ 5604',
-      desc: 'level 4 frontier: lower bound from 4096-sample SVD on AWS',
-      items: ['(thousands more — exact dimension still open)']
+      desc: 'level 4 frontier: lower bound from 200K-sample SVD on AWS',
+      items: ['(thousands more, exact dimension still open)']
     }
   ];
 
@@ -54,7 +54,7 @@
         <div class="alg-tag">${L.label}</div>
         <div class="alg-body">
           <div class="alg-dim-line">dim = <strong>${L.dim}</strong>
-            <span class="alg-desc"> — ${L.desc}</span>
+            <span class="alg-desc"> &middot; ${L.desc}</span>
           </div>
           <ul class="alg-items">
             ${L.items.map(s => `<li>${s}</li>`).join('')}

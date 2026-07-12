@@ -1,6 +1,6 @@
-// dimseq_widget.js — §5 the dimension sequence as a bar chart
+// dimseq_widget.js: §5 the dimension sequence as a bar chart
 // Compares dimension sequences across potentials, highlighting the universal
-// 3,6,17,116 vs the harmonic exception 3,6,15.
+// 3,6,17,116 vs the harmonic exception 3,6,13,15.
 
 (function () {
   const canvas = document.getElementById('dim-canvas');
@@ -15,7 +15,7 @@
     { label: '1/r³',                   color: '#c66',    seq: [3, 6, 17, 116], note: 'same dim' },
     { label: 'log r',                  color: '#888',    seq: [3, 6, 17, 116], note: 'same dim' },
     { label: 'e^(-r)/r (Yukawa)',      color: '#3aa0ff', seq: [3, 6, 17, 116], note: 'same dim' },
-    { label: 'r²  (harmonic)',         color: '#7bc94c', seq: [3, 6, 15],       note: 'closes at level 2' }
+    { label: 'r²  (harmonic)',         color: '#7bc94c', seq: [3, 6, 13, 15],   note: 'closes at 15 after level 3' }
   ];
 
   const LEVELS = 4; // show columns L_0..L_3
