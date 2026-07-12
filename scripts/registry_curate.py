@@ -111,7 +111,7 @@ PATCHES: dict[str, dict] = {
         "status": "complete",
         "description": (
             "Symbolic rank over Q(m1,m2,m3) for N=3 - the mass-invariance proof. "
-            "Establishes [3, 6, 17, 116] as an algebraic theorem for all positive masses."
+            "Establishes [3, 6, 17, 116] for generic masses (rank over Q(m1,m2,m3))."
         ),
         "latest_result": {
             "date": "2026-04-10",
@@ -800,7 +800,7 @@ PATCHES: dict[str, dict] = {
     },
     "unequal_mass_study": {
         "category": "analysis", "scope": "nbody/N3", "status": "complete",
-        "description": "Unequal-mass dimension-sequence study. The original [3,5,13,69] vs [3,6,17,116] artifact study; superseded by the symbolic-rank-over-Q proof of mass invariance for all positive masses.",
+        "description": "Unequal-mass dimension-sequence study. The original [3,5,13,69] vs [3,6,17,116] artifact study; superseded by the symbolic-rank-over-Q proof of mass invariance for generic masses.",
         "run_command": "python unequal_mass_study.py",
         "tags": ["analysis", "mass-invariance", "historical"],
     },

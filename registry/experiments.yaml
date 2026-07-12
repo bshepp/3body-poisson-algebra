@@ -912,7 +912,7 @@
   status: complete
   description: Unequal-mass dimension-sequence study. The original [3,5,13,69] vs
     [3,6,17,116] artifact study; superseded by the symbolic-rank-over-Q proof of mass
-    invariance for all positive masses.
+    invariance for generic masses.
   outputs: []
   tags:
   - analysis
@@ -1482,7 +1482,8 @@
   scope: nbody/N3
   status: complete
   description: Symbolic rank over Q(m1,m2,m3) for N=3 - the mass-invariance proof.
-    Establishes [3, 6, 17, 116] as an algebraic theorem for all positive masses.
+    Establishes [3, 6, 17, 116] for generic masses (rank over Q(m1,m2,m3);
+    a proper subvariety of exceptional mass triples is not excluded, none found).
   outputs: []
   tags:
   - dimseq
@@ -2736,8 +2737,8 @@
     date: '2026-05-11'
     summary: "1/r:    [3, 6, 17, 116] in 60.6s on SageMath 10.8 (Linux x86_64).\n\
       \        MATCH against Mathematica and Python pins.\n1/r^2:  [3, 6, 17, 116]\
-      \ in 57.9s. MATCH.\nHeadline numbers now stand on three unrelated CAS implementations\n\
-      and three unrelated rank algorithms.\n"
+      \ in 57.9s. MATCH.\nHeadline numbers now stand on three CAS implementations:\n\
+      two exact rational legs (SymPy, Wolfram) plus a mod-p leg (Sage, GF(2^31-1)).\n"
     sequence:
     - 3
     - 6
