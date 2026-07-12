@@ -1,12 +1,12 @@
 # Three-Body Poisson Algebra — Project Status & Roadmap
 
-*Last updated: April 18, 2026*
+*Last updated: July 11, 2026 (audit remediation sweep)*
 
 ---
 
 ## 1. Atlas Campaign Status
 
-### Completed Configurations (18)
+### Completed Configurations (21)
 
 | # | Configuration | Potential | Masses | Charges | Notes |
 |---|---|---|---|---|---|
@@ -205,11 +205,11 @@ Script: `nbody/level2_exponent_sweep.py`. Results: `results/level2_exponent_swee
 
 | # | Task | Result |
 |---|---|---|
-| 1 | **(+1,+q,−1) q=1..20** | All 20 give [3,6,17,116]. Complete universality — no departures at unit masses. |
+| 1 | **(+1,+q,−1) q=1..20** | All 20 give [3,6,17,116]. Complete universality at unit masses — mixed-sign (+1,+q,−1) exact rank over ℚ at d=1. |
 | 2 | **Method** | Exact symbolic rank over QQ at d=1 (44s/config avg). |
-| 3 | **Implication** | Previously reported departures (115 for H₂⁺, 111 for Li⁺) arose from specific mass ratios + charge combinations, not charge geometry alone. |
+| 3 | **Implication** | Early 500-sample runs reported Li⁺ (+3,−1,−1) → 111 and H₂⁺ (+1,+1,−1) → 115; revalidation at 1000–5000 samples (Mar 24, 2026, `results/charge_sensitivity/charge_sensitivity_completion.json`) restored [3,6,17,116] in every case, using the identical charges AND physical masses — undersampling artifacts, the same failure class as the SymPy-1.10 [3,5,13,69]. Combined with the same-sign named configs (Penning trap, H₃⁺, O₃, all 116), the charge story is: charge-invariant in everything tested. |
 
-Script: `nbody/charge_sweep_d1.py`. Results: `results/charge_sensitivity/charge_sweep_qqn_d1.json`.
+Script: `nbody/charge_sweep_d1.py`. Results: `results/charge_sensitivity/charge_sweep_qqn_d1.json`, `results/charge_sensitivity/charge_sensitivity_completion.json`.
 
 ### Completed — Named Molecular Systems (April 15, 2026)
 
@@ -277,16 +277,18 @@ First atlas data for four bodies (N=4, d=1, 1/r). Three 1D slices through the 2D
 
 Script: `n4_atlas_1d.py`. Results: `results/n4_atlas_1d.json`. Runtime: ~45s total.
 
-### Not Yet Started (4)
+### Not Yet Started (1)
 
 | # | Task | Notes |
 |---|---|---|
-| 1 | ~~Quantum rank for other potentials~~ | **DONE** — r², r⁴, 1/r², 1/r³, 1/r⁴ all tested. See Universality Classification above. |
-| 3 | ~~**Parametric exponent sweep**~~ | **DONE** — L2 broad sweep (500 values) and L3 extended sweep (76 values). |
-| 4 | ~~**Dusty plasma Yukawa**~~ | **DONE** — [3, 6, 17, 116]. See Yukawa Survey above. |
-| 5 | ~~**Tritium/He-3 Yukawa**~~ | **DONE** — [3, 6, 17, 116]. See Yukawa Survey above. |
-| 6 | **SageMath verification** | Independent verification of dimension sequence. SageMath not yet installed. |
 | 8 | **Structure extraction at level 3 (rank 116)** | Level-2 structure computed for 6 potentials. Level 3 requires AWS. |
+
+Completed since this table was last accurate (moved out of "Not Yet Started"):
+- ~~Quantum rank for other potentials~~ — **DONE**: r², r⁴, 1/r², 1/r³, 1/r⁴ all tested. See Universality Classification above.
+- ~~Parametric exponent sweep~~ — **DONE**: L2 broad sweep (500 values) and L3 extended sweep (76 values).
+- ~~Dusty plasma Yukawa~~ — **DONE**: [3, 6, 17, 116]. See Yukawa Survey above.
+- ~~Tritium/He-3 Yukawa~~ — **DONE**: [3, 6, 17, 116]. See Yukawa Survey above.
+- ~~SageMath verification~~ — **DONE (2026-05-11)**: three independent CAS implementations now confirm the dimension sequence — two exact rational legs (SymPy, and Wolfram MatrixRank over Rationals) plus a mod-p leg (SageMath, FLINT-backed rank over GF(2³¹−1)). See `sage/poisson_n3_d2_engine.sage`.
 
 ### Completed — Neural Network Algebra (April 2026)
 
@@ -304,7 +306,7 @@ Script: `n4_atlas_1d.py`. Results: `results/n4_atlas_1d.json`. Runtime: ~45s tot
 | 1 | **N-body exact rank scaling** | N=3: [3,6,17,116], N=4: [6,14,62,1260], N=5: [10,25,145], N=6: [15,39,279], N=7: [21,56,476], N=8: [28,76,748]. L3 available for N=3,4. d-independence confirmed for N=3–6. |
 | 2 | **New potentials (r⁴, 1/r⁴)** | Both give [3, 6, 17, 116]. The r² (harmonic) finite algebra is special, not representative of all regular potentials. |
 | 3 | **Structure constants (exact/Q)** | Computed for 1/r, 1/r⁴, r⁴, r² at level 2 (rank 17). |
-| 4 | **Killing form & signature** | Non-harmonic: (6+, 0-, 11 zero). Harmonic: (14+, 0-, 1 zero). |
+| 4 | **ad-Gram (Frobenius) signature** tr(ad_i·ad_jᵀ) — mislabeled "Killing form" in the original computation | Non-harmonic: (6+, 0−, 11 zero). Harmonic: (14+, 0−, 1 zero). **True Killing form** (from the exact structure constants): the non-harmonic dim-17 algebra is nilpotent, so its Killing form vanishes identically (0, 0, 17); the harmonic dim-15 algebra has Killing signature (6+, 4−, 5 zero) (see `docs/harmonic_dim15.md`). |
 | 5 | **Derived/lower central series** | Non-harmonic: solvable (length 3), nilpotent (class 3). Harmonic: neither. |
 | 6 | **Center dimension** | Non-harmonic: 11/17. Harmonic: 1/15. |
 | 7 | **SVD component saving** | `--save-svd` flag added to `exact_growth.py` and `nbody/exact_growth_nbody.py`. |
@@ -333,7 +335,7 @@ Script: `n4_atlas_1d.py`. Results: `results/n4_atlas_1d.json`. Runtime: ~45s tot
 | 6 | **composite(u+u²)** | [3, 6, 17, **117**] | [3, 6, 17, 116] | **+1** |
 | 7 | **GUE (log+harmonic)** | [3, 6, 17, 116] | [3, 6, 17, 116] | No (harmonic suppresses) |
 | 8 | **r^1** (linear) | [3, 4, 5, 5] | [3, 4, 5, 5] | No (exceptional) |
-| 9 | **r^2** (harmonic) | [3, 6, 13, 15] | [3, 6, 15, 15] | Different intermediate (13 vs 15 at L2), same final dim |
+| 9 | **r^2** (harmonic) | [3, 6, 13, 15] | [3, 6, 13, 15] | No (exceptional; classical and quantum sequences are identical, L2 = 13 in both — see `docs/harmonic_dim15.md`) |
 | 10 | **r^3** (cubic) | [3, 6, 17, 109] | [3, 6, 17, 109] | No (exceptional) |
 | 11 | **r^4** (quartic) | [3, 6, 17, 116] | [3, 6, 17, 116] | No |
 
@@ -655,18 +657,18 @@ singularity strength; mu^2-mu+1 has no real roots.
 
 ### Hugging Face Dataset Pipeline (April 17, 2026)
 
-The project maintains a structured Hugging Face dataset built from computation results. The pipeline (`dataset/build_dataset.py`) reads JSON result files and produces **13 Parquet tables (993 rows total)**. The builder deduplicates symbolic rank entries, keeping only the highest `max_level` for each (N, d, potential, bracket_type). The `neural_algebras` split (added April 17) covers Poisson algebras of linear neural network training dynamics across 12 coupling types and 7 universality classes at L=3.
+The project maintains a structured Hugging Face dataset built from computation results. The pipeline (`dataset/build_dataset.py`) reads JSON result files and produces **13 Parquet tables (997 rows total)**. The builder deduplicates symbolic rank entries, keeping only the highest `max_level` for each (N, d, potential, bracket_type). The `neural_algebras` split (added April 17) covers Poisson algebras of linear neural network training dynamics across 12 coupling types and 7 universality classes at L=3.
 
 | Split | Source file(s) | Rows | Description |
 |-------|---------------|------|-------------|
 | `neural_algebras` | `results/neural_algebras/*.json` | 21 | Poisson algebras of linear neural networks across 12 coupling types, depth L=2..5, width k=1..3, 3 losses, 2 activations; includes `universality_class_L3` label (7 classes: A_119_gradient, B_115_directional, C_111_gradient_sum, D_104_gradient_cubic, E_87_natural_gradient, F_62_cross_entropy, G_47_hessian) |
-| `dimension_sequences` | `results/symbolic_rank/rank_N*.json`, `primes/results/gue_comparison.json`, `results/yukawa_dimseq.json`, `results/l3_exponent_sweep_extended.json`, etc. | ~685 | Cumulative rank at each bracket level per (N, d, potential); includes 12 quantum (Moyal) rows, 6 Yukawa mu-sweep, ~76 extended L3 exponent sweep |
+| `dimension_sequences` | `results/symbolic_rank/rank_N*.json`, `primes/results/gue_comparison.json`, `results/yukawa_dimseq.json`, `results/l3_exponent_sweep_extended.json`, etc. | ~686 | Cumulative rank at each bracket level per (N, d, potential); includes 12 quantum (Moyal) rows, 6 Yukawa mu-sweep, ~76 extended L3 exponent sweep |
 | `structure_constants` | `results/algebra_structure/*/structure_constants_exact.json` | 16 | Exact rational C^k_ij tensors at level 2 (and level 3 for r^3) |
 | `charge_sensitivity` | `results/charge_sensitivity/*.json` | ~38 | Charge-independence tests |
 | `mass_invariance` | `data/mass_ratio_sweep.json` | 33 | Mass ratio sweep (1 to 10^10) with SVD spectra |
 | `level4_convergence` | `results/level4_*/results.json` | ~19 | Level-4 lower bounds |
 | `spectral_statistics` | `atlas_figures/atlas_summary.json`, `results/atlas_full/*/summary.json`, `results/n4_atlas_1d.json` | ~17 | Rank distributions across phase space (incl. 3 N=4 1D slices) |
-| `physical_systems` | `results/expansion_dimseq/expansion_dimseq_completion.json`, `results/yukawa_dimseq.json` | 17 | Named physical systems (helium, Sun-Earth-Moon, H₃⁺, O₃, Yukawa nuclear/plasma, etc.) |
+| `physical_systems` | `results/expansion_dimseq/expansion_dimseq_completion.json`, `results/yukawa_dimseq.json` | 20 | Named physical systems (helium, Sun-Earth-Moon, H₃⁺, O₃, Yukawa nuclear/plasma, etc.) |
 | `bell_test` | `nbody/bell_test_results/chsh_summary.json` | 9 | CHSH Bell inequality tests |
 | `scaling_formulas` | `results/analysis/nbody_scaling_formulas.json` | 5 | Closed-form L_k(N) formulas with verification status |
 | `tier_decomposition` | `results/tier_decomposition/s3_s4_decomposition.json` | 40 | S₃ and S₄ CG representation decompositions |
@@ -736,7 +738,7 @@ Three new artifacts; `explorer.html` retired:
 
 | Artifact | Replaces / extends | Notes |
 |---|---|---|
-| `website/datasets.html` | (new) | Browser for the 13 Parquet tables (993 rows). Three sections × 13 tables × per-table chart × cross-table filter. Built from `dataset/output/*.parquet` via `website/build_dataset_json.py`. |
+| `website/datasets.html` | (new) | Browser for the 13 Parquet tables (997 rows). Three sections × 13 tables × per-table chart × cross-table filter. Built from `dataset/output/*.parquet` via `website/build_dataset_json.py`. |
 | `website/figures.html` | `website/explorer.html` (deleted) | 309 canonical figures across 17 systems / 5 analyses + 10 curated comparisons. Three browse modes (System / Analysis / Comparisons), facet rail with multi-select, lightbox with comparison-group navigation, deep links into datasets.html. |
 | `docs/atlas_compute_workorder.md` | (new) | 502-line worksheet listing every atlas scan to relaunch (6 partial parametric + Triple BH custom invocation), 1 small-mu refinement, 4 tiers of suggested new atlases (Yukawa/Penning/composite/polynomial r^n; quantum Moyal; neural coupling slice; N=4 sphere; charge continuity; large-area Lagrange zoom). Each entry has the exact CLI, instance type, runtime, and post-completion sync/render commands. |
 

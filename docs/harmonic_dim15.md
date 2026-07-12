@@ -118,6 +118,12 @@ the natural ansatz.
 
 ## The numerical answer — the **Jacobi algebra** `sp(4, ℝ) ⋉ h₂`
 
+**Caveat:** This identification is by invariant matching (dimension, Killing
+signature, center, radical structure), not a verified isomorphism — the
+identification run skipped the O(n⁴) Jacobi verification of the
+structure-constant tensor (its `jacobi_ok:false` records "skipped", not
+"failed").
+
 Running [`harmonic_lie_algebra_id.py`](../harmonic_lie_algebra_id.py)
 on the exact rational structure constants of
 `results/algebra_structure/N3_d2_r2/` produces:

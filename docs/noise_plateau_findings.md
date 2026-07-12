@@ -53,7 +53,8 @@ The retrospective explanation for Sun-Earth-Moon's reported rank
 ~10²⁰–10²⁶ in the coefficient matrix) is *not* an algebraic
 phenomenon — it's the float64-SVD plateau collapsing past the
 detection threshold. The symbolic-rank-over-Q(m₁,m₂,m₃) proof
-establishes the true rank is 116 for all positive masses.
+establishes the true rank is 116 for generic masses (outside a possible
+proper subvariety, none found).
 
 ## Panel A — Equal-mass L=3 plateaus at three exemplar (μ, φ) points
 
@@ -110,10 +111,11 @@ plateau width is the unifying diagnostic.
 ## Relation to the symbolic-rank-over-Q proof
 
 The plateau-collapse story is purely about *float64* SVD. The
-algebraic rank — proved by computing `Matrix(QQ).rank()` over
+algebraic rank — computed exactly via `Matrix(QQ).rank()` over
 `Q(m₁, m₂, m₃)` in
-[`symbolic_rank.py`](../symbolic_rank.py) — is **116 for all positive
-masses simultaneously**. The plateau analysis here just maps where
+[`symbolic_rank.py`](../symbolic_rank.py) — is **116 for generic masses**
+(proved symbolically over ℚ(m₁,m₂,m₃); outside a possible proper
+subvariety, none found). The plateau analysis here just maps where
 float64 stops being able to *see* that rank.
 
 This is the kind of figure that satisfies a referee who is suspicious

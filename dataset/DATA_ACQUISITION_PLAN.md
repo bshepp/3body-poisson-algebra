@@ -2,7 +2,7 @@
 
 *April 16, 2026*
 
-This document outlines natural directions for expanding the dataset, organized by which split they feed, how much effort they require, and what scientific value they add. The current dataset has **993 rows across 13 tables** (including the new `neural_algebras` split). Each direction below lists the target split, estimated new rows, compute cost, and whether it requires new code or just running existing scripts.
+This document outlines natural directions for expanding the dataset, organized by which split they feed, how much effort they require, and what scientific value they add. The current dataset has **997 rows across 13 tables** (including the new `neural_algebras` split). Each direction below lists the target split, estimated new rows, compute cost, and whether it requires new code or just running existing scripts.
 
 ---
 
@@ -82,7 +82,7 @@ These use existing scripts with new parameters. Rebuild the dataset afterward wi
 - **Key findings:**
   - **Pure log: [3,6,17,117]** — grows by +1! Resolves the GUE ambiguity: pure log is singular and follows the quantum growth rule. The GUE composite (log+harmonic) did NOT grow (116) because the harmonic component suppresses quantum deformation.
   - **r^1: [3,4,5,5]** — no quantum growth. The smallest exceptional algebra remains exceptional.
-  - **r^2: [3,6,13,15]** — GROWING, but to 15 (same final dim as classical [3,6,15,15]). Intermediate structure differs: quantum L2 dim is 13 vs classical 15.
+  - **r^2: [3,6,13,15]** — same sequence as the classical harmonic closure [3,6,13,15,15] (L2 = 13 in both); no quantum growth detected (exceptional, like r^1).
   - **r^3: [3,6,17,109]** — same as classical. No quantum growth for the non-nilpotent anomaly.
   - **r^4: [3,6,17,116]** — same as classical. No quantum growth for polynomial potentials.
   - **composite(u+u²): [3,6,17,117]** — grows by +1! Confirms singular composite potential follows quantum growth rule.
@@ -290,7 +290,7 @@ These use existing scripts with new parameters. Rebuild the dataset afterward wi
 
 ## What Would Make the Biggest Splash on Hugging Face
 
-*Re-evaluated April 17, 2026, after completing N=4 atlas 1D slices (3.4), Yukawa survey (3.2), L3 exponent sweep (3.3), the neural-network expansion (12 coupling types, 7 universality classes at L=3), and all previous items. The dataset now has 993 rows across 13 tables (including the new `neural_algebras` split).*
+*Re-evaluated April 17, 2026, after completing N=4 atlas 1D slices (3.4), Yukawa survey (3.2), L3 exponent sweep (3.3), the neural-network expansion (12 coupling types, 7 universality classes at L=3), and all previous items. The dataset now has 997 rows across 13 tables (including the new `neural_algebras` split).*
 
 Ranked by likely community interest — remaining open items:
 

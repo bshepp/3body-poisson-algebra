@@ -14,7 +14,7 @@ by estimated value per compute-hour.
 | Exact symbolic engine | Dimension sequence [3, 6, 17, 116] via SymPy + polynomial u_ij representation |
 | Mass invariance | Sequence independent of mass ratios (tested 20+ configs including Tsygvintsev) |
 | Potential comparison | Harmonic (r^2) closes at dim 15; Calogero-Moser (1/r^2) matches Newton (1/r) at [3,6,17,116] |
-| Level 4 lower bound | d(4) >= 4,501 at generic config (30K samples, definitive SVD gap); d(4) >= 3,112 at Lagrange (20K) |
+| Level 4 lower bound | d(4) ≥ 5,604 (200,000 float64 samples; boundary gap only ≈1.2×, NOT definitive) — up from 4,501 at 30K samples; d(4) ≥ 3,112 at Lagrange (20K samples) |
 | High-res atlas (eps=5e-3) | 100x100 grid, all 3 potentials, full SV spectra |
 | S3 symmetry discovery | Gap ratio valleys trace the three isosceles curves; Lagrange point is S3 fixed point |
 | SV landscape analysis | SV #116 varies 4000x across shape sphere; spectral fingerprints differ between 1/r and 1/r^2 |
@@ -331,7 +331,7 @@ and results are documented.
 |-----------|--------|
 | ~~Gravitational mass-dependence~~ | ~~All 7 configs → [3, 5, 13, 69]~~ **RETRACTED** — SymPy artifact; mass invariance confirmed (Mar 23) |
 | Charge-class mass-invariance | He, H⁻, Ps⁻, muonic He all → [3, 6, 17, 116] (mass range 1 to 7294) |
-| Charge magnitude sensitivity | Li⁺ (+3,−1,−1) → [3, 6, 17, 111]; H₂⁺ (+1,+1,−1) → [3, 6, 17, 115] |
+| Charge magnitude sensitivity — RESOLVED AS ARTIFACT | Early 500-sample runs reported Li⁺ (+3,−1,−1) → 111 and H₂⁺ (+1,+1,−1) → 115; revalidation at 1000–5000 samples (Mar 24, 2026) restored [3, 6, 17, 116] in every case — undersampling artifacts |
 | Penning trap ions (+1,+1,+1) | [3, 6, 17, 116] — all-repulsive with external harmonic trap |
 | Logarithmic potential (2D vortices) | [3, 6, 17, 116] — transcendental singularity, universality holds |
 | Composite 1/r + 1/r² | [3, 6, 17, 116] — multi-pole composite, universality holds |
@@ -349,7 +349,7 @@ and results are documented.
 | **N=4 d=1 exact rank (L0-L3)** | [6, 14, 62, 1260]. new_L3(4) = 1198. First L3 data point beyond N=3. Computed in 52 min on r6i.8xlarge (sweep). |
 | **N-body rank sweep** | Systematic sweep N=3-10 L3, N=11-15 L2 on r6i.8xlarge. N=3 validated, N=4 L3 obtained. N=5,6 L3 OOM-killed. ~$23 total compute. |
 | **Quantum universality classification** | ALL singular 1/r^n grow by +1. NO polynomial potentials grow. Singularity is load-bearing. |
-| **Mass invariance (symbolic)** | Rank over Q(m1,m2,m3) = [3,6,17,116]. Proved for all mass ratios. |
+| **Mass invariance (symbolic)** | Rank over Q(m1,m2,m3) = [3,6,17,116]. Proved symbolically for generic masses over ℚ(m₁,m₂,m₃) (rank 116 outside a possible proper subvariety, none found); confirmed numerically at 25+ ratios from 10⁻³ to 10⁶. |
 
 ### Next priorities (post-energy-bound, updated April 11)
 | Analysis | Priority | Compute | Notes |

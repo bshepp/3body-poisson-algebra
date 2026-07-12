@@ -82,17 +82,14 @@
 - **Question answered:** The singular/regular dichotomy does NOT predict algebra dimension. r⁴ is regular (polynomial) yet generates the same dimension sequence as 1/r. The harmonic potential r² is special because of its enhanced symmetry (oscillator algebra), not because of regularity.
 
 ### 2.4 Charge Sweep Phase 3 (+1/+q/−1)
-- **Status:** CRASHED — phase 3 never completed
+- **Status:** ✅ COMPLETE (April 15, 2026) — all 20 integer charges q=1..20 give [3, 6, 17, 116] via exact symbolic rank over ℚ at d=1 (`nbody/charge_sweep_d1.py`, results in `results/charge_sensitivity/charge_sweep_qqn_d1.json`). Complete universality at unit masses; no departures.
 - **Data so far:** Phase 2 (+q/−1/−1) complete for q=1–20, all give [3, 6, 17, 116].
-- **Task:** Fix the crash in the AWS sweep script and run phase 3 for the mixed-sign (+1/+q/−1) geometry.
-- **Question answered:** Does the universality hold for the "molecular" charge configuration across magnitudes?
+- **Question answered:** YES — universality holds for the mixed-sign "molecular" (+1,+q,−1) charge configuration across all tested magnitudes.
 
 ### 2.5 S₄ Tier Decomposition (N=4)
-- **Status:** NOT STARTED
-- **Estimated time:** Hours (algebraic computation)
-- **Task:** Implement S₄ representation theory analogous to `clebsch_gordan_analysis.py`. Decompose the 62-dim N=4 level-2 algebra into S₄ irreps (trivial, sign, standard, standard⊗sign, 2D). Count tiers.
-- **Question answered:** Does the S₃ tier structure generalize to S₄? Are the scaling exponents still integer-quantized?
-- **Script to create:** `s4_tier_analysis.py`
+- **Status:** ✅ COMPLETE (April 15, 2026) — S₄ CG rules, character table, and exterior squares implemented in `s4_tier_analysis.py`. The edge representation decomposes as triv + std + hook; through L3 there are 23,226 candidate generators of which only 1,260 are independent (94.6% syzygies vs 25.6% for S₃). Dominant irreps: std (2,893 copies, 37.4%) and sign_std (2,932 copies, 37.9%).
+- **Question answered:** The S₃ tier structure generalizes to S₄, with a dramatically higher syzygy fraction. By analogy with S₃ (n_E = 52 = Tier 1 size), the N=4 Tier 1 prediction is n_std, pending N=4 SVD tier data.
+- **Script:** `s4_tier_analysis.py`
 
 ### 2.6 Harmonic Dimension 15 — Representation-Theoretic Derivation
 - **Status:** ✅ COMPLETE (2026-05-11) — identified as the **Jacobi algebra `sp(4, ℝ) ⋉ h₂`** (15-dim, Killing signature (6+, 4−, 5z), 5-dim Heisenberg radical with 1-d center). See `docs/harmonic_dim15.md` for the written derivation and `harmonic_lie_algebra_id.py` for the numerical identification from the exact rational structure constants at `results/algebra_structure/N3_d2_r2/`.
@@ -101,12 +98,9 @@
 - **Approach:** Compute the centralizer of the harmonic Hamiltonian analytically; or simply identify the Lie algebra generators symbolically from the checkpoints.
 
 ### 2.7 H₃⁺ and Ozone Molecular Systems
-- **Status:** NOT STARTED (mentioned in project_status.md as high-impact)
-- **Task:** Configure and run:
-  - H₃⁺: three protons with effective 1/r interaction, equal mass ≈ 1836
-  - O₃ (ozone): three oxygen nuclei, mass ≈ 29,164 (16 × 1836)
-- **Question answered:** Does the universality extend to molecular triatomic systems?
-- **Note:** These are really just reconfirmations of mass invariance at specific physical masses, but publishing the result for named molecules has outreach value.
+- **Status:** ✅ COMPLETE (April 15, 2026) — both H₃⁺ (m ≈ 1836) and O₃ (m ≈ 29,164) give [3, 6, 17, 116] (`nbody/named_molecular_systems.py`).
+- **Question answered:** YES — universality extends to named molecular triatomic systems; mass invariance confirmed at these specific physical masses.
+- **Note:** These are reconfirmations of mass invariance at specific physical masses; publishing the result for named molecules has outreach value.
 
 ---
 
@@ -140,7 +134,7 @@
 - **Impact:** MEDIUM — mostly for completeness and paper credibility.
 
 ### 3.4 Complete Interrupted Atlases
-- **Status:** ✅ COMPLETED — Sun-Earth-Moon and Sun-Jupiter-Asteroid atlases finished April 7–8, 2026 on AWS spot instances. Results synced to `aws_results/`. Both show rank 91–100 at float64, consistent with conditioning expectations at extreme mass ratios (10²⁴–10³⁰ coefficient dynamic range).
+- **Status:** ✅ COMPLETED — Sun-Earth-Moon and Sun-Jupiter-Asteroid atlases finished April 7–8, 2026 on AWS spot instances. Results synced to `aws_results/`. Sun-Earth-Moon shows ranks 102–108 at float64 (dynamic range 10²⁰–10²⁶); Sun-Jupiter-Asteroid shows ranks 91–100 (dynamic range 10²⁵–10³²) — both consistent with SVD conditioning expectations at extreme mass ratios.
 - **Impact:** LOW-MEDIUM — extreme mass ratios, confirms universality at edge cases (pending symbolic rank verification).
 
 ### 3.5 Lagrange Hires 1000×1000 Scan
@@ -155,8 +149,7 @@
 ## Phase 4: Verification & Theory
 
 ### 4.1 SageMath Independent Verification
-- **Status:** NOT STARTED (listed as "ESSENTIAL" in adversarial_analysis.md)
-- **Task:** Install SageMath (WSL or standalone). Independently compute [3, 6, 17, 116] for N=3, 1/r using SageMath's Poisson bracket facilities. Compare symbol-by-symbol against SymPy output.
+- **Status:** ✅ COMPLETE (2026-05-11) — SageMath oracle at `sage/poisson_n3_d2_engine.sage` confirms [3, 6, 17, 116] for both 1/r and 1/r² (~60s each) and [3, 6, 13, 15, 15] for the harmonic closure (2s), using `Matrix(GF(2³¹−1), ..., sparse=True).rank()` (FLINT-backed mod-p rank). Combined with the SymPy leg and the Wolfram `MatrixRank` over Rationals leg, the headline numbers now stand on three independent CAS implementations: two exact rational legs plus a mod-p leg.
 - **Impact:** HIGH — addresses the "single CAS" criticism head-on.
 
 ### 4.2 Growth Rate Formula / Generating Function
@@ -178,15 +171,15 @@
 - **Question answered:** Is there a pattern, or is the sequence "wild"?
 
 ### 4.3 Level-4 Bound Improvement
-- **Status:** Current best: d(4) ≥ 5,604 at 200K samples, gap NOT definitive
+- **Status:** Current best: d(4) ≥ 5,604 (200,000 float64 samples; boundary gap only ≈1.2×), NOT definitive
 - **Task:** Continue pushing sample count (300K? 500K?) or switch to mpmath high-precision rank computation to resolve the true d(4).
 - **Note:** The mpmath computation was at 4.4% (667/15,000 rows) when spot-reclaimed. Instance terminated. Checkpoint on S3. Needs relaunch on new instance.
 
 ### 4.4 Symbolic Rank Over Q (Exact Algebraic Dimension)
-- **Status:** ✅ COMPLETED — Rank [3, 6, 17, 116] confirmed at 5 specific mass points (exact over Q) and with symbolic masses (exact over Q(m1,m2,m3)). Mass invariance is now an algebraic theorem for all positive masses. See `symbolic_rank.py`, results in `results/symbolic_rank/`.
+- **Status:** ✅ COMPLETED — Rank [3, 6, 17, 116] confirmed at 5 specific mass points (exact over Q) and with symbolic masses (exact over Q(m1,m2,m3)). Mass invariance is now proved symbolically for generic masses over ℚ(m₁,m₂,m₃) (rank 116 outside a possible proper subvariety, none found). See `symbolic_rank.py`, results in `results/symbolic_rank/`.
 - **Motivation:** All rank determinations in this project use numerical SVD on float64 evaluations. While the SVD gap is large (6–13 orders of magnitude) at generic configurations, at extreme mass ratios the float64 rank drops to 91–100 due to coefficient dynamic range exceeding float64 precision. An attempted term-group factoring approach (splitting generators by magnitude order and evaluating groups independently) produced inflated ranks (up to 200) that were artifacts of spurious column independence, not genuine algebraic structure. The mpmath "ground truth" approach also proved unreliable for this purpose. The only definitive answer comes from exact linear algebra over Q.
 - **Approach:** The 156 generators are built from scratch via `build_hamiltonians()` and `poisson_bracket()` — polynomials in 15 variables `(x1,y1,...,u12,u13,u23)` with rational coefficients (parameterized by masses). The monomial-coefficient matrix (156 × 128,925) is extracted via `sympy.Poly` and its rank computed by exact Gaussian elimination (`DomainMatrix.rank()`) over Q or Q(m1,m2,m3), immune to numerical noise.
-- **Result:** Rank [3, 6, 17, 116] confirmed at 5 specific rational mass points (over Q, locally) and with symbolic masses (over Q(m1,m2,m3), AWS r6i.8xlarge, 3.2 hours). Mass invariance is an algebraic theorem for all positive masses.
+- **Result:** Rank [3, 6, 17, 116] confirmed at 5 specific rational mass points (over Q, locally) and with symbolic masses (over Q(m1,m2,m3), AWS r6i.8xlarge, 3.2 hours). Mass invariance is proved symbolically for generic masses over ℚ(m₁,m₂,m₃).
 - **Impact:** VERY HIGH — converted the central conjecture from "supported by numerical evidence" to "proven by exact computation."
 - **Reference:** See supplemental memo `poisson_numerical_robustness_memo.md` for discussion of the numerical robustness landscape. Note: the mpmath claims in that memo should be treated with caution; the symbolic approach supersedes them.
 
@@ -225,16 +218,16 @@ Mark items with status as work proceeds:
 | 2.1 | N=5 Level 1–2 (+ N=6) | ✅ |
 | 2.2 | N=4 with 1/r², 1/r³, log(r) | ✅ |
 | 2.3 | r⁴ and 1/r⁴ potentials | ✅ |
-| 2.4 | Charge sweep phase 3 | ⬜ |
-| 2.5 | S₄ tier decomposition | ⬜ |
+| 2.4 | Charge sweep phase 3 | ✅ |
+| 2.5 | S₄ tier decomposition | ✅ |
 | 2.6 | Harmonic dim=15 derivation | ✅ |
-| 2.7 | H₃⁺ and ozone | ⬜ |
+| 2.7 | H₃⁺ and ozone | ✅ |
 | 3.1 | Parametric exponent sweep | 🔄 (π, e, φ done; full sweep pending cost optimization) |
 | 3.2 | Yukawa debugging + run | ❌ |
 | 3.3 | Re-run 7 retracted gravitational configs | ⬜ |
 | 3.4 | Complete interrupted atlases | ✅ |
 | 3.5 | Lagrange hires 1000×1000 | ⬜ |
-| 4.1 | SageMath verification | ⬜ |
+| 4.1 | SageMath verification | ✅ |
 | 4.2 | Growth rate formula | ⬜ |
 | 4.3 | Level-4 bound improvement | ⬜ |
 | 4.4 | Symbolic rank over Q | ✅ |
