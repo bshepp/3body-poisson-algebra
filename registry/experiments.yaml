@@ -201,8 +201,8 @@
   description: Level-4 comparison chart (gap_workplan Phase 1 Item 1.5). Bar chart
     + convergence curves across 4 config types.
   outputs:
-  - level4_comparison_chart.png
-  - level4_convergence_curves.png
+  - legacy_figures_archive/spectral_depth/level4_comparison_chart.png
+  - legacy_figures_archive/spectral_depth/level4_convergence_curves.png
   tags:
   - analysis
   - level4
@@ -898,7 +898,7 @@
   description: 'SV #116 analytical prediction (gap_workplan Phase 1 Item 1.6). Achieved
     R^2 = 0.630 correlation between analytical prediction and observed SV #116.'
   outputs:
-  - spectral_depth/sv116_predicted_vs_observed.png
+  - legacy_figures_archive/spectral_depth/sv116_predicted_vs_observed.png
   tags:
   - analysis
   - sv116
@@ -987,8 +987,8 @@
   description: Clebsch-Gordan atlas comparison (gap_workplan Phase 1 Item 1.4). Lagrange=33
     doublets (E-frac=0.57), Euler=14, Iso-90=24.
   outputs:
-  - spectral_depth/cg_predicted_vs_observed.png
-  - spectral_depth/cg_residual_map.png
+  - legacy_figures_archive/spectral_depth/cg_predicted_vs_observed.png
+  - legacy_figures_archive/spectral_depth/cg_residual_map.png
   tags:
   - atlas
   - cg
@@ -1790,7 +1790,7 @@
   description: 'Kirillov coadjoint orbit spectral analysis - Bohigas-Giannoni-Schmit
     conjecture in algebraic structure. 1/r tensor: GUE-GSE; r^2: Poisson.'
   outputs:
-  - primes/figures/
+  - legacy_figures_archive/primes/figures/
   tags:
   - spectral
   - BGS
@@ -2030,7 +2030,7 @@
   path: nbody/run_schwarzschild.py
   category: dimseq
   scope: nbody/N3
-  status: wip
+  status: complete
   description: 'Schwarzschild effective-potential dimension-sequence sweep.
 
     V_eff = -M*u + (L^2/2)*u^2 - M*L^2*u^3 expressed as a 3-term composite in u=1/r.
@@ -2050,23 +2050,27 @@
   - results/schwarzschild/dimseq_l3_key.json
   - results/schwarzschild/run.log
   latest_result:
-    date: '2026-04-19'
+    date: '2026-04-21'
     summary: 'L2 full grid (30 (M,L) points) DONE in 2m11s: all give [3, 6, 17] -
-      L2
 
-      universality confirmed across the full Schwarzschild parameter grid. L3 on
+      L2 universality confirmed across the full Schwarzschild parameter grid. L3
 
-      4 physically-meaningful points (M=1,L=1; M=1,L=2; M=1,L=4; M=2,L=1)
+      key run on 4 physically-meaningful points (M=1,L=1; M=1,L=2; M=1,L=4;
 
-      RUNNING overnight, ETA ~4-5 hours.
+      M=2,L=1) COMPLETE: M=1,L=1 / M=1,L=2 / M=2,L=1 all give [3, 6, 17, 116];
+
+      M=1,L=4 gives [3, 6, 17, 115] - a one-off departure at that grid point,
+
+      not yet followed up with a dedicated investigation (results/schwarzschild/dimseq_l3_key.json).
 
       '
     sequence:
     - 3
     - 6
     - 17
-  runtime: L2 full (30 pts) ~2 min; L3 key (4 pts) ~4-5 hours; L3 full (30 pts) ~30+
-    hours
+    - 116
+  runtime: L2 full (30 pts) ~2 min; L3 key (4 pts) ~7 min actual (was estimated 4-5
+    hours); L3 full (30 pts) not run
   cost_usd: 0
   run_command: "python nbody/run_schwarzschild.py --mode full --max-level 2 --samples\
     \ 200 \\\n    --out results/schwarzschild/dimseq_l2_full.json\npython nbody/run_schwarzschild.py\
@@ -2648,8 +2652,9 @@
   path: mathematica/poisson_n3_d2_l4_backup.wl
   category: validation
   scope: 3body
-  status: planned
-  description: 'L=4 1/r backup oracle. Held in reserve in case the HF Jobs cpu-xl
+  status: wip
+  description: 'L=4 1/r backup oracle. Script is written and held in reserve in case
+    the HF Jobs cpu-xl
 
     Phase D2 jobs (69e820f1cd8c002f31e0140b for 1/r and
 
@@ -2657,7 +2662,9 @@
 
     mathematica_oracle_n3_d2; expected wall-clock measured in hours on a
 
-    single workstation kernel.
+    single workstation kernel. Not yet run (HF Jobs path succeeded), so no
+
+    output artifact exists yet.
 
     '
   outputs:
@@ -2669,7 +2676,7 @@
   - validation
   - oracle
   - mathematica
-  - planned
+  - backup
 - id: sage_oracle_n3_d2_engine
   path: sage/poisson_n3_d2_engine.sage
   category: validation
@@ -3043,3 +3050,225 @@
   - syzygy
   - collision
   - complete
+- id: bench_flint_lane_c_aws_driver
+  path: bench_flint/lane_c_aws_driver.py
+  category: infra
+  scope: nbody/N3
+  status: complete
+  description: 'Thin driver launched by infra/launch_lane_c.py on the AWS Lane C
+    instance: calls NBodyAlgebra.compute_growth_modp for N=3 d=2 1/r L=4,
+
+    adding checkpointing, resume, SIGTERM/SIGINT handling, and periodic S3
+
+    sync of checkpoints/results. Ran to 26/11,937 L4 brackets before the
+
+    2026-07-11 post-mortem found per-bracket cost made full L4 infeasible
+
+    (~396 day ETA); the driver itself worked as designed.
+
+    '
+  outputs: []
+  run_command: python3 -u bench_flint/lane_c_aws_driver.py --max-level 4 --n-samples
+    120
+  related_docs:
+  - docs/session_log.md
+  tags:
+  - infra
+  - aws
+  - lane_c
+  - modp
+- id: bench_flint_lane_c_rank_now
+  path: bench_flint/lane_c_rank_now.py
+  category: diagnostic
+  scope: nbody/N3
+  status: complete
+  description: Downloads the latest Lane C L=4 mod-p checkpoint from S3 and reports
+    the rank of the partial GF(p) matrix so far (a lower bound on dim(L_4), capped
+    at n_samples). Used for the 2026-07-11 Lane C post-mortem (26/11,937 brackets,
+    rank not informative yet).
+  outputs: []
+  run_command: python bench_flint/lane_c_rank_now.py
+  related_docs:
+  - docs/session_log.md
+  tags:
+  - diagnostic
+  - aws
+  - lane_c
+  - modp
+- id: bench_flint_probe
+  path: bench_flint/probe.py
+  category: diagnostic
+  scope: tooling
+  status: complete
+  description: Early diagnostic probing what cancel() does on a Schwarzschild-like
+    L3 bracket intermediate (flint vs Python ground types). First evidence for the
+    together()-vs-cancel() speedup later confirmed by the bench_flint/run_simplify_phases.py
+    phases and shipped in simplify_generator_patch.
+  outputs: []
+  run_command: python bench_flint/probe.py
+  related_docs:
+  - bench_flint/validation_summary.md
+  tags:
+  - diagnostic
+  - simplify
+  - performance
+- id: bench_flint_probe_l4
+  path: bench_flint/probe_l4.py
+  category: diagnostic
+  scope: nbody/N3
+  status: complete
+  description: Measures real per-bracket cost of poisson_bracket()/simplify_generator()
+    under the patched together() engine, bucketed by (level_i, level_j) pair type,
+    to extrapolate full N=3 d=2 1/r L=4 generation cost honestly rather than by
+    hand-wavy guesses. Feeds into the L4-feasibility question later resolved (negatively,
+    for the symbolic path) by the Lane C post-mortem.
+  outputs:
+  - bench_flint/probe_l4_results.json
+  run_command: python bench_flint/probe_l4.py
+  related_docs:
+  - docs/session_log.md
+  tags:
+  - diagnostic
+  - level4
+  - performance
+- id: bench_flint_probe_l4_30min
+  path: bench_flint/probe_l4_30min.py
+  category: diagnostic
+  scope: nbody/N3
+  status: complete
+  description: 30-minute timed L=4 bracket-generation probe walking the full N=3
+    d=2 1/r pair list (not bucketed sampling), with incremental checkpointing so
+    a kill loses at most one batch. Produced the real (non-extrapolated) completion
+    rate later confirmed by the Lane C AWS run.
+  outputs:
+  - bench_flint/probe_l4_30min_results.json
+  run_command: python bench_flint/probe_l4_30min.py
+  related_docs:
+  - docs/session_log.md
+  tags:
+  - diagnostic
+  - level4
+  - performance
+- id: bench_flint_run_one_strategy
+  path: bench_flint/run_one_strategy.py
+  category: infra
+  scope: tooling
+  status: complete
+  description: Single-strategy compute_growth worker (cancel | together | identity),
+    launched as its own subprocess by bench_flint/run_simplify_phases.py under bench_flint/watchdog.py
+    so hard timeouts and RAM caps apply. Not run standalone in normal use.
+  outputs: []
+  run_command: python bench_flint/run_one_strategy.py STRATEGY CASE OUT_PATH
+  related_docs:
+  - bench_flint/simplify_phases_summary.md
+  tags:
+  - infra
+  - simplify
+  - worker
+- id: bench_flint_simplify_experiment
+  path: bench_flint/simplify_experiment.py
+  category: diagnostic
+  scope: tooling
+  status: superseded
+  description: v1 smarter-simplify hypothesis test (microbench + one-hop + end-to-end
+    stages comparing cancel/together/factor/identity). Stage 2 hung on the pathological
+    identity-form case; superseded by bench_flint/simplify_experiment2.py which
+    skips that case. Ad-hoc iteration script, gitignored (not tracked in git).
+  outputs:
+  - bench_flint/simplify_experiment_results.txt
+  run_command: python bench_flint/simplify_experiment.py
+  related_docs:
+  - bench_flint/simplify_phases_summary.md
+  tags:
+  - diagnostic
+  - simplify
+  - performance
+  - ad-hoc
+  superseded_by: bench_flint_simplify_experiment2
+- id: bench_flint_simplify_experiment2
+  path: bench_flint/simplify_experiment2.py
+  category: diagnostic
+  scope: tooling
+  status: complete
+  description: v2 smarter-simplify hypothesis test, skipping the v1 stage-2 pathological
+    case. Confirms together()-form output does not explode downstream cost when
+    fed into the next bracket, and that end-to-end dimension sequences match between
+    together and cancel. Result fed directly into the simplify_generator_patch decision.
+    Ad-hoc iteration script, gitignored (not tracked in git).
+  outputs: []
+  run_command: python bench_flint/simplify_experiment2.py
+  related_docs:
+  - bench_flint/simplify_phases_summary.md
+  tags:
+  - diagnostic
+  - simplify
+  - performance
+  - ad-hoc
+- id: bench_flint_stage7_dataset_crosscheck
+  path: bench_flint/stage7_dataset_crosscheck.py
+  category: validation
+  scope: tooling
+  status: complete
+  description: Stage 7 of the simplify-patch validation suite. Cross-checks every
+    per-case JSON in bench_flint/_validate_results/ against the pinned dataset (dataset/output/dimension_sequences.parquet)
+    by (N, d, potential, charges, max_level); cases with no matching dataset row
+    are flagged informational, not failures.
+  outputs:
+  - bench_flint/stage7_crosscheck.json
+  run_command: python bench_flint/stage7_dataset_crosscheck.py
+  related_docs:
+  - bench_flint/validation_summary.md
+  tags:
+  - validation
+  - simplify
+  - dataset
+- id: bench_flint_validate_simplify_worker
+  path: bench_flint/validate_simplify_worker.py
+  category: infra
+  scope: tooling
+  status: complete
+  description: Single-case validation worker for the simplify-patch suite. Takes
+    a JSON case spec (potential, masses, charges, max_level, expected sequence),
+    builds an NBodyAlgebra, runs compute_growth, and writes a JSON result. Launched
+    as a subprocess by bench_flint/validate_simplify_patch.py under bench_flint/watchdog.py.
+  outputs: []
+  run_command: python bench_flint/validate_simplify_worker.py CASE_JSON OUT_JSON
+  related_docs:
+  - bench_flint/validation_summary.md
+  tags:
+  - infra
+  - simplify
+  - worker
+  - validation
+- id: bench_flint_watchdog
+  path: bench_flint/watchdog.py
+  category: infra
+  scope: tooling
+  status: complete
+  description: 'Subprocess watchdog utility: hard wall-clock timeout + resident-set-size
+    cap (own process plus descendants), 5s polling. Public API run_with_limits(args,
+    timeout_s, ram_cap_gb, ...). Used by the simplify-patch validation and phase
+    scripts to babysit workers that could otherwise run away with the machine.'
+  outputs: []
+  tags:
+  - infra
+  - tooling
+  - simplify
+- id: mathematica_engine_n3_d2
+  path: mathematica/poisson_n3_d2_engine.wl
+  category: validation
+  scope: 3body
+  status: complete
+  description: Shared Poisson-bracket / Lie-closure engine used by both mathematica/poisson_n3_d2.wl
+    and mathematica/poisson_n3_d2_l4_backup.wl - PB[f,g] chain-rule bracket, H0[pot]
+    pairwise Hamiltonians, exprListRank via SparseArray + MatrixRank over Rationals,
+    buildAlgebra frontier-based Lie closure. Not a standalone entry point.
+  outputs: []
+  related_docs:
+  - mathematica/README.md
+  tags:
+  - validation
+  - oracle
+  - mathematica
+  - engine
+  - shared

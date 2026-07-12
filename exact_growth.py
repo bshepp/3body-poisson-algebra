@@ -559,6 +559,7 @@ def lambdify_generators(exprs):
             def _subs_eval(*args):
                 n_pts = len(args[0]) if hasattr(args[0], '__len__') else 1
                 result = np.empty(n_pts)
+                n_zeroed = 0
                 for i in range(n_pts):
                     pt = {v: (float(a[i]) if hasattr(a, '__len__') else float(a))
                           for v, a in zip(vs, args)}
@@ -566,6 +567,10 @@ def lambdify_generators(exprs):
                         result[i] = complex(ex.xreplace(pt)).real
                     except Exception:
                         result[i] = 0.0
+                        n_zeroed += 1
+                if n_zeroed > 0:
+                    print(f"      WARNING: xreplace fallback silently zeroed "
+                          f"{n_zeroed}/{n_pts} entries", flush=True)
                 return result
             return _subs_eval
 
@@ -983,6 +988,8 @@ def compute_exact_growth(max_level=3, n_samples=500, seed=42,
             )) if rank_full > 0 else 0.0,
             "n_generators": int(eval_matrix.shape[1]),
             "n_samples": int(eval_matrix.shape[0]),
+            "rank_method": "float64_svd",
+            "provisional": True,
         }
         with open(os.path.join(svd_dir, "spectrum_stats.json"), "w") as _f:
             _json.dump(spectrum_stats, _f, indent=2)

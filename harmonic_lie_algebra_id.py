@@ -409,11 +409,16 @@ def main():
     print(f"  Antisymmetry: {'OK' if ok else 'FAIL at %s' % (where,)}")
     assert ok, "Structure constants not antisymmetric"
 
-    if not args.no_jacobi:
+    jacobi_checked = not args.no_jacobi
+    jacobi_ok_value = None
+    if jacobi_checked:
         print("  Checking Jacobi identity (this is O(n^4)) ...")
         ok, where = check_jacobi(sc)
         print(f"  Jacobi: {'OK' if ok else 'FAIL at %s' % (where,)}")
         assert ok, "Jacobi identity violated"
+        jacobi_ok_value = ok
+    else:
+        print("  Jacobi identity check SKIPPED (--no-jacobi)")
 
     print("\nComputing Killing form (exact over Q) ...")
     K = killing_form_exact(sc)
@@ -536,7 +541,8 @@ def main():
         "source_sc": str(SC_PATH.relative_to(REPO)),
         "dimension": n,
         "antisymmetry_ok": True,
-        "jacobi_ok": (not args.no_jacobi),
+        "jacobi_ok": jacobi_ok_value,
+        "jacobi_checked": jacobi_checked,
         "killing_signature": {"positive": pos, "negative": neg, "zero": zer},
         "killing_eigenvalues_exact": [
             {"eigenvalue": ev_str, "multiplicity": mult,

@@ -6703,3 +6703,51 @@ discussion replies posted.
 - OEIS working notes (`OEIS/candidates/A395423*.md`) and saved
   draft-page snapshots kept local and gitignored while the review is
   live (`49e200a`); dangling links in `OEIS/README.md` fixed (`8fd4722`).
+
+## 2026-07-11 (later): audit remediation sweep
+
+Consolidated close-out of the 2026-06-07 / 2026-07-11 audits (eight-task
+remediation plan; this entry covers the whole sweep).
+
+- Yukawa 9-config mu-sweep + named-system dataset, overwritten by a
+  partial rerun, restored (`16a4dc1`) and rebuilt; README survey rows
+  move to Complete [3, 6, 17, 116] (C14).
+- June-audit prose fixes, previously landed only on the OEIS entry, swept
+  repo-wide across README/docs/papers/website/explainer (`7274d80`
+  `66e19b9` `b9db6ee` `b5b4386` `c1ab995` `cdc1767` `60543e1` `73b68ba`
+  `de3109a` `e6205e4` `606779a` `7c22193`): C1 mass-invariance scoped to
+  generic Q(m1,m2,m3); C2 exceptional set is exactly {r1,r2,r3}; C3 SVD
+  gap >10^9 always (>10^10 only L0-L2); C4 harmonic id. is
+  invariant-matching not verified isomorphism; C5 three CAS legs, Sage is
+  mod-p not QQ; C6 d(4)>=5,604, drop "definitive"; C7 N=4 L3=1260 is
+  1/r-only; C8 [3,6,13,15,15], L2=13.
+- Li+/H2+ (C9): early 500-sample runs' -> 111/115 were undersampling
+  artifacts, not real charge-magnitude sensitivity; the project's own
+  2026-03-24 revalidation (`results/charge_sensitivity/charge_sensitivity_completion.json`)
+  reran the same charges/masses at 1000-5000 samples and got
+  [3, 6, 17, 116] every time. Survey tables now read "Revalidated".
+- Killing-form `.T` bug (C12): `nbody/symbolic_rank_nbody.py:896` computed
+  `trace(ad_i @ ad_j.T)` (ad-Gram/Frobenius) where the docstring specifies
+  the true Killing form `trace(ad_i @ ad_j)`. Fixed (comment notes the
+  stored April 2026 `killing_form.npy` artifacts are the ad-Gram variant,
+  not regenerated). Acceptance check: harmonic dim-15 (`N3_d2_r2`) now
+  gives (6+, 4-, 5 zero), matching `harmonic_n3_d2_identification.json`
+  digit-for-digit; the nilpotent dim-17 universal L2 algebra (`N3_d2_1r`)
+  now correctly gives (0, 0, 17), not the published ad-Gram (6+, 0-, 11
+  zero). `harmonic_lie_algebra_id.py`'s own Killing computation was
+  already correct and untouched.
+- Engine polish: last-resort xreplace/subs evaluators in `exact_growth.py`
+  and `nbody/exact_growth_nbody.py` count and warn on silently-zeroed
+  entries; `spectrum_stats.json` writers tag `rank_method: float64_svd` +
+  `provisional: true`; `harmonic_lie_algebra_id.py` writes `jacobi_ok:
+  null` + `jacobi_checked: false` (was `false`) when `--no-jacobi` skips
+  the check.
+- Registry + gitignore hygiene: untracked 60 regenerable
+  logs/heartbeats/aws_completion files (new patterns: `results/*.log`,
+  `results/**/run.log`, `bench_flint/identity_check.log`); dropped the
+  dead `docs/research_roadmap.md` ignore line; extended the registry to
+  scan `bench_flint/`, `sage/`, `mathematica/` and registered the 12
+  scripts that surfaced; fixed the stale `nbody_run_schwarzschild` entry
+  (wip -> complete; L3 key grid completed 2026-04-21, one of four points
+  (M=1,L=4) gives [3,6,17,115] rather than 116, not yet followed up);
+  repointed 4 entries' output figures at `legacy_figures_archive/`.

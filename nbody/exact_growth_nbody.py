@@ -492,6 +492,8 @@ class NBodyAlgebra:
                     return _np.array(vals)
                 except Exception:
                     n = len(args[0]) if hasattr(args[0], '__len__') else 1
+                    print(f"      [{label}] subs() evaluator failed, "
+                          f"silently zeroing all {n} entries", flush=True)
                     return _np.zeros(n)
 
             import numpy as _np
@@ -571,6 +573,7 @@ class NBodyAlgebra:
             for idx, (f, is_subs) in enumerate(zip(funcs, use_subs)):
                 if is_subs:
                     result = np.zeros(n_pts)
+                    n_zeroed = 0
                     for i in range(n_pts):
                         subs_dict = {var_syms[j]: float(args[j][i])
                                      for j in range(len(var_syms))}
@@ -578,6 +581,11 @@ class NBodyAlgebra:
                             result[i] = float(f.xreplace(subs_dict))
                         except Exception:
                             result[i] = 0.0
+                            n_zeroed += 1
+                    if n_zeroed > 0:
+                        print(f"      WARNING: subs() evaluator [{idx}] "
+                              f"silently zeroed {n_zeroed}/{n_pts} entries",
+                              flush=True)
                     cols.append(result)
                 else:
                     val = f(*args)
@@ -1077,6 +1085,8 @@ class NBodyAlgebra:
                     if rank_full > 0 else 0.0,
                 "n_generators": int(eval_matrix.shape[1]),
                 "n_samples": int(eval_matrix.shape[0]),
+                "rank_method": "float64_svd",
+                "provisional": True,
             }
             with open(os.path.join(svd_dir, "spectrum_stats.json"), "w") as _f:
                 _json.dump(spectrum_stats, _f, indent=2)

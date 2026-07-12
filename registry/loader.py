@@ -15,8 +15,9 @@ CLI::
     python -m registry.loader --markdown     # print markdown table
 
 Tracked roots: repository top-level + nbody/, primes/, neural/, 3d/, dataset/,
-website/build_*.py, infra/launch_*.py. Excluded paths are listed in
-``EXCLUDED_DIRS`` and ``EXCLUDED_FILES`` below.
+bench_flint/, website/build_*.py, infra/launch_*.py, sage/*.sage,
+mathematica/*.wl. Excluded paths are listed in ``EXCLUDED_DIRS`` and
+``EXCLUDED_FILES`` below.
 """
 
 from __future__ import annotations
@@ -39,6 +40,7 @@ TRACKED_ROOTS: tuple[str, ...] = (
     "neural",
     "3d",
     "dataset",
+    "bench_flint",
 )
 
 TRACKED_GLOBS: tuple[tuple[str, str], ...] = (
@@ -48,6 +50,8 @@ TRACKED_GLOBS: tuple[tuple[str, str], ...] = (
     ("website", "render_*.py"),
     ("infra", "launch_*.py"),
     ("scripts", "*.py"),
+    ("sage", "*.sage"),
+    ("mathematica", "*.wl"),
 )
 
 EXCLUDED_DIRS: frozenset[str] = frozenset({
