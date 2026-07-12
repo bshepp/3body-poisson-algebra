@@ -73,6 +73,11 @@ EXCLUDED_DIRS: frozenset[str] = frozenset({
 EXCLUDED_FILES: frozenset[str] = frozenset({
     "setup.py",
     "conftest.py",
+    # Deliberately gitignored throwaway iteration scripts (.gitignore names
+    # them explicitly); present on the dev machine but absent from fresh
+    # checkouts, so they must not require registry entries.
+    "simplify_experiment.py",
+    "simplify_experiment2.py",
 })
 
 

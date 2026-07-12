@@ -1,8 +1,8 @@
 # Experiment Registry
 
-*Auto-generated from `registry/experiments.yaml` — 180 entries.*
+*Auto-generated from `registry/experiments.yaml` — 190 entries.*
 
-**Status:** wip: 3 · complete: 114 · planned: 7 · broken: 1 · needs_review: 41 · superseded: 9 · archived: 5
+**Status:** wip: 3 · complete: 125 · planned: 6 · broken: 1 · needs_review: 41 · superseded: 9 · archived: 5
 
 ## analysis
 
@@ -100,6 +100,10 @@
 | ID | Status | Path | Description |
 |----|--------|------|-------------|
 | `bench_flint` | complete | `bench_flint/bench.py` | python-flint vs default ground-types benchmark on the actual project workload. Three benches: (1) micro cancel() on a... |
+| `bench_flint_lane_c_rank_now` | complete | `bench_flint/lane_c_rank_now.py` | Downloads the latest Lane C L=4 mod-p checkpoint from S3 and reports the rank of the partial GF(p) matrix so far (a l... |
+| `bench_flint_probe` | complete | `bench_flint/probe.py` | Early diagnostic probing what cancel() does on a Schwarzschild-like L3 bracket intermediate (flint vs Python ground t... |
+| `bench_flint_probe_l4` | complete | `bench_flint/probe_l4.py` | Measures real per-bracket cost of poisson_bracket()/simplify_generator() under the patched together() engine, buckete... |
+| `bench_flint_probe_l4_30min` | complete | `bench_flint/probe_l4_30min.py` | 30-minute timed L=4 bracket-generation probe walking the full N=3 d=2 1/r pair list (not bucketed sampling), with inc... |
 | `bench_simplify_identity` | complete | `bench_flint/test_simplify_identity.py` | Symbolic-identity spot check for the simplify_generator patch. Generates raw L=0..L=2 brackets via NBodyAlgebra.poiss... |
 | `bench_simplify_phases` | complete | `bench_flint/run_simplify_phases.py` | Three-phase smarter-simplify experiment. Tests whether `together` can replace `cancel` in NBodyAlgebra.simplify_gener... |
 | `bench_simplify_poly_compat` | complete | `bench_flint/test_simplify_poly_compat.py` | Phase E0 gate. Verifies that for raw L=1 and L=2 Poisson brackets in NBodySymbolicRank(N=3, d=2, potential='1/r'),   ... |
@@ -131,13 +135,13 @@
 | `nbody_run_n4_potential_universality` | complete | `nbody/run_n4_potential_universality.py` | N=4 potential universality: 1/r, 1/r^2, 1/r^3, log(r) all give [6, 14, 62]. |
 | `nbody_run_n_scaling_aws` | complete | `nbody/run_n_scaling_aws.py` | AWS launcher for the N-body rank scaling sweep. Confirmed N=3..8 L2; N=4 L3 = [6,14,62,1260]. |
 | `nbody_run_n_scaling_probe` | needs_review | `nbody/run_n_scaling_probe.py` | N-body scaling probe: how high can N go at d=1 for levels 0, 1, 2? |
-| `nbody_run_schwarzschild` | wip | `nbody/run_schwarzschild.py` | Schwarzschild effective-potential dimension-sequence sweep. V_eff = -M*u + (L^2/2)*u^2 - M*L^2*u^3 expressed as a 3-t... |
+| `nbody_run_schwarzschild` | complete | `nbody/run_schwarzschild.py` | Schwarzschild effective-potential dimension-sequence sweep. V_eff = -M*u + (L^2/2)*u^2 - M*L^2*u^3 expressed as a 3-t... |
 | `nbody_sweep_nbody_ranks` | complete | `nbody/sweep_nbody_ranks.py` | Local N-body rank sweep harness. |
 | `nbody_symbolic_gram_sweep` | needs_review | `nbody/symbolic_gram_sweep.py` | Symbolic Gram Determinant and Generator Norms vs Configuration ======================================================... |
 | `nbody_symbolic_rank_nbody` | complete | `nbody/symbolic_rank_nbody.py` | Exact symbolic rank over Q (or Q(m1,m2,m3)) for arbitrary N, d, potential. Supersedes float64 SVD for definitive dime... |
 | `planned_replay_schwarzschild_l3` | complete | `nbody/run_schwarzschild.py` | Re-ran the Schwarzschild L3 sweep that died yesterday under the cancel engine. With the patched together engine the 4... |
 | `primes_run_gue_logas` | complete | `primes/run_gue_logas.py` | Dyson log-gas computation across 4 configs (pure log, GUE composite, Penning trap, harmonic-only). All singular confi... |
-| `symbolic_rank` | complete | `symbolic_rank.py` | Symbolic rank over Q(m1,m2,m3) for N=3 - the mass-invariance proof. Establishes [3, 6, 17, 116] as an algebraic theor... |
+| `symbolic_rank` | complete | `symbolic_rank.py` | Symbolic rank over Q(m1,m2,m3) for N=3 - the mass-invariance proof. Establishes [3, 6, 17, 116] for generic masses (r... |
 | `yukawa_dimseq` | complete | `yukawa_dimseq.py` | Yukawa potential survey via Taylor-composite K=3. Confirms [3,6,17,116] for mu in {0.1, 0.5, 0.7, 1.0, 2.0, 5.0} plus... |
 
 ## engine
@@ -161,6 +165,10 @@
 
 | ID | Status | Path | Description |
 |----|--------|------|-------------|
+| `bench_flint_lane_c_aws_driver` | complete | `bench_flint/lane_c_aws_driver.py` | Thin driver launched by infra/launch_lane_c.py on the AWS Lane C instance: calls NBodyAlgebra.compute_growth_modp for... |
+| `bench_flint_run_one_strategy` | complete | `bench_flint/run_one_strategy.py` | Single-strategy compute_growth worker (cancel | together | identity), launched as its own subprocess by bench_flint/r... |
+| `bench_flint_validate_simplify_worker` | complete | `bench_flint/validate_simplify_worker.py` | Single-case validation worker for the simplify-patch suite. Takes a JSON case spec (potential, masses, charges, max_l... |
+| `bench_flint_watchdog` | complete | `bench_flint/watchdog.py` | Subprocess watchdog utility: hard wall-clock timeout + resident-set-size cap (own process plus descendants), 5s polli... |
 | `infra_launch_1r2` | needs_review | `infra/launch_1r2.py` | Launch c6i.4xlarge for plain 1/r^2 atlas (100x100, equal masses/charges, 16 workers). |
 | `infra_launch_atlas_instances` | needs_review | `infra/launch_atlas_instances.py` | Launch AWS EC2 instances for full atlas scans. |
 | `infra_launch_gram_sweep` | needs_review | `infra/launch_gram_sweep.py` | Launch EC2 instance for symbolic Gram determinant sweep. |
@@ -223,7 +231,9 @@
 
 | ID | Status | Path | Description |
 |----|--------|------|-------------|
-| `mathematica_l4_backup` | planned | `mathematica/poisson_n3_d2_l4_backup.wl` | L=4 1/r backup oracle. Held in reserve in case the HF Jobs cpu-xl Phase D2 jobs (69e820f1cd8c002f31e0140b for 1/r and... |
+| `bench_flint_stage7_dataset_crosscheck` | complete | `bench_flint/stage7_dataset_crosscheck.py` | Stage 7 of the simplify-patch validation suite. Cross-checks every per-case JSON in bench_flint/_validate_results/ ag... |
+| `mathematica_engine_n3_d2` | complete | `mathematica/poisson_n3_d2_engine.wl` | Shared Poisson-bracket / Lie-closure engine used by both mathematica/poisson_n3_d2.wl and mathematica/poisson_n3_d2_l... |
+| `mathematica_l4_backup` | wip | `mathematica/poisson_n3_d2_l4_backup.wl` | L=4 1/r backup oracle. Script is written and held in reserve in case the HF Jobs cpu-xl Phase D2 jobs (69e820f1cd8c00... |
 | `mathematica_oracle_n3_d2` | complete | `mathematica/poisson_n3_d2.wl` | Phase F independent CAS oracle. Reproduces the cumulative-rank dimension sequence [3, 6, 17, 116] for N=3 d=2 at L=3 ... |
 | `mathematica_oracle_n3_d2_harmonic` | complete | `mathematica/poisson_n3_d2_harmonic.wl` | Phase F.2 harmonic CAS oracle. Reproduces [3, 6, 13, 15, 15] for the harmonic potential H_ij = T_i + T_j + r_ij^2 at ... |
 | `sage_oracle_n3_d2` | complete | `sage/poisson_n3_d2.sage` | Phase G.1 SageMath sanity runner. Reproduces the cumulative-rank dimension sequence [3, 6, 17, 116] for N=3 d=2 at L=... |
