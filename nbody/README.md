@@ -140,8 +140,8 @@ confirmed [3, 6, 17] at level 2 for all ratios.
 | H⁻ Ion | +1,−1,−1 | 1836:1:1 | [3, 6, 17, 116] |
 | Positronium Ps⁻ | +1,−1,−1 | 1:1:1 | [3, 6, 17, 116] |
 | Muonic Helium | +2,−1,−1 | 7294:1:207 | [3, 6, 17, 116] |
-| Li⁺ Ion | +3,−1,−1 | 12789:1:1 | [3, 6, 17, 111] |
-| H₂⁺ Ion | +1,+1,−1 | 1836:1836:1 | [3, 6, 17, 115] |
+| Li⁺ Ion | +3,−1,−1 | 12789:1:1 | [3, 6, 17, 116] (Revalidated) |
+| H₂⁺ Ion | +1,+1,−1 | 1836:1836:1 | [3, 6, 17, 116] (Revalidated) |
 | Penning Trap | +1,+1,+1 | 1:1:1 | [3, 6, 17, 116] |
 
 **New potential types:**
@@ -149,7 +149,11 @@ confirmed [3, 6, 17] at level 2 for all ratios.
 |--------|-----------|----------|
 | 2D Vortices | log(r) | [3, 6, 17, 116] |
 | Composite | 1/r + 1/r² | [3, 6, 17, 116] |
-| Dusty Plasma | Yukawa (e^{-μr}/r) | In progress |
+| Dusty Plasma | Yukawa (e^{-μr}/r) | [3, 6, 17, 116] |
+
+After Task 1, the 9-config Yukawa artifact is restored: the μ-sweep
+(6 values) plus 3 physical systems (tritium/He-3, dusty plasma, p-n-n)
+all give [3, 6, 17, 116] (Apr 15–16, 2026).
 
 **Engine extensions for the survey:**
 - Logarithmic potential V ~ log(r) for 2D vortex dynamics
@@ -240,11 +244,12 @@ exact rank computations:
   Proved symbolically for generic masses over Q(m1,m2,m3) — all mass
   triples outside a possible proper subvariety (none found; confirmed
   numerically at 25+ mass ratios from 10⁻³ to 10⁶).
-- **N=3 charge-coupled**: sequence [3, 6, 17, 116] for most charge
-  configs (He, H⁻, Ps⁻, muonic He, Penning trap)
-- **N=3 high-charge deviations**: sequences [3, 6, 17, 111] (Li⁺) and
-  [3, 6, 17, 115] (H₂⁺) — possible SVD conditioning artifacts at
-  level 3 (investigation pending)
+- **N=3 charge-coupled**: sequence [3, 6, 17, 116] for all charge
+  configs tested (He, H⁻, Ps⁻, muonic He, Penning trap, Li⁺, H₂⁺)
+- **N=3 charge revalidation**: early 500-sample runs reported Li⁺ → 111
+  and H₂⁺ → 115; revalidation at 1000–5000 samples (Mar 24, 2026)
+  restored [3, 6, 17, 116] in every case — undersampling artifacts, the
+  same failure class as the SymPy-1.10 [3, 5, 13, 69]
 - **N=4**: sequence [6, 14, 62, ...] — exact over Q, d-independent
 - **N=5**: sequence [10, 25, 145, ...] — exact over Q, d-independent
 - **N=6**: sequence [15, 39, 279, ...] — exact over Q, d-independent
