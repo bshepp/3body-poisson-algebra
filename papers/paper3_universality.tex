@@ -73,9 +73,15 @@ Conjecture}: the dimension sequence of the pairwise
 Poisson algebra depends only on~$N$ and the singularity
 class of the potential (singular vs.\ regular), and is
 independent of the spatial dimension, mass ratios,
-pole order, and the sign of the interaction.  For
-regular (polynomial) potentials, the algebra is
-finite-dimensional.  Evidence is presented at two values
+pole order, and the sign of the interaction.  Regularity
+alone does not imply finiteness: among integer-power
+polynomial potentials, only $r^1$, $r^2$, and $r^3$ are
+exceptional (closing at dimension~5 and~15 respectively,
+or departing non-nilpotently at dimension~109), while
+$r^4$ through $r^{10}$ reproduce the singular sequence
+$[3, 6, 17, 116]$; the harmonic ($r^2$) closure reflects
+an enhanced dynamical symmetry, not regularity \emph{per
+se}.  Evidence is presented at two values
 of~$N$ ($N{=}3$ and $N{=}4$), three spatial dimensions
 ($d{=}1,2,3$), three singular potentials ($1/r$,
 $1/r^2$, $1/r^3$), and three charge configurations.
@@ -196,8 +202,11 @@ $\sigma_k / \sigma_{k+1} > 10^4$ is required for a
 definitive rank determination.
 
 The engine is validated by reproducing the known $N{=}3$
-sequence $[3, 6, 17, 116]$ with gap ratios exceeding
-$10^{10}$ at every level.
+sequence $[3, 6, 17, 116]$ with SVD gaps exceeding
+$10^{9}$ at every level (above $10^{10}$ at levels 0--2;
+the level-3 gap tops out at $\approx 5 \times 10^9$).  The
+dimension values themselves are exact ranks over~$\Q$; the
+SVD is a cross-check, not the proof.
 
 
 % ====================================================================
@@ -336,7 +345,9 @@ $N$ & $d$ & Phase space & Sequence \\
 \bottomrule
 \end{tabular}
 \end{center}
-All gap ratios exceed $10^{10}$.
+All gap ratios exceed $10^{9}$, with ratios above $10^{10}$
+at levels 0--2 (the $N{=}3$ level-3 gap is bounded as in
+Section~\ref{sec:engine}).
 \end{theorem}
 
 This result was unexpected.  The original conjecture
@@ -417,13 +428,20 @@ needed), and all iterated brackets remain polynomial.
 The algebra closes because polynomial rings are finitely
 generated at each degree.
 
-The relevant structural dichotomy is therefore:
+The relevant structural distinction is therefore:
 \begin{itemize}[nosep]
   \item \textbf{Singular potentials} ($V \propto r^{-p}$,
     $p > 0$): infinite-dimensional algebra, identical
     dimension sequence regardless of~$p$.
-  \item \textbf{Regular potentials} ($V$ polynomial
-    in~$r$): finite-dimensional algebra.
+  \item \textbf{Regular (polynomial) potentials} ($V$
+    polynomial in~$r$): finiteness is the exception, not
+    the rule.  Only $r^1$, $r^2$, and $r^3$ are exceptional
+    (closing at dimension~5 and~15 respectively, or
+    departing non-nilpotently at dimension~109); $r^4$
+    through $r^{10}$ instead reproduce the singular
+    sequence $[3, 6, 17, 116]$.  The harmonic ($r^2$)
+    closure is attributable to an enhanced dynamical
+    symmetry, not to regularity \emph{per se}.
 \end{itemize}
 \end{remark}
 
@@ -520,8 +538,10 @@ coupling constants $c_{ij}$:
     depends only on~$N$, not on~$d$, the masses~$m_i$,
     the pole order~$p$, or the couplings~$c_{ij}$.
 \end{enumerate}
-For regular potentials ($V$ polynomial in~$r$), the
-algebra is finite-dimensional.
+For regular potentials ($V$ polynomial in~$r$), finiteness
+is not generic: it holds only for the exceptional exponents
+$r^1$, $r^2$, and $r^3$, not for regular potentials as a
+class.
 \end{conjecture}
 
 \subsection{Evidence summary}
@@ -621,7 +641,8 @@ The conjecture makes concrete, testable predictions:
 
   \item \textbf{$N{=}3$, level~4:}
     does $d_3(4)$ agree for $1/r$ and $1/r^2$?
-    The lower bound $d_3(4) \ge 4{,}501$~\cite{paper1}
+    The lower bound $d_3(4) \ge 5{,}604$ (200{,}000 samples,
+    not definitive)~\cite{paper1}
     was established for $1/r$ only.  An independent
     computation for $1/r^2$ at level~4 would test
     whether the sequences remain identical at deeper

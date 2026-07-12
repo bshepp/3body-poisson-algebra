@@ -480,14 +480,16 @@ CAS implementations.
 
 A third independent CAS reproduction of `[3, 6, 17, 116]` and the
 harmonic closure `[3, 6, 13, 15, 15]`, parallel to the Mathematica
-Phase F oracle.  Three different CAS systems, three different rank
-algorithms, identical numbers.
+Phase F oracle.  Three independent CAS implementations: two exact
+rational legs (SymPy, and Wolfram MatrixRank over Rationals) plus a
+mod-p leg (SageMath, FLINT-backed rank over GF(2³¹−1)), identical
+numbers.
 
 | Leg | CAS | Rank algorithm | Phase |
 |-----|-----|----------------|-------|
 | 1 | Python (SymPy ≥ 1.13.3) | `DomainMatrix.rank()` over QQ | E |
 | 2 | Wolfram Mathematica 14.3 | `MatrixRank` over `Rationals` on `SparseArray` | F |
-| 3 | SageMath | `Matrix(QQ, ..., sparse=True).rank()` (FLINT-backed) | **G.1** |
+| 3 | SageMath | `Matrix(GF(2^31-1), ..., sparse=True).rank()` (FLINT-backed, mod-p default) | **G.1** |
 
 The Sage engine lives in [`../sage/`](../sage/):
 

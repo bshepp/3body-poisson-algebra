@@ -9,14 +9,16 @@ codebase:
 > potentials.
 
 This directory mirrors the structure of [`../mathematica/`](../mathematica/)
-in SageMath. Three independent implementations now produce the same
-numbers:
+in SageMath. Three independent CAS implementations now produce the same
+numbers: two exact rational legs (SymPy, and Wolfram MatrixRank over
+Rationals) plus a mod-p leg (SageMath, FLINT-backed rank over
+GF(2³¹−1)):
 
 | Leg | CAS | Rank algorithm | Phase in [`validation_summary.md`](../bench_flint/validation_summary.md) |
 |-----|-----|---------------|-----|
 | 1 | Python (SymPy ≥ 1.13.3) | `DomainMatrix.rank()` over QQ | E |
 | 2 | Wolfram Mathematica 14.3 | `MatrixRank` over `Rationals` on `SparseArray` | F |
-| 3 | SageMath | `Matrix(QQ, ..., sparse=True).rank()` (FLINT-backed) | G.1 |
+| 3 | SageMath | `Matrix(GF(2^31-1), ..., sparse=True).rank()` (FLINT-backed, mod-p default; exact QQ available via `mod_prime=None`) | G.1 |
 
 The Lane C streaming mod-p L=4 consumer is Phase G.2.
 
@@ -24,7 +26,7 @@ The Lane C streaming mod-p L=4 consumer is Phase G.2.
 
 | File | Purpose |
 |------|---------|
-| [`poisson_n3_d2_engine.sage`](poisson_n3_d2_engine.sage) | Shared engine — Poisson bracket with chain rule on `u_ij = 1/r_ij`, Lie closure with frontier-based dedupe, exact rank via sparse `Matrix(QQ, ...).rank()` |
+| [`poisson_n3_d2_engine.sage`](poisson_n3_d2_engine.sage) | Shared engine — Poisson bracket with chain rule on `u_ij = 1/r_ij`, Lie closure with frontier-based dedupe, rank by default via mod-p reduction over `GF(2^31-1)` (sparse `Matrix(GF(2^31-1), ...).rank()`); exact `Matrix(QQ, ...).rank()` available by passing `mod_prime=None` |
 | [`poisson_n3_d2.sage`](poisson_n3_d2.sage) | Sanity runner — L=3 for both 1/r and 1/r² and checks `[3, 6, 17, 116]` |
 | [`poisson_n3_d2_harmonic.sage`](poisson_n3_d2_harmonic.sage) | Harmonic runner — L=4 for `r²` and checks closure at `[3, 6, 13, 15, 15]` |
 | `results/` | JSON output (committed reference runs) |
@@ -84,8 +86,11 @@ print('MATCH: SymPy = Mathematica = SageMath')
 ## Notes
 
 - This is a pure CAS computation — no random sampling, no SVD, no
-  numerical tolerances. Correctness rests on Sage's `Matrix.rank()` over
-  QQ (FLINT under the hood).
+  numerical tolerances. By default, correctness rests on Sage's
+  `Matrix.rank()` over `GF(2^31-1)` (FLINT under the hood, mod-p exact
+  arithmetic); the exact QQ rank is available as a slower alternative
+  (`mod_prime=None` in `expr_list_rank`), and both are cross-checked
+  against the SymPy and Mathematica legs.
 - For N=3 d=2 a single kernel suffices. For larger N you'd want
   `@parallel` over the bracket evaluation loop.
 - Sage runs are typically a few minutes for L=3 and minutes-to-tens-of-

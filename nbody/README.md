@@ -237,7 +237,9 @@ exact rank computations:
 - **N=3 gravitational (all mass ratios)**: sequence [3, 6, 17, 116] —
   universal across 1/r, 1/r², 1/r³, 1/r⁴, r⁴, log(r), composite, all
   spatial dimensions, and all mass ratios tested (0.001 to 10⁶).
-  Proven algebraically over Q(m1,m2,m3) for all positive masses.
+  Proved symbolically for generic masses over Q(m1,m2,m3) — all mass
+  triples outside a possible proper subvariety (none found; confirmed
+  numerically at 25+ mass ratios from 10⁻³ to 10⁶).
 - **N=3 charge-coupled**: sequence [3, 6, 17, 116] for most charge
   configs (He, H⁻, Ps⁻, muonic He, Penning trap)
 - **N=3 high-charge deviations**: sequences [3, 6, 17, 111] (Li⁺) and

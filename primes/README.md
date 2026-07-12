@@ -83,9 +83,12 @@ distinguish integrable (Poisson) from chaotic (GUE/GOE/GSE) algebraic structure.
    closed Lie subalgebra. The structure constants capture the bracket tensor, not
    a Lie algebra.
 
-4. **Jacobi identity passes (r²):** The 15-dim harmonic algebra IS a genuine
-   closed Lie algebra. Killing form signature (6+, 4−, 5 zero) suggests it is
-   near-semisimple, likely sp(6) ⊕ center.
+4. **Harmonic algebra (r²) identified by invariant matching, Jacobi check
+   skipped:** The 15-dim harmonic algebra is identified with the Jacobi
+   algebra sp(4,ℝ) ⋉ h₂ by invariant matching (dimension, Killing signature
+   (6+, 4−, 5 zero), center, radical structure) — not a verified isomorphism;
+   the O(n⁴) Jacobi verification of the structure-constant tensor was
+   skipped (`jacobi_ok: false` records "skipped", not "failed").
 
 5. **Algebraic structure (1/r):** Killing form identically zero. Center dim 11.
    Derived series [17, 14, 3, 0]. Lower central series [17, 14, 11, 0] →

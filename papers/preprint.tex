@@ -49,7 +49,8 @@ algebra through four bracket levels.  The dimension sequence
   d(0)=3,\quad d(1)=6,\quad d(2)=17,\quad d(3)=116
 \]
 is proved exactly for levels~0--3, and a lower bound
-$d(4) \ge 4{,}501$ is established numerically.
+$d(4) \ge 5{,}604$ is established numerically (200{,}000
+float64 samples; not definitive).
 The growth is super-exponential, implying
 infinite Gelfand--Kirillov dimension.  The sequence
 is invariant under changes of mass ratios, including the
@@ -224,11 +225,14 @@ New generators & 3 & 3 & 11 & 99 \\
 \bottomrule
 \end{tabular}
 \end{center}
-At level 4, the lower bound $d(4) \ge 4{,}501$ is established
-with 30,000 sample points.  A gap ratio of $2{,}225$ is detected
-in the full SVD spectrum at index 11,673 (of 11,679 columns),
-though the gap at the rank boundary itself is modest ($1.2\times$),
-suggesting the true dimension may be higher.
+At level 4, an early lower bound $d(4) \ge 4{,}501$ was
+established with 30,000 sample points.  A gap ratio of $2{,}225$
+is detected in the full SVD spectrum at index 11,673 (of 11,679
+columns), though the gap at the rank boundary itself is modest
+($1.2\times$), suggesting the true dimension may be higher.
+Extending the sampling to 200,000 points raises the bound to
+$d(4) \ge 5{,}604$; the boundary gap remains modest
+($\approx 1.2\times$), so neither bound is definitive.
 \end{theorem}
 
 \begin{remark}
@@ -246,7 +250,7 @@ Level & Candidates & $d(n)$ & New & Ratio $d(n)/d(n{-}1)$ \\
 1 & 3 & 6 & 3 & 2.0 \\
 2 & 12 & 17 & 11 & 2.83 \\
 3 & 138 & 116 & 99 & 6.82 \\
-4 & $\ge$11,523 & $\ge$4,501 & $\ge$4,385 & $\ge$38.8 \\
+4 & $\ge$11,523 & $\ge$5,604 & $\ge$5,488 & $\ge$48.3 \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -313,7 +317,12 @@ $(1,1,\tfrac{1}{100})$, and $(1,1,\tfrac{1}{10000})$ all confirm
 $\rank M = 116$ over $\Q$, verifying that the determinant is nonzero
 at these points and hence is not identically zero as a rational
 function.  Since rank can only drop (never increase) at special
-parameter values, the rank is exactly 116 for all positive masses.
+parameter values, the rank is exactly 116 for generic masses:
+the determinant vanishes at worst on a proper algebraic
+subvariety of $\R_{>0}^3$, none of which has been found, and
+the symbolic computation over $\Q(m_1,m_2,m_3)$ establishes
+rank 116 for all mass triples outside such a possible
+subvariety.
 
 As additional evidence: the equal-mass case has $S_3$ permutation
 symmetry, which is the configuration most likely to exhibit
@@ -341,9 +350,12 @@ Extreme ratio (10000:1) & $(1,1,1/10000)$ & --- & $3,6,17,116$ & exact/$\Q$ \\
 Symbolic masses & $(m_1,m_2,m_3)$ & --- & $3,6,17,116$ & exact/$\Q(m_1,m_2,m_3)$ \\
 \bottomrule
 \end{tabular}
-\caption{Mass invariance verification.  The last row is the definitive
-computation: exact rank over the fraction field $\Q(m_1,m_2,m_3)$,
-establishing the result for \emph{all} positive masses.}
+\caption{Mass invariance verification.  The last row is the
+symbolic computation: exact rank over the fraction field
+$\Q(m_1,m_2,m_3)$, proving the result for \emph{generic} masses
+--- all mass triples outside a possible proper algebraic
+subvariety, none of which has been found (confirmed numerically
+at 25+ mass ratios from $10^{-3}$ to $10^6$).}
 \label{tab:mass-inv}
 \end{table}
 
@@ -442,9 +454,12 @@ $V_{ij} = -1/r_{ij}^2$ (Calogero--Moser) & 1D integrable & 3 & 6 & 17 & 116 & gr
 
 The harmonic potential (coupled oscillators) is integrable, and
 its Poisson algebra stabilises at dimension~15 with \emph{zero}
-new generators at level~4.  This confirms that regular
-potentials produce finite-dimensional algebras under our
-construction.
+new generators at level~4.  Of the potentials tested here, the
+harmonic case is the only regular (polynomial) one, and its
+finiteness is attributable to an enhanced dynamical symmetry
+(a Fradkin-tensor / $SU(d)$ structure) rather than to
+regularity \emph{per se}; regularity alone does not in general
+guarantee a finite-dimensional algebra.
 
 The Calogero--Moser ($1/r^2$) potential gives the \emph{identical}
 sequence $3, 6, 17, 116$ as Newton.  This identity is
@@ -456,14 +471,16 @@ case.  The dimension sequence is therefore determined by the
 \emph{singularity structure} of the pairwise potential, not by
 the integrability of the full system.
 
-The results reveal a sharp dichotomy:
+The results tested here reveal a structural distinction:
 \begin{itemize}[nosep]
-  \item \textbf{Regular potentials} (polynomial in positions):
-    finite-dimensional algebra, growth terminates.
   \item \textbf{Singular potentials} (inverse-distance type):
     infinite-dimensional algebra, super-exponential growth,
     with \emph{identical} dimension sequences regardless of the
     power of the singularity.
+  \item \textbf{The harmonic potential} ($r^2$): finite-dimensional
+    algebra, growth terminates --- attributable to its enhanced
+    dynamical symmetry rather than to regularity \emph{per se};
+    polynomial potentials are not finite-dimensional in general.
 \end{itemize}
 
 Combined with mass invariance (Theorem~\ref{thm:mass-inv}),
@@ -485,7 +502,8 @@ arising from fundamental physics.
 
 \begin{remark}
 Based on the four exactly computed values $d(0)$ through $d(3)$
-and the lower bound $d(4) \ge 4{,}501$, the growth appears
+and the lower bound $d(4) \ge 5{,}604$ (200{,}000 samples, not
+definitive), the growth appears
 consistent with $\log d(n) = \Theta(n^2)$, which would
 correspond to $\GKdim(\cA) = +\infty$.  Confirming this
 asymptotic would require exact computation of additional levels.
