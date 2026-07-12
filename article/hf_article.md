@@ -17,7 +17,7 @@ Now replace the network with three gravitating bodies — stars, atoms, black ho
 
 The neural network produces **3 extra generators**. It breaks a universality that holds across every pairwise potential \\(V(r)\\) in our 16-potential physical survey — from \\(1/r\\) through \\(r^{10}\\), \\(\log r\\), Yukawa \\(e^{-\mu r}/r\\), and the Calogero-Moser \\(1/r^2\\) — and across all spatial dimensions, mass ratios, and charge configurations tested. (Other neural couplings instead produce *smaller* algebras; see the seven-class table below.)
 
-This article introduces [bshepp/pairwise-poisson-algebras](https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras) — the first systematic computation of Poisson bracket Lie algebras for neural network training dynamics. The dataset contains **993 rows across 13 Parquet tables**, including a dedicated `neural_algebras` split with 21 configurations sweeping network depth (L=2..5), width (k=1..3), **12 coupling types**, loss function, and activation function — revealing **seven distinct neural universality classes at L=3**, versus the single physical class at [3, 6, 17, 116].
+This article introduces [bshepp/pairwise-poisson-algebras](https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras) — the first systematic computation of Poisson bracket Lie algebras for neural network training dynamics. The dataset contains **997 rows across 13 Parquet tables**, including a dedicated `neural_algebras` split with 21 configurations sweeping network depth (L=2..5), width (k=1..3), **12 coupling types**, loss function, and activation function — revealing **seven distinct neural universality classes at L=3**, versus the single physical class at [3, 6, 17, 116].
 
 ## Table of Contents
 
@@ -195,14 +195,14 @@ The dimension counts are identical at levels 0, 1, 2; the neural and physical ge
 
 ## Dataset Overview
 
-The full dataset contains **993 rows across 13 Parquet tables**:
+The full dataset contains **997 rows across 13 Parquet tables**:
 
 | Split | Rows | Description |
 |-------|------|-------------|
 | `neural_algebras` | 21 | **Neural network algebra sweep** (depth, width, 12 couplings, loss, activation) |
-| `dimension_sequences` | 685 | Dimension sequences for N=3..50, 16+ potentials, quantum/classical |
+| `dimension_sequences` | 686 | Dimension sequences for N=3..50, 16+ potentials, quantum/classical |
 | `structure_constants` | 16 | Exact rational structure constant tensors |
-| `physical_systems` | 17 | Named systems from helium to triple black holes |
+| `physical_systems` | 20 | Named systems from helium to triple black holes |
 | `charge_sensitivity` | 38 | Charge-independence tests |
 | `mass_invariance` | 33 | Mass ratio sweep (10 orders of magnitude) |
 | `convergence_trajectories` | 77 | SVD rank convergence tracking |

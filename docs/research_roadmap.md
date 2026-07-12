@@ -187,7 +187,7 @@ current dimension) varies with configuration.
 **Key finding**: The Level 3 local rank drop at Lagrange (110 vs 116)
 persists into Level 4. The gap at d(4) boundary is not as clean as
 the d(3)=116 gap (ratio ~10^8), suggesting d(4) may be higher with
-more samples — 4,501 is best understood as a lower bound.
+more samples — 5,604 is best understood as a lower bound.
 
 **Note on "definitive" claim**: The 30K-sample script declared d(4)=4501
 "definitive" based on the max gap ratio (2,225 at SVD index 11,673),

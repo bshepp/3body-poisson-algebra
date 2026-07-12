@@ -94,14 +94,20 @@ Structure constants, Killing form, and derived invariants computed via
 | Property | 1/r, 1/r^4, r^4 | r^2 (harmonic) |
 |----------|------------------|----------------|
 | Rank | 17 | 15 |
-| Killing signature | (6+, 0-, 11 zero) | (14+, 0-, 1 zero) |
+| ad-Gram (Frobenius) signature tr(ad_i·ad_jᵀ) | (6+, 0-, 11 zero) | (14+, 0-, 1 zero) |
 | Solvable | Yes (length 3) | No |
 | Nilpotent | Yes (class 3) | No |
 | Center dim | 11 | 1 |
 | Derived series | [17, 14, 3, 0] | [15, 15] |
 
+The signature row above is the ad-Gram (Frobenius) form tr(ad_i·ad_jᵀ),
+not the Killing form. The true Killing form differs sharply: the dim-17
+algebra is nilpotent, so its Killing form vanishes identically
+(0, 0, 17), while the harmonic dim-15 algebra has true Killing signature
+(6+, 4-, 5 zero).
+
 The 1/r, 1/r^4, and r^4 algebras have **identical** structure through
-level 2 (same Killing form, same derived series, same center), strongly
+level 2 (same ad-Gram form, same derived series, same center), strongly
 suggesting isomorphism. The harmonic algebra is structurally opposite:
 nearly semisimple, perfect ([L,L]=L), with trivial center.
 
@@ -151,9 +157,10 @@ confirmed [3, 6, 17] at level 2 for all ratios.
 | Composite | 1/r + 1/r² | [3, 6, 17, 116] |
 | Dusty Plasma | Yukawa (e^{-μr}/r) | [3, 6, 17, 116] |
 
-After Task 1, the 9-config Yukawa artifact is restored: the μ-sweep
-(6 values) plus 3 physical systems (tritium/He-3, dusty plasma, p-n-n)
-all give [3, 6, 17, 116] (Apr 15–16, 2026).
+The full 9-config Yukawa survey (6-value μ-sweep plus tritium/He-3,
+dusty plasma, and p-n-n scattering) gives [3, 6, 17, 116] (Apr 15–16,
+2026); the artifact `results/yukawa_dimseq.json` was restored in Jul
+2026 after being overwritten by a partial rerun.
 
 **Engine extensions for the survey:**
 - Logarithmic potential V ~ log(r) for 2D vortex dynamics
