@@ -429,8 +429,8 @@ body::before {
   <div class="header-stats">
     <span class="stat"><span class="dot dot-green"></span> 4 Papers Drafted</span>
     <span class="stat"><span class="dot dot-green"></span> Phase 1 Complete</span>
-    <span class="stat"><span class="dot dot-amber"></span> 12 Open Work Items</span>
-    <span class="stat"><span class="dot dot-red"></span> 2 Blocked</span>
+    <span class="stat"><span class="dot dot-amber"></span> 5 Open Work Items</span>
+    <span class="stat"><span class="dot dot-red"></span> 1 Blocked</span>
   </div>
 </div>
 
@@ -484,8 +484,8 @@ body::before {
           <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
         </div>
         <div class="progress-block">
-          <div class="progress-label"><span>Phase 2</span><span>4/7</span></div>
-          <div class="progress-track"><div class="progress-fill fill-amber" style="width:57%"></div></div>
+          <div class="progress-label"><span>Phase 2</span><span>7/7</span></div>
+          <div class="progress-track"><div class="progress-fill fill-green" style="width:100%"></div></div>
         </div>
         <div class="progress-block">
           <div class="progress-label"><span>Phase 5 (Quantum)</span><span>4/7</span></div>
@@ -588,7 +588,7 @@ body::before {
         </div>
 
         <div class="timeline-entry breakthrough">
-          <div class="timeline-date">February 2026</div>
+          <div class="timeline-date">March 2026</div>
           <div class="timeline-title">SymPy 1.13.3 Bug Fix: Dimension Correction</div>
           <div class="timeline-body">SymPy ≤1.10.1 produced incorrect [3, 5, 13, 69] for unequal masses. Version 1.13.3 corrected to universal [3, 6, 17, 116]. 63/156 level-3 expressions were wrong. All prior unequal-mass results re-validated.</div>
         </div>
@@ -663,11 +663,11 @@ body::before {
           <tr><td>5</td><td class="val-amber">10</td><td class="val-amber">25</td><td class="val-amber">145</td><td style="color:var(--text-secondary)">8s</td></tr>
           <tr><td>6</td><td class="val-amber">15</td><td class="val-amber">39</td><td class="val-amber">279</td><td style="color:var(--text-secondary)">16s</td></tr>
           <tr><td>7</td><td class="val-amber">21</td><td class="val-amber">56</td><td class="val-amber">476</td><td style="color:var(--text-secondary)">65s</td></tr>
-          <tr><td>8</td><td class="val-amber">28</td><td class="val-amber">76</td><td style="color:var(--text-dim)">301?</td><td style="color:var(--text-dim)">partial</td></tr>
+          <tr><td>8</td><td class="val-amber">28</td><td class="val-amber">76</td><td class="val-amber">748</td><td style="color:var(--text-secondary)">191s</td></tr>
         </tbody>
       </table>
       <div style="font-size:0.72rem; color:var(--text-dim); margin-top:0.5rem;">
-        d(0) = C(N,2) confirmed · d(1) sequence: 6, 14, 25, 39, 56, 76 · N=8 d(2) may be truncated by memory
+        d(0) = C(N,2) confirmed · d(1) sequence: 6, 14, 25, 39, 56, 76 · N=8 d(2) = 748, exact and cross-verified on SymPy 1.12 and 1.14.0
       </div>
 
       <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.8rem;">N-Body Scaling Formulas</h3>
@@ -747,16 +747,16 @@ body::before {
         <div class="phase-header" onclick="togglePhase(this)">
           <span class="phase-chevron">▶</span>
           <span class="phase-title">Phase 2: Light Compute (hours, local/small AWS)</span>
-          <span class="phase-badge badge-light">4/7</span>
+          <span class="phase-badge badge-free">COMPLETE</span>
         </div>
         <div class="phase-items">
           <div class="work-item"><span class="id">2.1</span><div><div class="title">N=5 Level 1–2</div><div class="desc">Third data point for d_N(k) vs N. Result: N=5 gives [10, 25, 145]. Formula L2(N)=N(4N²−9N+3)/2 (N≥4) confirmed. N=5 L3 OOM-blocked on 256 GB.</div></div><span class="chip chip-done">Done</span></div>
           <div class="work-item"><span class="id">2.2</span><div><div class="title">N=4 with 1/r², 1/r³, log(r)</div><div class="desc">Result: all three potentials confirmed [6, 14, 62] (Apr 1, 2026, 500 samples each). Paper 3 prediction #2 confirmed: potential invariance holds at N=4.</div></div><span class="chip chip-done">Done</span></div>
           <div class="work-item"><span class="id">2.3</span><div><div class="title">r⁴ Potential (Regular)</div><div class="desc">Result: classical [3, 6, 17, 116]; quantum [3, 6, 17, 116] (no growth). Quantum corrections exist but are linearly dependent. Confirms regular/singular dichotomy extends to quantum case.</div></div><span class="chip chip-done">Done</span></div>
           <div class="work-item"><span class="id">2.4</span><div><div class="title">Charge Sweep Phase 3 (+1/+q/−1)</div><div class="desc">Result: q = 1, 2, 3, 4, 5, 6, 8, 10, 15, 20 all give [3, 6, 17, 116] (Mar 24, 2026). Charge-sign invariance confirmed for arbitrary nucleus charge.</div></div><span class="chip chip-done">Done</span></div>
-          <div class="work-item"><span class="id">2.5</span><div><div class="title">S₄ Tier Decomposition (N=4)</div><div class="desc">Does S₃ tier structure generalize to S₄? Integer-quantized scaling?</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">2.6</span><div><div class="title">Harmonic Dimension 15: Rep Theory Derivation</div><div class="desc">Derive dim=15 from isotropic oscillator Lie algebra (sp(4,ℝ) or similar).</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">2.7</span><div><div class="title">H₃⁺ and Ozone Molecular Systems</div><div class="desc">Molecular triatomic reconfirmation. High outreach value.</div></div><span class="chip chip-todo">Not Started</span></div>
+          <div class="work-item"><span class="id">2.5</span><div><div class="title">S₄ Tier Decomposition (N=4)</div><div class="desc">Complete (Apr 15, 2026): S₄ CG rules, character table, and exterior squares implemented. Edge representation decomposes as triv + std + hook; through L3, 23,226 candidate generators of which only 1,260 are independent (94.6% syzygies vs 25.6% for S₃). Dominant irreps: std (37.4%) and sign_std (37.9%).</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">2.6</span><div><div class="title">Harmonic Dimension 15: Rep Theory Derivation</div><div class="desc">Complete (2026-05-11): identified with the Jacobi algebra sp(4,ℝ) ⋉ h₂ by invariant matching (dimension, Killing signature, center, radical structure), not a verified isomorphism. Killing signature (6+, 4−, 5 zero); 5-dim Heisenberg radical with 1-dim center.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">2.7</span><div><div class="title">H₃⁺ and Ozone Molecular Systems</div><div class="desc">Complete (Apr 15, 2026): both H₃⁺ (m ≈ 1836) and O₃ (m ≈ 29,164) give [3, 6, 17, 116]. Mass invariance confirmed at these specific physical masses.</div></div><span class="chip chip-done">Done</span></div>
         </div>
       </div>
 
@@ -765,11 +765,11 @@ body::before {
         <div class="phase-header" onclick="togglePhase(this)">
           <span class="phase-chevron">▶</span>
           <span class="phase-title">Phase 3: Medium Compute ($10–$200 AWS)</span>
-          <span class="phase-badge badge-medium">2/5</span>
+          <span class="phase-badge badge-medium">4/5</span>
         </div>
         <div class="phase-items">
-          <div class="work-item"><span class="id">3.1</span><div><div class="title">Parametric Exponent Sweep (1,015 values of n)</div><div class="desc">Gap ratio vs n continuous curve. Script ready. Est. $13–50. VERY HIGH impact.</div></div><span class="chip chip-todo">Not Started</span></div>
-          <div class="work-item"><span class="id">3.2</span><div><div class="title">Yukawa Potential (3 Scenarios)</div><div class="desc">Lambdification/OOM issues. Recursion fix deployed but not confirmed.</div></div><span class="chip chip-blocked">Blocked</span></div>
+          <div class="work-item"><span class="id">3.1</span><div><div class="title">Parametric Exponent Sweep</div><div class="desc">Complete via alternate route (Apr 15-16, 2026): L2 broad sweep (500 exponents, 0.02-5.0) plus extended L3 sweep (76 exponents) fill the gap-ratio-vs-n continuous curve; only r¹ and r² deviate at L2, and L3 shows the symmetric descent 116→108→87 approaching r² from either side. The original 1,015-value full-resolution AWS campaign was aborted (cost/runtime); this 576-exponent sweep supersedes it for the continuous-curve question.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">3.2</span><div><div class="title">Yukawa Potential (3 Scenarios)</div><div class="desc">Complete (Apr 16, 2026): recursion fix confirmed via a Taylor-expansion composite representation. All 3 named physical systems (tritium/He-3, dusty plasma, p-n-n) plus the 6-value mu-sweep give [3, 6, 17, 116]; the full 9-config Yukawa survey is restored.</div></div><span class="chip chip-done">Done</span></div>
           <div class="work-item"><span class="id">3.3</span><div><div class="title">Re-run 7 Retracted Gravitational Configs</div><div class="desc">Result: 4 of 7 directly confirmed [3, 6, 17, 116]; 3 (Sun-Earth-Moon, Sun-Jupiter-Asteroid, LISA) show rank deficit at extreme mass ratios, consistent with mass invariance theorem (SVD conditioning, not algebraic). Completed Mar 24, 2026.</div></div><span class="chip chip-done">Done</span></div>
           <div class="work-item"><span class="id">3.4</span><div><div class="title">Complete Interrupted Atlases</div><div class="desc">Sun-Earth-Moon: done April 7, 2026 (6h28m, 10,000 points, ranks 102–108). Sun-Jupiter-Asteroid: done April 8, 2026 (9h33m, 10,000 points, ranks 91–100). Most extreme mass ratios computed.</div></div><span class="chip chip-done">Done</span></div>
           <div class="work-item"><span class="id">3.5</span><div><div class="title">Lagrange Hires 1000×1000 Scan</div><div class="desc">Resolve concentric ring features and isosceles beads. Est. $3–12.</div></div><span class="chip chip-todo">Not Started</span></div>
@@ -784,7 +784,7 @@ body::before {
           <span class="phase-badge badge-verify">Theory</span>
         </div>
         <div class="phase-items">
-          <div class="work-item"><span class="id">4.1</span><div><div class="title">Independent CAS Verification (Mathematica)</div><div class="desc">Wolfram Language 14.3 reproduces [3, 6, 17, 116] for both 1/r (40s) and 1/r² (50s), and the harmonic closure [3, 6, 13, 15, 15] through L=4 (Apr 21, 2026). Independent rank algorithm: <code>MatrixRank</code> over <code>Rationals</code> on a <code>SparseArray</code>. The headline numbers now stand on two unrelated CAS implementations and two unrelated rank algorithms.</div></div><span class="chip chip-done">Done</span></div>
+          <div class="work-item"><span class="id">4.1</span><div><div class="title">Independent CAS Verification (Mathematica &amp; SageMath)</div><div class="desc">Wolfram Language 14.3 reproduces [3, 6, 17, 116] for both 1/r (40s) and 1/r² (50s), and the harmonic closure [3, 6, 13, 15, 15] through L=4 (Apr 21, 2026), using <code>MatrixRank</code> over <code>Rationals</code> on a <code>SparseArray</code>, an exact rational rank algorithm. A third leg, SageMath (FLINT-backed rank over GF(2³¹−1), a mod-p rank), confirms the same numbers (2026-05-11). The headline numbers now stand on three independent CAS implementations: two exact rational legs (SymPy, and Wolfram MatrixRank over Rationals) plus a mod-p leg (SageMath, FLINT-backed rank over GF(2³¹−1)).</div></div><span class="chip chip-done">Done</span></div>
           <div class="work-item"><span class="id">4.2</span><div><div class="title">OEIS Submission of [3, 6, 17, 116]: <a href="https://oeis.org/A395423" target="_blank" rel="noopener" style="color:var(--phosphor); text-decoration:none;">A395423</a></div><div class="desc">Submitted to OEIS Apr 21, 2026; A-number <strong>A395423</strong> assigned, awaiting editorial review. Source-format draft and human-readable companion staged in <code>OEIS/candidates/A395423.md</code>. Four further candidate sequences drafted (N=4 singular, N=3 harmonic, L2 closed-form, A095794 cross-reference) for follow-on submission once the headline entry is approved.</div></div><span class="chip chip-wip">In Review</span></div>
           <div class="work-item"><span class="id">4.3</span><div><div class="title">Level-4 Bound Improvement</div><div class="desc">Current: d(4) ≥ 5,604 at 200K samples. mpmath at 4.4% when reclaimed.</div></div><span class="chip chip-todo">Not Started</span></div>
         </div>
@@ -819,11 +819,11 @@ body::before {
         <table class="data-table">
           <thead><tr><th>Parameter</th><th>Tested Values</th><th>N=3</th><th>N=4</th><th>N≥5</th></tr></thead>
           <tbody>
-            <tr><td>Mass ratios</td><td style="color:var(--text-secondary)">0.001 to 10⁶ (25+ configs)</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ (3 configs)</td><td class="inv-unknown">-</td></tr>
+            <tr><td>Mass ratios</td><td style="color:var(--text-secondary)">0.001 to 10⁶ (25+ configs, generic)</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ (3 configs)</td><td class="inv-unknown">-</td></tr>
             <tr><td>Spatial dimension d</td><td style="color:var(--text-secondary)">d = 1, 2, 3</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">d=1 only</td></tr>
             <tr><td>Potential type</td><td style="color:var(--text-secondary)">1/r, 1/r², 1/r³, 1/r⁴, log(r), composite</td><td class="inv-yes">✓ Invariant</td><td class="inv-yes">✓ Confirmed</td><td class="inv-unknown">1/r only</td></tr>
-            <tr><td>Charge sign</td><td style="color:var(--text-secondary)">All-attract, all-repulse, mixed</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">Not tested</td><td class="inv-unknown">-</td></tr>
-            <tr><td>Charge magnitude</td><td style="color:var(--text-secondary)">|q| = 1–20 (10 values)</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">Not tested</td><td class="inv-unknown">-</td></tr>
+            <tr><td>Charge sign</td><td style="color:var(--text-secondary)">Same-sign (Penning trap, H₃⁺, O₃) and mixed-sign (+1,+q,−1) q=1–20</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">Not tested</td><td class="inv-unknown">-</td></tr>
+            <tr><td>Charge magnitude</td><td style="color:var(--text-secondary)">|q| = 1–20 (all 20 integers, exact rank over ℚ)</td><td class="inv-yes">✓ Invariant</td><td class="inv-unknown">Not tested</td><td class="inv-unknown">-</td></tr>
           </tbody>
         </table>
       </div>
@@ -845,11 +845,11 @@ body::before {
         <thead><tr><th>System</th><th>Charges</th><th>Masses</th><th>Sequence</th><th>Atlas</th></tr></thead>
         <tbody>
           <tr><td>Helium atom</td><td style="color:var(--text-secondary)">(+2,−1,−1)</td><td style="color:var(--text-secondary)">7294:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
-          <tr><td>Li⁺ ion</td><td style="color:var(--text-secondary)">(+3,−1,−1)</td><td style="color:var(--text-secondary)">12789:1:1</td><td class="seq-off" style="color:var(--amber)">[3, 6, 17, 111]</td><td class="status-done">✓</td></tr>
+          <tr><td>Li⁺ ion</td><td style="color:var(--text-secondary)">(+3,−1,−1)</td><td style="color:var(--text-secondary)">12789:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓ Revalidated</td></tr>
           <tr><td>H⁻ ion</td><td style="color:var(--text-secondary)">(+1,−1,−1)</td><td style="color:var(--text-secondary)">1836:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
           <tr><td>Positronium Ps⁻</td><td style="color:var(--text-secondary)">(+1,−1,−1)</td><td style="color:var(--text-secondary)">1:1:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
           <tr><td>Muonic Helium</td><td style="color:var(--text-secondary)">(+2,−1,−1)</td><td style="color:var(--text-secondary)">7294:1:207</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓</td></tr>
-          <tr><td>H₂⁺ molecular ion</td><td style="color:var(--text-secondary)">(+1,+1,−1)</td><td style="color:var(--text-secondary)">1836:1836:1</td><td class="seq-off" style="color:var(--amber)">[3, 6, 17, 115]</td><td class="status-done">✓</td></tr>
+          <tr><td>H₂⁺ molecular ion</td><td style="color:var(--text-secondary)">(+1,+1,−1)</td><td style="color:var(--text-secondary)">1836:1836:1</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">✓ Revalidated</td></tr>
         </tbody>
       </table>
 
@@ -868,13 +868,13 @@ body::before {
         </tbody>
       </table>
 
-      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.6rem;">Nuclear / Plasma (In Progress)</h3>
+      <h3 style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber); margin:1.5rem 0 0.6rem;">Nuclear / Plasma</h3>
       <table class="data-table">
-        <thead><tr><th>System</th><th>Potential</th><th>Status</th><th>Notes</th></tr></thead>
+        <thead><tr><th>System</th><th>Potential</th><th>Sequence</th><th>Notes</th></tr></thead>
         <tbody>
-          <tr><td>Tritium / He-3</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-wip">In progress</td><td style="color:var(--text-secondary)">Recursion fix deployed</td></tr>
-          <tr><td>p-n-n Scattering</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-wip">In progress</td><td></td></tr>
-          <tr><td>Dusty Plasma</td><td style="color:var(--text-secondary)">Yukawa</td><td class="status-blocked">Failed (OOM)</td><td style="color:var(--red)">Lambdification issue</td></tr>
+          <tr><td>Tritium / He-3</td><td style="color:var(--text-secondary)">Yukawa</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">Complete (Apr 16, 2026)</td></tr>
+          <tr><td>p-n-n Scattering</td><td style="color:var(--text-secondary)">Yukawa</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">Complete (Apr 16, 2026)</td></tr>
+          <tr><td>Dusty Plasma</td><td style="color:var(--text-secondary)">Yukawa</td><td class="seq">[3, 6, 17, 116]</td><td class="status-done">Complete (Apr 16, 2026)</td></tr>
         </tbody>
       </table>
 
@@ -894,7 +894,7 @@ body::before {
         <div>
           <div class="paper-title">Super-exponential growth of the Poisson algebra generated by pairwise Hamiltonians of the planar three-body problem</div>
           <div class="paper-file">preprint.tex</div>
-          <div class="paper-desc">Dimension sequence [3, 6, 17, 116], mass invariance theorem, potential comparison (harmonic/Newton/CM), level-4 lower bound d(4) ≥ 4,501. Reframed from "non-integrability certificate" to "structural algebraic invariant" after CM reckoning.</div>
+          <div class="paper-desc">Dimension sequence [3, 6, 17, 116], mass invariance theorem, potential comparison (harmonic/Newton/CM), level-4 lower bound d(4) ≥ 5,604 (200,000 float64 samples; 4,501 at 30K samples as history, NOT definitive). Reframed from "non-integrability certificate" to "structural algebraic invariant" after CM reckoning.</div>
         </div>
         <span class="paper-status paper-draft">Draft</span>
       </div>
@@ -956,7 +956,7 @@ body::before {
           </div>
           <div class="result-row">
             <span class="prop">SageMath verification (4.1)</span>
-            <span class="val" style="color:var(--amber)">Essential for credibility (not started)</span>
+            <span class="val" style="color:var(--phosphor)">Complete (2026-05-11)</span>
           </div>
         </div>
       </div>
@@ -1022,7 +1022,7 @@ body::before {
         <h4>Falsifiable Predictions (Paper 3)</h4>
         <p>Three predictions that would falsify or strengthen the universality conjecture:</p>
         <div class="evidence-grid" style="grid-template-columns:1fr;">
-          <div class="evidence"><span class="check">✓</span> <strong>P1:</strong> N=5, d=1 → [10, 25, 145] confirmed through L2; L3 in progress (AWS r6i.8xlarge)</div>
+          <div class="evidence"><span class="check">✓</span> <strong>P1:</strong> N=5, d=1 → [10, 25, 145] confirmed through L2; L3 OOM-blocked on 256 GB (brackets checkpointed on S3; mod-p rank is the open route)</div>
           <div class="evidence"><span class="check">✓</span> <strong>P2:</strong> N=4 with 1/r², 1/r³, log(r) → all confirmed [6, 14, 62] (Apr 1, 2026)</div>
           <div class="evidence"><span class="pending">○</span> <strong>P3:</strong> d(4) for 1/r² → predict matches d(4) for 1/r (level-4 universality)</div>
         </div>
@@ -1088,10 +1088,10 @@ body::before {
 
         <div class="infra-card">
           <h4>Known Issues</h4>
-          <div class="infra-detail" style="color:var(--red);">Yukawa lambdification: OOM/recursion on deeply nested exp(-μ/u)</div>
+          <div class="infra-detail" style="color:var(--phosphor);">Yukawa lambdification: OOM/recursion on deeply nested exp(-μ/u), resolved via Taylor-expansion composite representation (Apr 16, 2026)</div>
           <div class="infra-detail" style="color:var(--amber);">SymPy version sensitivity: 1.10.1 fails 63/156 L3 expressions</div>
           <div class="infra-detail" style="color:var(--amber);">Level-4 mpmath derivatives cache: 243 MB, must sync to S3</div>
-          <div class="infra-detail" style="color:var(--text-secondary);">Li⁺ dim=111, H₂⁺ dim=115: SVD artifact or real physics? Under investigation</div>
+          <div class="infra-detail" style="color:var(--phosphor);">Li⁺ (dim 111) and H₂⁺ (dim 115): early 500-sample undersampling artifacts, refuted by revalidation at 1000–5000 samples (Mar 24, 2026), which restored 116 in every case</div>
         </div>
       </div>
     </div>
