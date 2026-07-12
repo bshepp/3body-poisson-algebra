@@ -99,8 +99,7 @@ an offset shift).
 At level 2 the algebra grows by 11 new independent generators. Why
 exactly 11? We don't know. The closed form $L_2(N) = N(4N^2-9N+3)/2$
 that fits all $N \ge 4$ predicts 18 here, one more than the actual 17 —
-$N=3$ sits just outside its range, off by the same boundary
-correction of $-1$ that appears in the $N=3$ case generally. The
+$N=3$ sits just outside its range. The
 number 17 is genuinely irregular — neither pentagonal, nor binomial,
 nor a value of any clean polynomial we've found.
 
@@ -250,5 +249,5 @@ Three reasons.
 *Computational provenance: this document was prepared with AI
 assistance; every claim has been checked against running code. The
 underlying computations were performed on a local Windows workstation
-(Python 3.13, sympy 1.14.0, Mathematica 14.3.0) and on Hugging Face
-Jobs (cpu-xl) for the $a(3) = 116$ verification.*
+(Python 3.13, sympy 1.14.0, Mathematica 14.3.0); the larger survey and
+level-4 runs used AWS EC2.*
