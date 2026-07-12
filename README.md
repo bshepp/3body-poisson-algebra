@@ -358,7 +358,7 @@ See `docs/atlas_compute_workorder.md` for the full sync/render/deploy cycle incl
 
 ## Hugging Face Dataset
 
-The project maintains a structured dataset at [huggingface.co/datasets/bshepp/pairwise-poisson-algebras](https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras) containing **993 rows across 13 Parquet tables**: `neural_algebras` (Poisson algebras of linear neural networks across 12 coupling types — 7 universality classes at L=3), `dimension_sequences`, `structure_constants`, `charge_sensitivity`, `mass_invariance`, `level4_convergence`, `spectral_statistics`, `physical_systems`, `bell_test`, `scaling_formulas`, `tier_decomposition`, `contextuality`, and `convergence_trajectories`. After any computation campaign, rebuild the dataset:
+The project maintains a structured dataset at [huggingface.co/datasets/bshepp/pairwise-poisson-algebras](https://huggingface.co/datasets/bshepp/pairwise-poisson-algebras) containing **997 rows across 13 Parquet tables**: `neural_algebras` (Poisson algebras of linear neural networks across 12 coupling types — 7 universality classes at L=3), `dimension_sequences`, `structure_constants`, `charge_sensitivity`, `mass_invariance`, `level4_convergence`, `spectral_statistics`, `physical_systems`, `bell_test`, `scaling_formulas`, `tier_decomposition`, `contextuality`, and `convergence_trajectories`. After any computation campaign, rebuild the dataset:
 
 ```bash
 pip install pandas pyarrow

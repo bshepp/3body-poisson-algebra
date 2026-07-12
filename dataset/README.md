@@ -78,13 +78,13 @@ This dataset contains the first systematic computation of **pairwise Poisson bra
 
 ### Physical Benchmark (Universality Reference)
 
-- **685 dimension sequences** for N=3..50, 16+ potentials, quantum/classical
+- **686 dimension sequences** for N=3..50, 16+ potentials, quantum/classical
 - **576+ exponent sweep values** across the continuous algebraic landscape
 - **20 named physical systems** from helium atoms to triple black holes — all producing **[3, 6, 17, 116]**
 - **16 exact rational structure constant tensors** (all non-harmonic L2 algebras proven isomorphic)
 - **38 charge, 33 mass configurations** confirming invariance across 10 orders of magnitude
 
-**Total: 993 rows across 13 Parquet tables.**
+**Total: 997 rows across 13 Parquet tables.**
 
 ### What Makes This Unique
 
@@ -203,7 +203,7 @@ Poisson bracket algebras arising from neural network training dynamics. SGD with
 
 **Depth scaling**: L=2 → [1,1,1,1]; L=3 → [3,6,17,119] (matches physics at L0-L2); L=4 → [6,20,164] (diverges from physics [6,14,62] already at L1 by +6); L=5 → [10,45,210] (diverges at L1 by +20). Level-1 extras follow `C(L,2)*(L-3)` exactly.
 
-### `dimension_sequences` (~685 rows)
+### `dimension_sequences` (~686 rows)
 
 The headline table. One row per (N, d, potential, bracket_type) configuration. Includes flattened `dim_L0`..`dim_L4` integer columns for easy filtering in the HF Dataset Viewer, plus the full JSON `dimension_sequence`. Includes 12 quantum (Moyal bracket) rows covering the complete quantum classification.
 
@@ -311,7 +311,7 @@ Rank distributions across phase space from atlas scans.
 | `n_points` | int | Total phase-space points |
 | `pct_116` | float | Percentage of points achieving rank 116 |
 
-### `physical_systems` (17 rows)
+### `physical_systems` (20 rows)
 
 Named physical systems with their computed dimension sequences, spanning astrophysical (Sun-Earth-Moon, triple black holes) to atomic (helium, lithium ion) to exotic (Penning traps, 2D vortices).
 

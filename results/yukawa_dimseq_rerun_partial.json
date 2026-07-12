@@ -1,0 +1,87 @@
+{
+  "note": "This file preserves the state of results/yukawa_dimseq.json as it stood at HEAD before the 2026-07-11 audit remediation. It is a PARTIAL 2026-04-17 rerun (commit d5880090, \"Neural network algebra expansion\") that accidentally overwrote the canonical 9-config Yukawa survey artifact (commit 934d204, 2026-04-15, \"Yukawa survey (9 configs all universal)\") as unmentioned collateral damage. The rerun script (yukawa_dimseq.py) skips already-completed mu values via load_existing, so this file reflects a re-run that was interrupted mid-way, starting from a nearly-empty state: it retains only 5 of the 6 mu_sweep entries (mu=5 is missing) and an empty physical_systems list, though the 5 retained mu entries have identical dimension_sequence/settings to the canonical file (four of the five have slightly different computation_time_s from a slower replicate run). The canonical artifact has been restored to results/yukawa_dimseq.json from commit 934d204. This file is kept for provenance.",
+  "mu_sweep": [
+    {
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 17098.6,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "taylor_order": 3,
+      "N": 3,
+      "d": 1,
+      "mu": "1/10",
+      "potential": "yukawa"
+    },
+    {
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 17420.3,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "taylor_order": 3,
+      "N": 3,
+      "d": 1,
+      "mu": "1/2",
+      "potential": "yukawa"
+    },
+    {
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 13294.2,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "taylor_order": 3,
+      "N": 3,
+      "d": 1,
+      "mu": "7/10",
+      "potential": "yukawa"
+    },
+    {
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 13234.9,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "taylor_order": 3,
+      "N": 3,
+      "d": 1,
+      "mu": "1",
+      "potential": "yukawa"
+    },
+    {
+      "dimension_sequence": [
+        3,
+        6,
+        17,
+        116
+      ],
+      "computation_time_s": 17406.8,
+      "method": "numerical_svd",
+      "n_samples": 500,
+      "taylor_order": 3,
+      "N": 3,
+      "d": 1,
+      "mu": "2",
+      "potential": "yukawa"
+    }
+  ],
+  "physical_systems": [],
+  "convergence_checks": []
+}
