@@ -176,9 +176,10 @@ there is 2D ring structure to resolve.
 current dimension) varies with configuration.
 
 **Current state**: Level 4 computed at multiple configurations:
-- **Generic (global)**: d(4) >= 4,501 (30K samples, gap ratio 2,225 in
-  full SVD spectrum). Dimension sequence: [3, 6, 17, 116, >=4501].
-  New generators per level: [3, 3, 11, 99, >=4385].
+- **Generic (global)**: d(4) >= 5,604 (200,000 float64 samples; boundary
+  gap only ≈1.2×, NOT definitive) — up from 4,501 at 30K samples (gap
+  ratio 2,225 in full SVD spectrum). Dimension sequence:
+  [3, 6, 17, 116, >=5604]. New generators per level: [3, 3, 11, 99, >=5488].
 - **Lagrange**: d(4) >= 3,112 (20K samples), d(3)=110 (local rank drop).
   Growth ratio d(4)/d(3) = 28.3x.
 - **Euler, scalene**: computed at 5K, 10K, 20K sample counts.
@@ -273,7 +274,8 @@ sequence [3, 3, 11, 99]) to the On-Line Encyclopedia of Integer Sequences.
 - References or a preprint
 
 **Status**: Sequence not found in OEIS as of initial search.  Need to
-finalize the preprint. Level 4 lower bound now at d(4) >= 4,501.
+finalize the preprint. Level 4 lower bound now at d(4) >= 5,604 (200,000
+samples; boundary gap ≈1.2×, not definitive) — up from 4,501 at 30K samples.
 
 **Next steps**:
 1. Finalize preprint.tex with multi-epsilon atlas results
