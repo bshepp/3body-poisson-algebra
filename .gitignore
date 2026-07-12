@@ -98,7 +98,6 @@ docs/Designing*.txt
 docs/outreach_emails.md
 docs/funding_briefing.md
 docs/academic_engagement.md
-docs/research_roadmap.md
 docs/email_draft.md
 
 # Computation logs (large, regeneratable)
@@ -115,6 +114,8 @@ results/**/full.log
 results/sc_*.log
 results/targeted_*.log
 results/targeted_*heartbeat.json
+results/*.log
+results/**/run.log
 
 # Infra computation logs (large, ephemeral N=5/energy-bound iteration logs)
 infra/*.log
@@ -159,6 +160,7 @@ bench_flint/simplify_experiment2.py
 bench_flint/simplify_experiment2_results.json
 bench_flint/simplify_experiment2_results.txt
 bench_flint/results.jsonl
+bench_flint/identity_check.log
 
 # Per-(M,L) checkpoints from nbody/run_schwarzschild.py (regeneratable)
 nbody/checkpoints_schwarzschild/
