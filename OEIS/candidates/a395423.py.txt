@@ -1,0 +1,52 @@
+# A395423: Python program to compute a(0)..a(3) = [3, 6, 17, 116].
+# Self-contained reproduction; requires only sympy (>= 1.13.3).
+# Author: Brian J. Sheppard
+# Prints [dim L_0, dim L_1, dim L_2, dim L_3] = [3, 6, 17, 116].
+from itertools import combinations
+from sympy import Symbol, Integer, diff, expand, together, Poly
+from sympy.polys.matrices import DomainMatrix
+from sympy.polys.domains import QQ
+N, d = 3, 2                      # 3 bodies in the plane; d=1 gives the same, faster
+co = ["x", "y", "z"][:d]
+q = {b: [Symbol(f"{c}{b}") for c in co] for b in range(1, N + 1)}
+p = {b: [Symbol(f"p{c}{b}") for c in co] for b in range(1, N + 1)}
+u = {(i, j): Symbol(f"u{i}{j}", positive=True) for i, j in combinations(range(1, N + 1), 2)}
+allv = [s for b in q for s in q[b]] + [s for b in p for s in p[b]] + list(u.values())
+chain = {}                       # u_ij = 1/r_ij, so d u_ij/d q = -(q - q_partner)*u_ij^3
+for (i, j), uij in u.items():
+    for k in range(d):
+        chain[(uij, q[i][k])] = -(q[i][k] - q[j][k]) * uij**3
+        chain[(uij, q[j][k])] = -(q[j][k] - q[i][k]) * uij**3
+def Dq(f, v):                     # total position derivative (chain rule through u)
+    r = diff(f, v)
+    for uij in u.values():
+        if (uij, v) in chain:
+            r += diff(f, uij) * chain[(uij, v)]
+    return r
+def PB(f, g):                     # canonical Poisson bracket {f, g}
+    s = Integer(0)
+    for b in range(1, N + 1):
+        for k in range(d):
+            s += Dq(f, q[b][k]) * diff(g, p[b][k]) - diff(f, p[b][k]) * Dq(g, q[b][k])
+    return s
+gens, lev = [], []                # H_ij = (|p_i|^2 + |p_j|^2)/2 + u_ij  (V(r) = 1/r)
+for i, j in combinations(range(1, N + 1), 2):
+    gens.append(sum(s**2 for s in p[i]) / 2 + sum(s**2 for s in p[j]) / 2 + u[(i, j)]); lev.append(0)
+def dim(level):                   # exact rank over QQ of generators up to a given level
+    ds = [Poly(expand(gens[k]), *allv, domain="QQ").as_dict() for k in range(len(gens)) if lev[k] <= level]
+    mons = sorted({m for D in ds for m in D}); idx = {m: c for c, m in enumerate(mons)}
+    rows = [[QQ.zero] * len(mons) for _ in ds]
+    for r, D in zip(rows, ds):
+        for m, c in D.items():
+            r[idx[m]] = QQ.convert(c)
+    return DomainMatrix(rows, (len(rows), len(mons)), QQ).rank()
+seq, done = [dim(0)], set()
+for L in range(1, 4):
+    front = [k for k in range(len(gens)) if lev[k] == L - 1]; base = len(gens)
+    pairs = [(a, b) for a in range(base) for b in range(a + 1, base)] if L == 1 else [(a, b) for a in front for b in range(base) if a != b]
+    for a, b in pairs:
+        key = frozenset({a, b})
+        if key in done: continue
+        done.add(key); gens.append(together(PB(gens[a], gens[b]))); lev.append(L)
+    seq.append(dim(L))
+print(seq)                        # [3, 6, 17, 116]
