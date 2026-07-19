@@ -27,6 +27,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
 \newcommand{\cA}{\mathcal{A}}
 \newcommand{\cL}{\mathcal{L}}
 \newcommand{\SN}{S_N}
@@ -70,9 +71,10 @@ configurations produce the same dimension sequence.
 
 These results support the \textbf{Universality
 Conjecture}: the dimension sequence of the pairwise
-Poisson algebra depends only on~$N$ and the singularity
-class of the potential (singular vs.\ regular), and is
-independent of the spatial dimension, mass ratios,
+Poisson algebra depends only on~$N$ and whether the
+potential's exponent lies in the exceptional set
+$\{r^1, r^2, r^3\}$, rather than on a singular-versus-regular
+dichotomy, and is independent of the spatial dimension, mass ratios,
 pole order, and the sign of the interaction.  Regularity
 alone does not imply finiteness: among integer-power
 polynomial potentials, only $r^1$, $r^2$, and $r^3$ are
@@ -140,7 +142,8 @@ conjecture:
 
 In Section~\ref{sec:conjecture} we formulate the
 Universality Conjecture: the dimension sequence depends
-only on~$N$ and the singularity class, and nothing else.
+only on~$N$ and whether the potential's exponent lies in
+the exceptional set $\{r^1, r^2, r^3\}$, and nothing else.
 
 
 % ====================================================================
@@ -425,8 +428,12 @@ For the harmonic potential $V_{ij} = c_{ij}\, r_{ij}^2$,
 the situation is qualitatively different: $V_{ij}$ is
 polynomial in the coordinates (no auxiliary variable
 needed), and all iterated brackets remain polynomial.
-The algebra closes because polynomial rings are finitely
-generated at each degree.
+The algebra closes not because polynomial rings are
+finitely generated at each degree --- $r^4$ through
+$r^{10}$ are equally polynomial and do not close --- but
+because the harmonic oscillator possesses an enhanced
+dynamical symmetry (a Fradkin-tensor / $SU(d)$ structure)
+special to the degree-2 case.
 
 The relevant structural distinction is therefore:
 \begin{itemize}[nosep]
@@ -539,9 +546,12 @@ coupling constants $c_{ij}$:
     the pole order~$p$, or the couplings~$c_{ij}$.
 \end{enumerate}
 For regular potentials ($V$ polynomial in~$r$), finiteness
-is not generic: it holds only for the exceptional exponents
-$r^1$, $r^2$, and $r^3$, not for regular potentials as a
-class.
+is not generic: only $r^1$ and $r^2$ close to a
+finite-dimensional algebra (at dimension~5 and~15
+respectively).  The exponent $r^3$ is also exceptional ---
+it departs from the universal sequence at dimension~109 ---
+but does not close; $r^4$ through $r^{10}$ are not
+exceptional and reproduce the universal sequence.
 \end{conjecture}
 
 \subsection{Evidence summary}
@@ -570,14 +580,14 @@ Pole order $p$ & 3 & $p = 1, 2, 3$
 Charge signs & 3 & attractive, repulsive, mixed
   & invariant \\
 \midrule
-Potential type & 3 & singular vs.\ regular
-  & different \\
+Exceptional exponents & 3 & $r^1, r^2, r^3$ vs.\ all others
+  & departs vs.\ universal \\
 $N$ & 3, 4 & --- & different sequences \\
 \bottomrule
 \end{tabular}
 \caption{Evidence for the Universality Conjecture.  The
-  dimension sequence changes only when $N$ changes or
-  the potential switches from singular to regular.  All
+  dimension sequence changes only with $N$ or at the
+  exceptional exponents $r^1, r^2, r^3$.  All
   other parameters leave it invariant.}
 \label{tab:evidence}
 \end{table}
@@ -616,8 +626,10 @@ edges share a vertex).
 \begin{remark}
 In the graph-theoretic language, the conjecture states
 that the dimension sequence $d_N(n)$ is a
-\emph{graph invariant} of $K_N$ equipped with a
-singularity class label.  All other data --- the
+\emph{graph invariant} of $K_N$ equipped with an
+exceptional-exponent label (whether the potential is one
+of $r^1$, $r^2$, $r^3$, or lies outside this set).  All
+other data --- the
 embedding dimension~$d$, the vertex weights (masses),
 the edge weights (couplings and pole order) --- are
 irrelevant.
@@ -634,10 +646,11 @@ The conjecture makes concrete, testable predictions:
     mass-invariant.  Computing these values would extend
     the evidence to a third value of~$N$.
 
-  \item \textbf{$N{=}4$, $d{=}2$, $1/r^2$:}
-    the conjecture predicts the same sequence
-    $[6, 14, 62]$ as for $1/r$.  This has not yet been
-    verified.
+  \item \textbf{$N{=}4$, $d{=}2$, $1/r^2$:} \emph{Resolved
+    through level~2.}  The Calogero--Moser potential
+    reproduces $[6, 14, 62]$, matching $1/r$; the exact
+    level-3 value $d_4(3) = 1{,}260$ has been established
+    for $1/r$ only.
 
   \item \textbf{$N{=}3$, level~4:}
     does $d_3(4)$ agree for $1/r$ and $1/r^2$?
@@ -665,7 +678,8 @@ of the 116-dimensional algebra via $S_3$ representation
 theory and jet filtration.  The present paper shows that
 the sequence is far more robust than initially expected:
 it is independent of every tested parameter except~$N$
-and the singularity class.
+and whether the potential's exponent lies in the
+exceptional set $\{r^1, r^2, r^3\}$.
 
 \subsection{$S_N$ structure for $N{=}4$}
 
@@ -712,18 +726,23 @@ physical universe.
 \subsection{Open questions}
 
 \begin{enumerate}
-  \item \textbf{$N{=}5$ and beyond.}  Computing $d_5(1)$
-    requires handling $\binom{5}{2} = 10$ seed
-    Hamiltonians and $\binom{10}{2} = 45$ level-1
-    candidates.  This is computationally feasible and
-    would extend the evidence to a third value of~$N$.
+  \item \textbf{$N{=}5$ and beyond.} \emph{Partially
+    resolved.}  The dimension sequence has been computed
+    through level~2: $d_5(0) = 10$, $d_5(1) = 25$,
+    $d_5(2) = 145$, extending the evidence to a third
+    value of~$N$ (mass invariance at $N{=}5$ has not been
+    separately verified across multiple configurations;
+    see the falsifiable prediction above).  Level~3 for
+    $N{=}5$ remains an open computational target.
 
-  \item \textbf{$d_4(3)$.}  The level-3 computation for
-    $N{=}4$ involves a large number of candidates and is
-    expensive.  Whether the growth ratio
-    $d_4(3)/d_4(2)$ matches the acceleration seen at
-    $N{=}3$ ($d_3(3)/d_3(2) = 6.82$) is an important
-    test.
+  \item \textbf{$d_4(3)$.} \emph{Resolved for $1/r$.}
+    $d_4(3) = 1{,}260$ exactly, giving growth ratio
+    $d_4(3)/d_4(2) \approx 20.3$, exceeding the
+    acceleration seen at $N{=}3$
+    ($d_3(3)/d_3(2) = 6.82$).  Whether other potentials
+    (e.g.\ $1/r^2$) match this exact value at level~3
+    remains untested (verified only through level~2; see
+    above).
 
   \item \textbf{Higher-level divergence.}  The sequences
     for different pole orders match through level~3 for
@@ -732,12 +751,13 @@ physical universe.
     remains unverified.
 
   \item \textbf{Logarithmic and Yukawa potentials.}
-    The $1/r^p$ family does not exhaust all singular
-    potentials.  Logarithmic ($V \propto \log r$,
-    relevant for 2D gravity and vortex dynamics) and
-    Yukawa ($V \propto e^{-\alpha r}/r$, relevant for
-    screened Coulomb interactions) potentials remain
-    untested.
+    \emph{Resolved.}  The $1/r^p$ family does not exhaust
+    all singular potentials, but logarithmic
+    ($V \propto \log r$, relevant for 2D gravity and
+    vortex dynamics) and Yukawa ($V \propto e^{-\alpha
+    r}/r$, relevant for screened Coulomb interactions)
+    potentials have since been tested and both reproduce
+    the universal sequence $[3, 6, 17, 116]$.
 
   \item \textbf{Non-complete interaction graphs.}
     All results in this paper concern the complete graph

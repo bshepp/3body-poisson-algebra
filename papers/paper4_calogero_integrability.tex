@@ -39,10 +39,11 @@ Galperin's billiard construction for the digits of $\pi$.  We find
 $d(k) = [3, 6, 17, 116]$ for the integrable Calogero-Moser model,
 identical to non-integrable gravity, and invariant across all Galperin
 superintegrable mass ratios.  The Poisson algebra dimension sequence
-therefore detects the \emph{singularity class} of the pair
-potential---not its integrability properties---reflecting the
-combinatorial structure of the pairwise interaction graph rather than
-global dynamical conservation laws.
+is insensitive to integrability, departing from the universal value
+only for the exceptional exponents $r^1$, $r^2$, and $r^3$---not for
+singular versus regular potentials as a class---and reflecting
+instead the combinatorial structure of the pairwise interaction graph
+rather than global dynamical conservation laws.
 \end{abstract}
 
 \maketitle
@@ -93,7 +94,8 @@ potential $V \propto 1/r^2$ is singular.  If integrability constrains
 the growth of the pairwise Poisson algebra, the one-dimensional
 Calogero system should show a dimension sequence different from
 non-integrable gravity.  If it does not, the sequence reflects
-something else entirely: the singularity structure of the interaction.
+something else entirely: the exceptional-exponent classification of
+the interaction, not a singular-versus-regular dichotomy.
 
 In this paper, we report the computation of $d(k)$ for the
 one-dimensional Calogero-Moser three-body system through filtration
@@ -224,7 +226,8 @@ sequence $[3, 6, 17, 116]$ in both one and two spatial dimensions.
 Companion computations~\cite{paper1,paper3} for $\log r$, Yukawa
 ($e^{-\mu r}/r$), and Coulomb potentials in two dimensions also yield
 this sequence.  The harmonic oscillator ($V \propto r^2$) is the sole
-exception, generating a finite algebra that saturates at $d(3) = 15$.
+exception among the potentials in Table~\ref{tab:comparison},
+generating a finite algebra that saturates at $d(3) = 15$.
 
 \begin{table}[t]
 \caption{Poisson algebra dimension sequences for various
@@ -365,8 +368,12 @@ $u_{ij} = 1/r_{ij}$ and is identical for every potential---Newtonian,
 Calogero, or otherwise.  All Poisson brackets among the $H_{ij}$
 therefore share the same derivative structure; what differs is only
 the form of the potential term $V(u)$ in the initial generators.
-For regular potentials such as $V = r^2$, no auxiliary variables
-enter and the brackets close after finitely many iterations.  For
+For the harmonic potential $V = r^2$, no auxiliary variables enter,
+and the brackets close after finitely many iterations---not because
+the potential is regular, but because of its degree-2 enhanced
+dynamical symmetry (the Fradkin tensor, generating $SU(d)$); regular
+potentials are not finite in general, as $r^4$ through $r^{10}$
+remain polynomial yet do not close.  For
 any potential singular at $r = 0$, the $u$-substitution introduces
 the universal cubic chain rule, and iterated brackets produce new
 functionally independent expressions at each level.  The dimension
@@ -388,7 +395,8 @@ structure as generic, non-integrable gravity.
 
 This result is not a deficiency of our method but rather a precise
 characterization of what the pairwise algebra measures.  It is an
-\emph{algebraic} invariant of the singularity class, not a
+\emph{algebraic} invariant of the exceptional-exponent
+classification, not a
 \emph{dynamical} invariant of the trajectory structure.
 
 
@@ -423,7 +431,7 @@ open questions.  We note that the cross-potential universality
 established here holds through level~3; whether the sequences for
 different singular potentials continue to agree at level~4 and beyond,
 or eventually diverge, is the most important open computational test
-of the singularity-class hypothesis.
+of universality among singular potentials.
 
 \begin{acknowledgments}
 Computational resources were provided by Amazon Web Services (EC2).
