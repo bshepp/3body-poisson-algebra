@@ -158,7 +158,7 @@
       ctx.font = '16px Georgia, serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('all bodies off screen — click to reset', W/2, H/2);
+      ctx.fillText('all bodies off screen. Click to reset.', W/2, H/2);
     }
   }
 

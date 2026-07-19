@@ -1,4 +1,4 @@
-// §9 SVD rank gap: log-scale singular value plot with the >10^10 cliff at index 116
+// §9 SVD rank gap: log-scale singular value plot with the ~5x10^9 gap at index 116
 (function () {
   const cv = document.getElementById('svd-canvas');
   const out = document.getElementById('svd-out');

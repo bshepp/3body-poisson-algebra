@@ -174,7 +174,7 @@
 
   document.getElementById('pend-clear').addEventListener('click', () => {
     TRAJS.length = 0;
-    document.getElementById('pend-h').textContent = '—';
+    document.getElementById('pend-h').textContent = '–';
   });
   document.getElementById('pend-pause').addEventListener('click', (e) => {
     playing = !playing;
