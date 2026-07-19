@@ -191,9 +191,13 @@ level ($\sim 10^{-16}$).
 
 \subsection{Level 4: numerical pipeline}
 
-At level~4, there are 11,523 candidate brackets and the symbolic
-expressions become prohibitively large.  We use a fully numerical
-pipeline:
+At level~4, there are 11,937 candidate brackets and the symbolic
+expressions become prohibitively large.  The run reported here
+evaluated 11,523 of them: an enumeration slip omitted the 414
+brackets of level-3 generators with the original pair
+Hamiltonians.  Omitting candidates can only lower the computed
+rank, so the lower bound below is unaffected.  We use a fully
+numerical pipeline:
 \begin{enumerate}[nosep]
   \item Compute all 12 partial derivatives (6~position,
         6~momentum) of each level~$\le 3$ generator symbolically.

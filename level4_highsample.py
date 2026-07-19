@@ -161,7 +161,7 @@ def enumerate_level4_pairs(all_levels):
     computed = set()
     for i in range(n_existing):
         for j in range(i + 1, n_existing):
-            if all_levels[i] + all_levels[j] <= 3:
+            if max(all_levels[i], all_levels[j]) <= 2:  # pairs computed through L3 have max level <= 2; the old sum-form wrongly skipped the 414 {level-3, level-0} brackets
                 computed.add(frozenset({i, j}))
     pairs = []
     for i in frontier:

@@ -6798,3 +6798,22 @@ Highlights:
   serialization; build_status_table stdout/redirect self-corruption;
   killing_signature parquet column rename; papers/3body_poisson_algebra
   .pdf stale with no surviving .tex source.
+
+## 2026-07-19 (later) — L4 candidate-count discrepancy resolved: enumeration bug found
+
+Tracing the 11,523-vs-11,937 convention question (preprint vs Lane C)
+found a real bug, the same sum-vs-max class as the exact_growth resume
+fix: enumerate_level4_pairs marked already-computed pairs with
+`levels[i] + levels[j] <= 3` instead of `max(...) <= 2`, silently
+skipping all 414 {level-3 frontier, level-0 Hamiltonian} brackets
+(138x3). True candidate count is 11,937 (= C(138,2) + 138*18); the
+numeric pipelines evaluated 11,523. d(4) >= 5,604 REMAINS VALID
+(subset spans can only under-estimate rank, so the lower bound stands),
+but the S3 mpmath eval-matrix checkpoint (15,000-sample, stalled 4.4%)
+was built WITHOUT those 414 brackets - any jaga resume should
+regenerate the eval matrix with the fixed enumeration or append the
+missing brackets. Fixed in aws_level4.py, level4_highsample.py,
+level4_mpmath_rank.py, bench_flint/probe_l4.py, probe_l4_30min.py;
+preprint pipeline section now states 11,937 total / 11,523 evaluated
+with the unaffected-bound note. Lane C's 11,937 enumeration was correct
+all along.
