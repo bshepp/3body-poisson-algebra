@@ -31,14 +31,14 @@ See revised statement in Section 4 below.
 | Finite dim for r^2 | Proved (closes at dim 15) | — |
 | Mass invariance for 1/r (equal) | Verified numerically (float64) (20+ ratios, including Tsygvintsev cases) | — |
 | **Mass invariance for 1/r (generic)** | **Proved (generic)**: proved symbolically for generic masses over ℚ(m₁,m₂,m₃) — rank 116 holds for all mass triples outside a possible proper subvariety (none found); confirmed numerically at 25+ mass ratios from 10⁻³ to 10⁶ (Mar–Apr 2026). Sun-Earth-Moon (3.7×10⁻⁸) and Sun-Jupiter-Asteroid (10⁻¹⁰) atlases complete with non-trivial rank across full shape sphere | Original survey [3,5,13,69] was SymPy artifact. Extreme ratios show rank deficit (91–108 vs 116) due to SVD conditioning, not algebraic closure |
-| **Charge-class mass invariance** | **Verified computationally (exact)** (Mar 2026): He, H⁻, Ps⁻, muonic He → [3,6,17,116] despite 7000x mass ratios | Consistent with universal mass invariance |
+| **Charge-class mass invariance** | **Verified numerically (float64)** (Mar 2026): He, H⁻, Ps⁻, muonic He → [3,6,17,116] despite 7000x mass ratios | Consistent with universal mass invariance |
 | **Charge magnitude sensitivity — RESOLVED AS ARTIFACT** | **Revalidated** (Mar 24, 2026): Early 500-sample runs reported Li⁺ (+3,−1,−1) → 111 and H₂⁺ (+1,+1,−1) → 115; revalidation at 1000–5000 samples (`results/charge_sensitivity/charge_sensitivity_completion.json`) restored [3,6,17,116] in every case, using the identical charges and physical masses — undersampling artifacts, the same failure class as the SymPy-1.10 [3,5,13,69]. The (+1,+1,−1) charge multiset is also 116 by exact rank over ℚ at unit masses. The (+1,+q,−1) sweep (q=1..20, exact QQ) gives [3,6,17,116] for ALL q. | Charge-invariant in everything tested: magnitudes q=1..20 exact, mixed-sign and same-sign geometries, physical masses |
 | log(r) potential | **[3, 6, 17, 116]** (Mar 2026) — transcendental singularity universal | — |
 | Composite (1/r + 1/r²) | **[3, 6, 17, 116]** (Mar 2026) — multi-pole composite universal | — |
 | Penning trap (+1,+1,+1 with harmonic confinement) | **[3, 6, 17, 116]** (Mar 2026) — all-repulsive + external potential | — |
 | Mass invariance for 1/r^2 | **Atlas complete** (Mar 2026): 100×100, rank 116 at 87.9%. Instance terminated. | — |
 | N=4 dimension sequence | **[6, 14, 62, 1260]** (1/r; other potentials verified through L2) (Apr 2026). new_L3(4)=1198. | L3 computed. Graph-theoretic: 1198·C(4,4) with C(4,4)=1. |
-| N=4 mass invariance | **Verified computationally (exact)** (3 configs: equal, 100:10:1:1, 3:7:11:2) | — |
+| N=4 mass invariance | **Verified numerically (float64)** (3 configs: equal, 100:10:1:1, 3:7:11:2) | — |
 | N=7 dimension sequence | **[21, 56, 476]** (Apr 2026) | L1 formula confirmed; old L2 cubic off by 1 (predicts 477). Resolves L2 formula — see below. |
 | N=8 dimension sequence | **[28, 76, 748]** (Apr 2026). Cross-verified: SymPy 1.12 (local) and 1.14.0 (AWS) both agree. | L1 formula confirmed; old L2 cubic off by 4 (predicts 752) |
 | N=9 dimension sequence | **[36, 99, 1107]** (Apr 14, 2026). Exact QQ rank, local computation (~107 min). | All three scaling formulas confirmed: L0=36, L1=99, L2=1107 |
@@ -48,7 +48,7 @@ See revised statement in Section 4 below.
 | Dependence on N | Tested at N=3–9, 11–26 (L1), 11–50 (L0) | L2 complete through N=9 |
 | Dependence on spatial dim | **Independent of d** for N=3–6 | N=3, N=4: d=1,2,3 identical; N=5, N=6: d=1,2 identical (see gap_workplan.md §2.1, project_status.md Algebra Structure table) |
 | 1/r, 1/r^2, 1/r^3, log(r) give same sequence | **Proved** for N=3 through L3 | Could diverge at L4 |
-| Charge-sign invariance (1/r) | **Verified computationally (exact)** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
+| Charge-sign invariance (1/r) | **Verified numerically (float64)** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
 | Charge-sign invariance (1/r²) | **Dimension preserved**, gap structure differs (Mar 2026): rank=116 at most grid points but gap correlation r≈0.76 vs r≈0.85 for 1/r | Deeper investigation needed |
 | Yukawa (e^{-μr}/r) potential | **UNIVERSALITY CONFIRMED** (Apr 16, 2026) — 6 mu values (0.1–5.0) at d=1, all [3,6,17,116]. 3 physical systems (tritium/He-3, dusty plasma, p-n-n scattering) all universal. Used Taylor-expansion composite K=3 with chunked flat-func lambdification fix. First non-power-law singular potential with exponential screening confirmed universal. | — |
 | **Shape sphere atlas universality** | **Confirmed** (Mar 2026, extended Apr 2026): rank 116 is the mode across 85–93% of shape sphere for 11 equal-mass configurations (75% for log); extreme mass ratio systems show non-trivial rank (91–108) across 100% of grid with zero failures | Rank deficit at extreme mass ratios is numerical (SVD conditioning at dynamic ranges 10²⁰–10³²), not algebraic |
@@ -804,11 +804,11 @@ and not a singular-vs-analytic classifier.
 | Claim | Status | Evidence |
 |-------|--------|----------|
 | 1D Calogero (integrable) gives [3,6,17,116] | **Verified numerically (float64)** | `exact_growth_nbody.py -N 3 -d 1 --potential 1/r^2`, gap ratio 6.85×10⁷ |
-| Sequence is mass-ratio invariant for 1/r² in 1D | **Proved** | Tested q=3,4,5,6 superintegrable + generic masses |
+| Sequence is mass-ratio invariant for 1/r² in 1D | **Verified numerically (float64)** | Tested q=3,4,5,6 superintegrable + generic masses |
 | Singular potentials → infinite algebra | **Verified through L3 (infinitude conjectured)** | 1/r, 1/r², 1/r³, log, Yukawa all give [3,6,17,116] in d=1 and d=2 |
-| Regular potentials → finite algebra | **Falsified** | Only r¹ (dim 5) and r² (harmonic, [3,6,13,15,15], saturating at d=15) are finite among regular (polynomial) potentials; r³ is infinite (dim 109 at L3, non-nilpotent) and r⁴ through r¹⁰ all give the universal infinite-dimensional [3,6,17,116] |
+| Regular potentials → finite algebra | **Falsified** | Only r¹ (dim 5) and r² (harmonic, [3,6,13,15,15], saturating at d=15) are finite among regular (polynomial) potentials; r³ is infinite (dim 109 at L3, non-nilpotent) and r⁴ through r¹⁰ all give the universal (conjectured infinite-dimensional) [3,6,17,116] |
 | Integrability is invisible to pairwise algebra | **Proved** | CM integrals (L², Chevalley J) are non-pairwise; algebra can't see them |
-| Dimension sequence is d-independent for all singular V | **Verified computationally (exact)** | 1/r tested at d=1,2,3; 1/r² at d=1,2; 1/r³ at d=1 — all [3,6,17,116] |
+| Dimension sequence is d-independent for all singular V | **Verified computationally (exact at d=1,2; float64 at d=3)** | 1/r tested at d=1,2,3; 1/r² at d=1,2; 1/r³ at d=1 — all [3,6,17,116] |
 
 **The exceptional-set picture**: The dimension sequence does NOT
 distinguish potentials singular at r=0 from those that are analytic

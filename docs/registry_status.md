@@ -208,7 +208,7 @@
 |----|--------|------|-------------|
 | `harmonic_lie_algebra_id` | complete | `harmonic_lie_algebra_id.py` | Identifies the 15-dim Lie algebra of the harmonic (r^2) 3-body planar Poisson algebra. Reads exact rational structure... |
 | `nbody_compare_level3_structure` | wip | `nbody/compare_level3_structure.py` | Level-3 structure comparison across potentials. AWS-scale workload. |
-| `nbody_isomorphism_test` | complete | `nbody/isomorphism_test.py` | Cross-potential isomorphism test for L2 algebras. 12 non-harmonic 17-dim algebras canonically isomorphic via ad-Gram ... |
+| `nbody_isomorphism_test` | complete | `nbody/isomorphism_test.py` | Cross-potential isomorphism test for L2 algebras. 12 non-harmonic 17-dim algebras indistinguishable under fine invari... |
 | `nbody_structure_cross_section` | needs_review | `nbody/structure_cross_section.py` | 1D Cross-Section of Algebraic Structure Across Parameter Space ======================================================... |
 | `planned_atlas_structure_sweep` | planned | `atlas_structure_sweep.py` | Atlas of structure constants over the (mu, phi) shape sphere. Compute the 32 non-zero structure constants (and ad-Gra... |
 | `planned_compare_atlas_structures` | planned | `compare_atlas_structures.py` | Cross-potential comparison of atlas structure-constant tensors. Renders difference maps between universal-class poten... |

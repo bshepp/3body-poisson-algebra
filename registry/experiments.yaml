@@ -1820,17 +1820,19 @@
   scope: nbody/N3
   status: complete
   description: Cross-potential isomorphism test for L2 algebras. 12 non-harmonic 17-dim
-    algebras canonically isomorphic via ad-Gram (Frobenius) eigenvalues, ad-rank multisets,
-    Casimir trace. r^1 identified as filiform L_{5,2}. r^3 L3 deep analysis.
+    algebras indistinguishable under fine invariant matching (isomorphism conjectured)
+    via ad-Gram (Frobenius) eigenvalues, ad-rank multisets, Casimir trace. r^1 identified
+    as filiform L_{5,2}. r^3 L3 deep analysis.
   outputs: []
   tags:
   - structure
   - isomorphism
-  - killing
+  - ad-gram
   - L2
   latest_result:
     date: '2026-04-15'
-    summary: Isomorphism confirmed across 12 non-harmonic potentials at L2.
+    summary: 12 non-harmonic potentials indistinguishable under fine invariant matching
+      (isomorphism conjectured) at L2.
     sequence: []
   related_supplemental:
   - EXTRACT_ALGEBRA_STRUCTURE.md
