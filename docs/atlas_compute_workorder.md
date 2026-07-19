@@ -514,10 +514,17 @@ is the first published shape-sphere visualization for the four-body algebra.
 
 #### 4.3.2 -- Charge-magnitude continuity (q1 in [1, 5])
 
-**Motivation.** Datasets shows L3 = 116 for He (+2,-1,-1) but L3 = 111 for
-Li+ (+3,-1,-1). The transition between q1=2 and q1=3 is unexplored. A sweep
-of integer + half-integer q1 (1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0)
-with q2=q3=-1 would reveal whether the L3 drop is sharp at q1=3 or gradual.
+**Motivation.** The apparent L3 = 111 "drop" for Li+ (+3,-1,-1) was a
+500-sample undersampling artifact, refuted by the Mar 24 2026 revalidation
+(116 at 1000-5000 samples;
+`results/charge_sensitivity/charge_sensitivity_completion.json`). The
+exact-rational (+q1,-1,-1) sweep for q1 = 1..20 gives L3 = 116 everywhere,
+so there is no q1=2-to-3 transition to characterize. That sweep is
+integer-only, though -- fractional q1 has never been covered. A sweep of
+integer + half-integer q1 (1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0)
+with q2=q3=-1 would extend atlas coverage of charge invariance to
+fractional charge magnitudes and confirm the rank stays 116 continuously
+between integers, not just at them.
 
 **Source.** Need new scenarios in `expansion_configs.py` for half-integer
 charges (or extend full_atlas_scan.py to accept floats for `--charges`).
