@@ -52,7 +52,7 @@ Additional completed work:
 | 3 | **Classical commutant of H_total** | rank(ad_H) = 115 over QQ, commutant dim = **41** (156 − 115). |
 | 4 | **Comparison** | **SMALLER** — quantum commutant (40) < classical (41). Quantization *removes* one conservation law. |
 | 5 | **Kernel vector analysis** | All 40 quantum kernel vectors have rational (hbar-independent) coefficients. Mostly level-3 generators. |
-| 6 | **Casimir construction** | Level-2 Casimir: rank 17, Killing rank 0, center dim 17. |
+| 6 | **Casimir construction** | Level-2 Casimir: rank 17, Killing rank 0, center dim 17 (dim − Killing-rank shortcut; invalid for nilpotent algebras — the genuine ad-kernel center is 11/17, see the invariants table below). |
 | 7 | **Interpretation** | The 117th generator does NOT participate in any conserved combination with H_total. Energy bound via this approach is not possible. The quantum deformation strictly reduces symmetry (Case C). |
 
 ### Completed — N-Body Rank Sweep (April 11, 2026)

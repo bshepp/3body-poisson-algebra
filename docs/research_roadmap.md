@@ -273,7 +273,7 @@ sequence [3, 3, 11, 99]) to the On-Line Encyclopedia of Integer Sequences.
 - A clear mathematical definition
 - References or a preprint
 
-**Status**: **A395423 PROPOSED** (Apr 21, 2026), under editorial review.
+**Status**: **A395423 PROPOSED**, under editorial review (submitted Apr 21, 2026; proposed Jul 11, 2026).
 Level 4 lower bound now at d(4) >= 5,604 (200,000
 samples; boundary gap ≈1.2×, not definitive) — up from 4,501 at 30K samples.
 
