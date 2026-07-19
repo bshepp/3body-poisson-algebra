@@ -133,6 +133,10 @@ class NBodyAlgebra:
             mass_str = "_".join(f"m{k}{_mass_label(v)}"
                                 for k, v in sorted(masses.items()))
             tag += f"_{mass_str}"
+        # Full config tag (potential + charges + masses variants), reused
+        # by --save-svd's output dir so distinct runs of the same
+        # potential don't clobber each other's artifacts (E5 fix).
+        self.config_tag = tag
         default_ckpt = os.path.join(_SCRIPT_DIR, f"checkpoints_{tag}")
         self.checkpoint_dir = checkpoint_dir or default_ckpt
 
@@ -409,21 +413,6 @@ class NBodyAlgebra:
             lines.append(
                 f"{indent}{target_var} += {sp.pycode(chunk_expr)}")
         return lines
-
-    def _make_flat_func(self, expr, func_name="_f"):
-        replacements, reduced = sp.cse([expr])
-        var_str = ", ".join(str(v) for v in self.all_vars)
-        lines = [f"def {func_name}({var_str}):"]
-        for sym, sub_expr in replacements:
-            lines.extend(
-                self._expr_to_chunked_lines(sub_expr, str(sym)))
-        lines.extend(
-            self._expr_to_chunked_lines(reduced[0], "_result"))
-        lines.append("    return _result")
-        code = "\n".join(lines)
-        namespace = {"sqrt": np.sqrt, "math": __import__("math")}
-        exec(compile(code, "<generated>", "exec"), namespace)
-        return namespace[func_name]
 
     def _make_flat_func(self, expr, label=""):
         """Fallback for expressions too deeply nested for compile().
@@ -1068,9 +1057,11 @@ class NBodyAlgebra:
             eval_matrix, label="(ALL generators)")
 
         if save_svd:
-            pot_tag = self.potential.replace("/", "").replace("^", "")
+            # Same full config tag as the checkpoint dir (E5 fix): includes
+            # yukawa mu, charges, and masses variants, so distinct runs of
+            # the same potential stop clobbering each other's svd_components.
             svd_dir = os.path.join(_SCRIPT_DIR, "..", "results", "svd_components",
-                                   f"N{N}_d{d}_{pot_tag}")
+                                   self.config_tag)
             os.makedirs(svd_dir, exist_ok=True)
             np.save(os.path.join(svd_dir, "svd_spectrum.npy"), svals_full)
             np.save(os.path.join(svd_dir, "U_matrix.npy"), U_full)

@@ -115,7 +115,8 @@ def select_basis_and_pivots(poly_list, monom_list, monom_to_idx,
                             cache_path, expected_rank=116):
     """Numerical QR to select basis generators AND pivot monomials.
 
-    The SVD gap at rank 116 is >1e10 — numerical selection is exact.
+    The SVD gap at rank 116 (L3) is ~5e9 (>1e10 at L0-L2) — numerical
+    selection is exact.
     No DomainMatrix, no RREF on wide matrices. Runs in seconds.
 
     Returns (basis_indices, pivot_cols, pivot_col_map).

@@ -340,7 +340,8 @@ def build_hamiltonians(potential_type='1/r', masses=None, coupling=1):
 # =====================================================================
 # Checkpoint helpers
 # =====================================================================
-def save_checkpoint(level, all_exprs, all_names, all_levels):
+def save_checkpoint(level, all_exprs, all_names, all_levels,
+                    potential_type='1/r', masses=None, coupling=1):
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
     path = os.path.join(CHECKPOINT_DIR, f"level_{level}.pkl")
     data = {
@@ -348,13 +349,20 @@ def save_checkpoint(level, all_exprs, all_names, all_levels):
         "exprs": all_exprs,
         "names": all_names,
         "levels": all_levels,
+        # Identity of the run config that produced this checkpoint, so a
+        # later --resume can refuse to silently mix configs (E2 fix).
+        "identity": {
+            "potential": potential_type,
+            "masses": masses,
+            "coupling": coupling,
+        },
     }
     with open(path, "wb") as fh:
         pickle.dump(data, fh, protocol=pickle.HIGHEST_PROTOCOL)
     print(f"    Checkpoint saved: {path}")
 
 
-def load_checkpoint():
+def load_checkpoint(potential_type='1/r', masses=None, coupling=1):
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
     files = sorted(
         [f for f in os.listdir(CHECKPOINT_DIR) if f.endswith(".pkl")]
@@ -364,6 +372,25 @@ def load_checkpoint():
     path = os.path.join(CHECKPOINT_DIR, files[-1])
     with open(path, "rb") as fh:
         data = pickle.load(fh)
+    current_identity = {
+        "potential": potential_type,
+        "masses": masses,
+        "coupling": coupling,
+    }
+    identity = data.get("identity")
+    if identity is None:
+        # Mirrors nbody/exact_growth_nbody.py's checkpoint validation style
+        # (:810-821), but legacy checkpoints predate identity tracking, so
+        # we allow the load and just make the risk visible.
+        print(f"    WARNING: checkpoint {path} predates identity tracking "
+              f"-- resuming WITHOUT verifying potential/masses/coupling "
+              f"match this run's config")
+    elif identity != current_identity:
+        raise ValueError(
+            f"Checkpoint identity mismatch: {path} was computed for "
+            f"{identity}, but this run's config is {current_identity}. "
+            f"Refusing to resume from a mismatched checkpoint."
+        )
     print(f"    Loaded checkpoint: {path}  (level {data['level']})")
     return data
 
@@ -600,7 +627,15 @@ def lambdify_generators(exprs):
             if arr.shape[0] == 1:
                 arr = np.full(n_pts, arr[0])
             elif arr.shape[0] < n_pts:
-                arr = np.resize(arr, n_pts)
+                # Never fabricate entries via cyclic padding (E11): warn
+                # loudly and zero-fill the shortfall instead, with a count.
+                n_missing = n_pts - arr.shape[0]
+                print(f"      WARNING: eval {idx+1}/{n} returned only "
+                      f"{arr.shape[0]}/{n_pts} values; zero-filling "
+                      f"{n_missing} missing entries instead of cyclically "
+                      f"padding (np.resize) with fabricated data",
+                      flush=True)
+                arr = np.concatenate([arr, np.zeros(n_missing)])
             cols.append(arr[:n_pts])
             if n_xreplace > 0 and (idx + 1) % 20 == 0:
                 print(f"      eval {idx+1}/{n}  [{time()-t_eval:.1f}s]",
@@ -770,6 +805,21 @@ def verify_jacobi_numerical(a_expr, b_expr, c_expr,
     return ok
 
 
+def resume_pair_already_computed(level_i, level_j, start_level):
+    """True iff bracket (i, j) was already computed by the run that this
+    --resume is continuing.
+
+    Invariant: pairs computed through level k are exactly those with
+    max level <= k - 1 (see the Levels 2+ loop: at level k's iteration,
+    the frontier is the level-(k-1) generators, paired against every
+    generator that already existed, i.e. level <= k-1). Since
+    ``start_level`` here is the next level still to be computed
+    (``start_level = k + 1`` for a checkpoint that finished level k),
+    the threshold is ``start_level - 1``.
+    """
+    return max(level_i, level_j) < start_level - 1
+
+
 # =====================================================================
 # Main computation
 # =====================================================================
@@ -796,7 +846,7 @@ def compute_exact_growth(max_level=3, n_samples=500, seed=42,
     computed_pairs = set()
 
     if resume:
-        ckpt = load_checkpoint()
+        ckpt = load_checkpoint(potential_type, masses, coupling)
         if ckpt is not None:
             all_exprs = ckpt["exprs"]
             all_names = ckpt["names"]
@@ -804,7 +854,8 @@ def compute_exact_growth(max_level=3, n_samples=500, seed=42,
             start_level = ckpt["level"] + 1
             for i in range(len(all_exprs)):
                 for j in range(i + 1, len(all_exprs)):
-                    if all_levels[i] + all_levels[j] < start_level:
+                    if resume_pair_already_computed(
+                            all_levels[i], all_levels[j], start_level):
                         computed_pairs.add(frozenset({i, j}))
 
     # ------------------------------------------------------------------
@@ -826,7 +877,8 @@ def compute_exact_growth(max_level=3, n_samples=500, seed=42,
             for j in range(i + 1, 3):
                 computed_pairs.add(frozenset({i, j}))
 
-        save_checkpoint(0, all_exprs, all_names, all_levels)
+        save_checkpoint(0, all_exprs, all_names, all_levels,
+                       potential_type, masses, coupling)
 
     # ------------------------------------------------------------------
     # Level 1
@@ -850,7 +902,8 @@ def compute_exact_growth(max_level=3, n_samples=500, seed=42,
             all_names.append(short)
             all_levels.append(1)
 
-        save_checkpoint(1, all_exprs, all_names, all_levels)
+        save_checkpoint(1, all_exprs, all_names, all_levels,
+                       potential_type, masses, coupling)
 
     # ------------------------------------------------------------------
     # Levels 2+
@@ -908,7 +961,8 @@ def compute_exact_growth(max_level=3, n_samples=500, seed=42,
         print(f"\n  Level {level}: {len(new_exprs_this_level)} candidates "
               f"computed in {elapsed_level:.1f}s")
 
-        save_checkpoint(level, all_exprs, all_names, all_levels)
+        save_checkpoint(level, all_exprs, all_names, all_levels,
+                       potential_type, masses, coupling)
 
     # ------------------------------------------------------------------
     # Jacobi identity verification

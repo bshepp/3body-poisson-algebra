@@ -629,8 +629,8 @@ class DimensionGrowth(Scene):
     def construct(self):
         self.camera.background_color = DARK_BG
 
-        dims = [3, 6, 17, 116, 4501]
-        ratios = [None, 2.0, 2.83, 6.82, 38.8]
+        dims = [3, 6, 17, 116, 5604]
+        ratios = [None, 2.0, 2.83, 6.82, 48.3]
         level_names = ["Level 0", "Level 1", "Level 2", "Level 3", "Level 4"]
 
         dim_label = Text("Algebra dimension", font_size=28, color=DIM_TEXT)

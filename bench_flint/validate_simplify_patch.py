@@ -270,7 +270,9 @@ STAGE_5 = [
         masses={"1": 12789, "2": 1, "3": 1},
         charges={"1": 3, "2": -1, "3": -1},
         max_level=3, n_samples=500, seed=42,
-        expected=[3, 6, 17, 111],
+        # 116 is the revalidated value (Mar 24 2026, 1000-5000 samples);
+        # 111 was a 500-sample undersampling artifact, since refuted.
+        expected=[3, 6, 17, 116],
         best_effort=True,
     ),
 ]

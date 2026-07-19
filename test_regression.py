@@ -18,6 +18,43 @@ def test_sympy_version():
     assert parts >= (1, 13, 3), f"Need sympy>=1.13.3, got {sympy.__version__}"
 
 
+def test_resume_pair_reconstruction():
+    """E1 regression (exact_growth.py --resume pair reconstruction).
+
+    Simulate levels [0, 0, 0, 1, 1, 1] (3 level-0 generators, 3 level-1
+    generators) with start_level=2, i.e. a checkpoint that finished
+    level 1 and is about to start level 2. A fresh, uninterrupted run
+    reaching this same point has only ever marked the 3 level0-level0
+    pairs as computed_pairs (level 1's own loop never touches
+    computed_pairs -- see nbody/exact_growth_nbody.py:929-948, mirrored
+    in exact_growth.py's level-1 block). The 9 {level0,level1} cross
+    pairs must NOT be marked, since level 2's loop still needs to form
+    those brackets. The old buggy condition
+    (``all_levels[i] + all_levels[j] < start_level``) marks all 12
+    pairs (3 level0-level0 + 9 level0-level1, since 0+1=1 < 2), wrongly
+    skipping the cross brackets on resume.
+    """
+    from exact_growth import resume_pair_already_computed
+    levels = [0, 0, 0, 1, 1, 1]
+    start_level = 2
+
+    reconstructed = set()
+    for i in range(len(levels)):
+        for j in range(i + 1, len(levels)):
+            if resume_pair_already_computed(levels[i], levels[j], start_level):
+                reconstructed.add(frozenset({i, j}))
+
+    level0_pairs = {frozenset({i, j}) for i in range(3) for j in range(i + 1, 3)}
+    cross_pairs = {frozenset({i, j}) for i in range(3) for j in range(3, 6)}
+
+    assert reconstructed == level0_pairs, (
+        f"Expected exactly the 3 level0-level0 pairs, got {reconstructed}"
+    )
+    assert not (reconstructed & cross_pairs), (
+        "level0-level1 cross pairs must not be marked as already computed"
+    )
+
+
 def test_nbody_n3_levels_0_2():
     """Canonical N=3 d=2 1/r baseline: dimension sequence [3, 6, 17]."""
     from nbody.exact_growth_nbody import NBodyAlgebra
@@ -91,6 +128,7 @@ def test_schwarzschild_composite_levels_0_3():
 if __name__ == "__main__":
     tests = [
         ("SymPy version", test_sympy_version),
+        ("Resume pair reconstruction (E1)", test_resume_pair_reconstruction),
         ("NBodyAlgebra N=3 d=2 1/r levels 0-2", test_nbody_n3_levels_0_2),
         ("Planar engine equivalent levels 0-2", test_planar_engine_levels_0_2),
         ("ThreeBodyAlgebra d=2 levels 0-1", test_three_body_algebra_d2_levels_0_1),

@@ -207,8 +207,8 @@ def render_growth_chart():
                                     facecolor=DARK_BG)
 
     levels = [0, 1, 2, 3, 4]
-    dims = [3, 6, 17, 116, 4501]
-    ratios = [np.nan, 2.0, 2.83, 6.82, 38.8]
+    dims = [3, 6, 17, 116, 5604]
+    ratios = [np.nan, 2.0, 2.83, 6.82, 48.3]
 
     for ax in [ax1, ax2]:
         ax.set_facecolor(DARK_BG)
@@ -218,9 +218,9 @@ def render_growth_chart():
 
     ax1.semilogy(levels[:4], dims[:4], 'o-', color='#58a6ff',
                  markersize=12, linewidth=2.5, zorder=3)
-    ax1.semilogy([4], [4501], 's', color='#ff6b6b',
+    ax1.semilogy([4], [5604], 's', color='#ff6b6b',
                  markersize=14, zorder=3)
-    ax1.annotate(r'$\geq 4{,}501$', (4, 4501),
+    ax1.annotate(r'$\geq 5{,}604$', (4, 5604),
                  textcoords='offset points', xytext=(-50, 10),
                  fontsize=14, color='#ff6b6b', fontweight='bold',
                  path_effects=STROKE)

@@ -59,6 +59,7 @@ _WORKER_EXPRS = None
 _WORKER_NAMES = None
 _WORKER_PHASE_VARS = None
 _WORKER_DOMAIN = 'QQ'
+_WORKER_LOG_SUBS = None
 _shutdown_requested = False
 
 
@@ -91,10 +92,15 @@ def _compute_one_bracket(args):
 def _extract_one_monomial(idx):
     """Worker function: expand one expression and extract its monomial dict.
 
-    Uses fork-inherited _WORKER_EXPRS and _WORKER_PHASE_VARS.
+    Uses fork-inherited _WORKER_EXPRS, _WORKER_PHASE_VARS, and
+    _WORKER_LOG_SUBS. The log_subs substitution must be applied here too
+    (matching the sequential path, ~628-632) or log-potential runs would
+    silently disagree between the MP and sequential code paths (E8 fix).
     Returns (idx, monom_dict) where monom_dict maps monomial tuples to coefficients.
     """
     expanded = expand(_WORKER_EXPRS[idx])
+    if _WORKER_LOG_SUBS:
+        expanded = expanded.subs(_WORKER_LOG_SUBS)
     p = Poly(expanded, *_WORKER_PHASE_VARS, domain=_WORKER_DOMAIN)
     return (idx, p.as_dict())
 
@@ -594,10 +600,11 @@ class NBodySymbolicRank:
                 poly_domain = _QQ[self.hbar_sym]
 
         if use_mp:
-            global _WORKER_DOMAIN
+            global _WORKER_DOMAIN, _WORKER_LOG_SUBS
             _WORKER_EXPRS = exprs
             _WORKER_PHASE_VARS = self.phase_vars
             _WORKER_DOMAIN = poly_domain
+            _WORKER_LOG_SUBS = self._log_subs
 
             poly_list = [None] * n_gen
             chunksize = max(1, min(100, n_gen // (n_workers * 10)))
@@ -624,6 +631,7 @@ class NBodySymbolicRank:
             _WORKER_EXPRS = None
             _WORKER_PHASE_VARS = None
             _WORKER_DOMAIN = 'QQ'
+            _WORKER_LOG_SUBS = None
         else:
             poly_list = []
             for idx, expr in enumerate(exprs):
@@ -776,15 +784,25 @@ class NBodySymbolicRank:
         print(f"  Computing {r}*({r}-1)/2 = {r*(r-1)//2} brackets...")
         t_total = time()
 
+        # Structure-constant domain must match the generators' coefficient
+        # domain: QQ normally, QQ[hbar] for quantum runs where hbar is a
+        # free symbol (not folded into phase_vars). Used consistently below
+        # for both the basis and rhs DomainMatrix construction -- hardcoding
+        # QQ here crashed quantum r^N structure runs with CoercionFailed
+        # (E7 fix).
+        sc_domain = QQ
+        if self.quantum and hasattr(self, 'hbar_sym') and self.hbar_sym not in self.phase_vars:
+            sc_domain = QQ[self.hbar_sym]
+
         basis_dm_rows = []
         for idx in basis_indices:
-            row = [QQ.zero] * n_mon
+            row = [sc_domain.zero] * n_mon
             for monom, coeff in poly_list[idx].items():
                 col = monom_to_idx[monom]
-                row[col] = QQ.convert(coeff)
+                row[col] = sc_domain.convert(coeff)
             basis_dm_rows.append(row)
 
-        basis_dm = DomainMatrix(basis_dm_rows, (r, n_mon), QQ)
+        basis_dm = DomainMatrix(basis_dm_rows, (r, n_mon), sc_domain)
 
         C_exact = [[[None for _ in range(r)] for _ in range(r)] for _ in range(r)]
         C_float = np.zeros((r, r, r))
@@ -804,6 +822,7 @@ class NBodySymbolicRank:
                 print(f"  Resuming from checkpoint: {resume_from}/{r*(r-1)//2} brackets")
 
         n_computed = 0
+        n_out_of_span = 0
         for a in range(r):
             i = basis_indices[a]
             for b in range(a + 1, r):
@@ -819,22 +838,30 @@ class NBodySymbolicRank:
                 expanded = expand(bracket)
                 if self._log_subs:
                     expanded = expanded.subs(self._log_subs)
-                sc_domain = QQ
-                if self.quantum and hasattr(self, 'hbar_sym') and self.hbar_sym not in self.phase_vars:
-                    sc_domain = QQ[self.hbar_sym]
                 p = Poly(expanded, *self.phase_vars, domain=sc_domain)
                 bracket_dict = p.as_dict()
 
                 rhs = [sc_domain.zero] * n_mon
                 for monom, coeff in bracket_dict.items():
                     if monom in monom_to_idx:
-                        rhs[monom_to_idx[monom]] = QQ.convert(coeff)
+                        rhs[monom_to_idx[monom]] = sc_domain.convert(coeff)
 
-                rhs_dm = DomainMatrix([[v] for v in rhs], (n_mon, 1), QQ)
+                rhs_dm = DomainMatrix([[v] for v in rhs], (n_mon, 1), sc_domain)
                 system = basis_dm.transpose()
                 aug = system.hstack(rhs_dm)
 
                 aug_rref, pivots = aug.rref()
+
+                # A pivot in the augmented (RHS) column means the row
+                # reduces to 0 = nonzero: this bracket is NOT in the span
+                # of the selected basis. Record it instead of silently
+                # writing zeros for this pair's structure constants (E4).
+                if r in pivots:
+                    print(f"    WARNING: bracket {{{names[i]},{names[j]}}} "
+                          f"(basis rows {a},{b}) is not in the span of "
+                          f"the selected basis -- its structure constants "
+                          f"are incomplete")
+                    n_out_of_span += 1
 
                 coeffs = [QQ.zero] * r
                 for row_idx in range(min(r, aug_rref.shape[0])):
@@ -869,6 +896,15 @@ class NBodySymbolicRank:
         for a in range(r):
             for k in range(r):
                 C_exact[a][a][k] = "0"
+
+        # Stash the out-of-span count for the caller's metadata (E4); kept
+        # as an attribute rather than a new return value so other callers
+        # that unpack (C_float, C_exact) are unaffected.
+        self.n_out_of_span_brackets = n_out_of_span
+        if n_out_of_span:
+            print(f"  WARNING: {n_out_of_span}/{r*(r-1)//2} brackets were "
+                  f"out of basis span -- their structure constants are "
+                  f"incomplete, not silently zero")
 
         print(f"  Structure constants computed in {time()-t_total:.1f}s")
         n_nonzero = int(np.count_nonzero(C_float))
@@ -1210,13 +1246,16 @@ def main():
         "stabilized": stabilized,
     }
 
+    # Hoisted above the --output branch: --structure's struct_dir (below)
+    # needs pot_tag regardless of whether --output was given -- it used to
+    # live only in the else branch and NameError'd otherwise (E3 fix).
+    pot_tag = pot_label.replace("/", "").replace("^", "")
     if args.output:
         out_path = args.output
     else:
         out_dir = os.path.join(os.path.dirname(os.path.dirname(
             os.path.abspath(__file__))), "results", "symbolic_rank")
         os.makedirs(out_dir, exist_ok=True)
-        pot_tag = pot_label.replace("/", "").replace("^", "")
         out_path = os.path.join(out_dir, f"rank_N{args.N}_d{args.d}_{pot_tag}.json")
 
     # Phase 4: Structure extraction (optional)
@@ -1301,6 +1340,7 @@ def main():
         # Add structure data to output
         output["structure"] = {
             "basis_indices": basis_indices,
+            "out_of_span_brackets": getattr(engine, "n_out_of_span_brackets", 0),
             "killing_signature": list(signature),
             "killing_trace": float(np.trace(K)),
             "is_semisimple": bool(signature[2] == 0),

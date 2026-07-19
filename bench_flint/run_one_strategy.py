@@ -83,8 +83,8 @@ def case_1r_l3(ckpt_dir: str) -> tuple:
 
     n_samples=50 keeps the SVD-evaluation phase fast (~minutes) so the
     measurement isolates the symbolic / simplify pipeline rather than
-    the lambdify+eval phase. For 1/r the SVD gap is huge (>1e10) so 50
-    samples is plenty for unambiguous rank determination.
+    the lambdify+eval phase. For 1/r the SVD gap is ~5e9 at L3 (>1e10 at
+    L0-L2) so 50 samples is plenty for unambiguous rank determination.
     """
     alg = NBodyAlgebra(
         n_bodies=3, d_spatial=2, potential="1/r",

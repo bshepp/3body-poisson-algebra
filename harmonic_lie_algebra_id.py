@@ -427,7 +427,10 @@ def main():
     sig, eig_list = killing_signature(K)
     pos, neg, zer = sig
     print(f"  Signature: ({pos}+, {neg}-, {zer}z)")
-    print(f"  Eigenvalues (exact):")
+    # Eigenvalues come from numpy.linalg.eigvalsh (float64) inside
+    # killing_signature(); only the zero-count (zer) is cross-checked
+    # exactly via Kexact.rank(). Labelled float64, not exact (E10 fix).
+    print(f"  Eigenvalues (float64):")
     for ev_str, mult, ev_f in sorted(eig_list, key=lambda t: -t[2]):
         print(f"    multiplicity {mult}: {ev_str} (~ {ev_f:+.4e})")
 
@@ -544,7 +547,11 @@ def main():
         "jacobi_ok": jacobi_ok_value,
         "jacobi_checked": jacobi_checked,
         "killing_signature": {"positive": pos, "negative": neg, "zero": zer},
-        "killing_eigenvalues_exact": [
+        # Renamed from killing_eigenvalues_exact (E10 fix): these values
+        # are numpy.linalg.eigvalsh float64 output, not exact. Only the
+        # zero-count in killing_signature above is exactly verified
+        # (cross-checked against Kexact.rank()).
+        "killing_eigenvalues_float64": [
             {"eigenvalue": ev_str, "multiplicity": mult,
              "float_approx": ev_f}
             for ev_str, mult, ev_f in eig_list
