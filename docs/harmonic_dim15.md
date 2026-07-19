@@ -221,11 +221,12 @@ non-compact directions on top.
 
 ## Why this matters
 
-The harmonic potential is the *only* pairwise potential tested that
-produces a finite Poisson algebra. Every other potential — singular
-(`1/rⁿ`, log, Yukawa, composite) and most regular ones (`r^n` for
-n ≥ 4) — generates the universal `[3, 6, 17, 116]` sequence with
-infinite Gelfand-Kirillov dimension. Identifying the harmonic algebra
+The harmonic potential is one of two finite cases (r¹ closes at
+dimension 5; r² at 15) among pairwise potentials tested. Every other
+potential — singular (`1/rⁿ`, log, Yukawa, composite) and most regular
+ones (`r^n` for n ≥ 4) — generates the universal `[3, 6, 17, 116]`
+sequence with conjectured infinite Gelfand-Kirillov dimension.
+Identifying the harmonic algebra
 as the **Jacobi algebra `sp(4, ℝ) ⋉ h₂`** completes the classification
 of finite-dimensional pairwise Poisson algebras among the exceptional
 potentials:

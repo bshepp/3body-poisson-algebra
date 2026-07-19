@@ -78,7 +78,7 @@
 - **Status:** ✅ COMPLETED — Both r⁴ and 1/r⁴ give exact rank [3, 6, 17, 116] through level 3 for N=3, d=2. See `nbody/symbolic_rank_nbody.py`, results in `results/symbolic_rank/`.
 - **Estimated time:** ~5 min (r⁴) / ~10 min (1/r⁴)
 - **Task:** Run N=3, d=2 with V ~ r⁴ (quartic spring) and V ~ 1/r⁴ (inverse quartic).
-- **Result:** BOTH potentials produce [3, 6, 17, 116] — identical to 1/r, 1/r², 1/r³, log(r), and composite. The prediction that r⁴ would be finite-dimensional (like r² → dim 15) was FALSIFIED. The r⁴ quartic spring generates the same infinite-dimensional algebra as singular potentials. The harmonic r² appears to be the unique exception, not a representative of a "regular" class.
+- **Result:** BOTH potentials produce [3, 6, 17, 116] — identical to 1/r, 1/r², 1/r³, log(r), and composite. The prediction that r⁴ would be finite-dimensional (like r² → dim 15) was FALSIFIED. The r⁴ quartic spring generates the same conjectured-infinite-dimensional algebra as singular potentials (superseded 2026-04: exceptional set is {r^1, r^2, r^3}; r^1 closes at 5, r^3 departs at 109). The harmonic r² appears to be one of the three exceptions, not a representative of a "regular" class.
 - **Question answered:** The singular/regular dichotomy does NOT predict algebra dimension. r⁴ is regular (polynomial) yet generates the same dimension sequence as 1/r. The harmonic potential r² is special because of its enhanced symmetry (oscillator algebra), not because of regularity.
 
 ### 2.4 Charge Sweep Phase 3 (+1/+q/−1)
@@ -122,7 +122,7 @@
 - **Impact:** VERY HIGH — unique result, probably a paper figure.
 
 ### 3.2 Yukawa Potential (3 Scenarios)
-- **Status:** BROKEN — lambdification/OOM issues, recursion fix deployed but not confirmed
+- **Status:** ✅ COMPLETE (Apr 16, 2026) — all nine Yukawa configurations (6 mu-sweep values + 3 named physical systems: dusty plasma, tritium/He-3, p-n-n scattering) give [3, 6, 17, 116]. See `results/yukawa_dimseq.json`.
 - **Scenarios:** Dusty plasma, tritium/He-3, p-n-n scattering
 - **Task:** Debug the Yukawa lambda compilation pipeline. The exponential damping e^{−μr}/r creates deeply nested expressions. May need CSE-based compilation or a numerical-only evaluation path.
 - **Impact:** HIGH — Yukawa is the key non-power-law singular potential.
@@ -185,7 +185,7 @@
 
 ### 4.5 Algebra Structure Extraction (Structure Constants, Killing Form, Derived Series)
 - **Status:** ✅ COMPLETED (15 potentials, levels 2–3) — Structure constants computed exactly over Q for 15 potentials. Expanded from 9 to 15 tensors in April 2026 campaign.
-- **Key result:** 13 non-harmonic potentials produce **identical** L2 algebraic invariants: Killing signature (6+, 0-, 11 zero), solvable (length 3), nilpotent (class 3), center dim 11, 32 non-zero SC, derived series [17, 14, 3, 0]. Covers 1/r through 1/r^4, r^4 through r^10, composites, and log. The r^1 algebra is qualitatively different (dim 5, Killing 3+/0-/2z, solvable length 2). The r^3 algebra matches at L2 but diverges dramatically at L3: dim 109, NOT nilpotent (LCS oscillates), solvable length 4, center 80.
+- **Key result:** 13 non-harmonic potentials produce **identical** L2 algebraic invariants: ad-Gram (Frobenius) signature (6+, 0-, 11 zero), solvable (length 3), nilpotent (class 3), center dim 11, 32 non-zero SC, derived series [17, 14, 3, 0]. Covers 1/r through 1/r^4, r^4 through r^10, composites, and log. The r^1 algebra is qualitatively different (dim 5, ad-Gram (Frobenius) signature 3+/0-/2z, solvable length 2). The r^3 algebra matches at L2 but diverges dramatically at L3: dim 109, NOT nilpotent (LCS oscillates), solvable length 4, center 80.
 - **Next steps:** Scale to level 3 (rank 116) on AWS for universal-class potentials; explicit tensor comparison to test literal isomorphism (not just invariant matching).
 - **Impact:** VERY HIGH — strongest evidence yet for universal isomorphism class. r^3 L3 non-nilpotency is a novel discovery.
 
@@ -223,7 +223,7 @@ Mark items with status as work proceeds:
 | 2.6 | Harmonic dim=15 derivation | ✅ |
 | 2.7 | H₃⁺ and ozone | ✅ |
 | 3.1 | Parametric exponent sweep | 🔄 (π, e, φ done; full sweep pending cost optimization) |
-| 3.2 | Yukawa debugging + run | ❌ |
+| 3.2 | Yukawa debugging + run | ✅ |
 | 3.3 | Re-run 7 retracted gravitational configs | ⬜ |
 | 3.4 | Complete interrupted atlases | ✅ |
 | 3.5 | Lagrange hires 1000×1000 | ⬜ |

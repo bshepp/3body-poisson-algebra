@@ -121,7 +121,7 @@ The 1.1M L3 brackets are checkpointed on S3. Options to unblock:
 
 **Additional results:**
 - **Quantum GUE (Moyal bracket):** log potential with harmonic confinement gives **[3, 6, 17, 116]** under quantum deformation — no +1 growth for the GUE composite (unlike 1/r^n which grows to 117). See `primes/results/quantum_gue.json`.
-- **Hilbert-Pólya search:** HP operator search on the log-gas algebra yields a semisimple algebra (Killing signature [116+, 0−, 0 zero]) — a genuine closed Lie algebra at level 3, unlike the nilpotent 1/r algebra. See `primes/results/hp_search/hp_search_results.json`.
+- **Hilbert-Pólya search:** HP operator search on the log-gas algebra reports an ad-Gram (Frobenius) signature [116+, 0−, 0 zero] (always PSD; not the Killing form, and a positive-definite ad-Gram does not by itself imply semisimplicity or a genuine closed Lie algebra). This experiment is superseded per the registry (`primes_hilbert_polya_search`). See `primes/results/hp_search/hp_search_results.json`.
 - **Finite-N GUE comparison:** Level-2 spacing statistics (var=0.117, ⟨r⟩=0.639) analyzed against finite-N GUE reference ensembles. The variance suppression (0.117 < GUE asymptotic 0.178) is a genuine finite-size effect from the 3-eigenvalue constraint. See `primes/finite_n_gue_comparison.py`.
 - **Multi-potential ⟨r⟩ comparison:** Coadjoint orbit spacing ratio computed for all available potentials — confirms ⟨r⟩ ≈ 0.64 is universal across singular potentials. See `primes/multi_potential_r_comparison.py`.
 
@@ -163,7 +163,7 @@ Results in `results/fractional_exponent_sweep.json`, `results/fractional_exponen
 
 Expanded exact structure constant catalog from 9 to 15 potentials. All computed at N=3.
 
-| # | Potential | N | d | Level | Dim | Killing | Solvable | Nilpotent | Center | Notes |
+| # | Potential | N | d | Level | Dim | ad-Gram (Frobenius) | Solvable | Nilpotent | Center | Notes |
 |---|----------|---|---|-------|-----|---------|----------|-----------|--------|-------|
 | 1 | r^6 | 3 | 1 | 2 | 17 | (6+,0-,11z) | len 3 | class 3 | 11 | Universal — matches 1/r |
 | 2 | r^8 | 3 | 1 | 2 | 17 | (6+,0-,11z) | len 3 | class 3 | 11 | Universal — matches 1/r |
@@ -174,7 +174,7 @@ Expanded exact structure constant catalog from 9 to 15 potentials. All computed 
 | 7 | 1/r^4 | 3 | 2 | 2 | 17 | (6+,0-,11z) | len 3 | class 3 | 11 | Completes singular catalog through n=4 |
 
 **Key findings:**
-- **Isomorphism conjecture strongly supported:** 13 non-harmonic potentials share identical L2 algebraic invariants (Killing 6+/0-/11z, 32 non-zero SC, solvable length 3, nilpotent class 3, center 11). Includes both singular (1/r through 1/r^4) and polynomial (r^4 through r^10) families.
+- **Isomorphism conjecture strongly supported:** 13 non-harmonic potentials share identical L2 algebraic invariants (ad-Gram (Frobenius) signature 6+/0-/11z, 32 non-zero SC, solvable length 3, nilpotent class 3, center 11). Includes both singular (1/r through 1/r^4) and polynomial (r^4 through r^10) families.
 - **r^1 is qualitatively different:** 5-dimensional algebra with distinct Killing signature. Only potential with L1 rank 4 instead of 6.
 - **r^3 L3 is qualitatively different:** Despite matching universal pattern at L2, the L3 algebra is NOT nilpotent (lower central series oscillates: [109, 106, 103, 95, 52, 5, 10, 65, 93, 52, 5]), solvable length increases to 4, and center is massive (80/109 dimensions).
 
@@ -185,7 +185,7 @@ Structure constant tensors in `results/symbolic_rank/rank_N3_d1_r{1,3,6,8,10}.js
 
 | # | Task | Result |
 |---|---|---|
-| 1 | **Isomorphism test (L2 algebras)** | All 12 non-harmonic 17-dim algebras are canonically isomorphic under fine invariant matching (Killing eigenvalues, ad-rank multisets, Casimir trace). |
+| 1 | **Isomorphism test (L2 algebras)** | All 12 non-harmonic 17-dim algebras are indistinguishable under fine invariant matching (isomorphism conjectured) (ad-Gram (Frobenius) eigenvalues, ad-rank multisets, Casimir trace). |
 | 2 | **r^1 identification** | Identified as the filiform nilpotent Lie algebra L_{5,2}. |
 | 3 | **r^3 L3 deep analysis** | 80-dim radical + 29-dim quotient. LCS oscillates with period 5: [52,5,10,65,93,...]. Solvable length 4. Only non-nilpotent algebra in the catalog. |
 
@@ -308,7 +308,7 @@ Completed since this table was last accurate (moved out of "Not Yet Started"):
 | 3 | **Structure constants (exact/Q)** | Computed for 1/r, 1/r⁴, r⁴, r² at level 2 (rank 17). |
 | 4 | **ad-Gram (Frobenius) signature** tr(ad_i·ad_jᵀ) — mislabeled "Killing form" in the original computation | Non-harmonic: (6+, 0−, 11 zero). Harmonic: (14+, 0−, 1 zero). **True Killing form** (from the exact structure constants): the non-harmonic dim-17 algebra is nilpotent, so its Killing form vanishes identically (0, 0, 17); the harmonic dim-15 algebra has Killing signature (6+, 4−, 5 zero) (see `docs/harmonic_dim15.md`). |
 | 5 | **Derived/lower central series** | Non-harmonic: solvable (length 3), nilpotent (class 3). Harmonic: neither. |
-| 6 | **Center dimension** | Non-harmonic: 11/17. Harmonic: 1/15. |
+| 6 | **Center dimension** (genuine ad-representation kernel, not the Killing-form-rank shortcut used elsewhere) | Non-harmonic: 11/17. Harmonic: 1/15. |
 | 7 | **SVD component saving** | `--save-svd` flag added to `exact_growth.py` and `nbody/exact_growth_nbody.py`. |
 
 ### Completed — Quantum Commutator Algebra (April 10, 2026)
@@ -362,7 +362,7 @@ Completed since this table was last accurate (moved out of "Not Yet Started"):
 |---|---|---|
 | 1 | **Symbolic rank** | Rank over Q(m_1,m_2,m_3) = [3,6,17,116] — proves generic mass invariance. |
 | 2 | **Specific verifications** | Tested at masses (1,1,1), (1,2,3), (1,1,5/2), (1,1,1/100), (1,1,1/10000) — all [3,6,17,116]. |
-| 3 | **Formal statement** | Algebra dimension is determined solely by potential type, N, and d. Masses play no role. |
+| 3 | **Formal statement** | Algebra dimension is determined solely by potential type, N, and d. Generic masses play no role (a proper exceptional subvariety is not excluded; none found). |
 
 ### Completed — Non-Integrability Analysis Framework (April 10, 2026)
 
@@ -465,12 +465,14 @@ with a check have completed atlas computations.
 
 Several communities would find specific results immediately relevant:
 
-- **Calogero-Moser community**: The planar CM Poisson algebra is
-  infinite-dimensional despite 1D integrability. This is a surprise
-  the integrable systems / mathematical physics community would want
-  to understand. They know the 1D system closes; showing the 2D
-  system doesn't, with the same algebraic signature as gravity, is
-  a novel result.
+- **Calogero-Moser community**: The planar CM Poisson algebra grows
+  through L3 with no sign of closing (infinitude conjectured), despite
+  1D integrability. This is a surprise the integrable systems /
+  mathematical physics community would want to understand: even the 1D
+  Calogero-Moser system's own pairwise Poisson algebra does not close
+  either — it gives the same [3,6,17,116] as gravity (see "Singularity
+  Class Invariance" in `docs/conjectures.md`). Showing the 2D system
+  shares this same non-closing algebraic signature is a novel result.
 
 - **Restricted three-body / astrodynamics**: The mass invariance
   conjecture predicts the algebra shouldn't care when one mass goes

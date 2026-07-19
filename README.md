@@ -42,7 +42,7 @@ The harmonic potential (r²) produces a finite-dimensional algebra closing at di
 
 ### Potential exponent universality (April 2026)
 
-Dense numerical survey of V = −u^p for 79+ rational p-values confirms [3, 6, 17] is universal across all exponents with a single exception: p = −2 (harmonic oscillator, V = −r²) gives [3, 6, 13]. The transition is **infinitely sharp** — even p = −2 ± 0.001 gives dim = 17. The n→0⁺ degeneration test confirms the transition is topological (rank jumps discretely, never degrades continuously). See `nbody/symbolic_n_proof.py` for the survey scripts.
+Dense numerical survey of V = −u^p for 79+ rational p-values confirms [3, 6, 17] is universal through level 2, with the notable exception of p = −2 (harmonic oscillator, V = −r²), which gives [3, 6, 13]. (This p-sweep does not by itself establish a *single* exception: the exact symbolic r^n survey below shows p = −1 — matching r¹ — is a second exception, departing already at L2 ([3, 4, 5]), and r³ is a third exceptional case that matches [3, 6, 17] through L2 but departs only at L3, so it would be invisible to a level-2-only sweep regardless. The full, correct exception set is exactly {r¹, r², r³}.) The transition at p = −2 is **infinitely sharp** — even p = −2 ± 0.001 gives dim = 17. The n→0⁺ degeneration test confirms the transition is topological (rank jumps discretely, never degrades continuously). See `nbody/symbolic_n_proof.py` for the survey scripts.
 
 **Inverse-power 1/r^n fractional exponents (April 2026):** Numerical SVD sweep across 21 exponents from n=0.00001 to n=3.5 confirms [3, 6, 17, 116] for all n ≥ 0.0001 (N=3, d=1, max_level=3). Confirmed at N=4 with 9 exponents (all [6, 14, 62]). Universality is continuous across real exponents.
 
@@ -81,7 +81,7 @@ Spectral analysis of the level-2 bracket tensor (structure constants) via Kirill
 
 The non-integrable 1/r bracket tensor shows GUE-to-GSE level repulsion in its coadjoint orbit frequencies, while the integrable r² algebra shows Poisson statistics. This is the **Bohigas-Giannoni-Schmit conjecture manifested in the algebraic structure itself** — the bracket tensor of a non-integrable system has the same spectral universality as chaotic quantum Hamiltonians. The symplectic lean (toward GSE rather than exact GUE) reflects the inherent symplectic structure of the Poisson bracket.
 
-Additionally, the Jacobi identity FAILS for the 1/r structure constants, confirming the algebra is **infinite-dimensional** — the 17 generators at level 2 are not a closed Lie subalgebra. The harmonic r² sequence closes at dimension 15; it is identified with the Jacobi algebra sp(4,ℝ) ⋉ h₂ by invariant matching (dimension, Killing signature, center, radical structure), not a verified isomorphism — the identification run skipped the O(n⁴) Jacobi verification of the structure-constant tensor (its `jacobi_ok:false` records "skipped", not "failed").
+Additionally, the Jacobi identity FAILS for the 1/r structure constants, confirming the 17 generators at level 2 are not a closed Lie subalgebra (consistent with the conjectured infinite-dimensionality). The harmonic r² sequence closes at dimension 15; it is identified with the Jacobi algebra sp(4,ℝ) ⋉ h₂ by invariant matching (dimension, Killing signature, center, radical structure), not a verified isomorphism — the identification run skipped the O(n⁴) Jacobi verification of the structure-constant tensor (its `jacobi_ok:false` records "skipped", not "failed").
 
 See [`primes/level2_spectral_analysis.py`](primes/level2_spectral_analysis.py) and figures in [`legacy_figures_archive/primes/figures/`](legacy_figures_archive/primes/figures/).
 
@@ -260,7 +260,7 @@ Full analysis: [`potential_comparison_plots/quantization_analysis.md`](potential
 │   ├── level2_spectral_analysis.py # Kirillov orbit spectral analysis (BGS conjecture)
 │   ├── hilbert_polya_search.py # HP operator search (superseded by closure discovery)
 │   ├── diagnose_brackets.py    # Bracket computation diagnostics
-│   ├── check_1r_closure.py     # Infinite-dimensionality proof
+│   ├── check_1r_closure.py     # Closure test: not closed at 116 (116 → 306 at L4)
 │   ├── figures/                # Spectral analysis figures (6 PNGs)
 │   ├── launch_gue.py           # AWS launcher
 │   └── userdata_gue.sh         # EC2 userdata template
@@ -351,7 +351,7 @@ See `docs/atlas_compute_workorder.md` for the full sync/render/deploy cycle incl
 | `primes/multi_potential_r_comparison.py` | Multi-potential coadjoint orbit ⟨r⟩ comparison across all singular potentials |
 | `primes/hilbert_polya_search.py` | Hilbert-Pólya operator search (superseded by infinite-dimensionality discovery) |
 | `primes/diagnose_brackets.py` | 4-test diagnostic validating bracket computation pipeline |
-| `primes/check_1r_closure.py` | Closure test proving algebra is infinite-dimensional (116 → 306) |
+| `primes/check_1r_closure.py` | Closure test: the 116-dim level-3 span is not closed (116 → 306 at L4) |
 | `primes/gue_prime_connection.tex` | Mathematical framework: Montgomery-Odlyzko → Dyson log-gas → pairwise Hamiltonians |
 | `primes/launch_gue.py` | AWS EC2 spot launcher for GUE computation |
 | `primes/userdata_gue.sh` | EC2 userdata template with S3 sync and checkpointing |
@@ -464,7 +464,7 @@ GitHub Actions CI runs on pushes that touch the engines, registry, or tests (pat
 
 ## Key insights
 
-**Universality across potential types**: The Calogero-Moser potential (integrable), Newtonian gravity (non-integrable), 1/r³, logarithmic, Yukawa, and composite potentials all produce the same dimension sequence [3, 6, 17, 116] for equal-mass N=3. This rules out interpreting super-exponential growth as a "non-integrability certificate." The growth is a **structural algebraic invariant** of singular pairwise potentials.
+**Universality across potential types**: The Calogero-Moser potential (integrable), Newtonian gravity (non-integrable), 1/r³, logarithmic, Yukawa, and composite potentials all produce the same dimension sequence [3, 6, 17, 116] for equal-mass N=3. This rules out interpreting super-exponential growth as a "non-integrability certificate." The growth is a **structural algebraic invariant** of pairwise potentials outside the exceptional set {r^1, r^2, r^3}.
 
 **Mass invariance**: The dimension sequence [3, 6, 17, 116] is proved symbolically for generic masses over ℚ(m₁,m₂,m₃) — rank 116 holds for all mass triples outside a possible proper subvariety (none found), also confirmed numerically at 25+ mass ratios from 10⁻³ to 10⁶ (Mar 23, 2026). The original survey report of [3, 5, 13, 69] for unequal masses was a SymPy version artifact. Three extreme-mass-ratio systems (Sun-Earth-Moon, Sun-Jupiter-Asteroid, Triple BH LISA) still show SVD conditioning failures at their physical mass ratios in direct numerical runs, but the symbolic proof establishes the true rank is 116.
 

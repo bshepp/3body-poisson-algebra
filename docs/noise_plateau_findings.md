@@ -66,16 +66,25 @@ matching 1/r² cube. We sample three configurations:
 - **Euler**: μ=1.00, φ=5° — near-collinear, Z₂ symmetry wall.
 
 At the generic point, the L=3 rank-116 plateau spans ~5.5 decades
-of threshold. At Lagrange the plateau is *narrower*: rank drops to
-112 (the known Lagrange rank-drop, from the critical-locus
-conjecture). Near Euler the rank pattern reflects collinear-syzygy
-breaks — extra small SVs make the plateau more fragmented.
+of threshold. At Lagrange the plateau is *narrower*, and as τ shrinks
+past the 116-plateau the reported rank steps down through a staircase
+(…114, 112, 111, 110, 106…). Near Euler the rank pattern reflects
+collinear-syzygy breaks — extra small SVs make the plateau more
+fragmented.
 
-(Lagrange's rank-110 step is a feature, not a bug: it's the same S₃
-fixed-point rank drop that the critical-locus conjecture predicts.
-The reported-rank plot shows it as a distinct shelf at rank 112 for a
-small threshold window, then rank 116 once τ becomes small enough to
-include the Lagrange-broken syzygies.)
+(Caveat: 110 vs 112 refer to two different things — this is not a
+silent conflation. The **110** is the established Lagrange level-3
+rank drop from the critical-locus conjecture, the repo-wide value
+reported at the standard atlas SVD threshold (`docs/research_roadmap.md`
+§5: d(3)=110 at Lagrange). The **112** is one intermediate step of
+*this* ultra-fine threshold-sweep staircase below the 116 plateau —
+checking `results/noise_plateau/noise_plateau_data.json`, the same
+…,114,112,111,110,… staircase also appears in the *generic* point's
+sweep, so this fine-grained descent is a property of the sweep near
+the float64 noise floor, not a Lagrange-specific shelf. The 116
+plateau persists until τ becomes small enough to admit the
+Lagrange-broken syzygies, after which the reported rank descends
+through the staircase toward 110 and below.)
 
 ## Panel C — L=3 plateau width across the whole shape sphere (1/r²)
 

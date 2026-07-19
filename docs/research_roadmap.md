@@ -12,7 +12,7 @@ by estimated value per compute-hour.
 | Milestone | Key result |
 |-----------|-----------|
 | Exact symbolic engine | Dimension sequence [3, 6, 17, 116] via SymPy + polynomial u_ij representation |
-| Mass invariance | Sequence independent of mass ratios (tested 20+ configs including Tsygvintsev) |
+| Mass invariance | Sequence independent of mass ratios for generic masses (tested 20+ configs including Tsygvintsev; proved symbolically over ℚ(m₁,m₂,m₃) for generic masses, proper exceptional subvariety not excluded) |
 | Potential comparison | Harmonic (r^2) closes at dim 15; Calogero-Moser (1/r^2) matches Newton (1/r) at [3,6,17,116] |
 | Level 4 lower bound | d(4) ≥ 5,604 (200,000 float64 samples; boundary gap only ≈1.2×, NOT definitive) — up from 4,501 at 30K samples; d(4) ≥ 3,112 at Lagrange (20K samples) |
 | High-res atlas (eps=5e-3) | 100x100 grid, all 3 potentials, full SV spectra |
@@ -98,8 +98,8 @@ anticipated a different 3D result.
 
 **Impact on conjecture**: The universal signature conjecture is
 STRONGER than originally stated.  The sequence depends only on N
-and the singularity class (singular vs regular) — not on d, masses,
-or pole order.
+and whether the potential is one of the three exceptional exponents
+{r¹, r², r³} — not on d, masses, or pole order otherwise.
 
 **Bug note**: A resume-logic bug in the checkpoint system initially
 produced d_3D(3) = 102.  Fixed by correcting the condition for
@@ -223,14 +223,14 @@ for further analysis.
 | Potential | Type | Status | Notes |
 |-----------|------|--------|-------|
 | Yukawa: e^(-μr)/r | Singular + exponential | In progress | Recursion limit fix deployed |
-| r^4 | Regular | Not started | Prediction: finite algebra |
+| r^4 | Regular | Done — FALSIFIED (r^4..r^10 universal [3,6,17,116]) | — |
 
 **Outcome** (from completed tests):
 
 | Result | Interpretation |
 |--------|---------------|
 | 1/r, 1/r², 1/r³, log(r), composite all → [3,6,17,116] | **Universality across singularity types confirmed** |
-| log(r) matches polynomial singularities | Algebra depends on singularity *existence*, not strength |
+| log(r) matches polynomial singularities | **FALSIFIED** as a general hypothesis — r⁴ through r¹⁰ are not singular at all yet are also universal; the true boundary is the exceptional set {r¹, r², r³}, not singularity *existence* |
 
 **Priority**: IN PROGRESS (awaiting Yukawa results from AWS).
 
@@ -273,8 +273,8 @@ sequence [3, 3, 11, 99]) to the On-Line Encyclopedia of Integer Sequences.
 - A clear mathematical definition
 - References or a preprint
 
-**Status**: Sequence not found in OEIS as of initial search.  Need to
-finalize the preprint. Level 4 lower bound now at d(4) >= 5,604 (200,000
+**Status**: **A395423 PROPOSED** (Apr 21, 2026), under editorial review.
+Level 4 lower bound now at d(4) >= 5,604 (200,000
 samples; boundary gap ≈1.2×, not definitive) — up from 4,501 at 30K samples.
 
 **Next steps**:

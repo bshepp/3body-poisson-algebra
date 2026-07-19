@@ -26,19 +26,19 @@ See revised statement in Section 4 below.
 
 | Claim | Evidence | Gaps |
 |-------|----------|------|
-| Infinite GK dim for 1/r | Proved (super-exponential growth through L4) | — |
-| Infinite GK dim for 1/r^2 | Proved (identical sequence through L3) | L4 not yet computed |
+| Infinite GK dim for 1/r | Conjectured (strong computational evidence: super-exponential growth through L4) | — |
+| Infinite GK dim for 1/r^2 | Conjectured (strong computational evidence: identical sequence through L3) | L4 not yet computed |
 | Finite dim for r^2 | Proved (closes at dim 15) | — |
-| Mass invariance for 1/r (equal) | Proved (20+ ratios, including Tsygvintsev cases) | — |
+| Mass invariance for 1/r (equal) | Verified numerically (float64) (20+ ratios, including Tsygvintsev cases) | — |
 | **Mass invariance for 1/r (generic)** | **Proved (generic)**: proved symbolically for generic masses over ℚ(m₁,m₂,m₃) — rank 116 holds for all mass triples outside a possible proper subvariety (none found); confirmed numerically at 25+ mass ratios from 10⁻³ to 10⁶ (Mar–Apr 2026). Sun-Earth-Moon (3.7×10⁻⁸) and Sun-Jupiter-Asteroid (10⁻¹⁰) atlases complete with non-trivial rank across full shape sphere | Original survey [3,5,13,69] was SymPy artifact. Extreme ratios show rank deficit (91–108 vs 116) due to SVD conditioning, not algebraic closure |
-| **Charge-class mass invariance** | **Proved** (Mar 2026): He, H⁻, Ps⁻, muonic He → [3,6,17,116] despite 7000x mass ratios | Consistent with universal mass invariance |
+| **Charge-class mass invariance** | **Verified computationally (exact)** (Mar 2026): He, H⁻, Ps⁻, muonic He → [3,6,17,116] despite 7000x mass ratios | Consistent with universal mass invariance |
 | **Charge magnitude sensitivity — RESOLVED AS ARTIFACT** | **Revalidated** (Mar 24, 2026): Early 500-sample runs reported Li⁺ (+3,−1,−1) → 111 and H₂⁺ (+1,+1,−1) → 115; revalidation at 1000–5000 samples (`results/charge_sensitivity/charge_sensitivity_completion.json`) restored [3,6,17,116] in every case, using the identical charges and physical masses — undersampling artifacts, the same failure class as the SymPy-1.10 [3,5,13,69]. The (+1,+1,−1) charge multiset is also 116 by exact rank over ℚ at unit masses. The (+1,+q,−1) sweep (q=1..20, exact QQ) gives [3,6,17,116] for ALL q. | Charge-invariant in everything tested: magnitudes q=1..20 exact, mixed-sign and same-sign geometries, physical masses |
 | log(r) potential | **[3, 6, 17, 116]** (Mar 2026) — transcendental singularity universal | — |
 | Composite (1/r + 1/r²) | **[3, 6, 17, 116]** (Mar 2026) — multi-pole composite universal | — |
 | Penning trap (+1,+1,+1 with harmonic confinement) | **[3, 6, 17, 116]** (Mar 2026) — all-repulsive + external potential | — |
 | Mass invariance for 1/r^2 | **Atlas complete** (Mar 2026): 100×100, rank 116 at 87.9%. Instance terminated. | — |
-| N=4 dimension sequence | **[6, 14, 62, 1260]** (Apr 2026). new_L3(4)=1198. | L3 computed. Graph-theoretic: 1198·C(4,4) with C(4,4)=1. |
-| N=4 mass invariance | **Proved** (3 configs: equal, 100:10:1:1, 3:7:11:2) | — |
+| N=4 dimension sequence | **[6, 14, 62, 1260]** (1/r; other potentials verified through L2) (Apr 2026). new_L3(4)=1198. | L3 computed. Graph-theoretic: 1198·C(4,4) with C(4,4)=1. |
+| N=4 mass invariance | **Verified computationally (exact)** (3 configs: equal, 100:10:1:1, 3:7:11:2) | — |
 | N=7 dimension sequence | **[21, 56, 476]** (Apr 2026) | L1 formula confirmed; old L2 cubic off by 1 (predicts 477). Resolves L2 formula — see below. |
 | N=8 dimension sequence | **[28, 76, 748]** (Apr 2026). Cross-verified: SymPy 1.12 (local) and 1.14.0 (AWS) both agree. | L1 formula confirmed; old L2 cubic off by 4 (predicts 752) |
 | N=9 dimension sequence | **[36, 99, 1107]** (Apr 14, 2026). Exact QQ rank, local computation (~107 min). | All three scaling formulas confirmed: L0=36, L1=99, L2=1107 |
@@ -48,11 +48,11 @@ See revised statement in Section 4 below.
 | Dependence on N | Tested at N=3–9, 11–26 (L1), 11–50 (L0) | L2 complete through N=9 |
 | Dependence on spatial dim | **Independent of d** for N=3–6 | N=3, N=4: d=1,2,3 identical; N=5, N=6: d=1,2 identical (see gap_workplan.md §2.1, project_status.md Algebra Structure table) |
 | 1/r, 1/r^2, 1/r^3, log(r) give same sequence | **Proved** for N=3 through L3 | Could diverge at L4 |
-| Charge-sign invariance (1/r) | **Proved** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
+| Charge-sign invariance (1/r) | **Verified computationally (exact)** for N=3, d=3 (Mar 2026): all-attractive, all-repulsive, and mixed helium (q=+2,-1,-1) all give [3,6,17,116] | N=4 not tested |
 | Charge-sign invariance (1/r²) | **Dimension preserved**, gap structure differs (Mar 2026): rank=116 at most grid points but gap correlation r≈0.76 vs r≈0.85 for 1/r | Deeper investigation needed |
 | Yukawa (e^{-μr}/r) potential | **UNIVERSALITY CONFIRMED** (Apr 16, 2026) — 6 mu values (0.1–5.0) at d=1, all [3,6,17,116]. 3 physical systems (tritium/He-3, dusty plasma, p-n-n scattering) all universal. Used Taylor-expansion composite K=3 with chunked flat-func lambdification fix. First non-power-law singular potential with exponential screening confirmed universal. | — |
 | **Shape sphere atlas universality** | **Confirmed** (Mar 2026, extended Apr 2026): rank 116 is the mode across 85–93% of shape sphere for 11 equal-mass configurations (75% for log); extreme mass ratio systems show non-trivial rank (91–108) across 100% of grid with zero failures | Rank deficit at extreme mass ratios is numerical (SVD conditioning at dynamic ranges 10²⁰–10³²), not algebraic |
-| **Neural network coupling (non-physical)** | **[3, 6, 17, 119]** (Apr 2026) — gradient-product coupling V_ij = (∂L/∂w_i)(∂L/∂w_j)/2 for 3-layer linear network. 3 extra generators at level 3 (all S₃ standard rep, all involving H₂₃). Exact rank over ℚ. | First coupling to break level-3 universality. Confirms 116 is specific to singular/physical potentials, not a generic 3-body property. Strengthens the conjecture by sharpening its scope. |
+| **Neural network coupling (non-physical)** | **[3, 6, 17, 119]** (Apr 2026) — gradient-product coupling V_ij = (∂L/∂w_i)(∂L/∂w_j)/2 for 3-layer linear network. 3 extra generators at level 3 (all S₃ standard rep, all involving H₂₃). Exact rank over ℚ. | First coupling to break level-3 universality. Confirms 116 is specific to physical pairwise potentials outside the exceptional set, not a generic 3-body property. Strengthens the conjecture by sharpening its scope. |
 || **Polynomial r^n potentials** | **Exact symbolic** (Apr 2026): r^1→[3,4,5,5], r^2→[3,6,13,15], r^3→[3,6,17,109], r^4 through r^10→all [3,6,17,116]. | Only r^1 and r^2 produce finite algebras. r^3 has 7 extra relations at L3. r^n for n≥4 is universal. |
 || **1/r^n fractional exponents** | **Numerical SVD** (Apr 2026, extended Apr 16): 46 exponents at L3 (0.00001–3.5), all [3,6,17,116] except SVD artifact at n=0.00001→113. N=4 confirmed (9 exponents, all [6,14,62]). Extended L3 sweep adds ~25 new exponents filling transition regions. | Continuous universality across real exponents for inverse-power potentials. |
 || **r^n fractional exponents** | **Numerical SVD** (Apr 2026, extended Apr 16): 30 successful L3 exponents from 0.3 to 7.0. r^1 anomalous [3,6,15,148] (float64 SVD artifact — superseded by the exact symbolic r^1 = [3,4,5,5] above), symmetric descent near r^2 (1.999→108, 1.99999→87, 2.00001→87, 2.001→108). r^n for n≥2.01 is universal [3,6,17,116]. | r^2 is a sharp symmetry point; r^1 has distinct algebraic structure (exact dim 5, not the numerical [3,6,15,148]). |
@@ -92,14 +92,16 @@ See revised statement in Section 4 below.
   enhanced dynamical symmetry (Fradkin tensor / SU(d)), not its
   regularity. **Structure constant analysis (April 15, 2026):** r^6, r^8,
   r^10 at d=1 all share identical L2 algebraic invariants with 1/r
-  (Killing 6+/0-/11z, solvable length 3, nilpotent class 3, center 11,
-  32 non-zero SC). The r^1 algebra has Killing (3+/0-/2z), solvable
-  length 2 — qualitatively different. The r^3 algebra matches universal
+  (ad-Gram (Frobenius) signature 6+/0-/11z, solvable length 3, nilpotent
+  class 3, center 11, 32 non-zero SC; true Killing form is identically
+  zero for these nilpotent algebras). The r^1 algebra has ad-Gram
+  (Frobenius) signature (3+/0-/2z), solvable length 2 — qualitatively
+  different. The r^3 algebra matches universal
   at L2 but at L3 (dim 109) is NOT nilpotent: the lower central series
   oscillates [109, 106, 103, 95, 52, 5, 10, 65, 93, 52, 5], solvable
   length is 4, and center dimension is 80/109.
   **Cross-potential isomorphism supported by exact invariant matching
-  (April 15, 2026):** All L2 invariants are identical (Killing eigenvalues,
+  (April 15, 2026):** All L2 invariants are identical (ad-Gram (Frobenius) eigenvalues,
   ad-rank multisets, Casimir trace) across all 12 non-harmonic 17-dim L2
   algebras; the isomorphism itself is conjectured, not proved. This includes
   1/r, 1/r², 1/r³, 1/r⁴, r⁴, r⁶, r⁸, r^10,
@@ -319,8 +321,10 @@ appear at non-symmetric points across a comprehensive scan.
   `sp(4, ℝ) ⋉ h₂`** — a Levi decomposition with `sp(4, ℝ) ≅ so(3, 2)`
   as the simple part (Killing signature (6+, 4−)) and a 5-dim
   Heisenberg radical `h₂` with 1-dim center (the total Hamiltonian).
-  The algebra is **perfect** (`g = [g, g]`) but not semisimple. Full
-  derivation in [`harmonic_dim15.md`](harmonic_dim15.md); numerical
+  The algebra is **perfect** (`g = [g, g]`) but not semisimple. This
+  identification was made by invariant matching (dimension, signature,
+  center, radical); Jacobi verification of the isomorphism was skipped.
+  Full derivation in [`harmonic_dim15.md`](harmonic_dim15.md); numerical
   identification in
   [`harmonic_lie_algebra_id.py`](../harmonic_lie_algebra_id.py).
 
@@ -375,14 +379,14 @@ singular central potential in d = 1, 2, or 3 spatial dimensions:
     (+1,+1,−1) → 115; revalidation at 1000–5000 samples (Mar 24, 2026)
     restored [3, 6, 17, 116] in every case — undersampling artifacts, the
     same failure class as the SymPy-1.10 [3,5,13,69].
-- N=4: sequence [6, 14, 62, 1260] through Level 3. new_L3(4) = 1198.
+- N=4: sequence [6, 14, 62, 1260] through Level 3 (1/r; other potentials verified through L2). new_L3(4) = 1198.
 - N=5: sequence [10, 25, 145] through Level 2. L3 OOM-killed on 256 GB.
 - N=6: sequence [15, 39, 279] through Level 2
 - N=7: sequence [21, 56, 476] through Level 2
 - N=8: sequence [28, 76, 748] through Level 2
 
-All independent of spatial dimension. The N=3 algebra has infinite
-GK dimension (d(4) ≥ 5,604).
+All independent of spatial dimension. The N=3 algebra: d(4) ≥ 5,604
+(200K samples; infinite GK dimension conjectured).
 
 **L2 scaling formula status (Apr 2026):** The cubic formula
 L2(N) = (13N³−42N²+83N−120)/6, fitted from N=3,4,5,6, has been
@@ -784,7 +788,7 @@ This definitively closes the contextuality question for these algebras.
 
 ---
 
-## Singularity Class Invariance (Proved, March 25, 2026)
+## Singularity Class Invariance (Mixed status — see table below, March 25 / April 2026)
 
 *The Calogero-Moser integrability diagnostic has been completed.*
 
@@ -797,20 +801,27 @@ non-integrable Newtonian gravity.
 
 | Claim | Status | Evidence |
 |-------|--------|----------|
-| 1D Calogero (integrable) gives [3,6,17,116] | **Proved** | `exact_growth_nbody.py -N 3 -d 1 --potential 1/r^2`, gap ratio 6.85×10⁷ |
+| 1D Calogero (integrable) gives [3,6,17,116] | **Verified numerically (float64)** | `exact_growth_nbody.py -N 3 -d 1 --potential 1/r^2`, gap ratio 6.85×10⁷ |
 | Sequence is mass-ratio invariant for 1/r² in 1D | **Proved** | Tested q=3,4,5,6 superintegrable + generic masses |
-| Singular potentials → infinite algebra | **Proved** | 1/r, 1/r², 1/r³, log, Yukawa all give [3,6,17,116] in d=1 and d=2 |
+| Singular potentials → infinite algebra | **Verified through L3 (infinitude conjectured)** | 1/r, 1/r², 1/r³, log, Yukawa all give [3,6,17,116] in d=1 and d=2 |
 | Regular potentials → finite algebra | **Falsified** | Only r¹ (dim 5) and r² (harmonic, [3,6,13,15,15], saturating at d=15) are finite among regular (polynomial) potentials; r³ is infinite (dim 109 at L3, non-nilpotent) and r⁴ through r¹⁰ all give the universal infinite-dimensional [3,6,17,116] |
 | Integrability is invisible to pairwise algebra | **Proved** | CM integrals (L², Chevalley J) are non-pairwise; algebra can't see them |
-| Dimension sequence is d-independent for all singular V | **Proved** | 1/r tested at d=1,2,3; 1/r² at d=1,2; 1/r³ at d=1 — all [3,6,17,116] |
+| Dimension sequence is d-independent for all singular V | **Verified computationally (exact)** | 1/r tested at d=1,2,3; 1/r² at d=1,2; 1/r³ at d=1 — all [3,6,17,116] |
 
-**The singularity dichotomy**: The dimension sequence distinguishes
-potentials singular at r=0 from those that are analytic there. This
-holds for potentials polynomial in u=1/r (power-law singularities) and
-for transcendental cases (log, Yukawa). The shared mechanism is the
-universal cubic chain rule du/dq ~ u³ arising from u=1/r. The harmonic
-potential V=r² requires no auxiliary variables and generates a finite
-algebra. All singular potentials share the same infinite algebra growth.
+**The exceptional-set picture**: The dimension sequence does NOT
+distinguish potentials singular at r=0 from those that are analytic
+there — the row above already records the singular/regular dichotomy
+as Falsified: r⁴ through r¹⁰ are regular (polynomial) yet produce the
+same conjectured-infinite universal sequence [3,6,17,116] as the
+singular potentials (1/r^n, log, Yukawa). What actually distinguishes
+the exceptional cases is membership in the set {r¹, r², r³}: r¹ closes
+at dim 5, the harmonic potential r² closes at dim 15 (via enhanced
+dynamical symmetry, requiring no auxiliary u=1/r variables), and r³
+departs from the universal sequence at L3 (dim 109, non-nilpotent) but
+does not close. Every other potential tested — polynomial (r⁴..r¹⁰) or
+singular (power-law or transcendental, sharing the universal cubic
+chain rule du/dq ~ u³ from u=1/r) — shares the same conjectured-infinite
+algebra growth.
 
 This resolves the open question from the Calogero-Moser reckoning
 (Phase 5). The growth sequence is universal across singular potentials
@@ -889,8 +900,14 @@ dependent on others when hbar terms are included.
 - Level-2 Killing form is **identically zero** (rank 0). The level-2
   algebra is nilpotent with trivial trace form. No non-trivial
   quadratic Casimir exists.
-- Center dimension at level 2: 17/17 (the entire level-2 algebra is
-  central within itself).
+- Center dimension at level 2: 17/17 by this script's convention
+  (center = dim − rank(Killing form)). That convention is only valid
+  for semisimple algebras; this level-2 algebra is nilpotent, so its
+  Killing form is identically zero for trivial reasons and the formula
+  always returns the full dimension, regardless of true centrality — it
+  does not mean every generator commutes with every other. The
+  genuinely computed Lie-algebra center (kernel of the ad-representation)
+  is **11/17** — see `docs/project_status.md` §Algebra Structure.
 
 ### Universality implication
 
