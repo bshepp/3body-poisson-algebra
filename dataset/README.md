@@ -80,8 +80,8 @@ This dataset contains the first systematic computation of **pairwise Poisson bra
 
 - **686 dimension sequences** for N=3..50, 16+ potentials, quantum/classical
 - **576+ exponent sweep values** across the continuous algebraic landscape
-- **20 named physical systems** from helium atoms to triple black holes — all producing **[3, 6, 17, 116]**
-- **16 exact rational structure constant tensors** (all non-harmonic L2 algebras proven isomorphic)
+- **20 named physical systems** from helium atoms to triple black holes — true rank **[3, 6, 17, 116]** for all (9 rows retain historical artifact sequences, flagged via `known_artifact`)
+- **16 exact rational structure constant tensors** (all non-harmonic L2 algebras indistinguishable under invariant matching; isomorphism conjectured)
 - **38 charge, 33 mass configurations** confirming invariance across 10 orders of magnitude
 
 **Total: 997 rows across 13 Parquet tables.**
