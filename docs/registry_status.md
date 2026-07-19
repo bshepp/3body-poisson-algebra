@@ -13,7 +13,7 @@
 | `algebra_growth` | superseded | `algebra_growth.py` | Original Phase 1 numerical-finite-difference engine. Produced unstable level-3 estimates (39-103). Superseded by exac... |
 | `analyze_results` | complete | `analyze_results.py` | Post-hoc analysis of early growth runs. One-shot script that consumed algebra_growth output to characterize sensitivity. |
 | `aws_level4` | complete | `aws_level4.py` | Level-4 dimension multi-config AWS pipeline. Produced d(4)>=5604 lower bound across multiple configurations. |
-| `check_1r2` | complete | `check_1r2.py` | 1/r^2 sanity check script: validates Calogero-Moser variant produces [3, 6, 17, 116]. |
+| `check_1r2` | complete | `check_1r2.py` | Inventory/inspection script for aws_results 1/r^2 (Calogero-Moser) atlas result directories: prints rank-map shapes, ... |
 | `clebsch_gordan_analysis` | complete | `clebsch_gordan_analysis.py` | Canonical S_3 representation decomposition of the N=3 Poisson algebra. Establishes n_E = 52 = Tier 1 size exactly. Re... |
 | `cm_comparison` | complete | `cm_comparison.py` | Calogero-Moser vs Newtonian gravity bracket-algebra comparison. Established universality across singular potential ty... |
 | `data_inventory` | complete | `data_inventory.py` | Complete data inventory utility across all results/ subdirectories. |
@@ -53,7 +53,7 @@
 | `neural_summarize_results` | complete | `neural/summarize_results.py` | Summary table of all saved neural-algebra results. |
 | `noise_plateau_mapping` | complete | `noise_plateau_mapping.py` | SVD rank-threshold plateau mapping (gap_workplan section 4.6). Sweeps tau from 1e-1 down to 1e-18 over: (A) the 1/r a... |
 | `potential_comparison` | complete | `potential_comparison.py` | Potential comparison study: 1/r vs 1/r^2 vs r^2. Foundational comparison establishing that singular and integrable po... |
-| `primes_check_1r_closure` | complete | `primes/check_1r_closure.py` | Closure test for the 1/r potential algebra. Result: NOT closed at 116 (infinite-dimensional). |
+| `primes_check_1r_closure` | complete | `primes/check_1r_closure.py` | Closure test for the 1/r potential algebra: level-3 span not closed (116 -> 306 at L4). |
 | `primes_closure_check` | complete | `primes/closure_check.py` | L=4 dimension computation for 1/r and log potentials. Confirms infinite growth. |
 | `primes_hilbert_polya_search` | superseded | `primes/hilbert_polya_search.py` | Hilbert-Polya operator search via GUE Lie algebra structure. Superseded by the infinite-dimensionality discovery: the... |
 | `primes_launch_gue` | complete | `primes/launch_gue.py` | AWS EC2 spot launcher for the GUE log-gas Poisson algebra computation. Ran the 4-config GUE study. |
@@ -123,7 +123,7 @@
 | `convergence_trajectory_sweep` | needs_review | `convergence_trajectory_sweep.py` | Convergence Trajectory Sweep ============================= |
 | `l3_exponent_sweep` | complete | `l3_exponent_sweep.py` | Extended L3 exponent sweep: 76 successful data points across 1/r^n and r^n. |
 | `level4_mpmath_rank` | wip | `level4_mpmath_rank.py` | Level-4 mpmath high-precision rank computation. Spot-reclaimed at 4.4% (667/15000 rows). Checkpoint on S3; needs rela... |
-| `mass_ratio_sweep` | needs_review | `mass_ratio_sweep.py` | Mass Ratio Sweep â€” track dimension sequence and SVD gaps as mass ratio varies continuously from equal (1:1:1) to ex... |
+| `mass_ratio_sweep` | needs_review | `mass_ratio_sweep.py` | Mass Ratio Sweep - track dimension sequence and SVD gaps as mass ratio varies continuously from equal (1:1:1) to extr... |
 | `nbody_charge_sensitivity_sweep` | needs_review | `nbody/charge_sensitivity_sweep.py` | Charge Sensitivity Sweep ========================= |
 | `nbody_charge_sweep_d1` | complete | `nbody/charge_sweep_d1.py` | Charge magnitude sweep at d=1: integer charges (+1,+q,-1) for q=1..20 all give [3, 6, 17, 116]. Phase 3 of the charge... |
 | `nbody_fractional_exponent_sweep` | needs_review | `nbody/fractional_exponent_sweep.py` | Fractional exponent sweep: test dimension sequence sensitivity to infinitesimal variations in the potential exponent ... |
@@ -200,7 +200,7 @@
 |----|--------|------|-------------|
 | `primes_finite_n_gue_comparison` | needs_review | `primes/finite_n_gue_comparison.py` | Finite-N GUE comparison for bracket tensor spectral statistics. |
 | `primes_level2_spectral_analysis` | complete | `primes/level2_spectral_analysis.py` | Kirillov coadjoint orbit spectral analysis - Bohigas-Giannoni-Schmit conjecture in algebraic structure. 1/r tensor: G... |
-| `spectral_depth_mining` | needs_review | `spectral_depth_mining.py` | Spectral Depth Mining â€” Phase 1 Items 1.1 + 1.2 + 1.3 ======================================================= |
+| `spectral_depth_mining` | needs_review | `spectral_depth_mining.py` | Spectral Depth Mining - Phase 1 Items 1.1 + 1.2 + 1.3 ======================================================= |
 
 ## structure
 
@@ -208,9 +208,9 @@
 |----|--------|------|-------------|
 | `harmonic_lie_algebra_id` | complete | `harmonic_lie_algebra_id.py` | Identifies the 15-dim Lie algebra of the harmonic (r^2) 3-body planar Poisson algebra. Reads exact rational structure... |
 | `nbody_compare_level3_structure` | wip | `nbody/compare_level3_structure.py` | Level-3 structure comparison across potentials. AWS-scale workload. |
-| `nbody_isomorphism_test` | complete | `nbody/isomorphism_test.py` | Cross-potential isomorphism test for L2 algebras. 12 non-harmonic 17-dim algebras canonically isomorphic via Killing ... |
+| `nbody_isomorphism_test` | complete | `nbody/isomorphism_test.py` | Cross-potential isomorphism test for L2 algebras. 12 non-harmonic 17-dim algebras canonically isomorphic via ad-Gram ... |
 | `nbody_structure_cross_section` | needs_review | `nbody/structure_cross_section.py` | 1D Cross-Section of Algebraic Structure Across Parameter Space ======================================================... |
-| `planned_atlas_structure_sweep` | planned | `atlas_structure_sweep.py` | Atlas of structure constants over the (mu, phi) shape sphere. Compute the 32 non-zero structure constants (and Killin... |
+| `planned_atlas_structure_sweep` | planned | `atlas_structure_sweep.py` | Atlas of structure constants over the (mu, phi) shape sphere. Compute the 32 non-zero structure constants (and ad-Gra... |
 | `planned_compare_atlas_structures` | planned | `compare_atlas_structures.py` | Cross-potential comparison of atlas structure-constant tensors. Renders difference maps between universal-class poten... |
 | `planned_compute_monodromy` | planned | `compute_monodromy.py` | Parallel-transport the structure-constant basis around a small loop encircling a binary collision and check the resul... |
 
@@ -262,5 +262,5 @@
 |----|--------|------|-------------|
 | `website_build_dataset_json` | needs_review | `website/build_dataset_json.py` | Build website JSON files from the curated dataset and image inventory. |
 | `website_build_figures_manifest` | needs_review | `website/build_figures_manifest.py` | Build website/data/figures/manifest.json from the figures_v2/ tree. |
-| `website_render_knee_index` | needs_review | `website/render_knee_index.py` | Render the 1/rÂ² (Calogero-Moser) knee-index map as a single-panel figure for embedding on the research dashboard. |
+| `website_render_knee_index` | needs_review | `website/render_knee_index.py` | Render the 1/r^2 (Calogero-Moser) knee-index map as a single-panel figure for embedding on the research dashboard. |
 

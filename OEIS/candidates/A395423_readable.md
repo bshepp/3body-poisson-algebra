@@ -233,9 +233,9 @@ Three reasons.
 ## Reading further
 
 - [`README.md`](../../README.md) — project overview.
-- [`paper3_universality.tex`](../../paper3_universality.tex) — the
+- [`paper3_universality.tex`](../../papers/paper3_universality.tex) — the
   detailed mathematical writeup of the universality result.
-- [`paper4_calogero_integrability.tex`](../../paper4_calogero_integrability.tex)
+- [`paper4_calogero_integrability.tex`](../../papers/paper4_calogero_integrability.tex)
   — the Calogero–Moser specialization and connection to integrable
   systems.
 - [`mathematica/README.md`](../../mathematica/README.md) — conventions

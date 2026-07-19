@@ -80,8 +80,9 @@
   category: analysis
   scope: 3body
   status: complete
-  description: '1/r^2 sanity check script: validates Calogero-Moser variant produces
-    [3, 6, 17, 116].'
+  description: 'Inventory/inspection script for aws_results 1/r^2 (Calogero-Moser)
+    atlas result directories: prints rank-map shapes, configs, and summary fields;
+    computes nothing itself.'
   outputs: []
   tags:
   - analysis
@@ -587,8 +588,8 @@
   category: analysis
   scope: primes
   status: complete
-  description: 'Closure test for the 1/r potential algebra. Result: NOT closed at
-    116 (infinite-dimensional).'
+  description: 'Closure test for the 1/r potential algebra: level-3 span not closed
+    (116 -> 306 at L4).'
   outputs: []
   tags:
   - analysis
@@ -988,7 +989,7 @@
     doublets (E-frac=0.57), Euler=14, Iso-90=24.
   outputs:
   - legacy_figures_archive/spectral_depth/cg_predicted_vs_observed.png
-  - legacy_figures_archive/spectral_depth/cg_residual_map.png
+  - legacy_figures_archive/spectral_depth/cg_doublet_landscape.png
   tags:
   - atlas
   - cg
@@ -1072,8 +1073,6 @@
   - blocked
   related_docs:
   - docs/gap_workplan.md
-  related_supplemental:
-  - I now have everything I need. Let m.txt
 - id: run_expansion_atlas
   path: run_expansion_atlas.py
   category: atlas
@@ -1257,7 +1256,7 @@
   category: dimseq
   scope: 3body
   status: needs_review
-  description: Mass Ratio Sweep â€” track dimension sequence and SVD gaps as mass
+  description: Mass Ratio Sweep - track dimension sequence and SVD gaps as mass
     ratio varies continuously from equal (1:1:1) to extreme (1:1:1e6).
   outputs: []
   tags: []
@@ -1802,7 +1801,7 @@
   category: spectral
   scope: 3body
   status: needs_review
-  description: Spectral Depth Mining â€” Phase 1 Items 1.1 + 1.2 + 1.3 =======================================================
+  description: Spectral Depth Mining - Phase 1 Items 1.1 + 1.2 + 1.3 =======================================================
   outputs: []
   tags: []
 - id: nbody_compare_level3_structure
@@ -1821,8 +1820,8 @@
   scope: nbody/N3
   status: complete
   description: Cross-potential isomorphism test for L2 algebras. 12 non-harmonic 17-dim
-    algebras canonically isomorphic via Killing eigenvalues, ad-rank multisets, Casimir
-    trace. r^1 identified as filiform L_{5,2}. r^3 L3 deep analysis.
+    algebras canonically isomorphic via ad-Gram (Frobenius) eigenvalues, ad-rank multisets,
+    Casimir trace. r^1 identified as filiform L_{5,2}. r^3 L3 deep analysis.
   outputs: []
   tags:
   - structure
@@ -2023,7 +2022,7 @@
   category: website
   scope: website
   status: needs_review
-  description: Render the 1/rÂ² (Calogero-Moser) knee-index map as a single-panel
+  description: Render the 1/r^2 (Calogero-Moser) knee-index map as a single-panel
     figure for embedding on the research dashboard.
   outputs: []
   tags: []
@@ -2094,8 +2093,8 @@
   description: 'Atlas of structure constants over the (mu, phi) shape sphere. Compute
     the 32 non-zero
 
-    structure constants (and Killing eigenvalues + center dimension) at every grid
-    point and
+    structure constants (and ad-Gram (Frobenius) eigenvalues + center dimension) at
+    every grid point and
 
     render as sphere maps. Builds on nbody/isomorphism_test.py L2 pipeline.
 
@@ -2413,7 +2412,7 @@
 
       overall_match: true. Total elapsed 12.0 s.
 
-      Max count_ops ratio cancel/together = 10.5x at L=2 â€” direct measure
+      Max count_ops ratio cancel/together = 10.5x at L=2 - direct measure
 
       of the patch''s compactness benefit (together''s output is ~10x smaller
 
@@ -2880,7 +2879,9 @@
 
       The 138-generator L=3 closure was built clean in 85 seconds; patch
 
-      correctness is unaffected. A retry at n=1000 will recover 116.
+      correctness is unaffected. A retry at n=1000 is expected to recover
+
+      116 (not yet run).
 
       '
     runs:
