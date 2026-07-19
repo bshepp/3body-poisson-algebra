@@ -6751,3 +6751,50 @@ remediation plan; this entry covers the whole sweep).
   (wip -> complete; L3 key grid completed 2026-04-21, one of four points
   (M=1,L=4) gives [3,6,17,115] rather than 116, not yet followed up);
   repointed 4 entries' output figures at `legacy_figures_archive/`.
+
+## 2026-07-19 — Third full audit + remediation branch audit-remediation-2026-07-18
+
+Five parallel audit agents (docs, papers/website/explainer, engine code,
+results/dataset, registry/OEIS/hygiene) + direct verification; findings
+ledger kept out-of-repo. Remediation executed via subagent-driven
+development: 7 tasks, each task-reviewed and fix-looped, final
+whole-branch review (verdict "With fixes", fix wave applied). 14 commits,
+1ce5365..2df219c.
+
+Highlights:
+- Engines: fixed exact_growth.py --resume pair reconstruction (sum→max;
+  new regression test), checkpoint identity validation, --save-svd dir
+  clobbering (the mechanism behind the July yukawa overwrite), pot_tag
+  NameError (--output --structure), structure-constant out-of-span
+  detection, Li+ expected 111→116 in bench_flint validation, stale 4501
+  in video renders, gap-claim docstrings.
+- Dataset: physical_systems gains known_artifact/artifact_note columns
+  (9 rows: 7x SymPy-1.10 [3,5,13,69], Li+ 111, H2+ 115); card caveats;
+  validator asserts the flags; expansion_dimseq_summary.json gains a
+  provenance note (UNIVERSALITY_BROKEN verdict superseded); stale root
+  duplicate completion JSON removed. Output staging re-synced.
+- Prose: repo-wide C15 pass — infinite GK dimension now uniformly
+  Conjectured (docs + all four paper abstracts); "singularity class"
+  framing replaced by the exceptional-exponent classification
+  ({r^1,r^2,r^3}; only r^1, r^2 finite) across papers and website;
+  ad-Gram (Frobenius) vs true-Killing labels corrected everywhere incl.
+  the impossible "semisimple [116+,0-,0z]" HP claim; preprint theorem
+  restated for generic masses; OEIS status wording submitted/proposed.
+- OEIS candidates: N=4 draft %C now defines H_ij with kinetic terms
+  (the Zabolotskii error class), %o d_spatial 3→1; readable.md dead
+  paper links fixed. Registry: phantom output, stale descriptions,
+  mojibake, isomorphism overclaim fixed; registry_status.md regenerated
+  (190 entries). .gitignore covers docs/oeis-pull-*/.
+- Verification at head: test_regression 6/6 PASS (incl. new resume
+  test), registry lint OK (190), dataset validation ALL PASSED
+  (997/13), all four papers compile (pdflatex exit 0), tracked
+  paper4.pdf rebuilt from corrected source.
+- Local-only (gitignored by design, fixed on disk): outreach_emails.md
+  (DO-NOT-SEND banner), academic_engagement.md, funding_briefing.md,
+  website/data/hf_article.md re-staged, dataset/output/ card.
+- Post-merge cards: papers' remaining unhedged "infinite" leftovers in
+  registry primes_closure_check/README:316/tracker:866/harmonic table;
+  mojibake in two sibling OEIS drafts; QQ[hbar] structure-constant
+  serialization; build_status_table stdout/redirect self-corruption;
+  killing_signature parquet column rename; papers/3body_poisson_algebra
+  .pdf stale with no surviving .tex source.
