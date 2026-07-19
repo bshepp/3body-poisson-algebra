@@ -295,7 +295,7 @@ Level-4 lower bounds from numerical SVD at increasing sample sizes.
 | `elapsed_seconds` | float | Computation time |
 | `mu`, `phi`, `epsilon` | float | Phase-space parametrization (null for global) |
 
-### `spectral_statistics` (14 rows)
+### `spectral_statistics` (17 rows)
 
 Rank distributions across phase space from atlas scans.
 
@@ -323,8 +323,12 @@ Named physical systems with their computed dimension sequences, spanning astroph
 | `dimension_sequence` | str | JSON-encoded dimension sequence |
 | `dim_L0`..`dim_L3` | int | Flattened dimensions per level |
 | `matches_universal` | bool | Whether the sequence equals the universal [3, 6, 17, 116] |
+| `known_artifact` | bool | Whether the stored sequence is a known measurement artifact (see caveat below) |
+| `artifact_note` | str | Explanation of the artifact for flagged rows; empty for clean rows |
 | `completed_at` | str | ISO timestamp of computation completion |
 | `source_file` | str | Path to originating JSON |
+
+**Caveat:** 9 of the 20 rows have `matches_universal=False`. These are known measurement artifacts, not evidence against universality. Seven astrophysical systems (Sun-Earth-Moon, Sun-Jupiter-Asteroid, Three Cluster Stars, Binary Star + Planet, Three Galaxies, Triple Black Hole (LISA), Binary BH + Neutron Star) carry a SymPy 1.10 version-artifact sequence, `[3, 5, 13, 69]`. Two atomic systems (Lithium Ion, Hydrogen Molecular Ion) carry a 500-sample undersampling artifact (111 and 115 respectively). The true rank for every one of these nine systems is 116, established by the generic-mass symbolic mass-invariance proof (see "Physical Benchmark (Universality Reference)" above); the atomic pair was directly revalidated to 116 at 1000-5000 samples on Mar 24 2026 ([`results/charge_sensitivity/charge_sensitivity_completion.json`](../results/charge_sensitivity/charge_sensitivity_completion.json)). The raw historical sequences are kept in `dimension_sequence` unchanged, as the historical record; `known_artifact` and `artifact_note` carry the correction.
 
 ### `bell_test` (9 rows)
 

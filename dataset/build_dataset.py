@@ -624,6 +624,33 @@ SYSTEM_LABELS = {
     "p_n_n_scattering": "Proton-Neutron-Neutron (Yukawa)",
 }
 
+# Known measurement-artifact systems: their stored dimension_sequence is a
+# historical (superseded) computation, not the true rank. The true rank for
+# every one of these systems is 116, established by the generic-mass
+# symbolic proof. Kept here (rather than mutating dimension_sequence) so the
+# historical record stays intact; see dataset card "physical_systems" caveat.
+_SYMPY110_NOTE = (
+    "SymPy 1.10 version-artifact sequence; true rank 116 established by the "
+    "generic-mass symbolic proof (see README universality section)"
+)
+ARTIFACT_NOTES = {
+    "sun_earth_moon": _SYMPY110_NOTE,
+    "sun_jupiter_asteroid": _SYMPY110_NOTE,
+    "three_cluster_stars": _SYMPY110_NOTE,
+    "binary_star_planet": _SYMPY110_NOTE,
+    "three_galaxies": _SYMPY110_NOTE,
+    "triple_bh_lisa": _SYMPY110_NOTE,
+    "binary_bh_ns": _SYMPY110_NOTE,
+    "lithium_ion": (
+        "500-sample undersampling artifact (111); revalidated to 116 at "
+        "1000-5000 samples, Mar 24 2026 (charge_sensitivity_completion.json)"
+    ),
+    "h2_plus_ion": (
+        "500-sample undersampling artifact (115); revalidated to 116 at "
+        "1000-5000 samples, Mar 24 2026 (charge_sensitivity_completion.json)"
+    ),
+}
+
 
 def build_physical_systems() -> pd.DataFrame:
     fp = ROOT / "results" / "expansion_dimseq" / "expansion_dimseq_completion.json"
@@ -647,6 +674,8 @@ def build_physical_systems() -> pd.DataFrame:
             "dim_L2": dims[2] if len(dims) > 2 else None,
             "dim_L3": dims[3] if len(dims) > 3 else None,
             "matches_universal": matches,
+            "known_artifact": sys_name in ARTIFACT_NOTES,
+            "artifact_note": ARTIFACT_NOTES.get(sys_name, ""),
             "completed_at": entry.get("completed_at"),
             "source_file": str(fp.relative_to(ROOT)),
         })
@@ -671,6 +700,8 @@ def build_physical_systems() -> pd.DataFrame:
                 "dim_L2": dims[2] if len(dims) > 2 else None,
                 "dim_L3": dims[3] if len(dims) > 3 else None,
                 "matches_universal": matches,
+                "known_artifact": sys_name in ARTIFACT_NOTES,
+                "artifact_note": ARTIFACT_NOTES.get(sys_name, ""),
                 "completed_at": None,
                 "source_file": str(yuk_fp.relative_to(ROOT)),
             })

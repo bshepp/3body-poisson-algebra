@@ -1,4 +1,5 @@
 {
+  "provenance_note": "The \"UNIVERSALITY_BROKEN\" verdict below (completed_at 2026-03-24T09:33:04Z) has been superseded. The three departures recorded here (sun_earth_moon [3,6,17,89], sun_jupiter_asteroid [3,6,16,87], triple_bh_lisa [3,6,17,106]) were float64 SVD conditioning artifacts at extreme physical mass ratios, not a true rank difference; true rank is 116 for every system, established by the generic-mass symbolic mass-invariance proof over Q(m1,m2,m3). Note that the sibling completion manifest, results/expansion_dimseq/expansion_dimseq_completion.json, reports a different (SymPy-1.10 version-artifact) sequence [3,5,13,69] for these same seven astrophysical systems from an earlier run; both files are historical artifacts of superseded computations, kept for provenance, and neither reflects the true rank.",
   "status": "complete",
   "verdict": "UNIVERSALITY_BROKEN",
   "scenarios_completed": 7,

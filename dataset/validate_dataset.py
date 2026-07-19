@@ -19,6 +19,16 @@ TABLES = [
     "neural_algebras",
 ]
 
+# All 20 named physical systems the physical_systems table must contain.
+EXPECTED_PHYSICAL_SYSTEMS = {
+    "sun_earth_moon", "sun_jupiter_asteroid", "three_cluster_stars",
+    "binary_star_planet", "three_galaxies", "triple_bh_lisa",
+    "binary_bh_ns", "helium", "lithium_ion", "h_minus_ion",
+    "positronium_neg", "muonic_helium", "h2_plus_ion", "penning_trap",
+    "two_d_vortices", "h3_plus", "ozone_nuclei", "tritium_he3",
+    "dusty_plasma", "p_n_n_scattering",
+}
+
 
 def test_yaml_frontmatter():
     content = README.read_text(encoding="utf-8")
@@ -103,6 +113,21 @@ def test_physical_systems():
     if len(yukawa_systems) > 0:
         assert all(yukawa_systems["matches_universal"]), \
             "Yukawa systems should all match universal sequence"
+
+    # D1: known-artifact rows must be flagged with a non-empty explanatory note.
+    assert "known_artifact" in df.columns, "Missing known_artifact column"
+    assert "artifact_note" in df.columns, "Missing artifact_note column"
+    non_universal = df[~df["matches_universal"]]
+    assert len(non_universal) == 9, \
+        f"Expected 9 matches_universal=False rows, got {len(non_universal)}"
+    assert all(non_universal["known_artifact"]), \
+        "Every matches_universal=False row must have known_artifact=True"
+    assert all(non_universal["artifact_note"].str.len() > 0), \
+        "Every matches_universal=False row must have a non-empty artifact_note"
+
+    assert set(df["system_name"]) == EXPECTED_PHYSICAL_SYSTEMS, \
+        f"System name mismatch: {set(df['system_name']) ^ EXPECTED_PHYSICAL_SYSTEMS}"
+
     print(f"Physical systems: {len(df)} systems across {len(categories)} categories  OK")
 
 
