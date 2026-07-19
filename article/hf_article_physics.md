@@ -215,7 +215,7 @@ for _, row in df.iterrows():
           f"nonzero={nz:>5d}  Killing=({row['killing_signature']})")
 ```
 
-A key finding: **all 12 non-harmonic 17-dimensional algebras match on every invariant tested**. They share identical ad-Gram (Frobenius) eigenvalues, adjoint-rank multisets, Casimir traces, and canonical basis orderings. The universality is not just dimensional: it is structural, and this invariant matching strongly supports (though does not by itself prove) that these 12 potentials produce literally the *same* Lie algebra, up to basis change.
+A key finding: **all 12 non-harmonic 17-dimensional algebras match on every invariant tested**. They share identical ad-Gram (Frobenius) eigenvalues (the true Killing form is identically zero, signature (0, 0, 17), for every algebra in this nilpotent family — so the ad-Gram spectrum is the discriminating invariant), adjoint-rank multisets, Casimir traces, and canonical basis orderings. The universality is not just dimensional: it is structural, and this invariant matching strongly supports (though does not by itself prove) that these 12 potentials produce literally the *same* Lie algebra, up to basis change.
 
 ## Scaling with N
 
