@@ -125,10 +125,42 @@ def test_schwarzschild_composite_levels_0_3():
     )
 
 
+def test_flat_func_big_add_factor():
+    """Python 3.13 compiler-recursion regression (_make_flat_func).
+
+    A CSE-reduced cancelled rational function typically has the shape
+    coeff*(huge sum). The old _expr_to_chunked_lines only chunked
+    top-level Adds, so the huge sum nested inside the Mul was emitted
+    inline on one line, which Python 3.13's compiler recursion cap
+    rejects (RecursionError during compilation; first seen on the
+    level-3 generator {{K1,H12},{K1,K3}} on jaga). The fixed version
+    hoists big-Add factors into chunked temp accumulators. This test
+    builds a synthetic coeff*(2000-term sum), requires it to compile,
+    and checks the numeric value against exact substitution.
+    """
+    import sympy as _sp
+    from exact_growth import ALL_VARS, _make_flat_func
+
+    x = _sp.Symbol("px1")
+    y = _sp.Symbol("py1")
+    big = _sp.Add(*[_sp.Integer(k + 1) * x ** (k % 3) * y for k in range(2000)],
+                  evaluate=False)
+    expr = _sp.Mul(x + 2, big, evaluate=False)
+
+    f = _make_flat_func(expr, "_test_bigmul")
+    args = [3.0 if str(v) == "px1" else (0.5 if str(v) == "py1" else 0.0)
+            for v in ALL_VARS]
+    got = float(f(*args))
+    exact = float(expr.xreplace({x: _sp.Rational(3), y: _sp.Rational(1, 2)}))
+    rel = abs(got - exact) / abs(exact)
+    assert rel < 1e-9, f"flat func numeric mismatch: {got} vs {exact}"
+
+
 if __name__ == "__main__":
     tests = [
         ("SymPy version", test_sympy_version),
         ("Resume pair reconstruction (E1)", test_resume_pair_reconstruction),
+        ("Flat-func big-Add-factor chunking (py3.13)", test_flat_func_big_add_factor),
         ("NBodyAlgebra N=3 d=2 1/r levels 0-2", test_nbody_n3_levels_0_2),
         ("Planar engine equivalent levels 0-2", test_planar_engine_levels_0_2),
         ("ThreeBodyAlgebra d=2 levels 0-1", test_three_body_algebra_d2_levels_0_1),

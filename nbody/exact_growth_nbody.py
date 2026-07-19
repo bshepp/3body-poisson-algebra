@@ -404,14 +404,39 @@ class NBodyAlgebra:
 
     def _expr_to_chunked_lines(self, expr, target_var, indent="    ",
                                max_terms_per_line=50):
-        terms = sp.Add.make_args(expr)
-        if len(terms) <= max_terms_per_line:
-            return [f"{indent}{target_var} = {sp.pycode(expr)}"]
-        lines = [f"{indent}{target_var} = 0"]
-        for i in range(0, len(terms), max_terms_per_line):
-            chunk_expr = sp.Add(*terms[i:i + max_terms_per_line])
-            lines.append(
-                f"{indent}{target_var} += {sp.pycode(chunk_expr)}")
+        # Large sums become chunked += lines; a large Add nested inside
+        # Mul/Pow (CSE-reduced rational functions look like
+        # coeff*(huge sum)) is hoisted into its own chunked temp first,
+        # since Python 3.13's compiler recursion cap rejects the inline
+        # form.
+        lines = []
+        counter = [0]
+
+        def emit_add(e, tv):
+            terms = sp.Add.make_args(e)
+            lines.append(f"{indent}{tv} = 0")
+            for i in range(0, len(terms), max_terms_per_line):
+                chunk_expr = sp.Add(*terms[i:i + max_terms_per_line])
+                lines.append(f"{indent}{tv} += {sp.pycode(chunk_expr)}")
+
+        def hoist(e):
+            if isinstance(e, sp.Add) and len(e.args) > max_terms_per_line:
+                new_terms = [hoist(t) for t in e.args]
+                tv = f"_h_{target_var}_{counter[0]}"
+                counter[0] += 1
+                emit_add(sp.Add(*new_terms, evaluate=False), tv)
+                return sp.Symbol(tv)
+            if not e.args:
+                return e
+            new_args = [hoist(a) for a in e.args]
+            if all(na is a for na, a in zip(new_args, e.args)):
+                return e
+            if isinstance(e, (sp.Add, sp.Mul, sp.Pow)):
+                return e.func(*new_args, evaluate=False)
+            return e.func(*new_args)
+
+        top = hoist(expr)
+        lines.append(f"{indent}{target_var} = {sp.pycode(top)}")
         return lines
 
     def _make_flat_func(self, expr, label=""):
@@ -436,17 +461,9 @@ class NBodyAlgebra:
             f"def {label}({sig}):",
         ]
 
-        max_terms = 30
-
         def _chunked(sub_expr, target):
-            terms = Add.make_args(sub_expr)
-            if len(terms) <= max_terms:
-                lines.append(f"    {target} = {pycode(sub_expr)}")
-            else:
-                lines.append(f"    {target} = 0")
-                for i in range(0, len(terms), max_terms):
-                    chunk = Add(*terms[i:i + max_terms])
-                    lines.append(f"    {target} += {pycode(chunk)}")
+            lines.extend(self._expr_to_chunked_lines(
+                sub_expr, target, indent="    ", max_terms_per_line=30))
 
         for sym, sub in replacements:
             _chunked(sub, str(sym))

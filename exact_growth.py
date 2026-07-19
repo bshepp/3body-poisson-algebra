@@ -441,16 +441,44 @@ def sample_phase_space(n, seed=42, pos_range=3.0, mom_range=1.0,
 # =====================================================================
 def _expr_to_chunked_lines(expr, target_var, indent="    ",
                            max_terms_per_line=50):
-    """Break large additions into chunked += lines to avoid deep AST."""
+    """Break large expressions into compiler-safe lines.
+
+    Large top-level sums become chunked ``+=`` accumulation lines. A
+    large Add nested inside a Mul/Pow/function call (the typical
+    CSE-reduced shape of a cancelled rational function is
+    ``coeff*(huge sum)``) is hoisted into its own chunked temp
+    accumulator first; Python 3.13's compiler recursion cap rejects
+    such sums when emitted inline on one line.
+    """
     from sympy import pycode
-    terms = sp.Add.make_args(expr)
-    if len(terms) <= max_terms_per_line:
-        return [f"{indent}{target_var} = {pycode(expr)}"]
-    lines = [f"{indent}{target_var} = 0"]
-    for i in range(0, len(terms), max_terms_per_line):
-        chunk_expr = sp.Add(*terms[i:i + max_terms_per_line])
-        lines.append(
-            f"{indent}{target_var} += {pycode(chunk_expr)}")
+    lines = []
+    counter = [0]
+
+    def emit_add(e, tv):
+        terms = sp.Add.make_args(e)
+        lines.append(f"{indent}{tv} = 0")
+        for i in range(0, len(terms), max_terms_per_line):
+            chunk_expr = sp.Add(*terms[i:i + max_terms_per_line])
+            lines.append(f"{indent}{tv} += {pycode(chunk_expr)}")
+
+    def hoist(e):
+        if isinstance(e, sp.Add) and len(e.args) > max_terms_per_line:
+            new_terms = [hoist(t) for t in e.args]
+            tv = f"_h_{target_var}_{counter[0]}"
+            counter[0] += 1
+            emit_add(sp.Add(*new_terms, evaluate=False), tv)
+            return sp.Symbol(tv)
+        if not e.args:
+            return e
+        new_args = [hoist(a) for a in e.args]
+        if all(na is a for na, a in zip(new_args, e.args)):
+            return e
+        if isinstance(e, (sp.Add, sp.Mul, sp.Pow)):
+            return e.func(*new_args, evaluate=False)
+        return e.func(*new_args)
+
+    top = hoist(expr)
+    lines.append(f"{indent}{target_var} = {pycode(top)}")
     return lines
 
 
