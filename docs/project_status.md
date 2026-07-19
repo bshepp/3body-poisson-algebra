@@ -175,7 +175,7 @@ Expanded exact structure constant catalog from 9 to 15 potentials. All computed 
 
 **Key findings:**
 - **Isomorphism conjecture strongly supported:** 13 non-harmonic potentials share identical L2 algebraic invariants (ad-Gram (Frobenius) signature 6+/0-/11z, 32 non-zero SC, solvable length 3, nilpotent class 3, center 11). Includes both singular (1/r through 1/r^4) and polynomial (r^4 through r^10) families.
-- **r^1 is qualitatively different:** 5-dimensional algebra with distinct Killing signature. Only potential with L1 rank 4 instead of 6.
+- **r^1 is qualitatively different:** 5-dimensional algebra with distinct ad-Gram (Frobenius) signature (3+, 0−, 2 zero); its true Killing form vanishes identically (0, 0, 5) since the algebra is nilpotent. Only potential with L1 rank 4 instead of 6.
 - **r^3 L3 is qualitatively different:** Despite matching universal pattern at L2, the L3 algebra is NOT nilpotent (lower central series oscillates: [109, 106, 103, 95, 52, 5, 10, 65, 93, 52, 5]), solvable length increases to 4, and center is massive (80/109 dimensions).
 
 Results in `results/algebra_structure/N3_d1_r{1,3,6,8,10}/` and `results/algebra_structure/N3_d2_1r4/`.

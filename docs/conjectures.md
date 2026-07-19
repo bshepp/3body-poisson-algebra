@@ -796,8 +796,10 @@ This definitively closes the contextuality question for these algebras.
 1/r² potential) produces d(k) = [3, 6, 17, 116] — identical to
 non-integrable Newtonian gravity.
 
-**Implication**: The Poisson algebra dimension sequence is a
-**singularity class invariant**, not an integrability diagnostic.
+**Implication**: The Poisson algebra dimension sequence is an
+**algebraic invariant of the potential's exceptional-exponent class**
+({r^1, r^2, r^3} vs. everything else), not an integrability diagnostic
+and not a singular-vs-analytic classifier.
 
 | Claim | Status | Evidence |
 |-------|--------|----------|
