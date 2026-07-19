@@ -788,7 +788,7 @@ This definitively closes the contextuality question for these algebras.
 
 ---
 
-## Singularity Class Invariance (Mixed status — see table below, March 25 / April 2026)
+## Potential-Class Invariance (historically "Singularity Class Invariance"; mixed status — see table below, March 25 / April 2026)
 
 *The Calogero-Moser integrability diagnostic has been completed.*
 
