@@ -1,0 +1,33 @@
+{
+  "config": "global_highsample",
+  "n_samples": 100000,
+  "n_generators": 156,
+  "n_pairs": 11937,
+  "level_dims": {
+    "0": 3,
+    "1": 6,
+    "2": 17,
+    "3": 116,
+    "4": 5471
+  },
+  "dims": [
+    3,
+    6,
+    17,
+    116,
+    5471
+  ],
+  "d4_lower_bound": 5471,
+  "best_d4_so_far": 5471,
+  "boundary_gap_ratio": 1.0150354443150662,
+  "meaningful_max_gap_ratio": 1.1738171002741995,
+  "meaningful_max_gap_index": 1,
+  "max_gap_ratio": 6560.882269860072,
+  "max_gap_index": 12090,
+  "n_meaningful": 5471,
+  "svd_time_seconds": 345.8242688179016,
+  "elapsed_seconds": 360.2257807254791,
+  "definitive_gap": false,
+  "timestamp": "2026-07-19 17:36:33",
+  "seed": 137
+}

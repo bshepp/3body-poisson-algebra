@@ -6817,3 +6817,20 @@ level4_mpmath_rank.py, bench_flint/probe_l4.py, probe_l4_30min.py;
 preprint pipeline section now states 11,937 total / 11,523 evaluated
 with the unaffected-bound note. Lane C's 11,937 enumeration was correct
 all along.
+
+## 2026-07-19 (evening) — jaga first-light: corrected-census d(4) bound
+
+First compute campaign on jaga (44C/88T, 256GB). Job 1: level4_highsample
+rerun on the corrected 11,937-bracket enumeration (the 414 previously
+skipped {L3, H_ij} brackets included for the first time). Result:
+**d(4) >= 5,625** at 200K samples (was 5,604 on the incomplete census);
+boundary gap 1.01 — still sample-limited, NOT definitive; the L3 boundary
+shows a definitive 1.0e8 gap at index 116 in the same spectra. Full rung
+ladder (50K..200K) archived in results/level4_full_census/ (rung dirs
+keep the engine's level4_global_* names; the top-level results/
+level4_global_* dirs remain the historical 11,523-census runs).
+Ops notes: three launch attempts — (1) py3.13 compiler-recursion in
+flat-func codegen, fixed in e1ef1ea; (2) worker OOM-kill at 84 workers
+(~16GB peak RSS per big-generator derivative worker) left a silent
+multiprocessing.Pool lost-task hang; (3) succeeded with workers=22 +
+96G swapfile. Job 2 (N=10 L2 exact rank) launched on jaga afterward.
