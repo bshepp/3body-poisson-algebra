@@ -6834,3 +6834,15 @@ flat-func codegen, fixed in e1ef1ea; (2) worker OOM-kill at 84 workers
 (~16GB peak RSS per big-generator derivative worker) left a silent
 multiprocessing.Pool lost-task hang; (3) succeeded with workers=22 +
 96G swapfile. Job 2 (N=10 L2 exact rank) launched on jaga afterward.
+
+## 2026-07-19 (night) — N=10 L2 = 1,565: registered prediction confirmed
+
+jaga Job 2: exact QQ rank for N=10, d=1, 1/r through level 2 —
+cumulative [45, 125, 1565] (535,140 generators x 13,690 monomials,
+124 min, peak ~113 GB — the computation that OOM'd at 38 GB locally).
+The corrected L2 formula N(4N^2-9N+3)/2 had N=10 -> 1,565 registered as
+a prediction since April; confirmed exactly, along with
+new_L2 = 1,440 = 12*C(10,3) (oriented-triangle conjecture, 7th point,
+first out-of-sample). L0 = 45 and L1 = 125 match their formulas.
+Artifact: results/symbolic_rank/rank_N10_d1_1r.json;
+confirmed_predictions added to results/analysis/nbody_scaling_formulas.json.
