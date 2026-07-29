@@ -173,16 +173,30 @@
    "confirmation_note": "N=10 confirmed 2026-07-19 by exact QQ rank on jaga (results/symbolic_rank/rank_N10_d1_1r.json): [45, 125, 1565], new_L2 = 1440 = 12*C(10,3). First out-of-sample confirmation."
   },
   "L3": {
-   "expression": "unknown",
+   "expression": "candidate (see binomial_fit_2026_07_29)",
    "data_points": {
     "N=3": 116,
-    "N=4": 1260
+    "N=4": 1260,
+    "N=5": 5965
    },
    "new_per_level": {
     "N=3": 99,
-    "N=4": 1198
+    "N=4": 1198,
+    "N=5": 5820
    },
-   "note": "Two data points available (N=3,4). Not enough to determine functional form; L3(N) requires at least N=5 level 3 data."
+   "N5_provenance": "mod-p Schwartz-Zippel sampling rank (p=2^31-1, S=8192), jaga 2026-07-29 — certified lower bound, PROVISIONAL until the second-prime run and the exact mod-p elimination leg agree (results/symbolic_rank/rank_N5_d1_1r_L3_modp.json). All other entries in this file are exact QQ.",
+   "falsified_working_conjecture": "new_L3(N) = 1198*C(N,4) (single N=4 datum) predicted L3(5) = 6135; measured 5965. Same failure mode as L2_original: one-point extrapolation missing lower-order binomial terms.",
+   "binomial_fit_2026_07_29": {
+    "expression_new_per_level": "1294*C(N,4) - 147*C(N,3) + 82*C(N,2)",
+    "fitted_on": [3, 4, 5],
+    "degrees_of_freedom": 0,
+    "prediction": {
+     "new_L3(6)": 17700,
+     "L3(6)": 17979
+    },
+    "status": "POST-HOC — no evidential weight until tested at N=6"
+   },
+   "note": "Three data points determine the quadratic-in-binomials fit uniquely; N=6 (L3(6) = 17979 predicted) is the first test. N=6 L3 generation previously OOM'd during L2 gen — needs a fresh feasibility look."
   }
  },
  "observations": {

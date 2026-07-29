@@ -1,0 +1,43 @@
+{
+  "N": 5,
+  "d": 1,
+  "potential": "1/r",
+  "potential_label": "1/r",
+  "max_level": 3,
+  "quantum": false,
+  "bracket_type": "Poisson",
+  "method": "schwartz-zippel mod-p sampling rank (certified lower bound; equality up to SZ probability ~1e-4 per run)",
+  "n_generators": 1116775,
+  "generator_source": "AWS N5_d1_level3 checkpoint generators_level3.pkl (generation completed 2026-04-10; QQ rank OOM-killed at 256 GB)",
+  "level_histogram": {"0": 10, "1": 45, "2": 1440, "3": 1115280},
+  "prime": 2147483647,
+  "seed": 20260728,
+  "n_samples": 8192,
+  "rank_L3": 5965,
+  "cumulative_rank": [10, 25, 145, 5965],
+  "new_per_level": [10, 15, 120, 5820],
+  "prediction_tested": "L3(5) = 145 + 1198*C(5,4) = 6135 (a=1198 from the single N=4 datum new_L3(4)=1198)",
+  "prediction_outcome": "CONTRADICTED: measured 5965 (shortfall 170); new_L3(5) = 5820 = 1164*C(5,4), so the single-coefficient C(N,4) scaling law does not transport from N=4 to N=5",
+  "posthoc_binomial_fit": {
+    "form": "new_L3(N) = 1294*C(N,4) - 147*C(N,3) + 82*C(N,2)",
+    "fitted_on": {"N=3": 99, "N=4": 1198, "N=5": 5820},
+    "degrees_of_freedom": 0,
+    "testable_prediction": "new_L3(6) = 17700, i.e. L3(6) = 279 + 17700 = 17979",
+    "caveat": "three parameters on three points; N=6 required for any evidential weight"
+  },
+  "validation": {
+    "sampling_N5_L2": {"expected": 145, "got": 145},
+    "sampling_N4_L3": {"expected": 1260, "got": 1260, "flint_cross_check": 1260},
+    "elimination_N5_L2": {"expected": 145, "got": 145},
+    "elimination_N4_L3": {"expected": 1260, "got": 1260}
+  },
+  "confirmations_pending": [
+    "run 2: second prime 2147483629 + second seed 987654321 (sampling)",
+    "elimination leg: exact rank_p2 from dumped term lists (no sampling step)"
+  ],
+  "no_saturation": "rank 5965 < n_samples 8192 (headroom 2227)",
+  "timing": {"eval_s": 5484, "rank_fold_s": 2482, "pickle_load_s": 6317, "workers_eval": 6, "note": "first attempt at 44 workers oom-hung at 516/559 shards (worker peaked 34 GB under expand()); resumed with direct Poly construction and 6 workers"},
+  "hardware": "jaga (2x E5-2699 v4, 251 GiB)",
+  "software": "sympy 1.14.0, numpy 2.5.1, python 3.13.5; rank fold = exact mod-p block RREF via 16-bit-limb float64 GEMM",
+  "date": "2026-07-29"
+}
