@@ -18,10 +18,14 @@
     "new_per_level_4": 5798,
     "growth_ratio_L4_over_L3": 50.98
   },
+  "universality": {
+    "status": "a(4) = 5914 CONFIRMED POTENTIAL-UNIVERSAL for 1/r, 1/r^2, and 1/r^3 — identical full sequence [3,6,17,116,5914] in all three",
+    "note": "extends the published L0-L3 universality claim one level; see a4_census_r2.json / a4_census_r3.json"
+  },
   "open": [
-    "potential-universality of a(4) untested (published universality claim covers L0..L3); rerun with 1/r^2 etc. base jets",
     "possible A395423 extension (keyword `more`) — Brian's call; would be the first term computed by the jet method",
-    "exact-QQ or multi-prime strengthening if OEIS submission warrants"
+    "exact-QQ or multi-prime strengthening if OEIS submission warrants",
+    "log(r) and Yukawa potentials not jet-tested (transcendental base jets need a log/exp-jet extension)"
   ],
   "hardware": "local desktop (48 GB), ~7 min per full run",
   "date": "2026-07-30"

@@ -6953,6 +6953,15 @@ Artifacts: results/jet_eval/. Open: potential-universality of a(4)
 (published claim covers L0-L3), possible OEIS extension (keyword
 `more`) — Brian's call.
 
+**3. a(4) is potential-universal.** Rerunning the full L4 census with
+V = 1/r² and V = 1/r³ base jets gives the identical sequence
+[3, 6, 17, 116, 5914] in both (each ~9 min; the L<=3 prefix doubles
+as the engine check per potential). The published universality claim
+(L0–L3, "empirically universal for every singular pairwise potential
+tested") now extends to level 4 across the 1/r^k family, k = 1, 2, 3.
+log(r)/Yukawa need a transcendental-jet extension (future).
+Artifacts: results/jet_eval/a4_census_r2.json, a4_census_r3.json.
+
 Also overnight: status docs swept for stale claims (f4cf2cd) — README,
 conjectures, gap workplan, project status, research roadmap now carry
 L3(5) = 5,965, the falsified a=1198 law, and the corrected d(4) bound.

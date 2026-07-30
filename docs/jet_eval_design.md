@@ -95,7 +95,12 @@ match the symbolic engine's kept-generator histograms exactly.
    need S > a(5) which is unknown (≥ tens of thousands). Feasible on
    jaga if a(5) ≲ 10⁵; the S-scaling is the real constraint.
 4. **Any potential/exponent atlas at higher levels** — the same
-   machinery with different base-H jets.
+   machinery with different base-H jets. ✅ First fruits the same
+   night: **a(4) = 5,914 is potential-universal across 1/r, 1/r²,
+   1/r³** (identical [3,6,17,116,5914] full census sequence each) —
+   the published L0–L3 universality claim extends to level 4.
+   Transcendental potentials (log r, Yukawa) need log/exp jets —
+   straightforward extension, not yet implemented.
 
 ## Files
 

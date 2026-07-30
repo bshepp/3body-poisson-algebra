@@ -1,0 +1,27 @@
+{
+  "method": "jet-evaluation mod-p census rank (no symbolic generation)",
+  "N": 3,
+  "d": 2,
+  "potential": "1/r^2",
+  "max_level": 4,
+  "prime": 2147483647,
+  "seed": 20260730,
+  "n_samples": 8192,
+  "tree_counts": [
+    3,
+    3,
+    12,
+    138,
+    11937
+  ],
+  "cumulative_ranks": [
+    3,
+    6,
+    17,
+    116,
+    5914
+  ],
+  "prefix_valid": true,
+  "a4_candidate": 5914,
+  "t_total_s": 123.9
+}

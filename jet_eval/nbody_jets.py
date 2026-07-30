@@ -28,11 +28,12 @@ from jets import JetContext
 
 
 class NBodyJets:
-    def __init__(self, N, d, max_level, prime=(1 << 31) - 1):
+    def __init__(self, N, d, max_level, prime=(1 << 31) - 1, upow=1):
         self.N = N
         self.d = d
         self.max_level = max_level
         self.prime = prime
+        self.upow = upow  # potential V = u^upow, i.e. 1/r^upow
         self.n_q = N * d
         self.pairs = list(combinations(range(1, N + 1), 2))
         self.n_u = len(self.pairs)
@@ -63,7 +64,10 @@ class NBodyJets:
                     pv = ctx.variable(self.pi(b, k), pts[:, self.pi(b, k)], M)
                     acc = ctx.add(acc, ctx.scale(ctx.mult(pv, pv, M), inv2))
             uv = ctx.variable(self.ui(i, j), pts[:, self.ui(i, j)], M)
-            acc = ctx.add(acc, uv)
+            V = uv
+            for _ in range(self.upow - 1):
+                V = ctx.mult(V, uv, M)
+            acc = ctx.add(acc, V)
             H.append(acc)
         return H
 
