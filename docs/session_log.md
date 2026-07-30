@@ -6919,3 +6919,40 @@ the same SZ method aimed at N=3 L4; it died of per-bracket generation
 cost AND carried a latent flaw — n_samples=120 would have capped its
 reportable rank at 120 against an expected ~5,600+. Never resurrect
 Lane C's config as-is; samples must exceed the expected rank.
+
+## 2026-07-30 (overnight) — jet evaluation kills the generation wall; a(4) = 5,914
+
+Overnight autonomous session (Brian: "if you can think of anything you
+can do in the next 8 hours unsupervised please go ahead"; jaga off, so
+local only). Two deliverables:
+
+**1. `jet_eval/` — bracket-tree ranks without symbolic generation.**
+A bracket consumes one derivative order, so a level-L tree's value at
+a point needs only order-L truncated Taylor jets of the base
+Hamiltonians — a few thousand coefficients regardless of symbolic
+size, with lower-level jets shared by all higher trees and every
+coefficient vectorized across sample points mod p. u-chain rule and
+census enumeration mirror the symbolic engine exactly. Design memo:
+docs/jet_eval_design.md. Validated 3/3 on the known-value gauntlet:
+[3,6,17,116] (1 s), [10,25,145] (1 s), [6,14,62,1260] (92 s on the
+desktop — the symbolic original took 52 min on a 31-worker AWS box).
+This retires the wall that killed Lane C (396-day ETA) and blocked
+N=6 L3.
+
+**2. a(4) = 5,914 (mod-p, doubly verified) — A395423's next term.**
+Full corrected 11,937-tree L4 census (N=3, d=2, 1/r — the published
+definition) at S=8192 points: cumulative [3, 6, 17, 116, **5914**],
+identical at two independent (prime, seed) pairs, with the L<=3
+prefix reproduced exactly both times and no sample saturation
+(headroom 2,278). ~7 min per run, local desktop. Consistent with the
+float64 bound d(4) >= 5,625 and explains its stubborn boundary gap
+(the true rank exceeds what 200K float64 samples resolved).
+new_L4 = 5,798; growth ratio a(4)/a(3) = 50.98. Epistemic rung: same
+as L3(5) = 5,965 (certified lower bound; SZ-equal at ~1e-4 per run).
+Artifacts: results/jet_eval/. Open: potential-universality of a(4)
+(published claim covers L0-L3), possible OEIS extension (keyword
+`more`) — Brian's call.
+
+Also overnight: status docs swept for stale claims (f4cf2cd) — README,
+conjectures, gap workplan, project status, research roadmap now carry
+L3(5) = 5,965, the falsified a=1198 law, and the corrected d(4) bound.

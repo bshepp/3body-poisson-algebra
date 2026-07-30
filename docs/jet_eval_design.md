@@ -79,11 +79,13 @@ match the symbolic engine's kept-generator histograms exactly.
 
 ## What this opens
 
-1. **Exact a(4) for A395423** (`run_l4.py`): the full corrected
-   11,937-tree L4 census at S=8192 points. Local-desktop scale
-   (minutes, not days). A definitive a(4) extends the *published*
-   sequence (keyword `more`). The float64-SVD bound to beat/confirm:
-   d(4) ≥ 5,625, sample-limited.
+1. **Exact a(4) for A395423** (`run_l4.py`): ✅ **DONE the same
+   night — a(4) = 5,914**, doubly verified (p=2147483647/seed
+   20260730 and p=2147483629/seed 987654322, identical), full
+   11,937-tree census, S=8192 (headroom 2,278), prefix
+   [3,6,17,116] reproduced in both runs, ~7 min per run on the
+   48 GB desktop. Consistent with (and explaining) the sample-limited
+   float64 bound d(4) ≥ 5,625. Artifacts: results/jet_eval/.
 2. **N=6 L3** (the L3(6) = 17,979 vs 18,249 hypothesis test): ~25.6M
    trees over 27 variables. The L2-jet stage dominates; estimated
    jaga-hours to low-days, vs "OOM during generation" before. Needs

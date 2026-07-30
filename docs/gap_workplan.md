@@ -171,8 +171,8 @@
 - **Question answered:** Is there a pattern, or is the sequence "wild"?
 
 ### 4.3 Level-4 Bound Improvement
-- **Status:** Current best: d(4) ≥ 5,625 (2026-07-19, jaga, 200K float64 samples on the FULL corrected 11,937-bracket census; boundary gap ≈1.01), NOT definitive
-- **Task:** Resolve the true a(4) exactly. The mpmath route is superseded (its S3 eval matrix lacks the 414 recovered brackets). The 2026-07-29 N=5 campaign points at a better route: mod-p rank is cheap once generators can be evaluated — a jet-evaluation approach (evaluate nested-bracket trees via truncated Taylor jets mod p, no symbolic generation) would make the exact L4 census rank tractable. A definitive a(4) would EXTEND the published A395423 (keyword `more`). See docs/jet_eval_design.md.
+- **Status:** ✅ RESOLVED 2026-07-30 — **a(4) = 5,914** (mod-p, doubly verified at two prime/seed pairs, full corrected 11,937-tree census, S=8192, prefix [3,6,17,116] reproduced both runs). Computed via the new jet-evaluation route (docs/jet_eval_design.md) in ~7 min/run on the local desktop; artifacts in results/jet_eval/. Supersedes the float64 ladder (d(4) ≥ 5,625, consistent) and the abandoned mpmath route.
+- **Remaining:** potential-universality of a(4) (published universality covers L0–L3); decide on submitting the extension to A395423 (keyword `more`); optional exact-QQ or additional-prime strengthening for that submission.
 
 ### 4.4 Symbolic Rank Over Q (Exact Algebraic Dimension)
 - **Status:** ✅ COMPLETED — Rank [3, 6, 17, 116] confirmed at 5 specific mass points (exact over Q) and with symbolic masses (exact over Q(m1,m2,m3)). Mass invariance is now proved symbolically for generic masses over ℚ(m₁,m₂,m₃) (rank 116 outside a possible proper subvariety, none found). See `symbolic_rank.py`, results in `results/symbolic_rank/`.

@@ -1,0 +1,28 @@
+{
+  "result": "a(4) = 5914 (mod-p, doubly verified)",
+  "sequence": [3, 6, 17, 116, 5914],
+  "N": 3,
+  "d": 2,
+  "potential": "1/r",
+  "definition_matches_A395423": "yes — planar 3-body, pairwise Hamiltonians, singular potential",
+  "method": "jet-evaluation mod-p census rank: all 11,937 level-4 bracket trees (full corrected census incl. the 414 {L3, H_ij} brackets) evaluated at 8,192 random F_p^15 points via truncated Taylor jets (no symbolic generation); exact mod-p block-RREF cumulative rank. Engine validated same night on [3,6,17,116], [10,25,145], [6,14,62,1260] (3/3 exact, tree censuses matching the symbolic engine).",
+  "runs": [
+    {"prime": 2147483647, "seed": 20260730, "rank": 5914, "file": "a4_census_modp_run1.json"},
+    {"prime": 2147483629, "seed": 987654322, "rank": 5914, "file": "a4_census_modp_run2.json"}
+  ],
+  "prefix_validation": "cumulative [3, 6, 17, 116] reproduced exactly in both runs before the L4 fold",
+  "no_saturation": "5914 < 8192 samples (headroom 2278)",
+  "epistemic_status": "certified lower bound a(4) >= 5914 unconditionally; equality up to Schwartz-Zippel probability ~1e-4 per run at two independent primes/seeds — same rung as the L3(5) = 5965 result. One rung below exact QQ.",
+  "consistency": {
+    "float64_bound": "d(4) >= 5,625 (2026-07-19 jaga, 200K samples, sample-limited) — consistent, and explains the non-definitive boundary gap: the true rank exceeds what 200K float64 samples resolved by 289",
+    "new_per_level_4": 5798,
+    "growth_ratio_L4_over_L3": 50.98
+  },
+  "open": [
+    "potential-universality of a(4) untested (published universality claim covers L0..L3); rerun with 1/r^2 etc. base jets",
+    "possible A395423 extension (keyword `more`) — Brian's call; would be the first term computed by the jet method",
+    "exact-QQ or multi-prime strengthening if OEIS submission warrants"
+  ],
+  "hardware": "local desktop (48 GB), ~7 min per full run",
+  "date": "2026-07-30"
+}
