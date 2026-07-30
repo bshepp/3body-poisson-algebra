@@ -31,10 +31,28 @@
     "elimination_N5_L2": {"expected": 145, "got": 145},
     "elimination_N4_L3": {"expected": 1260, "got": 1260}
   },
-  "confirmations_pending": [
-    "run 2: second prime 2147483629 + second seed 987654321 (sampling)",
-    "elimination leg: exact rank_p2 from dumped term lists (no sampling step)"
-  ],
+  "confirmations": {
+    "run2_sampling": {
+      "status": "CONFIRMED 2026-07-29 evening",
+      "prime": 2147483629,
+      "seed": 987654321,
+      "rank": 5965,
+      "note": "independent prime AND seed; fold-trajectory checkpoints identical to run 1 at every reporting point (2021/2822/3935/4612/4661/4962/5319/5517/5827/5965); raw artifact rank_N5_d1_1r_L3_modp_run2_raw.json"
+    },
+    "elimination_exact": {
+      "status": "CONFIRMED 2026-07-29 ~22:40",
+      "method": "streaming sparse elimination from dumped term lists, exact rank_p2 (p=2147483629), no sampling step",
+      "rank": 5965,
+      "n_rows_nonzero": 204655,
+      "n_cols": 759855,
+      "monomial_count_cross_check": "759,855 distinct monomials reconstructed from term dumps = exactly the April AWS QQ run's count",
+      "t_eliminate_s": 475.3,
+      "peak_rss_gb": 0.47,
+      "basis_density": 0.00156,
+      "note": "the frontier that OOM'd 256 GB over QQ needs 0.47 GB mod p; raw artifact rank_N5_d1_1r_L3_elim_raw.json"
+    }
+  },
+  "final_status": "L3(5) = 5965 TRIPLY VERIFIED (two primes x two seeds sampling + exact mod-p elimination). Remaining epistemic gap vs exact QQ: both primes dividing the same invariant factors — negligible. a=1198 single-coefficient law FALSIFIED.",
   "no_saturation": "rank 5965 < n_samples 8192 (headroom 2227)",
   "timing": {"eval_s": 5484, "rank_fold_s": 2482, "pickle_load_s": 6317, "workers_eval": 6, "note": "first attempt at 44 workers oom-hung at 516/559 shards (worker peaked 34 GB under expand()); resumed with direct Poly construction and 6 workers"},
   "hardware": "jaga (2x E5-2699 v4, 251 GiB)",

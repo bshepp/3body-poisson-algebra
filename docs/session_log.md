@@ -6877,10 +6877,19 @@ freedom, evidential weight only via its testable prediction
 **L3(6) = 17,979** (new_L3(6) = 17,700). Same arc as L2: one-point
 extrapolation broke, richer binomial structure exposed.
 
-Confirmations: run 2 (prime 2147483629, seed 987654321, sampling) and
-an exact-elimination leg (no sampling step) from dumped term lists —
-both close the bad-prime and sampling-shortfall loopholes.
-Artifact: results/symbolic_rank/rank_N5_d1_1r_L3_modp.json.
+Confirmations — BOTH LANDED 2026-07-29 evening, **L3(5) = 5,965 is
+triply verified**: (1) run 2, independent prime 2147483629 AND seed
+987654321 → 5,965, with the fold trajectory identical to run 1 at every
+checkpoint; (2) exact streaming elimination from the dumped term lists
+(no sampling step) → 5,965 MATCH, in 475 s at 0.47 GB peak RSS with
+basis density 0.16% — the computation that OOM'd a 256 GB machine over
+QQ is sub-gigabyte mod p (coefficient blowup, not structure, was the
+whole wall). Bonus cross-check: pass 1 reconstructed exactly 759,855
+distinct monomials, matching the April AWS QQ extraction. Also
+measured: 204,655 of 1,116,775 stored generators are nonzero (82%
+vanish identically). Artifacts:
+results/symbolic_rank/rank_N5_d1_1r_L3_modp.json (+ run1/run2/elim raw
+JSONs alongside).
 
 ## 2026-07-29 — A395423 APPROVED: published on OEIS
 

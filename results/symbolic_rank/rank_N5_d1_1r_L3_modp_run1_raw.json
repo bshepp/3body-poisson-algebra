@@ -1,0 +1,17 @@
+{
+  "method": "schwartz-zippel mod-p sampling rank",
+  "N": 5,
+  "d": 1,
+  "potential": "1/r",
+  "max_level": 3,
+  "prime": 2147483647,
+  "seed": 20260728,
+  "n_samples": 8192,
+  "n_generators": 1116775,
+  "rank": 5965,
+  "expected": null,
+  "match": true,
+  "t_eval_s": 5484.4,
+  "t_rank_s": 2481.8,
+  "workers": 6
+}
