@@ -157,7 +157,7 @@
 - **Task:** With data points:
   - N=3: d(k) = [3, 6, 17, 116, ≥5604]
   - N=4: d(k) = [6, 14, 62, 1260] (exact over Q). new_L3(4) = 1198.
-  - N=5: d(k) = [10, 25, 145] (exact over Q, d-independent). L3 OOM-killed.
+  - N=5: d(k) = [10, 25, 145, 5965] (L0–L2 exact over Q, d-independent; L3 mod-p triply verified 2026-07-29 on jaga — see results/symbolic_rank/rank_N5_d1_1r_L3_modp.json).
   - N=6: d(k) = [15, 39, 279] (exact over Q, d-independent)
   - N=7: d(k) = [21, 56, 476] (exact over Q)
   - N=8: d(k) = [28, 76, 748] (exact over Q, cross-verified)
@@ -166,14 +166,13 @@
   - Test exponential/super-exponential fits
   - Compare growth to known Lie algebra dimension formulas
   - Scaling formulas: L0 = C(N,2), L1 = N(3N-5)/2, L2 = N(4N²-9N+3)/2 (N≥4)
-  - New-per-level: new_L0 = C(N,2), new_L1 = N(N-2), new_L2 = 12·C(N,3) (N≥4), new_L3 = 1198·C(N,4)? (only N=4 data, boundary case)
+  - New-per-level: new_L0 = C(N,2), new_L1 = N(N-2), new_L2 = 12·C(N,3) (N≥4), new_L3 = 1294·C(N,4) − 147·C(N,3) + 82·C(N,2)? (exact 3-point fit after N=5 falsified the pure 1198·C(N,4) law; L3(6) = 17,979 predicted, untested)
   - Graph-theoretic conjecture: new_L_k ~ f(k)·C(N,k+1) for large N.
 - **Question answered:** Is there a pattern, or is the sequence "wild"?
 
 ### 4.3 Level-4 Bound Improvement
-- **Status:** Current best: d(4) ≥ 5,604 (200,000 float64 samples; boundary gap only ≈1.2×), NOT definitive
-- **Task:** Continue pushing sample count (300K? 500K?) or switch to mpmath high-precision rank computation to resolve the true d(4).
-- **Note:** The mpmath computation was at 4.4% (667/15,000 rows) when spot-reclaimed. Instance terminated. Checkpoint on S3. Needs relaunch on new instance.
+- **Status:** Current best: d(4) ≥ 5,625 (2026-07-19, jaga, 200K float64 samples on the FULL corrected 11,937-bracket census; boundary gap ≈1.01), NOT definitive
+- **Task:** Resolve the true a(4) exactly. The mpmath route is superseded (its S3 eval matrix lacks the 414 recovered brackets). The 2026-07-29 N=5 campaign points at a better route: mod-p rank is cheap once generators can be evaluated — a jet-evaluation approach (evaluate nested-bracket trees via truncated Taylor jets mod p, no symbolic generation) would make the exact L4 census rank tractable. A definitive a(4) would EXTEND the published A395423 (keyword `more`). See docs/jet_eval_design.md.
 
 ### 4.4 Symbolic Rank Over Q (Exact Algebraic Dimension)
 - **Status:** ✅ COMPLETED — Rank [3, 6, 17, 116] confirmed at 5 specific mass points (exact over Q) and with symbolic masses (exact over Q(m1,m2,m3)). Mass invariance is now proved symbolically for generic masses over ℚ(m₁,m₂,m₃) (rank 116 outside a possible proper subvariety, none found). See `symbolic_rank.py`, results in `results/symbolic_rank/`.

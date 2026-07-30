@@ -66,14 +66,16 @@ Additional completed work:
 | 5 | **Graph-theoretic test** | new_L3(4) = 1198 with C(4,4) = 1. Consistent with a = 1198 but N=4 is a boundary case. Critical test is N=5 (prediction: new_L3 = 5990 if a = 1198). |
 | 6 | **Instance cleanup** | All 5 EC2 instances terminated. All data synced to S3. ~$23 compute cost. |
 
-### Blocked — N=5 d=1 Level 3
+### ~~Blocked~~ RESOLVED 2026-07-29 — N=5 d=1 Level 3 = 5,965
 
-The N=5 L3 computation is **memory-blocked**: the 1.1M × 760K matrix
-over QQ cannot be rank-computed in 256 GB. Each worker consumes ~27 GB.
-The 1.1M L3 brackets are checkpointed on S3. Options to unblock:
-1. Algorithmic: modular rank (compute over GF(p) for several primes)
-2. Hardware: r6i.16xlarge (512 GB) or x2idn.xlarge (768+ GB)
-3. Out-of-core: stream matrix rows from disk
+The April memory block is resolved: option 1 (modular rank) won, on
+jaga, using the S3-checkpointed brackets. **L3(5) = 5,965**, triply
+verified (Schwartz-Zippel mod-p sampling at two independent
+prime/seed pairs + exact streaming mod-p elimination at 475 s /
+0.47 GB peak — the QQ wall was rational-coefficient blowup, not
+structure; no bigger instance was ever needed). new_L3(5) = 5,820
+falsifies the a=1198 prediction (5,990); see the L3-formula row
+below and results/symbolic_rank/rank_N5_d1_1r_L3_modp.json.
 
 ### Completed — N=7 d=1 Level 2 (April 11, 2026)
 
@@ -353,7 +355,7 @@ Completed since this table was last accurate (moved out of "Not Yet Started"):
 | 1 | **L1 formula** | L1(N) = N(3N-5)/2. Verified for N=3,4,5,6,7,8. New-per-level: N(N-2). |
 | 2 | **L2 formula (original)** | L2(N) = (13N^3 - 42N^2 + 83N - 120)/6 **FALSIFIED at N=7,8**: predicts 477/752, observed 476/748. Cubic was fitted from N=3,4,5,6 (4 points determine a unique cubic) but does not extrapolate. This was a legitimate inference that failed at the next data points. |
 | 2b | **L2 formula (resolved)** | With N=7 filling the gap, the falsification is resolved. new_L2 = 12·C(N,3) for N≥4 (boundary: 11 at N=3). Cumulative: **L2(N) = N(4N²−9N+3)/2** for N≥4. The true formula IS cubic — a different cubic. The original was polluted by the N=3 boundary effect. Verified for N=4,5,6,7,8. |
-| 3 | **L3 formula** | Two data points: N=3 L3=116 (new_L3=99), N=4 L3=1260 (new_L3=1198). Both are boundary cases for C(N,4): C(3,4)=0, C(4,4)=1. If a=1198, prediction: new_L3(5)=5990. N=5 L3 OOM-killed on 256 GB; needs algorithmic improvement or larger instance. |
+| 3 | **L3 formula** | Three data points as of 2026-07-29: new_L3(3,4,5) = (99, 1198, **5820**). N=5 L3 = **5,965** computed on jaga via mod-p (triply verified: two prime/seed sampling runs + exact elimination; see results/symbolic_rank/rank_N5_d1_1r_L3_modp.json). The a=1198 single-coefficient prediction (5990) is **FALSIFIED** — same failure mode as the original L2 cubic. Unique 3-point fit: new_L3(N) = 1294·C(N,4) − 147·C(N,3) + 82·C(N,2), predicting L3(6) = 17,979 (untested; zero dof). |
 | 4 | **Degree pattern** | Leading polynomial degree in N: L0~N^2, L1~N^2, L2~N^3. Confirmed cubic growth at L2. |
 
 ### Completed — Mass Invariance Statement (April 10, 2026)
