@@ -210,6 +210,47 @@ per-length upper bound for any 3-generated Lie algebra:
   `related_literature_2026-07-19.md` already concluded. "Cf. A027376" in
   A395423 is appropriate.
 
+### B7. Where the single length-4 relation comes from
+**Mixed labels, per line below. 1D, N = 3, bracket length 4 only.**
+
+* **The same relation for different potentials (EXACT over ℚ).** The
+  relation has identical coefficients for V = 1/r, 1/r², 1/r³ (equal
+  masses). Its coefficients change with the masses (e.g. ½, ⅔, ⅓ at masses
+  1, 2, 3). So it is not a property of the potential
+  (`scripts/relation4_compare.py`).
+* **What it needs (`scripts/relation_origin.py`, `logs/relation_origin.log`).**
+  A rank of 18 is certified (it reaches the free maximum, so the relation
+  is absent). A rank of 17 is a lower bound (the relation is present with
+  high probability).
+
+  | variant of H_ij = T_i + T_j + V_ij | rank | relation |
+  |---|---|---|
+  | V = 1/(x_i−x_j); + (x_i−x_j)³; V = 1/(x_i−2x_j) (no translation invariance); + x_i² trap; + x_i x_j² | 17 | holds |
+  | curved local kinetic T_k = (1+x_k²)p_k²/2; T_k = p_k²/2 + a_k p_k | 17 | holds |
+  | three random flat quadratic kinetic forms + random potentials (no body structure) | 18 | **gone** |
+  | V_12 also depends on body 3 (non-local) | 18 | **gone** |
+  | potential containing momentum; kinetic term of body j with a coefficient depending on body i | 18 | **gone** |
+  | T_k with p³ or p⁴ terms (non-quadratic in momentum) | 18 | **gone** |
+
+* **Reading (EVIDENCE, not proof).** The relation is present exactly when
+  three conditions hold:
+  1. **Locality.** H_ij involves only bodies i and j, and body i's own term
+     T_i is the same in every Hamiltonian containing i.
+  2. **Kinetic terms are quadratic in momentum.** They may be curved or
+     shifted.
+  3. **Potentials are momentum-free.** They do not need translation
+     invariance (so it is *not* Newton's third law, which was tested and
+     ruled out).
+
+  Conditions 2 and 3 are exactly what makes {V_a, {V_b, T}} a function of
+  position only, so that {V_c, {V_a, {V_b, T}}} = 0. This is the classical
+  identity behind force-gradient symplectic integrators. The conjecture is
+  that the relation is this identity, seen through the free Lie algebra
+  and filtered by locality. Not yet derived by hand.
+* **Not yet checked:** planar; N ≥ 4 (does the same mechanism explain
+  new_L1 = N(N−2), which is smaller than the number of pairs of edges
+  sharing a body?); an explicit hand derivation.
+
 ---
 
 ## Proposed actions (for decision)
