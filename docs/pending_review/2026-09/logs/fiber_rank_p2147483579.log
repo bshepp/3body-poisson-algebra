@@ -1,0 +1,7 @@
+equal masses | generic scalene 3-4-5    order-0 rank  52 | order<=1 rank  96
+equal masses | isosceles (5,5,6)        order-0 rank  52 | order<=1 rank  96
+equal masses | Euler collinear (1:2)    order-0 rank  40 | order<=1 rank  83
+equal masses | collinear midpoint       order-0 rank  38 | order<=1 rank  83
+equal masses | Lagrange equilateral     order-0 rank  52 | order<=1 rank  96
+random masses | generic scalene 3-4-5    order-0 rank  52 | order<=1 rank  96
+random masses | Lagrange equilateral     order-0 rank  52 | order<=1 rank  96

@@ -251,6 +251,32 @@ per-length upper bound for any 3-generated Lie algebra:
   new_L1 = N(N−2), which is smaller than the number of pairs of edges
   sharing a body?); an explicit hand derivation.
 
+### B8. What the atlas images measure, made exact
+**LOWER BOUND (exact mod p); planar, V = −g/r, level ≤ 3.**
+`scripts/fiber_rank.py` (run with `PRIME=2147483579`, where √3 exists;
+`EQUAL=1` for equal masses), `logs/fiber_rank_p2147483579.log`.
+
+The atlas freezes positions near a triangle shape (ε-ball), randomises
+momenta, and takes an SVD. The exact version pins positions *exactly*
+(ε = 0). "Order 0" is the rank of the generators as functions of momentum
+over that shape. "Order ≤ 1" adds their first position derivatives. On a
+fixed configuration, rank drops are genuine, unlike in an ε-ball.
+
+| shape | order 0 | order ≤ 1 |
+|---|---|---|
+| generic scalene; isosceles; **Lagrange equilateral** | 52 | 96 |
+| collinear, generic ratio (random or equal masses) | 40 | 83 |
+| collinear midpoint (Euler configuration for equal masses) | 38 (equal masses) / 40 (random) | 83 |
+
+* Paper 2's tier sizes **52** and **52 + 44 = 96** are these exact numbers.
+  The tiers are the jet (Taylor-order) structure of the algebra over a
+  shape, not numerical noise.
+* **Collinear configurations** are genuinely special (exact drops). The
+  **equal-mass Euler point** drops further at order 0.
+* **Lagrange and isosceles show no exact drop at orders ≤ 1.** Their atlas
+  features are changes in magnitude/conditioning, or possibly exact drops
+  at higher order (not tested).
+
 ---
 
 ## Proposed actions (for decision)
