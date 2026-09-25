@@ -1,0 +1,23 @@
+d(1) = 6   (3 candidates, 0s)
+d(2) = 17   (12 candidates, 1s)
+d(3) = 116   (121 candidates, 110s)
+evaluating derivatives of level<=3 basis ...
+  done (1746s)
+level-4 candidates (nonzero): 6534
+  length  1: rows     3  rank     3
+  length  2: rows     3  rank     3
+  length  3: rows     8  rank     8
+  length  4: rows    17  rank    17
+  length  5: rows    65  rank    44
+  length  6: rows   146  rank    74
+  length  7: rows   310  rank   177
+  length  8: rows   497  rank   323
+  length  9: rows   752  rank   609
+  length 10: rows  1049  rank   932
+  length 11: rows  1237  rank  1213
+  length 12: rows  1198  rank  1161
+  length 13: rows   909  rank   909
+  length 14: rows   381  rank   366
+  length 15: rows    72  rank    72
+  length 16: rows     3  rank     3
+d(4) = 5914   (S=2500, 1760s)
