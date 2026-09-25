@@ -26,7 +26,8 @@ before testing. That check has now been done:
 * Title/abstract "super-exponential", the Θ(n²) remark, and the infinite-GK
   framing (§2.1): **yes.**
 * "Unchanged by the spatial dimension" (Discussion and Future directions
-  item 4) (§2.3): **yes.**
+  item 4) (§2.3): verified only through level 3; strong but unproven
+  evidence of divergence at level 4.
 * The d(4) ≥ 5,604 float bound: superseded by the exact lower bound 5,914.
 * Yukawa listed as confirming universality: it was the truncated version.
 * The stability-atlas paragraph ("rank drops at the Lagrange and Euler
@@ -130,7 +131,7 @@ r³ is the next degenerate case. The universality is real, but it is a
 statement about free Lie algebras plus one relation, not a deep physical
 invariant.
 
-### 2.3 Spatial-dimension independence breaks at level 4
+### 2.3 Spatial-dimension independence: evidence (not proof) that it breaks at level 4
 
 `d4.py` computes d(4) exactly mod p. It uses the repo's own derivative
 pipeline ({f,g} from the first derivatives of level-3 generators), but in
@@ -156,9 +157,17 @@ coefficient rank (u free) mod p. If that rank also comes out at 5,914,
 a(4) is proved. That symbolic expansion is the heavy, memory-bound step,
 and it is the right job for the 256 GB server.
 
-The planar float bound in the repo is d(4) ≥ 5,625. So the claim that the
-sequence is independent of spatial dimension (paper 3, the cosmology
-section, the OEIS comments) fails at level 4. The finite-GK argument says
+**What is and is not proven.** Both numbers are certified *lower* bounds.
+Two lower bounds cannot prove that two values differ: the true 1D value
+could be ≥ 5,914. Divergence becomes a theorem only with an exact **upper
+bound** in 1D below 5,914, e.g. the rank over Q of the formal
+monomial-coefficient matrix of the 1D level-4 brackets. That has not been
+done. The evidence is strong (two independent 1D runs agree exactly; no
+block saturates; the 1D and planar block ranks agree for word lengths
+≤ 8 and split at lengths 9–12, e.g. 550 vs 609 at length 9), but it is
+evidence, not proof. The claim of independence from spatial dimension
+(paper 3, the cosmology section, the OEIS comments) should be treated as
+*unverified at level 4*, not as refuted. The finite-GK argument says
 it had to fail eventually: the 1D and planar algebras live on spaces of
 different dimension.
 
