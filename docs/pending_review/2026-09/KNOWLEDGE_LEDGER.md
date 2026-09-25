@@ -5,6 +5,12 @@
 > after time away. Each line is a claim, its status, and where the
 > evidence lives.
 >
+> **Scope of the papers (per Brian, 2026-09-25).** Only paper 1
+> (`papers/preprint.tex`, the Zenodo deposit) has been through the
+> author's own review. Papers 2–4 are **exploration notes in paper form**:
+> a record of the walk, not claims the author stands behind. Items citing
+> them are informational, not "needs fixing".
+>
 > **How it was built (2026-09-25).** Four read-only passes over the whole
 > repo (papers, status/conjecture docs plus the full session log, every
 > results file, OEIS/public/side projects). They were then assembled and
@@ -129,7 +135,7 @@
 | claim | status | evidence |
 |---|---|---|
 | 21 completed 100×100 atlases; "critical locus" at S₃ fixed points | NUMERICAL, CONJ. ⚠ Local rank below the global rank is conditioning, not algebra (analytic functions stay independent on every open ball) | `docs/project_status.md` §1; S3 data not in repo |
-| ranks > 116 near collinear; "soft syzygies wake up" | RETRACTED in `collision_syzygy/COLLISION_SYZYGY_REPORT.md`; **paper 2 still states it** | |
+| ranks > 116 near collinear; "soft syzygies wake up" | RETRACTED in `collision_syzygy/COLLISION_SYZYGY_REPORT.md` (paper 2, an exploration note, still has the old text) | |
 | collision stratum: exact ℚ rank 80 (76 syzygies) on the (4,3) ε-family | EXACT-Q | `collision_syzygy/` |
 | four-tier SV structure 52+44+16+4; ε^α exponents 0, 1, 2, 3 | NUMERICAL (paper 2); tier 4 fitted as 2.82 ± 0.21 | paper 2 |
 | S₃ isotypic 24A + 28A′ + 52E of the 156 candidates | exact counting (on candidates, not on the 116-dim span) | `results/tier_decomposition/` |
@@ -170,16 +176,22 @@
 
 ## 11. Housekeeping (stale, inconsistent, or wrong text)
 
-**Papers**
-- **Paper 4 defines the filtration as ℓ({f,g}) = ℓ(f)+ℓ(g)+1** ✔. That is a different filtration (brackets of two level-2 elements land at level 5), yet it reports 116. The text or the computation must be fixed.
-- **Paper 3's N = 4 level-1 arithmetic** ✔ says "one additional dependence"; 12 nonzero brackets giving 8 new generators needs four.
-- **Paper 3's proof sketch for charge invariance** assumes {H_ij,H_kl} ∝ c_ij c_kl, which is false because of the kinetic terms.
-- **Paper 2's abstract says "156 candidates at level 3"**; the correct count is 138 (156 is cumulative).
-- **Paper 2's soft syzygies** conflict with its own "40 directions exactly zero" and with the collision report.
-- **Preprint:** calls Thm 2 both a "theorem" and "a proof sketch"; names μ = 2/9 but never tests it; says "not in OEIS"; methods section says ranks come from a float SVD gap test.
-- **Paper 4** claims "new functionally independent expressions at each level", contradicting the preprint's ≤ 12 remark.
-- **Mis-citations across papers:** paper 2 attributes N = 4 to paper 1; paper 3 attributes a "critical locus conjecture" to paper 1; paper 4 cites paper 1 under another title.
-- **No paper cites a script or results file.**
+**Paper 1 (Zenodo; author-reviewed; these are the ones that matter)**
+- Calls Thm 2 both a "theorem" and "a proof sketch".
+- Names μ = 2/9 but never tests it.
+- Says the sequence is "not in OEIS".
+- Methods section says ranks come from a float SVD gap test.
+- Title and abstract say "super-exponential"; the discussion says "unchanged by spatial dimension"; Yukawa is cited from truncated runs; the atlas paragraph describes "rank drops" (see REVIEW_PENDING A1–A5).
+- Cites no script or results file.
+
+**Papers 2–4 (exploration notes, not author-reviewed; informational only)**
+- Paper 4 defines the filtration as ℓ({f,g}) = ℓ(f)+ℓ(g)+1 ✔. That is a different filtration from the one used everywhere else, yet it reports 116.
+- Paper 3's N = 4 level-1 arithmetic ✔ says "one additional dependence" where four are needed.
+- Paper 3's proof sketch for charge invariance assumes {H_ij,H_kl} ∝ c_ij c_kl, which the kinetic terms break.
+- Paper 2's abstract says "156 at level 3"; the level-3 count is 138.
+- Paper 2's soft syzygies conflict with its own "exactly zero" statement and with the collision report.
+- Paper 4 says "functionally independent at each level".
+- The three papers cite each other inconsistently.
 
 **OEIS**
 - **L2 closed-form draft:** the generating function is **wrong** ✔ (it gives 62, 145, 257…; should be 62, 145, 279…). The claim of invariance for N ≥ 5 masses and potentials is unbacked.
@@ -211,4 +223,4 @@
 4. **Prove L1 and L2 for all N by hand.** This is the most likely real theorem.
 5. **Understand the single length-4 relation** (generic masses, planar).
 6. **Untruncated Yukawa and log at L3**, exact.
-7. **Editorial pass** over §11 before any new submission.
+7. **Editorial pass** over the paper 1 and public-text items in §11 before any new submission. Papers 2–4 only if they are ever promoted.
