@@ -1,7 +1,0 @@
-L= 1  formal g_L=     3  physical g_L=     3  (cum formal 3, cum phys 3; max terms 3; 0.0s)
-L= 2  formal g_L=     3  physical g_L=     3  (cum formal 6, cum phys 6; max terms 4; 0.0s)
-L= 3  formal g_L=     8  physical g_L=     8  (cum formal 14, cum phys 14; max terms 19; 0.0s)
-L= 4  formal g_L=    17  physical g_L=    17  (cum formal 31, cum phys 31; max terms 66; 0.1s)
-L= 5  formal g_L=    44  physical g_L=    44  (cum formal 75, cum phys 75; max terms 221; 0.7s)
-L= 6  formal g_L=   103  physical g_L=   103  (cum formal 178, cum phys 178; max terms 848; 7.6s)
-L= 7  formal g_L=   272  physical g_L=   272  (cum formal 450, cum phys 450; max terms 3229; 147.1s)
