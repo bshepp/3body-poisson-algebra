@@ -130,14 +130,29 @@ at levels ≤ 3: for a generic potential, the algebra is nearly free at low
 depth.
 
 ### B3. Pure exponential potential V = e^{−r} gives 3, 6, 17, 116
-**LOWER BOUND = formal count, 1D, one ordering; EVIDENCE of universality.**
-`scripts/exp_potential.py` uses w_ij = e^{−(x_i−x_j)} as an exact
-polynomial variable (no truncation). Formal and physical evaluation
-(w13 = w12·w23) both give 3, 6, 17, 116. Not previously tested (see A3).
-The first version of this script had two bugs (rational coefficients
-truncated to integers; resampling points per row). Both were caught by a
-Jacobi-identity cross-check and fixed; the result above is from the fixed
-version.
+**PROVEN for 1D, one ordering (x1 > x2 > x3), at masses (1,1,1), (1,2,3),
+(3,5,11).** Not tested: generic symbolic masses, all orderings, planar.
+
+* Representation: on the ordering x1 > x2 > x3, r_ij = x_i − x_j and
+  w_ij = e^{−(x_i−x_j)} with ∂w_ij/∂x_i = −w_ij and ∂w_ij/∂x_j = +w_ij.
+  Everything is an exact polynomial in (p, w), with no Taylor truncation.
+* Proof: substituting w13 = w12·w23 (exact on this ordering) leaves
+  polynomials in (p1, p2, p3, w12, w23). These five are algebraically
+  independent functions on phase space, so the ℚ rank of the
+  monomial-coefficient matrix *is* the function-space dimension.
+  `scripts/exp_exact.py`: exact ℚ ranks [3, 6, 17, 116] at all three
+  mass triples; also [3, 6, 17, 116] with w free.
+* Why it was run: to test the hypothesis that potentials whose derivatives
+  collapse (V′ = −V) give a *smaller* algebra. That hypothesis is
+  **refuted**. The result instead fits B2: at depth ≤ 3 the algebra is
+  nearly free for essentially any non-polynomial potential.
+* Relevance to A3: the same exact-variable trick (w = e^{−μr} alongside
+  u = 1/r) would allow an untruncated Yukawa run.
+* Process note: `scripts/exp_potential.py` (the first, sampling version)
+  had two bugs: rational coefficients truncated to integers, and sample
+  points redrawn per row. Its buggy output (18 at level 2) violated the
+  Jacobi identity, which is how both bugs were caught. The exact script
+  supersedes it.
 
 ### B4. d(4) lower bounds
 **LOWER BOUND.** `scripts/d4.py` uses the repo's derivative pipeline: level
@@ -197,7 +212,7 @@ depth filtration.
 python docs/pending_review/2026-09/scripts/formal_vs_physical.py 3 2 3 1/r 300   # B1 (planar, ~17 min)
 python docs/pending_review/2026-09/scripts/free_lie_depth.py 3 3                 # A7/B2
 python docs/pending_review/2026-09/scripts/relation4.py 1                        # B2
-python docs/pending_review/2026-09/scripts/exp_potential.py 3 1 250              # B3
+python docs/pending_review/2026-09/scripts/exp_exact.py 1,2,3                    # B3 (exact over Q, seconds)
 python docs/pending_review/2026-09/scripts/d4.py 1 2500 17                       # B4 1D (~1 min)
 python docs/pending_review/2026-09/scripts/d4.py 2 2500 17                       # B4 planar (~30 min)
 python docs/pending_review/2026-09/scripts/graded.py 7 400 all                   # B6
