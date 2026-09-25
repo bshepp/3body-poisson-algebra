@@ -185,12 +185,30 @@ unaffected. The 1D definition should say which is meant. (An earlier
 message read the 215 as "formal overcounts"; that was wrong and was
 retracted.)
 
-### B6. Word-length-graded dimensions (1D, full line)
-**LOWER BOUND = formal count.** g_L = 3, 3, 8, 17, 44, 103, 272 for
-L = 1..7 (`scripts/graded.py`, `logs/graded_d1_allorderings.log`). The
-planar run reached L = 6 (3, 3, 8, 17, 44, 103), matching 1D, before it
-was stopped. Proposed as the more natural invariant to report next to the
-depth filtration.
+### B6. Word-length-graded dimensions (1D, full line) vs A027376
+**LOWER BOUND** (exact mod-p evaluation on real phase space; formal count
+agrees through L = 7). g_L = 3, 3, 8, 17, 44, 103, 272, **572** for
+L = 1..8 (`scripts/graded.py` to L = 7; `scripts/graded_fast.py` to
+L = 8). The planar run matched 1D through L = 6.
+
+A027376 (Witt numbers, free Lie algebra on 3 generators) is the exact
+per-length upper bound for any 3-generated Lie algebra:
+
+| L | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+|---|---|---|---|---|---|---|---|---|
+| A027376 | 3 | 3 | 8 | 18 | 48 | 116 | 312 | 810 |
+| physical g_L | 3 | 3 | 8 | 17 | 44 | 103 | 272 | 572 |
+| shortfall | 0 | 0 | 0 | 1 | 4 | 13 | 40 | 238 |
+
+* The shortfall 1, 4, 13, 40 looked like (3^(L−3) − 1)/2, which predicted
+  689 at L = 8. **Refuted:** the value is 572. Record this so the pattern
+  is not rediscovered.
+* The growth ratio g_{L+1}/g_L runs 2.6, 2.3, 2.6, 2.1 and falls well
+  below A027376's (about 2.6 at L = 8). This is EVIDENCE consistent with
+  A1 (finite GK dimension), not proof.
+* d(3) = 116 = A027376(6) is a coincidence (d(3) mixes lengths 1–8), as
+  `related_literature_2026-07-19.md` already concluded. "Cf. A027376" in
+  A395423 is appropriate.
 
 ---
 
@@ -215,5 +233,5 @@ python docs/pending_review/2026-09/scripts/relation4.py 1                       
 python docs/pending_review/2026-09/scripts/exp_exact.py 1,2,3                    # B3 (exact over Q, seconds)
 python docs/pending_review/2026-09/scripts/d4.py 1 2500 17                       # B4 1D (~1 min)
 python docs/pending_review/2026-09/scripts/d4.py 2 2500 17                       # B4 planar (~30 min)
-python docs/pending_review/2026-09/scripts/graded.py 7 400 all                   # B6
+python docs/pending_review/2026-09/scripts/graded_fast.py 8 1000 all             # B6 (~8 min)
 ```
