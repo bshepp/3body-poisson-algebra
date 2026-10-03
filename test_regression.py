@@ -156,11 +156,38 @@ def test_flat_func_big_add_factor():
     assert rel < 1e-9, f"flat func numeric mismatch: {got} vs {exact}"
 
 
+def test_simplify_generator_detects_hidden_zero():
+    """Hidden-zero regression (found 2026-09-30 while porting the engine
+    into the poisson-algebra library).
+
+    ``together`` does not expand numerators, so a bracket that is
+    mathematically zero can come back structurally nonzero.  Such hidden
+    zeros evaluate to float cancellation noise which svd_gap_analysis's
+    per-column normalisation amplifies into phantom rank: harmonic N=3
+    d=2 level 4 reported 34 instead of closing at 15 (344 of the 11,937
+    level-4 brackets were hidden zeros; the exact coefficient-matrix rank
+    was 15 either way).  simplify_generator must return literal 0 for
+    them while keeping together's factored form for genuine generators.
+    """
+    import sympy as _sp
+    from nbody.exact_growth_nbody import NBodyAlgebra
+    alg = NBodyAlgebra(n_bodies=3, d_spatial=2, potential="1/r",
+                       checkpoint_dir=None)
+    a, b, u = _sp.symbols("a b u")
+    hidden_zero = ((a + b) ** 2 - a ** 2 - 2 * a * b - b ** 2) / u
+    assert alg.simplify_generator(hidden_zero) == 0
+    nonzero = (a + b) ** 4 / u + 1 / u
+    out = alg.simplify_generator(nonzero)
+    assert out != 0
+    assert out.count_ops() <= 6, "together's factored form must be kept"
+
+
 if __name__ == "__main__":
     tests = [
         ("SymPy version", test_sympy_version),
         ("Resume pair reconstruction (E1)", test_resume_pair_reconstruction),
         ("Flat-func big-Add-factor chunking (py3.13)", test_flat_func_big_add_factor),
+        ("simplify_generator hidden-zero detection", test_simplify_generator_detects_hidden_zero),
         ("NBodyAlgebra N=3 d=2 1/r levels 0-2", test_nbody_n3_levels_0_2),
         ("Planar engine equivalent levels 0-2", test_planar_engine_levels_0_2),
         ("ThreeBodyAlgebra d=2 levels 0-1", test_three_body_algebra_d2_levels_0_1),

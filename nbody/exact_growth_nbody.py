@@ -55,6 +55,43 @@ def _parse_power_potential(pot_str):
     return None
 
 
+_ZERO_PROBE_SEED = 0x5EED
+_N_ZERO_PROBES = 3
+
+
+def _is_hidden_zero(expr):
+    """Exact probabilistic zero test: evaluate at random rational points.
+
+    A nonzero rational function of total degree D vanishes at a uniformly
+    random point of a grid with S values per coordinate with probability
+    at most D/S (Schwartz-Zippel).  With S ~ 1e6 and three independent
+    points the false-zero probability is far below 1e-12 for any
+    generator this engine produces.  Points on a pole are skipped.
+    Deterministic: the same points are used on every call.
+    """
+    import random
+    syms = sorted(expr.free_symbols, key=str)
+    if not syms:
+        return expr.is_zero is True
+    rng = random.Random(_ZERO_PROBE_SEED)
+    probes = 0
+    for _ in range(10 * _N_ZERO_PROBES):
+        pt = {s_: Rational(rng.randint(-10 ** 4, 10 ** 4), rng.randint(1, 97))
+              for s_ in syms}
+        val = expr.xreplace(pt)
+        if val.has(sp.zoo, sp.nan, sp.oo) or not val.is_number:
+            continue
+        if val.is_Rational:
+            if val != 0:
+                return False
+        elif abs(val.evalf(60)) > Rational(1, 10 ** 50):
+            return False
+        probes += 1
+        if probes == _N_ZERO_PROBES:
+            return True
+    return False
+
+
 class NBodyAlgebra:
     """Poisson algebra engine for the N-body problem in d spatial dimensions.
 
@@ -298,7 +335,18 @@ class NBodyAlgebra:
         # ">5 hours, killed at 16 GB RAM" to "90 seconds, <0.2 GB RAM" with the
         # canonical [3, 6, 17, 116] dim sequence. cancel still imported because
         # it's used in verify_jacobi_symbolic (one-shot, not the hot loop).
-        return together(expr)
+        #
+        # Patched 2026-09-30: `together` does not expand the numerator, so a
+        # bracket that is mathematically zero can come back structurally
+        # nonzero.  Such hidden zeros evaluate to float cancellation noise
+        # which svd_gap_analysis's per-column normalisation amplifies into
+        # phantom rank (harmonic N=3 d=2 L4: 34 instead of closing at 15;
+        # 344/11,937 L4 brackets were hidden zeros).  Finish with an exact
+        # Schwartz-Zippel zero test and return literal 0 when it vanishes.
+        out = together(expr)
+        if out != 0 and _is_hidden_zero(out):
+            return Integer(0)
+        return out
 
     # -----------------------------------------------------------------
     # Pre-computed derivatives for faster brackets
