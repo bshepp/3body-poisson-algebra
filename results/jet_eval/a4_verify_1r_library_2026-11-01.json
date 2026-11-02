@@ -1,0 +1,36 @@
+{
+  "potential": "1/r",
+  "N": 3,
+  "d": 2,
+  "max_level": 4,
+  "dim_sequence": [
+    3,
+    6,
+    17,
+    116,
+    5914
+  ],
+  "metadata": {
+    "method": "modp",
+    "prime": 2147483647,
+    "seed": 42,
+    "n_samples": 16384,
+    "tree_counts": [
+      3,
+      3,
+      12,
+      138,
+      11937
+    ],
+    "saturated": false,
+    "verified_runs": 2,
+    "epistemic": "mod-p rank of the bracket-tree census at random points: a certified lower bound on the rank over Q, equal to it up to Schwartz-Zippel probability ~rank*deg/p per run; verified_runs=2 means two independent (prime, seed) pairs agreed",
+    "t_total_s": 2140.55
+  },
+  "t_total_s": 2140.6,
+  "_provenance": {
+    "method": "poisson-algebra library modp_rank (jet evaluation), verify=True",
+    "date": "2026-11-01",
+    "note": "independent implementation of results/jet_eval/a4_census_modp_run{1,2}.json (jet_eval/run_l4.py)"
+  }
+}
