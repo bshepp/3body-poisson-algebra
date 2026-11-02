@@ -1,0 +1,44 @@
+{
+  "method": "basis-reduced jet-evaluation mod-p census rank (no symbolic generation; independent spanning subsets carried below the top level)",
+  "N": 3,
+  "d": 2,
+  "potential": "1/r",
+  "max_level": 4,
+  "prime": 2147483647,
+  "seed": 20261101,
+  "n_samples": 8192,
+  "n_sel_samples": 1024,
+  "candidate_counts": [
+    3,
+    3,
+    12,
+    121,
+    6534
+  ],
+  "selected_counts": [
+    3,
+    3,
+    11,
+    99
+  ],
+  "selection_ranks": [
+    3,
+    6,
+    17,
+    116
+  ],
+  "cumulative_ranks": [
+    3,
+    6,
+    17,
+    116,
+    5914
+  ],
+  "selection_consistent": true,
+  "saturated": false,
+  "expected": "3,6,17,116,5914",
+  "verdict": [
+    "expected [3, 6, 17, 116, 5914]: MATCH"
+  ],
+  "t_total_s": 240.4
+}
