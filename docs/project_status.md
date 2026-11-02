@@ -1,6 +1,6 @@
 # Three-Body Poisson Algebra — Project Status & Roadmap
 
-*Last updated: July 11, 2026 (audit remediation sweep)*
+*Last updated: November 1, 2026 (website lockdown; deploy note corrected)*
 
 ---
 
@@ -757,4 +757,4 @@ Topbar updated across all 6 pages: `Data Explorer` → `Figures`, plus a new `Da
 
 About-page rewrite: tier names changed from "For Everyone / High School / Undergraduate / Graduate" to neutral "Overview / Concepts / Methods / Formalism". Tier-4 N=4 result updated to current `[6, 14, 62, 1260]` exact-L3 plus the closed-form L0/L1/L2 formulas; stale Dirac-constraints bullet replaced with the BGS spectral-statistics result; quantum/neural/GUE one-liners added. See `docs/session_log.md` Phase 11 for the full rendering-bug iteration log (gap_score_map vs gap_map mismatch, validity masking, axis aspect ratios, and 5 other root-cause fixes).
 
-Deployment status: the local `main` branch is **ahead of production**. The live site at `https://nbody.briansheppard.com` (S3 + CloudFront `E3AHN5BEM2KUCH`, bucket `nbody-briansheppard-com`) still has the old `index.html`, `tracker.html`, and `explorer.html`; Datasets and Figures pages don't exist on S3 yet, and `figures_v2/` hasn't been synced. Deploy is held back pending review.
+Deployment status: **deployed.** The live site at `https://nbody.briansheppard.com` carries the current `main` (Datasets, Figures, `figures_v2/`, favicon set and 404 page verified live 2026-11-01). Since 2026-11-01 the bucket `nbody-briansheppard-com` is private behind CloudFront `E3AHN5BEM2KUCH` with an Origin Access Control; see `CLAUDE.md` for the deploy command and the directory-index caveat.
