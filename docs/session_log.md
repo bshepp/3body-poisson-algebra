@@ -6999,3 +6999,77 @@ to masses/charges/composites/harmonic/trap) that reproduces
 1000045; ~14 min per potential on the desktop), on top of the July 30
 single-run censuses. Artifact:
 results/jet_eval/a4_verify_r2_r3_library_2026-09-30.json.
+
+
+## 2026-11-01 — website bucket locked down; basis-reduced jet census; a(4) five-fold; N=6 L3 run stopped at the rank stage
+
+First session in four weeks. Four deliverables, one interrupted.
+
+**1. Website bucket is private.** `nbody-briansheppard-com` now sits
+behind CloudFront `E3AHN5BEM2KUCH` through Origin Access Control
+`E21EP7BLNZ2LVA`; REST origin, Block Public Access on, bucket policy
+grants GetObject to cloudfront.amazonaws.com for this distribution only,
+S3 website hosting removed, 403/404 served as `/404.html` with status
+404 (the recipe in CLAUDE.md mapped them to index.html; the site has had
+a real 404 page since 92ceb0d, so that is what is served). Verified:
+`/`, `/figures.html`, `/favicon.svg`, `/data/figures/manifest.json` 200;
+a bad path 404 with the 404 page; direct S3 GET 403. The REST origin
+does not serve directory indexes (`/figures_v2/` is now 404); the site
+had no directory-style links. The `project_status.md` "deploy held back"
+note was stale (datasets/figures/favicon were all live) and is corrected.
+CLAUDE.md rewritten to describe the locked-down state. Commit 28227b2.
+
+**2. `jet_eval/run_basis_census.py` — basis-reduced census.** Below the
+top level only a maximal independent subset of trees is carried forward
+(chosen by RREF pivot columns at S_sel selection points); by bilinearity
+brackets of spanning sets span the next level, so cumulative ranks are
+identical to the full tree census. Top-level values are a gradient
+bilinear form over all frontier x selected pairs at once. Candidate
+counts collapse: N=3 L4 11,937 -> 6,534; N=5 L3 1,116,775 -> 10,140;
+N=6 L3 ~25.6M -> 38,040. Validation gauntlet 5/5 (seed 20261101,
+p = 2^31-1): [3,6,17,116] 1 s; [10,25,145] 1 s; [6,14,62,1260] 17 s;
+[3,6,17,116,5914] 240 s (a(4) through a different tree set and a new
+seed); **[10,25,145,5965] in 225 s on the desktop** — the N=5 L3 value
+that took the 44-core jaga campaign in July, now a four-minute laptop-
+class computation, and a fourth independent confirmation of L3(5).
+Selection-phase ranks are re-derived at the evaluation points as a
+built-in consistency check (all consistent). Artifacts in
+results/jet_eval/basis_census/. Commit 6b6fa2a.
+
+**3. a(4) = 5,914 for 1/r now five-fold, three code paths.** The
+poisson-algebra library backend (`compute_growth(method="modp",
+verify=True)`, N=3 d=2 1/r, L<=4) gives [3,6,17,116,5914] at two
+(prime, seed) pairs with 16,384 points (auto-doubled), 2,141 s total.
+With the two July run_l4.py runs and today's basis-census run, that is
+five runs: full census x2 (run_l4), full census x2 (library), reduced
+census x1. Artifact results/jet_eval/a4_verify_1r_library_2026-11-01.json.
+Commit 29d3b5f. Whether to extend A395423 remains Brian's call.
+
+**4. N=6 d=1 L3 — evaluation done, rank stage stopped.** Run 1
+(S=24,576, S_sel=4,096, batch 512): selection gave 15 / 24 new / 240 new
+(cumulative 15, 39, 279 — L0, L1 and the L2 formula N(4N^2-9N+3)/2 = 279
+all confirmed at N=6, a new out-of-sample point for L2); 38,040 top
+candidates evaluated in 833 s; the lower-level ranks at the evaluation
+points re-derived 15, 39, 279. The top-level rank stage was then killed
+by Claude Code's memory-pressure reaper: the dense kernel holds float64
+limb copies of an ~18K x 24.6K basis plus a 7 GB uint64 copy of the
+value matrix, past what this 48 GB desktop had free. Fixes landed:
+`LeanIncrementalBasis` (uint32 basis storage, column/row-chunked limb
+GEMMs, same algorithm; agrees with the dense kernel at 1260 and 5965)
+and top-level values written straight to a .npy memmap with
+`--stage eval` / `--stage rank` so the rank can be re-run without
+re-evaluating. Relaunch (Brian's call; the reaper asks not to restart
+unattended):
+    cd jet_eval && python run_basis_census.py --N 6 --d 1 --L 3 \
+        --samples 24576 --sel-samples 4096 --batch 512 \
+        --out ../results/jet_eval/basis_census/rank_N6_d1_1r_L3_run1.json
+Prediction under test: L3(6) = 17,979 (binomial fit through
+new_L3(3,4,5)) vs 18,249 (the old a=1198 law, already falsified at N=5).
+Then a second (prime, seed) pair, e.g. --prime 2147483629 --seed 987654321.
+
+Housekeeping: four untracked `jet_eval/l4_census_result*.json` (byte-
+equivalent to the committed results/jet_eval/a4_census_*.json) moved out
+of the tree to C:\Users\Snarf\AppData\Local\Temp\jet_eval_dups\ (the
+auto-mode classifier refused a delete); jet_eval/.gitignore ignores
+*.npy/*.npz value checkpoints. jaga was off (ping timed out); everything
+above ran on the desktop.

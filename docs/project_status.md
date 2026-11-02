@@ -77,6 +77,10 @@ structure; no bigger instance was ever needed). new_L3(5) = 5,820
 falsifies the a=1198 prediction (5,990); see the L3-formula row
 below and results/symbolic_rank/rank_N5_d1_1r_L3_modp.json.
 
+### In progress — N=6 d=1 Level 3 (2026-11-01, basis-reduced jet census)
+
+`jet_eval/run_basis_census.py` (validated 5/5 on known ranks, incl. L3(5) = 5,965 in 225 s locally) makes N=6 L3 a desktop job: 38,040 top-level candidates instead of ~25.6M census trees. Run 1 evaluated all values (833 s) and confirmed L0–L2 = **[15, 39, 279]** at N=6 (the L2 formula's second out-of-sample point); the top-level rank stage was stopped by memory pressure and needs a relaunch with the new lean kernel (command in `docs/session_log.md`, 2026-11-01). Prediction under test: L3(6) = 17,979 (binomial fit) vs 18,249 (falsified a=1198 law).
+
 ### Completed — N=7 d=1 Level 2 (April 11, 2026)
 
 | # | Task | Result |
@@ -101,7 +105,7 @@ below and results/symbolic_rank/rank_N5_d1_1r_L3_modp.json.
 
 | # | Task | Progress | Status |
 |---|---|---|---|
-| 1 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Spot reclaimed, instance terminated. Rank=667, plateau=0. Checkpoint on S3. Needs relaunch on new instance. |
+| 1 | **Level-4 mpmath rank computation** | 667/15,000 rows (4.4%) | Superseded 2026-07-30 by the mod-p jet-evaluation census (a(4) = 5,914, five-fold verified by 2026-11-01); checkpoint left on S3, no relaunch planned. |
 
 ### Completed — GUE Log-Gas / Prime Distribution (April 11, 2026)
 
