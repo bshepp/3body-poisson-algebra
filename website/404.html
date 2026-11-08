@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<meta name="description" content="Nothing is published at this address on nbody.briansheppard.com.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0a0c10">
+<title>404: Three-Body Poisson Algebra</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" ="/assets/theme.css">
+<script ="/assets/theme.js" defer></script>
+<style>
+:root {
+  --bg-deep: #0a0c10;
+  --bg-panel: #0f1218;
+  --bg-card: #141820;
+  --bg-card-hover: #1a1f2a;
+  --border: #1e2430;
+  --border-bright: #2a3040;
+  --text-primary: #c8ccd4;
+  --text-secondary: #7a8090;
+  --text-dim: #4a5060;
+  --phosphor: #3ddc84;
+  --phosphor-dim: #1a6e3a;
+  --phosphor-glow: rgba(61, 220, 132, 0.15);
+  --amber: #f0a030;
+  --amber-dim: #7a5018;
+  --amber-glow: rgba(240, 160, 48, 0.12);
+  --red: #e05555;
+  --red-dim: #7a2a2a;
+  --cyan: #4ac8e8;
+  --cyan-dim: #1a5a6e;
+  --violet: #a07ae0;
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'Source Serif 4', Georgia, serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 14px; scroll-behavior: smooth; }
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--mono);
+  font-weight: 400;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ═══════════ TOPBAR ═══════════ */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 2rem; background: var(--bg-panel);
+  border-bottom: 1px solid var(--border); font-size: 0.72rem;
+}
+.topbar-left { display: flex; align-items: center; gap: 1.5rem; }
+.topbar-left a {
+  color: var(--text-secondary); text-decoration: none;
+  text-transform: uppercase; letter-spacing: 0.08em; transition: color 0.2s;
+}
+.topbar-left a:hover { color: var(--phosphor); }
+.topbar-left a.active { color: var(--phosphor); border-bottom: 1px solid var(--phosphor); }
+.topbar-right { color: var(--text-dim); display: flex; align-items: center; gap: 0.8rem; }
+.topbar-right a { color: var(--text-dim); transition: color 0.2s; }
+.topbar-right a:hover { color: var(--phosphor); }
+.topbar-right .gh-icon { width: 16px; height: 16px; fill: currentColor; vertical-align: middle; }
+
+/* ═══════════ HEADER ═══════════ */
+.page-header {
+  padding: 1.8rem 2rem 1rem;
+  border-bottom: 1px solid var(--border);
+  max-width: 1000px; margin: 0 auto;
+}
+.page-header h1 {
+  font-family: var(--serif); font-size: 1.6rem; font-weight: 600;
+  color: var(--text-primary); margin-bottom: 0.25rem;
+}
+.page-header h1 .dim { color: var(--text-secondary); font-weight: 300; }
+.page-header .subtitle {
+  color: var(--text-secondary); font-size: 0.78rem;
+}
+
+/* ═══════════ CONTENT ═══════════ */
+.page-content {
+  max-width: 1000px; margin: 0 auto; padding: 1.5rem 2rem 3rem;
+}
+
+/* ═══════════ TIER CARDS ═══════════ */
+.tier {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.tier:hover { border-color: var(--border-bright); }
+
+.tier-header {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.9rem 1.2rem;
+  background: var(--bg-card);
+  cursor: pointer;
+  -webkit-user-select: none; user-select: none;
+  transition: background 0.15s;
+}
+.tier-header:hover { background: var(--bg-card-hover); }
+
+.tier-icon {
+  width: 10px; height: 10px; border-radius: 50%;
+  flex-shrink: 0;
+}
+.tier-title {
+  font-family: var(--serif);
+  font-size: 1.05rem; font-weight: 600;
+  flex: 1;
+}
+.tier-audience {
+  font-size: 0.68rem; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.tier-chevron {
+  font-size: 0.8rem; color: var(--text-dim);
+  transition: transform 0.2s;
+}
+.tier.open .tier-chevron { transform: rotate(90deg); }
+
+.tier-body {
+  display: none;
+  padding: 1.2rem 1.4rem;
+  background: var(--bg-panel);
+  font-family: var(--serif);
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+.tier.open .tier-body { display: block; }
+
+.tier-body p { margin-bottom: 0.8rem; }
+.tier-body p:last-child { margin-bottom: 0; }
+.tier-body strong { color: var(--text-primary); font-weight: 600; }
+.tier-body em { font-style: italic; }
+.tier-body code {
+  font-family: var(--mono); font-size: 0.82rem;
+  background: var(--bg-card); padding: 0.1rem 0.35rem;
+  border-radius: 3px; color: var(--phosphor);
+}
+.tier-body .seq {
+  display: inline-block; padding: 0.15rem 0.5rem;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 3px; font-family: var(--mono);
+  font-size: 0.95rem; letter-spacing: 0.05em;
+  margin: 0.3rem 0;
+}
+.tier-body ul {
+  margin: 0.5rem 0 0.8rem 1.5rem;
+  color: var(--text-secondary);
+}
+.tier-body li { margin-bottom: 0.3rem; }
+
+/* Tier accent colors */
+.tier-1 .tier-icon { background: var(--phosphor); }
+.tier-1 .tier-title { color: var(--phosphor); }
+.tier-1.open { border-color: var(--phosphor-dim); }
+
+.tier-2 .tier-icon { background: var(--cyan); }
+.tier-2 .tier-title { color: var(--cyan); }
+.tier-2.open { border-color: var(--cyan-dim); }
+
+.tier-3 .tier-icon { background: var(--amber); }
+.tier-3 .tier-title { color: var(--amber); }
+.tier-3.open { border-color: var(--amber-dim); }
+
+.tier-4 .tier-icon { background: var(--violet); }
+.tier-4 .tier-title { color: var(--violet); }
+.tier-4.open { border-color: #503a80; }
+
+/* ═══════════ SCROLLBAR ═══════════ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+@media (max-width: 700px) {
+  .page-content { padding: 1rem; }
+  .tier-header { padding: 0.7rem 0.9rem; }
+  .tier-body { padding: 0.9rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOPBAR ═══════════ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="https://briansheppard.com/" style="text-transform:none; opacity:0.75; letter-spacing:0;" title="Back to briansheppard.com">← briansheppard.com</a>
+    <a ="/index.html">Dashboard</a>
+    <a ="/tracker.html">Research Tracker</a>
+    <a ="/figures.html">Figures</a>
+    <a ="/datasets.html">Datasets</a>
+    <a ="/interactive.html">Interactive Atlas</a>
+    <a ="/article.html">Neural Article</a>
+    <a ="/about.html">About</a>
+  </div>
+  <div class="topbar-right">
+    Three-Body Poisson Algebra
+    <a href="https://github.com/bshepp/3body-poisson-algebra" target="_blank" rel="noopener" title="GitHub Repository"><svg class="gh-icon" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+  </div>
+</div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<div class="page-header">
+  <h1>404</h1>
+  <div class="subtitle">Nothing is published at this address. If a link brought you here, it is out of date.</div>
+</div>
+
+<!-- ═══════════ CONTENT ═══════════ -->
+<div class="page-content">
+  <div class="tier tier-1 open">
+    <div class="tier-header">
+      <div class="tier-icon"></div>
+      <div class="tier-title">Where to go</div>
+      <div class="tier-audience">Everything on this site</div>
+    </div>
+    <div class="tier-body">
+      <p>The <a href="/index.html">dashboard</a> is the entry point. From there: the <a href="/tracker.html">research tracker</a>, <a href="/figures.html">figures</a>, <a href="/datasets.html">datasets</a>, the <a href="/interactive.html">interactive atlas</a>, the <a href="/article.html">neural article</a> and the <a href="/about.html">about page</a>.</p>
+      <p>All code and data are in the <a href="https://github.com/bshepp/3body-poisson-algebra" target="_blank" rel="noopener">GitHub repository</a>.</p>
+    </div>
+  </div>
+</div><!-- /page-content -->
+</body>
+</html>

@@ -677,7 +677,7 @@ of N.
 | 0 | C(N,2) | 1 | edges | N=3–8 | none |
 | 1 | N(N−2) | — | wedges (not exactly f·C(N,2)) | N=3–8 | none |
 | 2 | 12·C(N,3) | 12 | triangles | N=4–8 | N=3: 11 instead of 12 |
-| 3 | a·C(N,4)? | 1198? | K₄ subgraphs? | N=3 (99, boundary), N=4 (1198) | N=3: C(3,4)=0 |
+| 3 | 1294·C(N,4) − 147·C(N,3) + 82·C(N,2)? | 1294? | K₄ subgraphs + lower-order corrections | N=3 (99), N=4 (1198), N=5 (5820) | exact 3-point fit; first test is N=6 |
 
 **Note on Level 1:** new_L1 = N(N−2) does not factor cleanly as
 f(1)·C(N,2) = f(1)·N(N−1)/2. Instead, N(N−2) = 2·C(N,2) − (N−2),
@@ -694,14 +694,31 @@ count N(N−2) may itself be the natural generalization.
    at L2 where the boundary effect was −1. N=4 is likely also a
    boundary case for L3.
 
-2. **N=5 Level 3** (OOM-killed on 256 GB): new_L3(5) should be
-   a·C(5,4) = 1198·5 = 5990 if a=1198 holds without boundary
-   corrections, giving L3(5) = 145 + 5990 = **6135**. This is the
-   first non-trivial test. The 1.1M L3 brackets are checkpointed on
-   S3 but exact QQ rank exceeds available memory.
+2. ~~**N=5 Level 3**~~: **DONE 2026-07-29 — the single-coefficient law
+   is FALSIFIED.** Measured L3(5) = **5,965** (new_L3(5) = 5,820 =
+   1164·C(5,4)), not the predicted 6,135 (5,990 = 1198·C(5,4)).
+   Triply verified on jaga: Schwartz-Zippel mod-p sampling at two
+   independent (prime, seed) pairs plus exact streaming mod-p
+   elimination, all agreeing at 5,965; the reconstructed monomial
+   count (759,855) matches the April QQ extraction exactly. See
+   results/symbolic_rank/rank_N5_d1_1r_L3_modp.json. The failure
+   mode mirrors L2_original: a one-point extrapolation missing
+   lower-order binomial terms. The unique fit through
+   new_L3(3,4,5) = (99, 1198, 5820) is
+   **new_L3(N) = 1294·C(N,4) − 147·C(N,3) + 82·C(N,2)** —
+   an exact 3-point fit with zero degrees of freedom, so it carries
+   no evidential weight until tested. The leading-clique philosophy
+   survives in refined form (leading term still ∝ C(N,4)); the pure
+   f(k)·C(N,k+1) form does not hold at k=3 any more than it did at
+   k=1.
 
-3. **N=6 Level 3**: new_L3(6) = 1198·C(6,4) = 1198·15 = 17,970 if
-   the conjecture holds. Also currently infeasible.
+3. **N=6 Level 3**: the refined fit predicts new_L3(6) = **17,700**,
+   i.e. L3(6) = 279 + 17,700 = **17,979**. The (falsified) pure law
+   predicted new_L3(6) = 17,970, i.e. L3(6) = 18,249 — the hypotheses
+   are 270 apart at N=6, comfortably separated even by a mod-p rank.
+   Symbolic generation previously OOM'd during L2; a jet-evaluation
+   route (see docs/jet_eval_design.md, 2026-07-30) may make this
+   feasible without symbolic generation.
 
 4. **General prediction**: For any k, the cumulative rank L_k(N) should
    be a polynomial of degree k+1 in N for sufficiently large N.

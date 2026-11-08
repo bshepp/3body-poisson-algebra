@@ -357,7 +357,7 @@ and results are documented.
 | Analysis | Priority | Compute | Notes |
 |----------|----------|---------|-------|
 | ~~N=7 d=1 Level 2 exact rank~~ | ~~HIGHEST~~ | **DONE** | [21, 56, 476]. Resolved L2 formula: new_L2 = 12·C(N,3) for N≥4, cumulative L2(N) = N(4N²−9N+3)/2. |
-| **N=5 d=1 Level 3 exact rank** | HIGHEST | **BLOCKED** (OOM on 256 GB) | 1.1M L3 brackets checkpointed on S3. Matrix 1.1M×760K over QQ exceeds memory. Needs modular rank or 512+ GB instance. Prediction if a=1198: new_L3(5) = 5990. |
+| ~~N=5 d=1 Level 3 exact rank~~ | ~~HIGHEST~~ | **DONE 2026-07-29** (mod-p on jaga) | **L3(5) = 5,965** — triply verified (SZ sampling at two prime/seed pairs + exact mod-p elimination, 475s/0.47GB). a=1198 prediction (5990 new) FALSIFIED: new_L3(5) = 5820. 3-point binomial fit predicts L3(6) = 17,979. The QQ OOM was coefficient blowup, not structure — no bigger instance ever needed. |
 | arXiv submission (Papers 1-3) | HIGHEST | ~0h | Establish priority; energy bound + L2 falsification + N=4 L3 strengthen paper |
 | ~~N=4 Level 3~~ | ~~HIGH~~ | **DONE** | [6,14,62,1260]. new_L3(4) = 1198. Computed in 52 min (sweep, r6i.8xlarge). |
 | N=4 with 1/r² potential | HIGH | ~hours | Paper 3 falsifiable prediction #2 |

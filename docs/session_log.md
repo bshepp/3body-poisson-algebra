@@ -6919,3 +6919,83 @@ the same SZ method aimed at N=3 L4; it died of per-bracket generation
 cost AND carried a latent flaw — n_samples=120 would have capped its
 reportable rank at 120 against an expected ~5,600+. Never resurrect
 Lane C's config as-is; samples must exceed the expected rank.
+
+## 2026-07-30 (overnight) — jet evaluation kills the generation wall; a(4) = 5,914
+
+Overnight autonomous session (Brian: "if you can think of anything you
+can do in the next 8 hours unsupervised please go ahead"; jaga off, so
+local only). Two deliverables:
+
+**1. `jet_eval/` — bracket-tree ranks without symbolic generation.**
+A bracket consumes one derivative order, so a level-L tree's value at
+a point needs only order-L truncated Taylor jets of the base
+Hamiltonians — a few thousand coefficients regardless of symbolic
+size, with lower-level jets shared by all higher trees and every
+coefficient vectorized across sample points mod p. u-chain rule and
+census enumeration mirror the symbolic engine exactly. Design memo:
+docs/jet_eval_design.md. Validated 3/3 on the known-value gauntlet:
+[3,6,17,116] (1 s), [10,25,145] (1 s), [6,14,62,1260] (92 s on the
+desktop — the symbolic original took 52 min on a 31-worker AWS box).
+This retires the wall that killed Lane C (396-day ETA) and blocked
+N=6 L3.
+
+**2. a(4) = 5,914 (mod-p, doubly verified) — A395423's next term.**
+Full corrected 11,937-tree L4 census (N=3, d=2, 1/r — the published
+definition) at S=8192 points: cumulative [3, 6, 17, 116, **5914**],
+identical at two independent (prime, seed) pairs, with the L<=3
+prefix reproduced exactly both times and no sample saturation
+(headroom 2,278). ~7 min per run, local desktop. Consistent with the
+float64 bound d(4) >= 5,625 and explains its stubborn boundary gap
+(the true rank exceeds what 200K float64 samples resolved).
+new_L4 = 5,798; growth ratio a(4)/a(3) = 50.98. Epistemic rung: same
+as L3(5) = 5,965 (certified lower bound; SZ-equal at ~1e-4 per run).
+Artifacts: results/jet_eval/. Open: potential-universality of a(4)
+(published claim covers L0-L3), possible OEIS extension (keyword
+`more`) — Brian's call.
+
+**3. a(4) is potential-universal.** Rerunning the full L4 census with
+V = 1/r² and V = 1/r³ base jets gives the identical sequence
+[3, 6, 17, 116, 5914] in both (each ~9 min; the L<=3 prefix doubles
+as the engine check per potential). The published universality claim
+(L0–L3, "empirically universal for every singular pairwise potential
+tested") now extends to level 4 across the 1/r^k family, k = 1, 2, 3.
+log(r)/Yukawa need a transcendental-jet extension (future).
+Artifacts: results/jet_eval/a4_census_r2.json, a4_census_r3.json.
+
+Also overnight: status docs swept for stale claims (f4cf2cd) — README,
+conjectures, gap workplan, project status, research roadmap now carry
+L3(5) = 5,965, the falsified a=1198 law, and the corrected d(4) bound.
+
+
+## 2026-09-30 — hidden-zero fix in the SVD engine (back-port from poisson-algebra)
+
+While porting the engine into the `poisson-algebra` library, the
+cancel -> together simplify swap (c430ebf) was found to leave brackets
+that are mathematically zero in a structurally nonzero form. They
+evaluate to float cancellation noise, and `svd_gap_analysis` normalises
+every column to unit norm, so the noise columns become full-strength
+random vectors: harmonic N=3 d=2 level 4 reported rank 34 instead of
+closing at 15 (344 of the 11,937 level-4 brackets were hidden zeros;
+the exact coefficient-matrix rank was 15 with either simplifier, so the
+symbolic brackets themselves were fine). Headline numbers are
+unaffected (they rest on exact/Q, mod-p, or L<=3 float runs where
+vanishing brackets are structurally detected), but any float64 run with
+many vanishing brackets could be. Fix: `simplify_generator` in
+`nbody/exact_growth_nbody.py` now follows `together` with a
+deterministic three-point Schwartz-Zippel zero test (exact rational
+substitution) and returns literal 0. Regression test:
+`test_simplify_generator_detects_hidden_zero` in `test_regression.py`.
+`symbolic_rank_nbody.py`'s `together` is untouched: zero rows cannot
+change an exact rank. The library also gained a mod-p jet-evaluation
+backend (`compute_growth(method="modp")`, generalised from `jet_eval/`
+to masses/charges/composites/harmonic/trap) that reproduces
+[3,6,17,116], [10,25,145], [6,14,62,1260] and the harmonic
+[3,6,13,15,15].
+
+**a(4) potential-universality now triply verified.** The library's
+`modp_rank(..., max_level=4, n_samples=8192, verify=True)` on 1/r² and
+1/r³ (N=3, d=2) gives [3, 6, 17, 116, 5914] at two further independent
+(prime, seed) pairs each (p=2147483647/seed 42 and p=2147483629/seed
+1000045; ~14 min per potential on the desktop), on top of the July 30
+single-run censuses. Artifact:
+results/jet_eval/a4_verify_r2_r3_library_2026-09-30.json.
