@@ -14,5 +14,10 @@ papers, docs, and results so that nothing is mistaken for a settled claim.
 
 Scripts need `pip install python-flint sympy numpy` and run from the repo root.
 
+Reconciled with `main` on 2026-11-08 (merge of seven post-July commits,
+including the author's own a(4) = 5,914 jet-evaluation result and the
+hidden-zero fix). See the reconciliation notes at the top of
+`REVIEW_PENDING.md` and `KNOWLEDGE_LEDGER.md`.
+
 History: an earlier version was committed as `review_2026_09/` and struck
 (reverted) for mixing proven and unproven claims; this folder replaces it.

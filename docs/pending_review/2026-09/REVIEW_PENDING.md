@@ -8,6 +8,15 @@
 > It was **struck (reverted)** because it mixed proven and unproven claims
 > and did not check prior repo work first. This file replaces it.
 
+> **Reconciliation note (2026-11-08).** This review was written against
+> commit `a1ee0fb` (2026-07-29). Seven commits landed on `main` afterwards
+> and were merged into this branch on 2026-11-08: `3e9ff6e`/`18790aa`
+> (jet-evaluation engine; **a(4) = 5,914**, 2026-07-29/30), `7b8a5b8`
+> (a(4) = 5,914 for 1/r² and 1/r³), `f4cf2cd` (L3(5) propagated to status
+> docs), `68028ea` (CLAUDE.md), `803310b` (hidden-zero fix, 2026-09-30),
+> `92ceb0d` (website). Where they change a statement below, the statement is
+> annotated **[superseded 2026-11-08]** rather than silently rewritten.
+
 ## How to read the labels
 
 | label | meaning |
@@ -61,15 +70,21 @@ should be rerun with an exact exponential representation (B3 shows how).
 
 ### A4. d(4) ≥ 5,604 (Zenodo paper: abstract, theorem, remark)
 This is a float64 SVD estimate with boundary gap ≈ 1.2, so it is not a
-certified bound. If B4 is accepted, replace it with the certified
-**d(4) ≥ 5,914**.
+certified bound. Replace it with the certified **d(4) ≥ 5,914**
+(author's `results/jet_eval/`, 2026-07-30; independently confirmed in B4).
 
 ### A5. Stability-atlas paragraph (Zenodo paper, Future directions item 6: "rank drops at Lagrange/Euler ... encoding stability boundaries")
 **PROVEN (standard fact).** Real-analytic functions that are linearly
 independent on phase space stay linearly independent on every open ball.
 Local rank below 116 in an ε-ball is therefore numerical conditioning,
 not algebra. This is consistent with the repo's own
-collision-syzygy finding (A6).
+collision-syzygy finding (A6). **[added 2026-11-08]** A second, now-fixed
+mechanism for phantom float ranks is the hidden-zero bug (`803310b`,
+2026-09-30): `together` left mathematically-zero brackets structurally
+nonzero, and per-column SVD normalisation turned their cancellation noise
+into unit vectors (harmonic N=3 d=2 L4 reported 34 instead of 15; 344 of
+11,937 brackets). Any pre-2026-09-30 float64 run with many vanishing
+brackets could be affected; the exact/ℚ and mod-p headline numbers are not.
 
 ### A6. Paper 2, §"Deep and soft syzygies" (116 → 124, "wake up")
 **PREVIOUSLY KNOWN.** `collision_syzygy/COLLISION_SYZYGY_REPORT.md` and the
@@ -155,7 +170,19 @@ depth.
   supersedes it.
 
 ### B4. d(4) lower bounds
-**LOWER BOUND.** `scripts/d4.py` uses the repo's derivative pipeline: level
+**LOWER BOUND.** **[Credit corrected 2026-11-08]:** the planar value
+a(4) = 5,914 was first obtained by the author's own jet-evaluation engine
+on 2026-07-29/30 (`jet_eval/`, `results/jet_eval/a4_census_*.json`;
+two prime/seed pairs; commits `18790aa`, `7b8a5b8`), extended the same
+night to 1/r² and 1/r³, and re-verified on 2026-09-30 through the
+`poisson-algebra` library at two further prime/seed pairs
+(`results/jet_eval/a4_verify_r2_r3_library_2026-09-30.json`). Those
+commits were not on `main` when this review was written. The run below
+(2026-09-25) is therefore an **independent third method** (symbolic
+level-3 derivatives evaluated mod p with FLINT, rank split by word
+length) that agrees exactly, not a first. What remains new here: the
+**1D value 5,042**, the **per-word-length block ranks**, and the
+1D/planar comparison. `scripts/d4.py` uses the repo's derivative pipeline: level
 0–3 generators built symbolically as exact polynomials (coefficients mod
 p), first derivatives symbolic, then brackets evaluated exactly in GF(p)
 at points on real phase space. There is no floating point anywhere. The
@@ -163,7 +190,7 @@ rank is split by word-length block.
 
 | case | result | runs | largest block rank / samples |
 |---|---|---|---|
-| planar | **d(4) ≥ 5,914** | 1 (seed 17) | 1,213 / 2,500 |
+| planar | **d(4) ≥ 5,914** | 1 here (seed 17); plus author's 4 jet-eval runs (1/r) and 2+2 for 1/r², 1/r³ | 1,213 / 2,500 |
 | 1D (all orderings) | **d(4) ≥ 5,042** | 2 (seeds 17, 99), identical | 960 / 2,500 |
 
 * The planar lower bound improves on the repo's float bound of ≥ 5,625.
@@ -174,8 +201,9 @@ rank is split by word-length block.
   planar case would settle a(4) for A395423.
 * EVIDENCE for divergence: 1D and planar block ranks agree at every word
   length ≤ 8 and split at lengths 9–12 (e.g. 550 vs 609 at length 9).
-* The planar result needs a second prime and seed before anyone relies
-  on it.
+* ~~The planar result needs a second prime and seed before anyone relies
+  on it.~~ **[superseded 2026-11-08]** Done by the author's jet-eval runs
+  (see credit note above). The exact ℚ **upper** bound is still open.
 
 ### B5. 1D definition subtlety
 **LOWER BOUND = formal count.** The word-length-7 piece has dimension 272
@@ -319,8 +347,8 @@ fixed configuration, rank drops are genuine, unlike in an ε-ball.
 | # | action | depends on |
 |---|---|---|
 | 1 | Exact ℚ upper bound for 1D d(4), per block, on jaga | nothing |
-| 2 | Same for planar d(4); if equal to 5,914, submit a(4) | 1 (method) |
-| 3 | Second prime/seed run of planar `d4.py` | nothing |
+| 2 | Exact ℚ upper bound for planar d(4); if 5,914, a(4) is a theorem and A395423 can be extended (lower bound already quadruply verified) | 1 (method) |
+| 3 | ~~Second prime/seed run of planar `d4.py`~~ done by author's jet-eval (2 primes) + library (2 more) | — |
 | 4 | Editorial fixes A1–A5 in the Zenodo paper; A6 in paper 2; A7 in the literature note | your acceptance |
 | 5 | Identify the length-4 relation for generic masses and in 2D | nothing |
 | 6 | Universal-count comparison with McLachlan–Murua (B9): class-P + locality algebra on six pieces | nothing |

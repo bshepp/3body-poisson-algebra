@@ -11,6 +11,11 @@
 > a record of the walk, not claims the author stands behind. Items citing
 > them are informational, not "needs fixing".
 >
+> **Reconciled with `main` on 2026-11-08.** The ledger was built against
+> `a1ee0fb`; `main` then gained a(4) = 5,914 (jet evaluation, 07-29/30),
+> the hidden-zero fix (09-30) and status-doc updates. Rows touched by
+> those commits are marked **[2026-11-08]**.
+>
 > **How it was built (2026-09-25).** Four read-only passes over the whole
 > repo (papers, status/conjecture docs plus the full session log, every
 > results file, OEIS/public/side projects). They were then assembled and
@@ -53,10 +58,12 @@
 | d(4) ≥ 4,501 (30k samples, "definitive") | SUPERSEDED; "definitive" retracted (the gap sat in the zero tail) | `results/level4_global_30000/results.json` |
 | d(4) ≥ 5,604 (200k samples, 11,523 of 11,937 brackets) | NUMERICAL; boundary gap 1.01 | `results/level4_global_200000/`, `results/highsample_status.json` |
 | d(4) ≥ 5,625 (full census, jaga) | NUMERICAL; boundary gap 1.01 | `results/level4_full_census/` |
-| **d(4) ≥ 5,914 planar** | ⚠ EXACT-p lower bound, 1 run | `REVIEW_PENDING.md` B4, `scripts/d4.py` |
+| **a(4) = d(4) ≥ 5,914 planar, 1/r** | EXACT-p lower bound, **author's jet-evaluation engine**, 2 prime/seed pairs, S = 8192, full 11,937-tree census **[2026-11-08]** | `results/jet_eval/a4_census_modp_run{1,2}.json`, `a4_census_summary.json`; `docs/jet_eval_design.md` |
+| same for 1/r², 1/r³ (potential-universal one level further) | EXACT-p, 1 + 2 runs each **[2026-11-08]** | `results/jet_eval/a4_census_r{2,3}.json`, `a4_verify_r2_r3_library_2026-09-30.json` |
+| d(4) ≥ 5,914 planar, independent third method | ⚠ EXACT-p, 1 run (Sept review; different code path, word-length blocks) | `REVIEW_PENDING.md` B4, `scripts/d4.py` |
 | **d(4) ≥ 5,042 in 1D** | ⚠ EXACT-p lower bound, 2 runs agree | same |
 | d(4) exactly 5,914; 1D ≠ planar | **not proven**; needs an exact upper bound | B4 |
-| mpmath high-precision rank | STALLED at 665 of 15,000 rows; eval matrix lacks the 414 skipped brackets; treat as void | `results/level4_mpmath/` |
+| mpmath high-precision rank | STALLED at 665 of 15,000 rows; SUPERSEDED by jet evaluation **[2026-11-08]** | `results/level4_mpmath/` |
 | Lane C (mod-p streaming, April) | ABANDONED; 26 of 11,937 brackets; the sample count capped the rank at 120 | session log; "never resurrect as configured" |
 
 ## 3. N-body (V = 1/r, 1D unless noted)
@@ -172,6 +179,7 @@
 | SymPy 1.10.1 lambdify drops | unequal-mass survey | retracted |
 | `--save-svd` clobbering | Yukawa dataset overwritten | restored |
 | vacuous Padé test; s3 stale .npy; column_stack; argparse 1/r³ | various | fixed |
+| **hidden zeros after `cancel`→`together` swap** (`c430ebf`): zero brackets left structurally nonzero; SVD column normalisation inflated float ranks (harmonic L4: 34 vs 15; 344/11,937 brackets) | any pre-09-30 float64 run with many vanishing brackets; exact/ℚ and mod-p results unaffected | fixed `803310b` (2026-09-30) + regression test **[2026-11-08]** |
 | **evidence overwritten** (docs cite L3 = 116, files hold L2 only) | `rank_N3_d1_r{1,6,8,10}.json`, `rank_N3_d2_{1r,1r2,1r3,1r4,r4}.json` | ⚠ **open**: regenerate or recover from S3 |
 
 ## 11. Housekeeping (stale, inconsistent, or wrong text)
@@ -208,7 +216,7 @@
 - Contextuality "zero commuting pairs" despite nontrivial centers.
 
 **Synthesis docs**
-- `project_status.md`, `conjectures.md`, `research_roadmap.md` and `gap_workplan.md` predate July. Only the session log records N = 5 L3 = 5,965, N = 10 L2 = 1,565, d(4) ≥ 5,625 and the OEIS approval. `conjectures.md:397` contradicts the paragraph below it.
+- ~~`project_status.md`, `conjectures.md`, `research_roadmap.md` and `gap_workplan.md` predate July.~~ **[2026-11-08]** `f4cf2cd` and `18790aa` propagated L3(5) = 5,965 and a(4) = 5,914 to README, `project_status.md`, `conjectures.md`, `research_roadmap.md`, `gap_workplan.md`. Still stale (checked 2026-11-08): `conjectures.md:399` keeps the pre-resolution "at least degree 5 or non-polynomial" L2 note directly above the "RESOLVED (Apr 11)" paragraph; `results/analysis/nbody_scaling_formulas.json` `N5_provenance` still says "PROVISIONAL" although L3(5) is triply verified; `OEIS/README.md` still says "Submitted".
 - `nbody_scaling_formulas.json` still says N = 5 is "PROVISIONAL".
 
 **Missing data**
@@ -217,7 +225,7 @@
 
 ## 12. Open questions, ranked by value per effort
 
-1. **Exact upper bound for d(4)**, 1D then planar (per bracket-length block, over ℚ, on jaga). This settles a(4) and d-independence at level 4.
+1. **Exact upper bound for d(4)**, 1D then planar (per bracket-length block, over ℚ, on jaga). The lower bound 5,914 is now quadruply verified (jet-eval ×2, library ×2, Sept review ×1, three potentials); an upper bound makes a(4) a theorem and settles d-independence at level 4.
 2. **Regenerate the overwritten L3 files** (§10) so every "116" has a backing file.
 3. **N = 6 L3 mod p**, to test the 17,979 prediction.
 4. **Prove L1 and L2 for all N by hand.** This is the most likely real theorem.
