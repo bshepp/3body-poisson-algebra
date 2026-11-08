@@ -478,7 +478,9 @@ This work was developed with the assistance of Claude (Opus 4.6), a large langua
 
 ## Citation
 
-If you use this software or its results, please cite this repository. Machine-readable metadata is provided in [`CITATION.cff`](CITATION.cff) (GitHub "Cite this repository") and [`.zenodo.json`](.zenodo.json) (used by the Zenodo–GitHub integration when a release is published). A DOI badge will be added here once the first Zenodo release is minted.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18899804.svg)](https://doi.org/10.5281/zenodo.18899804)
+
+If you use this software or its results, please cite this repository via its Zenodo DOI (the record above links every tagged version) and OEIS A395423 for the sequence. Machine-readable metadata is in [`CITATION.cff`](CITATION.cff) (GitHub "Cite this repository") and [`.zenodo.json`](.zenodo.json) (read by the Zenodo–GitHub integration on each release).
 
 ## License
 
