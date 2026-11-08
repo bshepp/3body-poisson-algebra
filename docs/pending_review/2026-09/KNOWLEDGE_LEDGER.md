@@ -221,6 +221,7 @@
 2. **Regenerate the overwritten L3 files** (§10) so every "116" has a backing file.
 3. **N = 6 L3 mod p**, to test the 17,979 prediction.
 4. **Prove L1 and L2 for all N by hand.** This is the most likely real theorem.
-5. **Understand the single length-4 relation** (generic masses, planar).
+5. **Understand the single length-4 relation** (generic masses, planar), and run the McLachlan–Murua universal-count comparison (`REVIEW_PENDING.md` B9): does "locality + quadratic kinetic + momentum-free potential" alone reproduce 17, 44, 103, 272, 572?
 6. **Untruncated Yukawa and log at L3**, exact.
 7. **Editorial pass** over the paper 1 and public-text items in §11 before any new submission. Papers 2–4 only if they are ever promoted.
+8. **Literature (done 2026-11-08, unreviewed):** the per-length sequence is unpublished; the framework to cite is McLachlan & Murua 2019 (two-piece case). See `literature_check/REPORT.md`.

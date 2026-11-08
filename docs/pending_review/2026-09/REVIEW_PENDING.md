@@ -279,6 +279,41 @@ fixed configuration, rank drops are genuine, unlike in an ε-ball.
 
 ---
 
+### B9. Literature check (2026-11-08): the sequence is unpublished; its home is McLachlan–Murua
+**Deep-research pass, five note files + synthesized report in
+`literature_check/`. Sources fetched in full from arXiv/OEIS. UNREVIEWED.**
+
+* **Not in the literature.** OEIS live search: `3,3,8,17,44,103,272,572` →
+  "No results"; `3,6,17,116` → only A395423. No integrator, quantum
+  Trotter-error, dynamical-Lie-algebra, or control-theory source computes
+  these numbers. The *free* three-generator counts (A027376) are in print
+  (Laskar & Vaillant 2019; Munthe-Kaas & Owren 1999), so the pairwise case
+  is a gap, not an unknown field.
+* **Closest work: McLachlan & Murua, "The Lie algebra of classical
+  mechanics", J. Comput. Dyn. 6 (2019), arXiv:1905.07554** (and McLachlan &
+  Ryland 2003, whose counts are wrong from order 13; cite 2019 numbers
+  only). They do this construction for the two-piece split H = T + V:
+  Table 5 dims 2,1,2,2,4,5,10,14,25,39,69,…, entropy 1.8249…, and a
+  structure theorem. Their first deficit from free is at length 4, as here.
+  Important precedent: their algebra is *not* just free modulo the single
+  length-4 identity; the one-relator quotient diverges from it at length 8
+  (15 vs 14). Extra mechanical identities appear deeper, which is a
+  plausible reading of the growing shortfalls here (1, 4, 13, 40, 238).
+* **Integrator link.** The H_ij are the pairwise Kepler pieces of
+  Hernandez & Bertschinger 2015 and SAKURA (Gonçalves Ferrari et al. 2014).
+  Dehnen & Hernandez 2017 state verbatim that brackets with four distinct
+  body indices vanish and classify error terms by 2/3/4-body content; no
+  one counts them. The per-length sequence is that count for N = 3.
+* **Open question the literature sharpens.** Are the numbers a universal
+  "locality + mechanics" count, or do they carry 1/r-specific identities?
+  Decisive test: build the free algebra on the six homogeneous pieces
+  {T1,T2,T3,V12,V13,V23} with McLachlan–Murua's grading, impose only the
+  universal relations (class P + locality), count brackets of the three
+  sums, compare with 17, 44, 103, 272, 572. The 1D/planar split at length 9
+  already implies the universal count there is ≥ 609.
+* Full citation list and prioritized recommendations:
+  `literature_check/REPORT.md`.
+
 ## Proposed actions (for decision)
 
 | # | action | depends on |
@@ -288,6 +323,8 @@ fixed configuration, rank drops are genuine, unlike in an ε-ball.
 | 3 | Second prime/seed run of planar `d4.py` | nothing |
 | 4 | Editorial fixes A1–A5 in the Zenodo paper; A6 in paper 2; A7 in the literature note | your acceptance |
 | 5 | Identify the length-4 relation for generic masses and in 2D | nothing |
+| 6 | Universal-count comparison with McLachlan–Murua (B9): class-P + locality algebra on six pieces | nothing |
+| 7 | Decide whether to contact McLachlan with the framing in `literature_check/REPORT.md` | your call |
 
 ## Reproducing
 
