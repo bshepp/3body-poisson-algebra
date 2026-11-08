@@ -36,8 +36,11 @@ keywords:
   - oeis
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.18899804"
-    description: "Zenodo software DOI (minted from v0.1.0; the Zenodo record links all versions)"
+    value: "10.5281/zenodo.19689320"
+    description: "Zenodo software concept DOI (resolves to the latest tagged release; v0.1.0 = 10.5281/zenodo.19689321)"
+  - type: doi
+    value: "10.5281/zenodo.18899803"
+    description: "Paper 1 preprint on Zenodo (publication deposit; concept DOI, latest version = 10.5281/zenodo.21443883)"
   - type: other
     value: "OEIS:A395423"
     description: "OEIS A395423 (approved 2026-07-29): the dimension sequence 3, 6, 17, 116"
