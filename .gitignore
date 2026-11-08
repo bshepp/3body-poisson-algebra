@@ -204,3 +204,7 @@ OEIS/candidates/A395423_hookfirst.md
 docs/A395423 - OEIS*.html
 docs/A395423 - OEIS*_files/
 docs/oeis-pull-*/
+
+# deep-research working folders (moved into docs/pending_review/ when a pass completes)
+research_notes/
+reports/
