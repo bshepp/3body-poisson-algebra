@@ -478,9 +478,9 @@ This work was developed with the assistance of Claude (Opus 4.6), a large langua
 
 ## Citation
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.18899804.svg)](https://doi.org/10.5281/zenodo.18899804)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19689320.svg)](https://doi.org/10.5281/zenodo.19689320)
 
-If you use this software or its results, please cite this repository via its Zenodo DOI (the record above links every tagged version) and OEIS A395423 for the sequence. Machine-readable metadata is in [`CITATION.cff`](CITATION.cff) (GitHub "Cite this repository") and [`.zenodo.json`](.zenodo.json) (read by the Zenodo–GitHub integration on each release).
+If you use this software or its results, please cite this repository via its Zenodo software DOI (10.5281/zenodo.19689320 resolves to the latest tagged release; each release also has its own version DOI) and OEIS A395423 for the sequence. The paper has a separate Zenodo deposit: 10.5281/zenodo.18899803. Machine-readable metadata is in [`CITATION.cff`](CITATION.cff) (GitHub "Cite this repository") and [`.zenodo.json`](.zenodo.json) (read by the Zenodo–GitHub integration on each release).
 
 ## License
 
